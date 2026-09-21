@@ -106,7 +106,7 @@ export async function POST(req: Request) {
     "<b>НОВАЯ ЗАЯВКА С САЙТА</b>\n\n" +
       "<b>Имя:</b>\n" + escapeHtml(name) + "\n\n" +
       "<b>Контакт:</b>\n" + escapeHtml(phone) + "\n\n" +
-      "<b>Задача:</b>\n" + escapeHtml(task) + "\n\n" +
+      "<b>Как устроено обучение:</b>\n" + escapeHtml(task) + "\n\n" +
       "<b>Дата:</b>\n" + escapeHtml(date) + "\n\n" +
       "<b>ИСТОЧНИК</b>\n" +
       "Source: " + escapeHtml(attr.utm_source) + "\n" +

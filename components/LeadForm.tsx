@@ -40,7 +40,7 @@ export default function LeadForm() {
     const e: Errors = {};
     if (name.trim().length < 2) e.name = "Укажите имя";
     if (!validContact(phone)) e.phone = "Укажите телефон или Telegram (@username)";
-    if (task.trim().length < 10) e.task = "Опишите задачу хотя бы парой предложений";
+    if (task.trim().length < 10) e.task = "Опишите текущее обучение хотя бы парой предложений";
     if (task.trim().length > LIMITS.task) e.task = "Слишком длинное описание — до " + LIMITS.task + " символов";
     if (!consent) e.consent = "Нужно согласие на обработку данных";
     return e;
@@ -89,15 +89,12 @@ export default function LeadForm() {
   return (
     <section id="contact" className="mx-auto max-w-[720px] scroll-mt-3 px-[22px] pb-11 pt-10 min-[560px]:pt-14">
       <div className="rounded-lg bg-gradient-to-b from-surface to-panel p-[clamp(22px,5vw,38px)] shadow-[0_0_0_1px_#3f424d,0_16px_40px_rgba(0,0,0,0.5)]">
-        <p className="mb-4 text-[11px] uppercase tracking-[0.2em] text-accent-400">07 — Консультация</p>
-        <h2 className="m-0 mb-3.5 text-balance text-[clamp(27px,6.8vw,44px)] font-medium leading-[1.08] tracking-[-0.03em]">
-          Есть процесс, который хочется улучшить?
+        <p className="mb-4 text-[11px] uppercase tracking-[0.2em] text-accent-400">08 — Обсудить задачу</p>
+        <h2 className="m-0 mb-3.5 text-balance text-[clamp(26px,6.2vw,42px)] font-medium leading-[1.08] tracking-[-0.03em]">
+          Расскажите, как сейчас обучаются ваши сотрудники
         </h2>
         <p className="m-0 mb-7 max-w-[50ch] text-pretty text-[15px] leading-[1.6] text-neutral-500">
-          Опишите задачу. Я посмотрю на нее с точки зрения продукта, автоматизации и AI и предложу возможный вариант решения.
-        </p>
-        <p className="m-0 mb-7 -mt-4 max-w-[50ch] border-l-2 border-accent-700 pl-3.5 text-pretty text-sm leading-[1.55] text-neutral-400">
-          Готовое ТЗ не нужно — достаточно описать проблему своими словами.
+          Я посмотрю на текущий процесс и предложу, в каком направлении его можно систематизировать.
         </p>
 
         {sent ? (
@@ -106,7 +103,7 @@ export default function LeadForm() {
             <div>
               <p className="m-0 text-[19px] tracking-[-0.02em]">Заявка отправлена.</p>
               <p className="m-0 mt-1.5 text-[15px] leading-[1.55] text-neutral-400">
-                Свяжусь с вами для обсуждения задачи.
+                Свяжусь с вами для обсуждения текущего процесса обучения.
               </p>
             </div>
           </div>
@@ -149,10 +146,10 @@ export default function LeadForm() {
             </label>
 
             <label className="flex flex-col gap-2">
-              <span className="text-[13px] text-neutral-500">Описание задачи <span className="text-accent-400">*</span></span>
+              <span className="text-[13px] text-neutral-500">Как сейчас устроено обучение сотрудников? <span className="text-accent-400">*</span></span>
               <textarea
                 name="task" rows={4} maxLength={LIMITS.task}
-                placeholder="Расскажите, что сейчас происходит, что хочется изменить и какой результат получить."
+                placeholder="Например: новичков обучает управляющий, материалы лежат в Telegram и PDF, единых тестов и контроля прохождения нет."
                 value={task}
                 onFocus={onFieldTouch}
                 onChange={(e) => { setTask(e.target.value); setErrors((p) => ({ ...p, task: undefined })); }}
@@ -198,10 +195,10 @@ export default function LeadForm() {
               disabled={sending}
               className="mt-1 min-h-[58px] rounded-md border border-accent bg-accent-900 text-base font-medium tracking-[-0.01em] text-accent-200 transition-colors hover:border-accent-400 hover:bg-accent-800 hover:text-accent-100 active:bg-accent-700 disabled:opacity-45"
             >
-              {sending ? "Отправляю…" : "Отправить заявку"}
+              {sending ? "Отправляю…" : "Разобрать систему обучения"}
             </button>
             <p className="m-0 text-pretty text-center text-[13px] leading-[1.5] text-neutral-500">
-              После заявки я посмотрю задачу и свяжусь с вами для уточнения деталей.
+              После заявки я посмотрю описание и свяжусь с вами для уточнения деталей.
             </p>
 
             <p className="m-0 text-[12.5px] leading-[1.5] text-neutral-600">

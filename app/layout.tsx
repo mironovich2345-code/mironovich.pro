@@ -21,8 +21,9 @@ export const metadata: Metadata = {
   applicationName: site.name,
   authors: [{ name: site.name, url: siteUrl }],
   keywords: [
-    "внутренние приложения", "автоматизация бизнес-процессов", "обучение сотрудников",
-    "AI для бизнеса", "Telegram Mini Apps", "интеграции API",
+    "система обучения сотрудников", "обучение сотрудников", "адаптация сотрудников",
+    "онбординг сотрудников", "корпоративная академия", "база знаний сотрудников",
+    "аттестация сотрудников", "автоматизация обучения сотрудников",
   ],
   alternates: { canonical: siteUrl },
   openGraph: {
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
     siteName: site.name,
     title: site.title,
     description: site.description,
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: site.name + " — digital products × AI × business", type: "image/png" }],
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: site.name + " — системы обучения сотрудников для бизнеса", type: "image/png" }],
   },
   twitter: {
     card: "summary_large_image",

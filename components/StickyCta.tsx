@@ -37,7 +37,7 @@ export default function StickyCta() {
         onClick={() => track("cta_click", { location: "sticky" })}
         className="flex min-h-[50px] items-center justify-center rounded-md border border-accent bg-accent-900 text-base font-medium text-accent-200"
       >
-        Обсудить задачу
+        Разобрать обучение
       </a>
     </div>
   );

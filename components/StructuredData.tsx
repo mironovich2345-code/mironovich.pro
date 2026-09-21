@@ -1,10 +1,19 @@
 import { site, siteUrl, socialProfiles } from "@/config/site";
 
 /**
- * WebSite + Person graph. Nothing here is invented: no awards, clients, ratings
- * or employment claims, and sameAs is emitted only for profiles set in env.
+ * WebSite + Person + Service graph. Nothing here is invented: no awards, clients,
+ * ratings, prices or reviews, and sameAs is emitted only for profiles set in env.
  */
 export default function StructuredData() {
+  const knowsAbout = [
+    "системы обучения сотрудников",
+    "адаптация сотрудников",
+    "корпоративное обучение",
+    "базы знаний",
+    "автоматизация бизнес-процессов",
+    "AI",
+  ];
+
   const graph: Record<string, unknown>[] = [
     {
       "@type": "WebSite",
@@ -21,14 +30,19 @@ export default function StructuredData() {
       name: site.person,
       url: siteUrl,
       jobTitle: site.jobTitle,
-      knowsAbout: [
-        "цифровые продукты",
-        "автоматизация бизнес-процессов",
-        "AI",
-        "внутренние приложения",
-        "обучение сотрудников",
-      ],
+      knowsAbout,
       ...(socialProfiles.length > 0 ? { sameAs: socialProfiles } : {}),
+    },
+    {
+      "@type": "Service",
+      "@id": siteUrl + "/#service",
+      name: "Системы обучения сотрудников",
+      serviceType: "Разработка систем обучения и адаптации сотрудников",
+      description:
+        "Проектирование и запуск системы обучения сотрудников: адаптация новичков, корпоративная академия, база знаний, тестирование, аттестации, контроль прогресса, автоматизация и AI.",
+      provider: { "@id": siteUrl + "/#person" },
+      areaServed: "RU",
+      url: siteUrl,
     },
   ];
 

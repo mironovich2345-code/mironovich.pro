@@ -1,6 +1,7 @@
 import Hero from "@/components/Hero";
 import Pains from "@/components/Pains";
 import Services from "@/components/Services";
+import Shift from "@/components/Shift";
 import About from "@/components/About";
 import CaseStudy from "@/components/CaseStudy";
 import Process from "@/components/Process";
@@ -19,8 +20,9 @@ export default function Page() {
         <Hero />
         <Pains />
         <Services />
-        <About />
+        <Shift />
         <CaseStudy />
+        <About />
         <Process />
         <FirstReview />
         <LeadForm />

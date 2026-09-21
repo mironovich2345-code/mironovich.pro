@@ -21,15 +21,16 @@ export default function Hero() {
       <div className="relative flex flex-col items-start gap-7">
         <p className="flex items-center gap-2.5 text-[11px] uppercase tracking-[0.2em] text-neutral-500">
           <span className="h-[5px] w-[5px] animate-pulseDot rounded-full bg-accent" />
-          Digital products × AI × Business
+          Employee training systems × Automation × AI
         </p>
 
-        <h1 className="m-0 max-w-[17ch] text-balance text-[clamp(38px,9.6vw,78px)] font-medium leading-[1.02] tracking-[-0.035em]">
-          Разбираю бизнес-процессы и превращаю их в цифровые продукты
+        <h1 className="m-0 max-w-[19ch] text-balance text-[clamp(34px,8.2vw,70px)] font-medium leading-[1.04] tracking-[-0.035em]">
+          Создаю системы обучения сотрудников, которые не зависят от одного руководителя
         </h1>
 
-        <p className="m-0 max-w-[44ch] text-pretty text-[clamp(16px,4.2vw,20px)] leading-[1.55] text-neutral-400">
-          Внутренние приложения, обучение сотрудников, автоматизация и AI-инструменты для бизнеса.
+        <p className="m-0 max-w-[52ch] text-pretty text-[clamp(15.5px,4vw,19px)] leading-[1.55] text-neutral-400">
+          Разбираю, как компания адаптирует и обучает сотрудников, и собираю обучение, базу знаний, тестирование,
+          аттестации и контроль прогресса в единую систему.
         </p>
 
         <div className="flex w-full flex-wrap gap-3">
@@ -38,15 +39,19 @@ export default function Hero() {
             location="hero"
             className="inline-flex min-h-[54px] flex-[1_1_210px] items-center justify-center rounded-md border border-accent bg-accent-900 px-[30px] text-base font-medium tracking-[-0.01em] text-accent-200 transition-colors hover:border-accent-400 hover:bg-accent-800 hover:text-accent-100"
           >
-            Обсудить задачу
+            Разобрать систему обучения
           </CtaLink>
           <a
-            href="#problems"
+            href="#system"
             className="inline-flex min-h-[54px] flex-[1_1_210px] items-center justify-center rounded-md px-[22px] text-[15px] text-neutral-500 transition-colors hover:text-ink"
           >
-            Посмотреть, с чем могу помочь ↓
+            Посмотреть, из чего состоит система ↓
           </a>
         </div>
+
+        <p className="m-0 -mt-1.5 max-w-[48ch] text-pretty text-[13.5px] leading-[1.5] text-neutral-500">
+          Готовое ТЗ не требуется — достаточно рассказать, как обучение устроено сейчас.
+        </p>
 
         <div
           aria-hidden
@@ -57,11 +62,11 @@ export default function Hero() {
         </div>
 
         <ul className="m-0 flex list-none flex-wrap gap-x-[26px] gap-y-1.5 p-0 text-[13px] text-neutral-400">
-          <li>Внутренние приложения</li>
-          <li>Обучение</li>
-          <li>Автоматизация</li>
-          <li>AI</li>
-          <li>Telegram Mini Apps</li>
+          <li>Адаптация</li>
+          <li>Корпоративная академия</li>
+          <li>База знаний</li>
+          <li>Аттестации</li>
+          <li>Контроль прогресса</li>
         </ul>
       </div>
     </section>
