@@ -94,11 +94,13 @@ app/
   page.tsx              сборка секций главной
   globals.css           резеты, focus-visible, prefers-reduced-motion
   about/page.tsx        /about — ProfilePage + Person JSON-LD
+  blog/page.tsx         /blog — список опубликованных статей (Blog JSON-LD)
+  blog/[slug]/page.tsx  /blog/<slug> — статья, BlogPosting JSON-LD, canonical, OG
   privacy/page.tsx      политика обработки данных (noindex, follow)
   consent/page.tsx      согласие на обработку данных (noindex, follow)
   api/lead/route.ts     приём заявки, honeypot, rate limit, отправка в Telegram
   robots.ts             robots.txt
-  sitemap.ts            sitemap.xml — / и /about
+  sitemap.ts            sitemap.xml — /, /about, /blog и опубликованные статьи
   manifest.ts           web app manifest
   icon.png              favicon 512
   apple-icon.png        apple touch icon 180
@@ -106,15 +108,24 @@ app/
 components/
   Hero · Pains · Services · About · CaseStudy (+DashboardMockup)
   Process · FirstReview · LeadForm (+ConsentDialog) · Faq
-  SecondaryCta · Footer · StickyCta · Reveal
+  SecondaryCta · StickyCta · Reveal
+  SiteHeader (+MobileMenu) · Footer — подключены в layout.tsx, видны на всех страницах
+  Markdown — рендер статей блога (серверный компонент)
   StructuredData · Analytics · CtaLink
 config/
-  site.ts               имя, описание, соцссылки из env
+  site.ts               имя, описание, соцссылки из env, навигация
+content/
+  blog/                 статьи блога — по одному .md на статью (см. content/blog/README.md)
 lib/
   analytics.ts          track(), список событий, ID провайдеров из env
   attribution.ts        first-touch UTM + referrer + landing page
+  blog.ts               чтение и валидация статей, published/draft
+  markdown.ts           небольшой Markdown-парсер без зависимостей
+  jsonld.ts             безопасная сериализация JSON-LD
 public/
   images/               фотографии (webp)
+  yandex_*.html         подтверждение Яндекс.Вебмастера — не удалять
+  zen_*.html            подтверждение Дзена — не удалять
   og.png                превью для мессенджеров, 1200×630
   icon-192.png icon-512.png  иконки для «на главный экран»
 ```
@@ -122,6 +133,21 @@ public/
 Порядок секций главной: Hero → 01 Когда могу быть полезен → 02 Что можно
 сделать → 03 Обо мне → 04 Пример проекта → 05 Как я работаю → 06 Первый разбор
 → 07 Консультация (форма) → FAQ → Secondary CTA → футер.
+
+## Блог
+
+Статьи лежат в `content/blog/*.md`, без CMS и внешних зависимостей. Чтобы добавить
+статью, достаточно положить туда файл с frontmatter — страница, карточка в `/blog`,
+sitemap и структурированные данные появятся сами. Формат, поля и чек-лист —
+в [content/blog/README.md](./content/blog/README.md).
+
+- `status: published` — статья в списке, sitemap и индексе; `draft` — не попадает никуда,
+  виден только в `npm run dev` по прямому адресу (с `noindex`).
+- Картинки лежат в `public/blog/`. `coverImage` — превью на `/blog` и Open Graph статьи;
+  в тексте картинка ставится строкой `![alt](/blog/file.png "подпись")` и рендерится через `next/image`.
+  Размеры читаются из файла, поэтому вручную их указывать не нужно.
+- Ошибка в frontmatter, Markdown или пути к картинке останавливает сборку с указанием файла.
+- Страницы блога — server components, клиентский JS нужен только мобильному меню и CTA-ссылкам.
 
 ## Аналитика
 
@@ -135,7 +161,7 @@ cookie-баннера пока и нет.
 
 | Событие | Когда | Параметры |
 |---|---|---|
-| `cta_click` | клик по CTA | `location`: `hero` · `sticky` · `first_review` · `secondary` |
+| `cta_click` | клик по CTA | `location`: `hero` · `sticky` · `first_review` · `secondary` · `header` · `about` · `article` · `blog` |
 | `form_start` | первое взаимодействие с полем формы, один раз за сессию | — |
 | `lead_submit_success` | Telegram подтвердил доставку | `utm_source`, `utm_medium`, `utm_campaign` |
 | `lead_submit_error` | заявка не ушла | `reason`: `validation` · `network` · `delivery` |

@@ -19,6 +19,13 @@ export const site = {
   telegram: envTelegram || "https://t.me/mironovich",
 } as const;
 
+/** Main navigation. "Система обучения" points at the services section of the landing page. */
+export const navLinks = [
+  { href: "/#system", label: "Система обучения" },
+  { href: "/about", label: "Обо мне" },
+  { href: "/blog", label: "Блог" },
+] as const;
+
 /** Configured profiles only — used for structured data. */
 export const socialProfiles = [envInstagram, envTelegram].filter(Boolean);
 

@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import Analytics from "@/components/Analytics";
+import Footer from "@/components/Footer";
+import SiteHeader from "@/components/SiteHeader";
 import { site, siteUrl } from "@/config/site";
 import "./globals.css";
 
@@ -55,7 +57,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ru" className={inter.variable}>
       <body className="font-sans antialiased">
+        <SiteHeader />
         {children}
+        <Footer />
         <Analytics />
       </body>
     </html>

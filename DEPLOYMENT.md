@@ -134,9 +134,11 @@ HSTS с `preload` действует два года — это нормальн
 ## 11. Яндекс Вебмастер
 
 1. webmaster.yandex.ru → добавить сайт.
-2. Подтвердить права (проще всего — через привязанную Метрику или DNS TXT).
+2. Подтвердить права. Файл подтверждения уже в проекте:
+   `public/yandex_bf4d8bb8201490e1.html` → `https://mironovich.pro/yandex_bf4d8bb8201490e1.html`
+   (можно и через привязанную Метрику или DNS TXT). Файл не удалять и не менять.
 3. Индексирование → Файлы Sitemap → `https://mironovich.pro/sitemap.xml`.
-4. Переобход страниц → добавить `/` и `/about`.
+4. Переобход страниц → добавить `/`, `/about` и `/blog`.
 
 ## 12. Google Search Console
 
@@ -150,7 +152,7 @@ HSTS с `preload` действует два года — это нормальн
 Генерируются Next.js из `NEXT_PUBLIC_SITE_URL`, править руками не нужно.
 Проверить на живом домене:
 
-- `/sitemap.xml` — две записи: `/` и `/about`;
+- `/sitemap.xml` — `/`, `/about`, `/blog` и по одной записи на каждую опубликованную статью (черновиков нет);
 - `/robots.txt` — `Allow: /`, `Disallow: /api/`, строка `Sitemap:` с production-адресом;
 - `/privacy` и `/consent` отдают `noindex, follow`.
 

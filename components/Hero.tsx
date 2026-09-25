@@ -3,7 +3,7 @@ import CtaLink from "./CtaLink";
 export default function Hero() {
   return (
     <section id="hero"
-      className="relative mx-auto max-w-[1080px] px-[22px] pb-10 pt-[52px] min-[560px]:pb-[72px] min-[560px]:pt-[84px]">
+      className="relative mx-auto max-w-[1080px] px-[22px] pb-10 pt-[28px] max-[700px]:overflow-x-clip min-[560px]:pb-[72px] min-[560px]:pt-[40px]">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 [mask-image:radial-gradient(64%_58%_at_22%_26%,#000,transparent_76%)]"

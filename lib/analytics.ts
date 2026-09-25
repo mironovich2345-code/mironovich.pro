@@ -14,7 +14,7 @@ export type AnalyticsEvent =
   | "lead_submit_error"
   | "telegram_fallback_click";
 
-export type CtaLocation = "hero" | "sticky" | "first_review" | "secondary";
+export type CtaLocation = "hero" | "sticky" | "first_review" | "secondary" | "header" | "about" | "article" | "blog";
 
 /** Only non-identifying, low-cardinality values belong in here. */
 export type EventParams = {
