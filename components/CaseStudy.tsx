@@ -12,6 +12,14 @@ const steps = [
   },
 ];
 
+// Design parameters of the system as built — deliberately not outcomes: no measured results exist to report.
+const parameters = [
+  { value: "3 дня", label: "базовая адаптация сотрудника" },
+  { value: "около 15 минут", label: "за смену — обучение встроено в рабочий процесс" },
+  { value: "Тестирование", label: "предусмотрено после модулей" },
+  { value: "Итоговая аттестация", label: "в конце обучения" },
+];
+
 const inside = [
   "адаптация новичков",
   "обучение",
@@ -62,9 +70,23 @@ export default function CaseStudy() {
           </p>
         </div>
 
-        <Reveal delay={0.1}>
-          <DashboardMockup />
-        </Reveal>
+        <div className="flex flex-col gap-6">
+          <Reveal delay={0.1}>
+            <DashboardMockup />
+          </Reveal>
+
+          <Reveal delay={0.16}>
+            <p className="mb-3 text-[11px] uppercase tracking-[0.18em] text-neutral-600">Параметры спроектированной системы</p>
+            <ul className="m-0 grid list-none grid-cols-2 gap-2 p-0">
+              {parameters.map((p) => (
+                <li key={p.value} className="rounded-md bg-panel px-4 pb-4 pt-3.5 shadow-[0_0_0_1px_#292b31]">
+                  <p className="m-0 text-[clamp(17px,3.4vw,20px)] leading-[1.2] tracking-[-0.02em] text-ink">{p.value}</p>
+                  <p className="m-0 mt-1.5 text-pretty text-[13px] leading-[1.45] text-neutral-500">{p.label}</p>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
