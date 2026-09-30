@@ -1,5 +1,3 @@
-import Reveal from "./Reveal";
-
 const rows: [string, string][] = [
   [
     "Руководитель по несколько часов объясняет одно и то же каждому новичку.",
@@ -21,36 +19,37 @@ const rows: [string, string][] = [
 
 export default function Shift() {
   return (
-    <section id="shift" className="mx-auto max-w-[1080px] scroll-mt-4 px-[22px] py-10 min-[560px]:py-14">
-      <p className="mb-4 text-[11px] uppercase tracking-[0.2em] text-accent-400">03 — Что меняется</p>
-      <h2 className="m-0 mb-[34px] max-w-[20ch] text-balance text-[clamp(27px,6.6vw,46px)] font-medium leading-[1.1] tracking-[-0.03em]">
-        Обучение перестаёт быть задачей конкретного руководителя
-      </h2>
+    <section id="shift" className="bg-cream px-[22px] py-16 min-[560px]:py-24">
+      <div className="mx-auto max-w-[1080px]">
+        <div className="mb-10 flex items-end justify-between gap-6 min-[560px]:mb-14">
+          <p className="m-0 text-[11px] uppercase tracking-[0.22em] text-maroon">03 / Что меняется</p>
+          <p className="m-0 hidden text-[11px] uppercase tracking-[0.22em] text-graphite/45 min-[560px]:block">
+            Сейчас → Система
+          </p>
+        </div>
 
-      <div className="flex flex-col">
-        {rows.map(([now, sys], i) => (
-          <Reveal key={i} delay={(i % 2) * 0.06}>
+        <h2 className="m-0 mb-12 max-w-[20ch] text-balance font-display text-[clamp(28px,5.6vw,48px)] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-graphite min-[560px]:mb-16">
+          Обучение перестаёт быть задачей конкретного руководителя
+        </h2>
+
+        <div className="flex flex-col border-t border-graphite/15">
+          {rows.map(([now, sys], i) => (
             <div
-              className="grid grid-cols-1 items-start gap-2.5 pb-7 pt-[26px] min-[700px]:gap-5 min-[700px]:[grid-template-columns:1fr_44px_1fr]"
-              style={{
-                backgroundImage: `linear-gradient(90deg, ${i === 0 ? "#5d5294" : "#3f424d"}, ${i === rows.length - 1 ? "transparent" : "#292b31"})`,
-                backgroundRepeat: "no-repeat",
-                backgroundSize: "100% 1px",
-                backgroundPosition: "0 0",
-              }}
+              key={i}
+              className="grid grid-cols-1 items-start gap-3 border-b border-graphite/15 py-8 min-[700px]:gap-8 min-[700px]:[grid-template-columns:1fr_44px_1fr]"
             >
               <div>
-                <p className="m-0 mb-2.5 text-[11px] uppercase tracking-[0.18em] text-neutral-600">Сейчас</p>
-                <p className="m-0 max-w-[42ch] text-pretty text-[15px] leading-[1.6] text-neutral-500">{now}</p>
+                <p className="m-0 mb-2.5 text-[11px] uppercase tracking-[0.18em] text-graphite/45">Сейчас</p>
+                <p className="m-0 max-w-[42ch] text-pretty text-[15px] leading-[1.6] text-graphite/60">{now}</p>
               </div>
-              <div aria-hidden className="hidden justify-center pt-[22px] text-lg text-accent-600 min-[700px]:flex">→</div>
+              <div aria-hidden className="hidden justify-center pt-[22px] text-lg text-signal min-[700px]:flex">→</div>
               <div>
-                <p className="m-0 mb-2.5 text-[11px] uppercase tracking-[0.18em] text-accent-400">Система</p>
-                <p className="m-0 max-w-[42ch] text-pretty text-[15.5px] leading-[1.6] text-neutral-300">{sys}</p>
+                <p className="m-0 mb-2.5 text-[11px] uppercase tracking-[0.18em] text-maroon">Система</p>
+                <p className="m-0 max-w-[42ch] text-pretty text-[16px] font-medium leading-[1.6] text-graphite">{sys}</p>
               </div>
             </div>
-          </Reveal>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

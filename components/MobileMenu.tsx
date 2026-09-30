@@ -30,7 +30,7 @@ export default function MobileMenu({ links }: { links: readonly { href: string; 
         aria-expanded={open}
         aria-controls="mobile-menu"
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex min-h-[40px] items-center rounded-md border border-neutral-800 px-3.5 text-sm text-neutral-300 transition-colors hover:border-accent-700 hover:text-ink"
+        className="inline-flex min-h-[38px] items-center border border-cream/20 px-3.5 text-[13px] uppercase tracking-[0.06em] text-cream transition-colors hover:border-signal"
       >
         {open ? "Закрыть" : "Меню"}
       </button>
@@ -39,7 +39,7 @@ export default function MobileMenu({ links }: { links: readonly { href: string; 
         <nav
           id="mobile-menu"
           aria-label="Основная навигация"
-          className="absolute inset-x-0 top-full border-y border-neutral-900 bg-bg px-[22px] pb-5 pt-2"
+          className="absolute inset-x-0 top-full border-y border-cream/10 bg-graphite px-[22px] pb-5 pt-2"
         >
           <ul className="m-0 flex list-none flex-col p-0">
             {links.map((l) => (
@@ -47,7 +47,7 @@ export default function MobileMenu({ links }: { links: readonly { href: string; 
                 <Link
                   href={l.href}
                   onClick={close}
-                  className="flex min-h-[48px] items-center border-b border-neutral-900 text-base text-neutral-300 hover:text-ink"
+                  className="flex min-h-[48px] items-center border-b border-cream/10 text-[15px] uppercase tracking-[0.04em] text-stone hover:text-cream"
                 >
                   {l.label}
                 </Link>
@@ -58,7 +58,7 @@ export default function MobileMenu({ links }: { links: readonly { href: string; 
             href="/#contact"
             location="header"
             onClick={close}
-            className="mt-4 flex min-h-[50px] items-center justify-center rounded-md border border-accent bg-accent-900 text-base font-medium text-accent-200"
+            className="mt-4 flex min-h-[50px] items-center justify-center bg-signal text-[15px] font-medium uppercase tracking-[0.06em] text-white"
           >
             Обсудить задачу
           </CtaLink>

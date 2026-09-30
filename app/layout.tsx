@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Roboto_Condensed } from "next/font/google";
 import Analytics from "@/components/Analytics";
 import Footer from "@/components/Footer";
 import SiteHeader from "@/components/SiteHeader";
@@ -8,9 +8,18 @@ import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "700"],
   display: "swap",
   variable: "--font-inter",
+});
+
+// Editorial display face — oversized headlines only (font-display utility). Chosen over
+// Inter 800 after a side-by-side check: condensed width reads closer to a magazine cover.
+const displayFont = Roboto_Condensed({
+  subsets: ["latin", "cyrillic"],
+  weight: ["700", "800"],
+  display: "swap",
+  variable: "--font-display",
 });
 
 export const metadata: Metadata = {
@@ -55,7 +64,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru" className={inter.variable}>
+    <html lang="ru" className={inter.variable + " " + displayFont.variable}>
       <body className="font-sans antialiased">
         <SiteHeader />
         {children}

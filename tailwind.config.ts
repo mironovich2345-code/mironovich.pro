@@ -32,9 +32,21 @@ const config: Config = {
           800: "#3f424d",
           900: "#292b31",
         },
+        // Editorial redesign palette (Hero, Problems, CaseStudy, home About) — kept
+        // separate from the tokens above so the untouched sections are unaffected.
+        graphite: "#0E0E11",
+        cream: "#F2EFE8",
+        signal: "#D92D2D",
+        maroon: "#481014",
+        stone: "#94918C",
       },
       borderRadius: { sm: "4px", md: "8px", lg: "14px" },
-      fontFamily: { sans: ["var(--font-inter)", "system-ui", "sans-serif"] },
+      fontFamily: {
+        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        // Editorial display face for oversized headlines/statements only — Inter stays
+        // for everything else (body, buttons, forms, nav, small captions).
+        display: ["var(--font-display)", "var(--font-inter)", "system-ui", "sans-serif"],
+      },
       keyframes: {
         pulseDot: { "0%,100%": { opacity: "0.3" }, "50%": { opacity: "1" } },
         drift: { "0%": { transform: "translateX(-12%)" }, "100%": { transform: "translateX(112%)" } },

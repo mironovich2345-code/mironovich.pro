@@ -35,33 +35,37 @@ const items: [string, string][] = [
 
 export default function Faq() {
   return (
-    <section id="faq" className="mx-auto max-w-[1080px] scroll-mt-4 px-[22px] pb-5 pt-10 min-[560px]:pt-14">
-      <div className="mb-9 grid items-end gap-x-14 gap-y-3 [grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))]">
-        <h2 className="m-0 text-[clamp(27px,6.6vw,46px)] font-medium leading-[1.1] tracking-[-0.03em]">FAQ</h2>
-        <p className="m-0 mb-1.5 max-w-[42ch] text-pretty text-[15px] leading-[1.6] text-neutral-500">
-          Если вопроса здесь нет — напишите его прямо в форме выше.
-        </p>
-      </div>
+    <section id="faq" className="bg-cream px-[22px] pb-16 pt-16 min-[560px]:pt-24">
+      <div className="mx-auto max-w-[1080px]">
+        <div className="mb-10 flex items-end justify-between gap-6 min-[560px]:mb-14">
+          <p className="m-0 text-[11px] uppercase tracking-[0.22em] text-maroon">09 / FAQ</p>
+          <p className="m-0 hidden max-w-[42ch] text-[13px] leading-[1.6] text-graphite/50 min-[560px]:block">
+            Если вопроса здесь нет — напишите его прямо в форме выше.
+          </p>
+        </div>
 
-      <div className="flex flex-col">
-        {items.map(([q, a], i) => (
-          <details
-            key={q}
-            className="group"
-            style={{
-              backgroundImage: `linear-gradient(90deg, ${i === 0 ? "#5d5294" : "#3f424d"}, ${i === items.length - 1 ? "transparent" : "#292b31"})`,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "100% 1px",
-              backgroundPosition: "0 0",
-            }}
-          >
-            <summary className="flex cursor-pointer list-none items-baseline justify-between gap-5 py-[22px] text-[clamp(16px,3.2vw,19px)] leading-[1.4] tracking-[-0.02em] text-ink [&::-webkit-details-marker]:hidden">
-              <span className="max-w-[44ch]">{q}</span>
-              <span className="flex-none text-lg leading-none text-accent transition-transform duration-200 group-open:rotate-45">+</span>
-            </summary>
-            <p className="m-0 mb-6 max-w-[60ch] text-pretty text-[15px] leading-[1.6] text-neutral-500">{a}</p>
-          </details>
-        ))}
+        <h2 className="m-0 mb-12 font-display text-[clamp(28px,5.6vw,48px)] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-graphite min-[560px]:mb-16">
+          Вопросы
+        </h2>
+
+        <div className="flex flex-col border-t border-graphite/15">
+          {items.map(([q, a], i) => (
+            <details key={q} className="group border-b border-graphite/15">
+              <summary className="flex cursor-pointer list-none items-start gap-5 py-7 [&::-webkit-details-marker]:hidden">
+                <span className="flex-none pt-1 font-display text-[13px] text-maroon">{String(i + 1).padStart(2, "0")} /</span>
+                <span className="flex-1 text-balance text-[clamp(17px,3.2vw,21px)] leading-[1.35] tracking-[-0.015em] text-graphite">
+                  {q}
+                </span>
+                <span className="flex-none pt-0.5 font-display text-xl leading-none text-maroon transition-transform duration-200 group-open:rotate-45">
+                  +
+                </span>
+              </summary>
+              <p className="m-0 mb-7 max-w-[60ch] text-pretty text-[15px] leading-[1.6] text-graphite/60 min-[560px]:pl-[52px]">
+                {a}
+              </p>
+            </details>
+          ))}
+        </div>
       </div>
     </section>
   );

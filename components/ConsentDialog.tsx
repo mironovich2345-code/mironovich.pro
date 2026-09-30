@@ -33,14 +33,14 @@ export default function ConsentDialog({ open, onClose }: { open: boolean; onClos
       aria-modal="true"
       aria-labelledby="consent-title"
       onClick={onClose}
-      className="fixed inset-0 z-[60] flex items-end justify-center bg-[rgba(10,11,18,0.7)] backdrop-blur-sm"
+      className="fixed inset-0 z-[60] flex items-end justify-center bg-graphite/80 backdrop-blur-sm"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="max-h-[86vh] w-full max-w-[620px] overflow-y-auto rounded-t-lg bg-surface px-[22px] pb-[34px] pt-[26px] shadow-[0_0_0_1px_#595d6c,0_16px_40px_rgba(0,0,0,0.65)]"
+        className="max-h-[86vh] w-full max-w-[620px] overflow-y-auto border-t border-cream/15 bg-graphite px-[22px] pb-[34px] pt-[26px]"
       >
-        <div className="mb-4 flex items-start justify-between gap-4">
-          <h3 id="consent-title" className="m-0 text-xl font-medium tracking-[-0.02em]">
+        <div className="mb-4 flex items-start justify-between gap-4 border-b border-cream/15 pb-4">
+          <h3 id="consent-title" className="m-0 text-xl font-medium tracking-[-0.02em] text-cream">
             Согласие на обработку персональных данных
           </h3>
           <button
@@ -48,17 +48,17 @@ export default function ConsentDialog({ open, onClose }: { open: boolean; onClos
             type="button"
             onClick={onClose}
             aria-label="Закрыть"
-            className="h-9 w-9 flex-none rounded-md border border-neutral-800 text-lg text-neutral-500 transition-colors hover:bg-accent-900 hover:text-ink"
+            className="h-9 w-9 flex-none border border-cream/20 text-lg text-stone transition-colors hover:border-signal hover:text-cream"
           >
             ×
           </button>
         </div>
-        <div className="flex flex-col gap-3 text-sm leading-[1.65] text-neutral-400">
+        <div className="flex flex-col gap-3 text-sm leading-[1.65] text-stone">
           {paragraphs.map((p) => <p key={p} className="m-0">{p}</p>)}
         </div>
         <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-[13.5px]">
-          <Link href="/consent" className="text-accent-300 underline underline-offset-[3px]">Полный текст согласия</Link>
-          <Link href="/privacy" className="text-accent-300 underline underline-offset-[3px]">Политика обработки данных</Link>
+          <Link href="/consent" className="text-cream underline underline-offset-[3px] hover:text-signal">Полный текст согласия</Link>
+          <Link href="/privacy" className="text-cream underline underline-offset-[3px] hover:text-signal">Политика обработки данных</Link>
         </div>
       </div>
     </div>

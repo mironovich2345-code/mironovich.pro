@@ -27,7 +27,7 @@ export default function StickyCta() {
   return (
     <div
       className={
-        "fixed inset-x-0 bottom-0 z-40 min-[700px]:hidden border-t border-neutral-900 bg-[rgba(22,24,38,0.9)] px-4 pt-2.5 backdrop-blur-md transition-all duration-300 " +
+        "fixed inset-x-0 bottom-0 z-40 min-[700px]:hidden border-t border-cream/15 bg-graphite/95 px-4 pt-2.5 backdrop-blur-md transition-all duration-300 " +
         (show ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-full opacity-0")
       }
       style={{ paddingBottom: "calc(10px + env(safe-area-inset-bottom))" }}
@@ -35,7 +35,7 @@ export default function StickyCta() {
       <a
         href="#contact"
         onClick={() => track("cta_click", { location: "sticky" })}
-        className="flex min-h-[50px] items-center justify-center rounded-md border border-accent bg-accent-900 text-base font-medium text-accent-200"
+        className="flex min-h-[50px] items-center justify-center bg-signal text-base font-medium uppercase tracking-[0.04em] text-white"
       >
         Разобрать обучение
       </a>

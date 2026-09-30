@@ -2,66 +2,57 @@ import CtaLink from "./CtaLink";
 
 export default function Hero() {
   return (
-    <section id="hero"
-      className="relative mx-auto max-w-[1080px] px-[22px] pb-10 pt-[28px] max-[700px]:overflow-x-clip min-[560px]:pb-[72px] min-[560px]:pt-[40px]">
-      <div
+    <section id="hero" className="relative overflow-hidden bg-graphite px-[22px] pb-16 pt-8 min-[560px]:pb-24 min-[560px]:pt-12">
+      {/* Oversized ghost wordmark — pure typographic texture, not a badge or icon. */}
+      <p
         aria-hidden
-        className="pointer-events-none absolute inset-0 [mask-image:radial-gradient(64%_58%_at_22%_26%,#000,transparent_76%)]"
-        style={{
-          backgroundImage: "radial-gradient(circle, rgba(233,233,237,0.07) 1px, transparent 1px)",
-          backgroundSize: "34px 34px",
-        }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -left-20 -top-32 h-[420px] w-[520px]"
-        style={{ background: "radial-gradient(50% 50% at 50% 50%, rgba(145,132,217,0.14), transparent 72%)" }}
-      />
+        className="pointer-events-none absolute right-0 top-0 select-none whitespace-nowrap font-display text-[clamp(140px,28vw,360px)] font-extrabold uppercase leading-none tracking-[-0.02em] text-cream/5"
+      >
+        Mironovich
+      </p>
 
-      <div className="relative flex flex-col items-start gap-7">
-        <p className="flex items-center gap-2.5 text-[11px] uppercase tracking-[0.2em] text-neutral-500">
-          <span className="h-[5px] w-[5px] animate-pulseDot rounded-full bg-accent" />
-          Employee training systems × Automation × AI
-        </p>
+      <div className="relative mx-auto flex max-w-[1080px] flex-col gap-10 min-[560px]:gap-14">
+        <div className="flex items-start justify-between gap-6 text-[11px] uppercase tracking-[0.22em] text-stone">
+          <p className="m-0">
+            Mironovich <span className="text-signal">/</span> Employee Training Systems
+          </p>
+          <p className="m-0 hidden min-[560px]:block">Mironovich / 2026</p>
+        </div>
 
-        <h1 className="m-0 max-w-[19ch] text-balance text-[clamp(34px,8.2vw,70px)] font-medium leading-[1.04] tracking-[-0.035em]">
-          Создаю системы обучения сотрудников, которые не зависят от одного руководителя
+        <h1 className="m-0 max-w-[13ch] font-display text-[clamp(42px,9.5vw,128px)] font-extrabold uppercase leading-[0.92] tracking-[-0.02em] text-cream">
+          Обучение
+          <br />
+          не должно
+          <br />
+          держаться
+          <br />
+          на одном
+          <br />
+          человеке<span className="text-signal">.</span>
         </h1>
 
-        <p className="m-0 max-w-[52ch] text-pretty text-[clamp(15.5px,4vw,19px)] leading-[1.55] text-neutral-400">
-          Разбираю, как компания адаптирует и обучает сотрудников, и собираю обучение, базу знаний, тестирование,
-          аттестации и контроль прогресса в единую систему.
-        </p>
-
-        <div className="flex w-full flex-wrap gap-3">
-          <CtaLink
-            href="#contact"
-            location="hero"
-            className="inline-flex min-h-[54px] flex-[1_1_210px] items-center justify-center rounded-md border border-accent bg-accent-900 px-[30px] text-base font-medium tracking-[-0.01em] text-accent-200 transition-colors hover:border-accent-400 hover:bg-accent-800 hover:text-accent-100"
-          >
-            Разобрать систему обучения
-          </CtaLink>
-          <a
-            href="#system"
-            className="inline-flex min-h-[54px] flex-[1_1_210px] items-center justify-center rounded-md px-[22px] text-[15px] text-neutral-500 transition-colors hover:text-ink"
-          >
-            Посмотреть, из чего состоит система ↓
-          </a>
+        <div className="grid gap-8 border-t border-cream/15 pt-8 min-[760px]:grid-cols-[1fr_auto] min-[760px]:items-end">
+          <p className="m-0 max-w-[46ch] text-pretty text-[15.5px] leading-[1.6] text-stone min-[560px]:text-[17px]">
+            Системы обучения сотрудников: база знаний, тестирование, аттестация, контроль прогресса, автоматизация и AI.
+          </p>
+          <div className="flex flex-col items-start gap-3 min-[760px]:items-end">
+            <CtaLink
+              href="#contact"
+              location="hero"
+              className="inline-flex min-h-[56px] items-center justify-center bg-signal px-9 text-[15px] font-medium uppercase tracking-[0.06em] text-white transition-colors hover:bg-[#b82323]"
+            >
+              Разобрать систему обучения
+            </CtaLink>
+            <a
+              href="#system"
+              className="text-[13px] text-stone underline decoration-stone/40 underline-offset-4 transition-colors hover:text-cream"
+            >
+              Из чего состоит система ↓
+            </a>
+          </div>
         </div>
 
-        <p className="m-0 -mt-1.5 max-w-[48ch] text-pretty text-[13.5px] leading-[1.5] text-neutral-500">
-          Готовое ТЗ не требуется — достаточно рассказать, как обучение устроено сейчас.
-        </p>
-
-        <div
-          aria-hidden
-          className="relative mt-4 h-px w-full"
-          style={{ background: "linear-gradient(90deg, transparent, #3f424d 48px, #3f424d calc(100% - 48px), transparent)" }}
-        >
-          <span className="absolute -top-0.5 left-0 h-[5px] w-[5px] animate-drift rounded-full bg-accent" />
-        </div>
-
-        <ul className="m-0 flex list-none flex-wrap gap-x-[26px] gap-y-1.5 p-0 text-[13px] text-neutral-400">
+        <ul className="m-0 flex list-none flex-wrap gap-x-5 gap-y-2 border-t border-cream/10 p-0 pt-6 text-[11px] uppercase tracking-[0.16em] text-stone/80 min-[560px]:gap-x-8">
           <li>Адаптация</li>
           <li>Корпоративная академия</li>
           <li>База знаний</li>

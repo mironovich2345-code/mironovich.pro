@@ -1,5 +1,3 @@
-import Reveal from "./Reveal";
-
 const steps = [
   { title: "Разбор", body: "Изучаем, как сейчас проходит адаптация и обучение сотрудников." },
   { title: "Архитектура", body: "Определяем роли, знания, этапы обучения, контрольные точки и требования руководителей." },
@@ -10,35 +8,39 @@ const steps = [
 
 export default function Process() {
   return (
-    <section id="process" className="mx-auto max-w-[1080px] scroll-mt-4 px-[22px] py-10 min-[560px]:py-14">
-      <p className="mb-4 text-[11px] uppercase tracking-[0.2em] text-accent-400">06 — Как я работаю</p>
-      <h2 className="m-0 mb-8 text-[clamp(27px,6.6vw,46px)] font-medium leading-[1.1] tracking-[-0.03em]">Сначала процесс. Потом инструмент.</h2>
+    <section id="process" className="bg-graphite px-[22px] py-16 min-[560px]:py-24">
+      <div className="mx-auto max-w-[1080px]">
+        <div className="mb-10 flex items-end justify-between gap-6 min-[560px]:mb-14">
+          <p className="m-0 text-[11px] uppercase tracking-[0.22em] text-signal">06 / Как я работаю</p>
+          <p className="m-0 hidden text-[11px] uppercase tracking-[0.22em] text-stone min-[560px]:block">Process</p>
+        </div>
 
-      <ol className="m-0 grid list-none grid-cols-1 gap-x-4 gap-y-3.5 p-0 min-[560px]:gap-y-[18px] min-[560px]:[grid-template-columns:repeat(auto-fit,minmax(min(100%,172px),1fr))]">
-        {steps.map((s, i) => (
-          <Reveal key={s.title} delay={(i % 3) * 0.06}>
+        <h2 className="m-0 mb-12 max-w-[18ch] text-balance font-display text-[clamp(28px,5.6vw,48px)] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-cream min-[560px]:mb-16">
+          Сначала процесс. Потом инструмент.
+        </h2>
+
+        <ol className="m-0 flex list-none flex-col border-t border-cream/15 p-0">
+          {steps.map((s, i) => (
             <li
-              className="relative list-none pt-[18px]"
-              style={{
-                backgroundImage: `linear-gradient(90deg, ${i === 0 ? "#5d5294" : "#3f424d"}, ${i === steps.length - 1 ? "transparent" : "#292b31"})`,
-                backgroundRepeat: "no-repeat",
-                backgroundSize: "100% 1px",
-              }}
+              key={s.title}
+              className="grid grid-cols-[64px_1fr] items-start gap-6 border-b border-cream/15 py-7 min-[760px]:grid-cols-[140px_1fr] min-[760px]:gap-10"
             >
-              <span
-                className={"absolute -top-0.5 left-0 h-[5px] w-[5px] rounded-full " + (i === 0 ? "bg-accent" : "bg-neutral-700")}
-              />
-              <p className="text-[11px] tracking-[0.14em] text-neutral-600">{String(i + 1).padStart(2, "0")}</p>
-              <p className="my-2 text-[13px] uppercase tracking-[0.14em] text-ink">{s.title}</p>
-              <p className="m-0 text-pretty text-sm leading-[1.5] text-neutral-500">{s.body}</p>
+              <span className="font-display text-[clamp(28px,4.6vw,44px)] font-extrabold leading-none tracking-[-0.02em] text-cream/20">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <div>
+                <p className="m-0 mb-1.5 text-[15px] uppercase tracking-[0.08em] text-cream">{s.title}</p>
+                <p className="m-0 max-w-[46ch] text-pretty text-[14.5px] leading-[1.6] text-stone">{s.body}</p>
+              </div>
             </li>
-          </Reveal>
-        ))}
-      </ol>
+          ))}
+        </ol>
 
-      <p className="m-0 mt-7 max-w-[56ch] text-pretty text-[15px] leading-[1.6] text-neutral-500">
-        Не начинаю с выбора LMS или разработки приложения. Сначала нужно понять, как должна работать сама система обучения.
-      </p>
+        <p className="m-0 mt-12 max-w-[46ch] text-balance text-[clamp(19px,3.4vw,24px)] leading-[1.4] tracking-[-0.01em] text-cream min-[560px]:mt-16">
+          Не начинаю с выбора LMS или разработки приложения. Сначала нужно понять, как должна работать{" "}
+          <span className="text-signal">сама система обучения</span>.
+        </p>
+      </div>
     </section>
   );
 }
