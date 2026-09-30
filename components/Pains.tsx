@@ -6,6 +6,9 @@ const items = [
   "Уходит сильный человек — вместе с ним уходят знания",
 ];
 
+// Mobile keeps only the three sharpest points — the rest stays for desktop.
+const mobileItems = [items[0], items[2], items[4]];
+
 export default function Pains() {
   return (
     <section id="problems" className="bg-cream px-[22px] py-16 min-[560px]:py-24">
@@ -21,7 +24,24 @@ export default function Pains() {
           Возможно, именно так сейчас устроено обучение сотрудников.
         </p>
 
-        <ol className="m-0 flex list-none flex-col border-t border-graphite/15 p-0">
+        {/* Mobile: 3 of the 5 points — full list stays for desktop below. */}
+        <ol className="m-0 flex list-none flex-col border-t border-graphite/15 p-0 min-[640px]:hidden">
+          {mobileItems.map((text, i) => (
+            <li
+              key={text}
+              className="grid grid-cols-[64px_1fr] items-start gap-6 border-b border-graphite/15 py-7"
+            >
+              <span className="font-display text-[clamp(30px,6vw,56px)] font-extrabold leading-none tracking-[-0.02em] text-graphite/20">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <p className="m-0 max-w-[46ch] text-pretty text-[clamp(19px,3.4vw,27px)] font-medium leading-[1.25] tracking-[-0.01em] text-graphite">
+                {text}
+              </p>
+            </li>
+          ))}
+        </ol>
+
+        <ol className="m-0 hidden list-none flex-col border-t border-graphite/15 p-0 min-[640px]:flex">
           {items.map((text, i) => (
             <li
               key={text}

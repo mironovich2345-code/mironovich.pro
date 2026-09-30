@@ -21,7 +21,12 @@ export default function About() {
               Я пришёл к системам обучения из операционного управления.
             </p>
 
-            <div className="flex flex-col gap-4 border-t border-graphite/15 pt-6">
+            {/* Mobile: the long story lives on /about — keep only the pivot sentence here. */}
+            <p className="m-0 max-w-[34ch] text-balance border-l-2 border-signal pl-5 text-[clamp(18px,3.2vw,23px)] leading-[1.4] tracking-[-0.015em] text-graphite min-[640px]:hidden">
+              Сначала разбираю процесс. Потом выбираю технологии.
+            </p>
+
+            <div className="hidden flex-col gap-4 border-t border-graphite/15 pt-6 min-[640px]:flex">
               <p className="m-0 max-w-[56ch] text-pretty text-[15.5px] leading-[1.7] text-graphite/70">
                 До разработки я работал с реальными операционными процессами бизнеса: сотрудниками, обучением, продажами,
                 контролем и ежедневным управлением.
@@ -32,12 +37,12 @@ export default function About() {
               </p>
             </div>
 
-            <p className="m-0 max-w-[34ch] text-balance border-l-2 border-signal pl-5 text-[clamp(18px,3.2vw,23px)] leading-[1.4] tracking-[-0.015em] text-graphite">
+            <p className="m-0 hidden max-w-[34ch] text-balance border-l-2 border-signal pl-5 text-[clamp(18px,3.2vw,23px)] leading-[1.4] tracking-[-0.015em] text-graphite min-[640px]:block">
               Сначала разбираюсь, как работает обучение. Потом выбираю технологии.
             </p>
 
             <div className="flex flex-wrap items-center justify-between gap-4 border-t border-graphite/15 pt-6">
-              <p className="m-0 text-[11px] uppercase tracking-[0.14em] text-graphite/55">
+              <p className="m-0 hidden text-[11px] uppercase tracking-[0.14em] text-graphite/55 min-[640px]:block">
                 Операционное управление <span className="text-signal">→</span> обучение{" "}
                 <span className="text-signal">→</span> продукт <span className="text-signal">→</span> разработка{" "}
                 <span className="text-signal">→</span> AI
@@ -51,20 +56,16 @@ export default function About() {
             </div>
           </div>
 
-          <figure className="relative m-0 w-full overflow-hidden aspect-[3/4]">
+          {/* Editorial portrait — same file and treatment on mobile and desktop: large vertical crop, no card, no frame, no caption, no color treatment. */}
+          <figure className="relative m-0 w-full overflow-hidden aspect-[2/3]">
             <Image
-              src="/images/danil-mironovich-work.webp"
-              alt="Данил Миронович — системы обучения сотрудников"
-              width={1009}
-              height={806}
+              src="/images/danil-mironovich-editorial.webp"
+              alt="Данил Миронович"
+              width={853}
+              height={1280}
               sizes="(max-width: 900px) 100vw, 40vw"
-              className="block h-full w-full object-cover object-[22%_30%] grayscale"
+              className="block h-full w-full object-cover"
             />
-            <div aria-hidden className="absolute inset-0 bg-maroon/35 mix-blend-multiply" />
-            <figcaption className="absolute bottom-5 left-5 flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-cream">
-              <span aria-hidden className="h-px w-6 bg-signal" />
-              В работе
-            </figcaption>
           </figure>
         </div>
       </div>

@@ -52,7 +52,13 @@ export default function Hero() {
           </div>
         </div>
 
-        <ul className="m-0 flex list-none flex-wrap gap-x-5 gap-y-2 border-t border-cream/10 p-0 pt-6 text-[11px] uppercase tracking-[0.16em] text-stone/80 min-[560px]:gap-x-8">
+        {/* Mobile: trimmed to 3 directions so the tag row doesn't wrap into a paragraph. */}
+        <ul className="m-0 flex list-none flex-wrap gap-x-5 gap-y-2 border-t border-cream/10 p-0 pt-6 text-[11px] uppercase tracking-[0.16em] text-stone/80 min-[640px]:hidden">
+          <li>Адаптация</li>
+          <li>База знаний</li>
+          <li>Контроль</li>
+        </ul>
+        <ul className="m-0 hidden list-none flex-wrap gap-x-8 gap-y-2 border-t border-cream/10 p-0 pt-6 text-[11px] uppercase tracking-[0.16em] text-stone/80 min-[640px]:flex">
           <li>Адаптация</li>
           <li>Корпоративная академия</li>
           <li>База знаний</li>

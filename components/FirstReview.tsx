@@ -7,7 +7,8 @@ const items = [
 
 export default function FirstReview() {
   return (
-    <section id="first-review" className="bg-cream px-[22px] py-16 min-[560px]:py-24">
+    // Mobile: merged into Process ("Как начинаем") to avoid repeating the same idea twice.
+    <section id="first-review" className="hidden bg-cream px-[22px] py-16 min-[640px]:block min-[560px]:py-24">
       <div className="mx-auto max-w-[1080px]">
         <div className="mb-10 flex items-end justify-between gap-6 min-[560px]:mb-14">
           <p className="m-0 text-[11px] uppercase tracking-[0.22em] text-maroon">07 / Первый разбор</p>

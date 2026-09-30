@@ -33,6 +33,33 @@ const items: [string, string][] = [
   ],
 ];
 
+// Mobile shows the 4 most common questions first; the rest sit behind a native
+// <details> disclosure ("Показать все вопросы") — no JS needed. Original
+// numbers are kept so a question means the same thing on every breakpoint.
+const primaryIdx = [0, 1, 5, 7];
+const secondaryIdx = [2, 3, 4, 6];
+
+const questionClass =
+  "flex-1 text-balance text-[clamp(17px,3.2vw,21px)] leading-[1.35] tracking-[-0.015em] text-graphite";
+const numberClass = "flex-none pt-1 font-display text-[13px] text-maroon";
+const plusClass =
+  "flex-none pt-0.5 font-display text-xl leading-none text-maroon transition-transform duration-200 group-open:rotate-45";
+const answerClass = "m-0 mb-7 max-w-[60ch] text-pretty text-[15px] leading-[1.6] text-graphite/60 min-[560px]:pl-[52px]";
+
+function FaqItem({ i }: { i: number }) {
+  const [q, a] = items[i];
+  return (
+    <details className="group border-b border-graphite/15">
+      <summary className="flex cursor-pointer list-none items-start gap-5 py-7 [&::-webkit-details-marker]:hidden">
+        <span className={numberClass}>{String(i + 1).padStart(2, "0")} /</span>
+        <span className={questionClass}>{q}</span>
+        <span className={plusClass}>+</span>
+      </summary>
+      <p className={answerClass}>{a}</p>
+    </details>
+  );
+}
+
 export default function Faq() {
   return (
     <section id="faq" className="bg-cream px-[22px] pb-16 pt-16 min-[560px]:pt-24">
@@ -48,23 +75,23 @@ export default function Faq() {
           Вопросы
         </h2>
 
-        <div className="flex flex-col border-t border-graphite/15">
-          {items.map(([q, a], i) => (
-            <details key={q} className="group border-b border-graphite/15">
-              <summary className="flex cursor-pointer list-none items-start gap-5 py-7 [&::-webkit-details-marker]:hidden">
-                <span className="flex-none pt-1 font-display text-[13px] text-maroon">{String(i + 1).padStart(2, "0")} /</span>
-                <span className="flex-1 text-balance text-[clamp(17px,3.2vw,21px)] leading-[1.35] tracking-[-0.015em] text-graphite">
-                  {q}
-                </span>
-                <span className="flex-none pt-0.5 font-display text-xl leading-none text-maroon transition-transform duration-200 group-open:rotate-45">
-                  +
-                </span>
-              </summary>
-              <p className="m-0 mb-7 max-w-[60ch] text-pretty text-[15px] leading-[1.6] text-graphite/60 min-[560px]:pl-[52px]">
-                {a}
-              </p>
-            </details>
-          ))}
+        {/* Mobile: 4 questions, then a disclosure for the rest. */}
+        <div className="flex flex-col border-t border-graphite/15 min-[640px]:hidden">
+          {primaryIdx.map((i) => <FaqItem key={i} i={i} />)}
+          <details className="group border-b border-graphite/15">
+            <summary className="flex cursor-pointer list-none items-center gap-5 py-6 text-[14px] uppercase tracking-[0.08em] text-maroon [&::-webkit-details-marker]:hidden">
+              <span>Показать все вопросы</span>
+              <span className="font-display text-base leading-none transition-transform duration-200 group-open:rotate-45">+</span>
+            </summary>
+            <div className="flex flex-col">
+              {secondaryIdx.map((i) => <FaqItem key={i} i={i} />)}
+            </div>
+          </details>
+        </div>
+
+        {/* Desktop: all 8, flat. */}
+        <div className="hidden flex-col border-t border-graphite/15 min-[640px]:flex">
+          {items.map((_, i) => <FaqItem key={i} i={i} />)}
         </div>
       </div>
     </section>

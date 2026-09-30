@@ -9,6 +9,11 @@ const steps = [
   },
 ];
 
+// Mobile: same two labels, a much shorter problem statement (2–3 lines) — the
+// solution line is already short enough to reuse as-is.
+const problemShort =
+  "Обучение, база знаний и контроль были разрознены и держались на ручной передаче знаний.";
+
 const inside = [
   "адаптация новичков",
   "обучение",
@@ -38,28 +43,20 @@ export default function CaseStudy() {
           </p>
         </div>
 
-        <div className="grid gap-12 min-[900px]:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] min-[900px]:gap-20">
-          <div className="flex flex-col gap-8">
-            <h2 className="m-0 max-w-[18ch] text-balance font-display text-[clamp(27px,5vw,44px)] font-extrabold leading-[1.1] tracking-[-0.02em] text-cream">
-              Как разрозненные процессы обучения превращаются в единую систему
-            </h2>
+        {/*
+          Mobile reading order: heading → stats/proof → problem/solution.
+          Desktop keeps the original two-column layout (text left, stats right).
+          Both are the same 3 DOM blocks — grid-template-areas just remaps them
+          at min-900px, so nothing is duplicated.
+        */}
+        <div
+          className="grid gap-y-10 min-[900px]:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] min-[900px]:gap-x-20 min-[900px]:gap-y-8 min-[900px]:[grid-template-areas:'heading_stats'_'rest_stats']"
+        >
+          <h2 className="m-0 max-w-[18ch] text-balance font-display text-[clamp(27px,5vw,44px)] font-extrabold leading-[1.1] tracking-[-0.02em] text-cream min-[900px]:[grid-area:heading]">
+            Как разрозненные процессы обучения превращаются в единую систему
+          </h2>
 
-            <div className="flex flex-col gap-6 border-t border-cream/15 pt-6">
-              {steps.map((s) => (
-                <div key={s.label}>
-                  <p className="m-0 mb-2 text-[11px] uppercase tracking-[0.18em] text-stone">{s.label}</p>
-                  <p className="m-0 text-pretty text-[15px] leading-[1.6] text-cream/80">{s.body}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex flex-col gap-3 border-t border-cream/15 pt-6">
-              <p className="m-0 text-[11px] uppercase tracking-[0.18em] text-stone">Внутри системы</p>
-              <p className="m-0 max-w-[44ch] text-pretty text-[14px] leading-[1.9] text-cream/65">{inside.join(" — ")}</p>
-            </div>
-          </div>
-
-          <div className="flex flex-col">
+          <div className="flex flex-col min-[900px]:[grid-area:stats]">
             <p className="m-0 mb-6 text-[11px] uppercase tracking-[0.22em] text-stone">Параметры спроектированной системы</p>
 
             <div className="grid grid-cols-1 border-t border-cream/15 min-[560px]:grid-cols-2">
@@ -85,6 +82,35 @@ export default function CaseStudy() {
               <span>Тест</span>
               <span aria-hidden className="text-signal">→</span>
               <span>Аттестация</span>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-6 border-t border-cream/15 pt-6 min-[900px]:[grid-area:rest]">
+            {/* Mobile: shortened problem, same short solution — no "Внутри системы" (it repeats Services). */}
+            <div className="flex flex-col gap-6 min-[640px]:hidden">
+              <div>
+                <p className="m-0 mb-2 text-[11px] uppercase tracking-[0.18em] text-stone">Проблема</p>
+                <p className="m-0 text-pretty text-[15px] leading-[1.6] text-cream/80">{problemShort}</p>
+              </div>
+              <div>
+                <p className="m-0 mb-2 text-[11px] uppercase tracking-[0.18em] text-stone">Решение</p>
+                <p className="m-0 text-pretty text-[15px] leading-[1.6] text-cream/80">{steps[1].body}</p>
+              </div>
+            </div>
+
+            {/* Desktop/tablet: full problem/solution + "Внутри системы". */}
+            <div className="hidden flex-col gap-6 min-[640px]:flex">
+              {steps.map((s) => (
+                <div key={s.label}>
+                  <p className="m-0 mb-2 text-[11px] uppercase tracking-[0.18em] text-stone">{s.label}</p>
+                  <p className="m-0 text-pretty text-[15px] leading-[1.6] text-cream/80">{s.body}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="hidden flex-col gap-3 border-t border-cream/15 pt-6 min-[640px]:flex">
+              <p className="m-0 text-[11px] uppercase tracking-[0.18em] text-stone">Внутри системы</p>
+              <p className="m-0 max-w-[44ch] text-pretty text-[14px] leading-[1.9] text-cream/65">{inside.join(" — ")}</p>
             </div>
           </div>
         </div>

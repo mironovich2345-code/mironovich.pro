@@ -17,6 +17,13 @@ const rows: [string, string][] = [
   ],
 ];
 
+// Mobile keeps 3 of the 4 pairs, shortened to a single line each side.
+const mobileRows: [string, string][] = [
+  ["Руководитель каждый раз повторяет обучение.", "Сотрудник самостоятельно проходит единый маршрут."],
+  ["Знания находятся в чатах, документах и головах сотрудников.", "Есть единая актуальная база знаний."],
+  ["«Мы его обучили», но результат неизвестен.", "Есть тестирование, аттестация и история результатов."],
+];
+
 export default function Shift() {
   return (
     <section id="shift" className="bg-cream px-[22px] py-16 min-[560px]:py-24">
@@ -32,7 +39,23 @@ export default function Shift() {
           Обучение перестаёт быть задачей конкретного руководителя
         </h2>
 
-        <div className="flex flex-col border-t border-graphite/15">
+        {/* Mobile: 3 pairs, shortened — full 4 pairs stay for desktop. */}
+        <div className="flex flex-col border-t border-graphite/15 min-[640px]:hidden">
+          {mobileRows.map(([now, sys], i) => (
+            <div key={i} className="grid grid-cols-1 items-start gap-3 border-b border-graphite/15 py-7">
+              <div>
+                <p className="m-0 mb-2.5 text-[11px] uppercase tracking-[0.18em] text-graphite/45">Сейчас</p>
+                <p className="m-0 max-w-[42ch] text-pretty text-[15px] leading-[1.6] text-graphite/60">{now}</p>
+              </div>
+              <div>
+                <p className="m-0 mb-2.5 text-[11px] uppercase tracking-[0.18em] text-maroon">Система</p>
+                <p className="m-0 max-w-[42ch] text-pretty text-[16px] font-medium leading-[1.6] text-graphite">{sys}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="hidden flex-col border-t border-graphite/15 min-[640px]:flex">
           {rows.map(([now, sys], i) => (
             <div
               key={i}
