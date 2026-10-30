@@ -40,18 +40,29 @@ export const homeFaq: [string, string][] = [
   ],
 ];
 
-export default function Faq() {
+export default function Faq({
+  items = homeFaq,
+  index = "07",
+  title = "Частые вопросы",
+  continued = true,
+}: {
+  items?: [string, string][];
+  index?: string;
+  title?: string;
+  /** true when the previous section is also cream: a rule replaces the top padding */
+  continued?: boolean;
+}) {
   return (
-    <section id="faq" className="bg-cream px-[22px] pb-16 pt-4 min-[560px]:pb-24">
-      <div className="mx-auto max-w-[1080px] border-t border-graphite/15 pt-12 min-[560px]:pt-16">
-        <SectionLabel index="07" label="Вопросы" note="Если вопроса нет — задайте его в форме" tone="light" />
+    <section id="faq" className={"bg-cream px-[22px] pb-16 min-[560px]:pb-24 " + (continued ? "pt-4" : "pt-16 min-[560px]:pt-24")}>
+      <div className={"mx-auto max-w-[1080px] " + (continued ? "border-t border-graphite/15 pt-12 min-[560px]:pt-16" : "")}>
+        <SectionLabel index={index} label="Вопросы" note="Если вопроса нет — задайте его в форме" tone="light" />
 
         <h2 className="m-0 mb-10 font-display text-[clamp(30px,5.6vw,52px)] font-extrabold uppercase leading-[1.03] tracking-[-0.02em] text-graphite min-[560px]:mb-14">
-          Частые вопросы
+          {title}
         </h2>
 
         <div className="flex flex-col border-t border-graphite/15">
-          {homeFaq.map(([q, a], i) => (
+          {items.map(([q, a], i) => (
             <details key={q} className="group border-b border-graphite/15">
               <summary className="flex min-h-[64px] cursor-pointer list-none items-start gap-5 py-6 [&::-webkit-details-marker]:hidden">
                 <span aria-hidden className="flex-none pt-1 font-display text-[13px] text-maroon">

@@ -16,7 +16,7 @@ export type AnalyticsEvent =
 
 export type CtaLocation =
   | "hero" | "sticky" | "header" | "about" | "article" | "blog"
-  | "problems" | "services" | "diagnostics" | "not_found";
+  | "problems" | "services" | "diagnostics" | "not_found" | "service_page" | "services_index";
 
 /** Only non-identifying, low-cardinality values belong in here. */
 export type EventParams = {

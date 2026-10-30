@@ -1,6 +1,8 @@
 import SectionLabel from "./SectionLabel";
 
-const scenarios: { steps: string[]; change: string }[] = [
+export type Scenario = { steps: string[]; change: string };
+
+const homeScenarios: Scenario[] = [
   {
     steps: ["Данные из нескольких источников", "Единая панель руководителя"],
     change: "Цифры собираются сами: руководитель смотрит, а не сводит.",
@@ -19,24 +21,31 @@ const scenarios: { steps: string[]; change: string }[] = [
   },
 ];
 
-export default function Scenarios() {
+export default function Scenarios({
+  items = homeScenarios,
+  index = "03",
+  title = "Как это может выглядеть",
+  intro = "Это типовые схемы решений, а не описания клиентских проектов. Конкретная схема складывается после разбора вашего процесса.",
+}: {
+  items?: Scenario[];
+  index?: string;
+  title?: string;
+  intro?: string;
+}) {
   return (
     <section id="scenarios" className="bg-maroon px-[22px] py-16 min-[560px]:py-24">
       <div className="mx-auto max-w-[1080px]">
-        <SectionLabel index="03" label="Сценарии" note="Типовые схемы решений" tone="maroon" />
+        <SectionLabel index={index} label="Сценарии" note="Типовые схемы решений" tone="maroon" />
 
         <div className="mb-12 grid gap-6 min-[860px]:mb-16 min-[860px]:grid-cols-[1fr_1fr] min-[860px]:items-end min-[860px]:gap-16">
           <h2 className="m-0 max-w-[16ch] text-balance font-display text-[clamp(30px,5.8vw,54px)] font-extrabold uppercase leading-[1.03] tracking-[-0.02em] text-cream">
-            Как это может выглядеть
+            {title}
           </h2>
-          <p className="m-0 max-w-[46ch] text-pretty text-[15px] leading-[1.6] text-cream/75">
-            Это типовые схемы решений, а не описания клиентских проектов. Конкретная схема складывается после
-            разбора вашего процесса.
-          </p>
+          <p className="m-0 max-w-[46ch] text-pretty text-[15px] leading-[1.6] text-cream/75">{intro}</p>
         </div>
 
         <ol className="m-0 grid list-none grid-cols-1 border-t border-cream/15 p-0 min-[860px]:grid-cols-2">
-          {scenarios.map((s, i) => (
+          {items.map((s, i) => (
             <li
               key={s.change}
               className={

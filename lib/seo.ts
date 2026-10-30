@@ -51,3 +51,16 @@ export function pageMetadata({
     ...(noindex ? { robots: { index: false, follow: true } } : {}),
   };
 }
+
+/** schema.org BreadcrumbList for the same trail the page shows. */
+export function breadcrumbList(items: { name: string; href: string }[]) {
+  return {
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((c, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: c.name,
+      item: siteUrl + (c.href === "/" ? "/" : c.href),
+    })),
+  };
+}
