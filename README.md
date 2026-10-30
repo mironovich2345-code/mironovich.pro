@@ -97,7 +97,10 @@ app/
   globals.css           резеты, focus-visible, scroll-padding под липкую шапку, reduced-motion
   services/page.tsx     /services — каталог трёх направлений (CollectionPage JSON-LD)
   services/[slug]/      /services/automation|apps|training — страницы услуг (Service, FAQPage, BreadcrumbList)
-  about/page.tsx        /about — ProfilePage + Person JSON-LD
+  about/page.tsx        /about — путь, подход, направления; ProfilePage + Person JSON-LD
+  contact/page.tsx      /contact — форма, следующие шаги, только подтверждённые контакты (ContactPage)
+  projects/page.tsx     /projects — портфолио по статусам; пока список пуст: noindex, нет в sitemap и меню
+  projects/[slug]/      страницы кейсов — только для проектов с caseStudy
   blog/page.tsx         /blog — список опубликованных статей (Blog JSON-LD)
   blog/[slug]/page.tsx  /blog/<slug> — статья, BlogPosting JSON-LD, canonical, OG
   privacy/page.tsx      политика обработки данных (noindex, follow)
@@ -113,6 +116,7 @@ components/
   Hero · Problems · Services · Scenarios · Diagnostics · About · Process · Faq
   ContactSection (+LeadForm, ConsentDialog) · StickyCta · SectionLabel
   ServicePage — шаблон страницы услуги · Breadcrumbs
+  ProjectCard · ProjectsByStatus · HomeProjects — портфолио
   SiteHeader (+ServicesMenu, MobileMenu) · Footer — подключены в layout.tsx, видны на всех страницах
   Markdown — рендер статей блога (серверный компонент)
   StructuredData · Analytics · CtaLink
@@ -122,6 +126,7 @@ config/
 content/
   blog/                 статьи блога — по одному .md на статью (см. content/blog/README.md)
   services/             тексты страниц услуг: порядок блоков, задачи, уникальный блок, FAQ, стоимость
+  projects.ts           портфолио: статус, задача, что сделано; добавлять только с подтверждением владельца
 lib/
   analytics.ts          track(), список событий, ID провайдеров из env
   attribution.ts        first-touch UTM + referrer + landing page
@@ -144,8 +149,8 @@ public/
 Порядок секций главной: Hero → 01 Где теряется время → 02 Направления →
 03 Сценарии → 04 С чего начать (бесплатное обсуждение / платный аудит) →
 05 Обо мне → 06 Как я работаю → 07 Вопросы → 08 Заявка → футер.
-Блок проектов появится между 04 и 05, когда будет подтверждённый материал
-(`projectsPublished` в config/site.ts).
+Блок проектов появится между 04 и 05, как только в content/projects.ts будет
+хотя бы одна запись (`projectsPublished` в config/site.ts считается автоматически).
 
 ## Блог
 
