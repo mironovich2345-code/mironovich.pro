@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/config/site";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Политика обработки персональных данных",
-  robots: { index: false, follow: true },
-  alternates: { canonical: "/privacy" },
-};
+  description: "Какие данные собирает сайт mironovich.pro, зачем они нужны и как с ними обращаются.",
+  path: "/privacy",
+  absoluteTitle: false,
+  noindex: true,
+});
 
 const blocks: { heading: string; items: string[] }[] = [
   {
@@ -41,33 +44,33 @@ const blocks: { heading: string; items: string[] }[] = [
 
 export default function Page() {
   return (
-    <main className="mx-auto max-w-[720px] px-[22px] py-16">
-      <h1 className="m-0 mb-6 text-[clamp(26px,6vw,40px)] font-medium leading-[1.12] tracking-[-0.03em]">
+    <main id="main" className="mx-auto max-w-[720px] px-[22px] py-16">
+      <h1 className="m-0 mb-6 font-display text-[clamp(28px,6vw,44px)] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-cream">
         Политика обработки персональных данных
       </h1>
-      <p className="m-0 mb-10 text-[15px] leading-[1.7] text-neutral-400">Документ описывает, какие данные собирает сайт, зачем они нужны и как с ними обращаются.</p>
+      <p className="m-0 mb-10 text-[15px] leading-[1.7] text-stone">Документ описывает, какие данные собирает сайт, зачем они нужны и как с ними обращаются.</p>
 
       <div className="flex flex-col gap-8">
         {blocks.map((b) => (
           <section key={b.heading}>
-            <h2 className="m-0 mb-3 text-[19px] font-medium tracking-[-0.02em]">{b.heading}</h2>
-            <div className="flex flex-col gap-3 text-[15px] leading-[1.7] text-neutral-400">
+            <h2 className="m-0 mb-3 text-[19px] font-medium tracking-[-0.01em] text-cream">{b.heading}</h2>
+            <div className="flex flex-col gap-3 text-[15px] leading-[1.7] text-stone">
               {b.items.map((t) => <p key={t} className="m-0">{t}</p>)}
             </div>
           </section>
         ))}
       </div>
 
-      <p className="m-0 mt-10 text-[13px] text-neutral-500">
+      <p className="m-0 mt-10 text-[13px] text-stone">
         Вопросы по обработке данных — в Telegram:{" "}
-        <a href={site.telegram} target="_blank" rel="noopener noreferrer" className="text-accent-300 underline underline-offset-[3px]">
+        <a href={site.telegram} target="_blank" rel="noopener noreferrer" className="text-cream underline hover:text-signal underline-offset-[3px]">
           {site.telegram.replace("https://", "")}
         </a>
       </p>
 
       <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-[14px]">
-        <Link href="/" className="text-accent-300 underline underline-offset-[3px]">← На главную</Link>
-        <Link href="/consent" className="text-accent-300 underline underline-offset-[3px]">Согласие на обработку данных →</Link>
+        <Link href="/" className="text-cream underline hover:text-signal underline-offset-[3px]">← На главную</Link>
+        <Link href="/consent" className="text-cream underline hover:text-signal underline-offset-[3px]">Согласие на обработку данных →</Link>
       </div>
     </main>
   );

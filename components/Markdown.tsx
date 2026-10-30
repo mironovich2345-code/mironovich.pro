@@ -114,7 +114,7 @@ function renderBlock(b: Block, i: number): ReactNode {
             />
           </a>
           {b.caption && (
-            <figcaption className="mt-3 text-[11px] uppercase tracking-[0.1em] text-graphite/50">{b.caption}</figcaption>
+            <figcaption className="mt-3 text-[11px] uppercase tracking-[0.1em] text-graphite/65">{b.caption}</figcaption>
           )}
         </figure>
       );

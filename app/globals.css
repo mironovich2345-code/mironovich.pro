@@ -4,17 +4,19 @@
 
 :root { color-scheme: dark; }
 
-html { scroll-behavior: smooth; }
+/* the sticky header covers the top of anchored sections without this */
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 
 body {
-  background: #161826;
-  color: #e9e9ed;
+  background: #0E0E11;
+  color: #F2EFE8;
   -webkit-font-smoothing: antialiased;
 }
 
-::selection { background: #423a6a; color: #f5f4ff; }
+::selection { background: #D92D2D; color: #ffffff; }
 
-:focus-visible { outline: 2px solid #9184d9; outline-offset: 2px; }
+/* signal red keeps ≥3:1 against both graphite (4.0) and cream (4.2) */
+:focus-visible { outline: 2px solid #D92D2D; outline-offset: 3px; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }

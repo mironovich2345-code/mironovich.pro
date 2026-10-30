@@ -2,30 +2,16 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import CtaLink from "@/components/CtaLink";
-import { site, siteUrl } from "@/config/site";
+import { contactHref, site, siteUrl } from "@/config/site";
+import { pageMetadata } from "@/lib/seo";
 import { formatDate, getPublishedPosts, readingTimeLabel } from "@/lib/blog";
 import { jsonLd } from "@/lib/jsonld";
 
-const title = "Блог об обучении и адаптации сотрудников | " + site.name;
+const title = "Блог об автоматизации, приложениях и обучении — MIRONOVICH";
 const description =
-  "Разбираю адаптацию сотрудников, корпоративное обучение, базы знаний, автоматизацию и AI без лишней теории. Блог Данила Мироновича.";
+  "Практические разборы автоматизации процессов, разработки приложений, ИИ для бизнеса и обучения сотрудников. Без лишней теории.";
 
-export const metadata: Metadata = {
-  title: { absolute: title },
-  description,
-  alternates: { canonical: siteUrl + "/blog" },
-  openGraph: {
-    type: "website",
-    locale: "ru_RU",
-    url: siteUrl + "/blog",
-    siteName: site.name,
-    title,
-    description,
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: site.name, type: "image/png" }],
-  },
-  twitter: { card: "summary_large_image", title, description, images: ["/og.png"] },
-  robots: { index: true, follow: true },
-};
+export const metadata: Metadata = pageMetadata({ title, description, path: "/blog" });
 
 export default function BlogPage() {
   const posts = getPublishedPosts();
@@ -56,7 +42,7 @@ export default function BlogPage() {
 
   return (
     <>
-      <main>
+      <main id="main">
         {/* Hero */}
         <section className="relative overflow-hidden bg-graphite px-[22px] py-16 min-[560px]:py-24">
           <p
@@ -119,7 +105,7 @@ export default function BlogPage() {
                     <p className="m-0 mb-6 max-w-[58ch] text-pretty text-[16px] leading-[1.7] text-graphite/70">
                       {featured.excerpt}
                     </p>
-                    <p className="m-0 mb-6 text-[13px] text-graphite/50">
+                    <p className="m-0 mb-6 text-[13px] text-graphite/65">
                       <time dateTime={featured.publishDate}>{formatDate(featured.publishDate)}</time>
                       <span aria-hidden> · </span>
                       {readingTimeLabel(featured.readingTime)}
@@ -171,7 +157,7 @@ export default function BlogPage() {
                               </Link>
                             </h3>
                             <p className="m-0 mb-3 max-w-[56ch] text-pretty text-[15px] leading-[1.6] text-stone">{p.excerpt}</p>
-                            <p className="m-0 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-stone/70">
+                            <p className="m-0 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-stone">
                               <span>
                                 <time dateTime={p.publishDate}>{formatDate(p.publishDate)}</time>
                                 <span aria-hidden> · </span>
@@ -200,16 +186,16 @@ export default function BlogPage() {
                 <p className="m-0 mb-2 font-display text-[clamp(20px,4vw,24px)] font-extrabold uppercase leading-[1.2] text-graphite">
                   Здесь появятся статьи.
                 </p>
-                <p className="m-0 mb-5 text-pretty text-[15px] leading-[1.65] text-graphite/60">
-                  Опубликованных материалов пока нет. Если нужна система обучения или адаптации сотрудников, можно не
-                  ждать статей и просто описать задачу.
+                <p className="m-0 mb-5 text-pretty text-[15px] leading-[1.65] text-graphite/70">
+                  Опубликованных материалов пока нет. Если есть задача по автоматизации, разработке или обучению сотрудников, можно
+                  не ждать статей и просто её описать.
                 </p>
                 <CtaLink
-                  href="/#contact"
+                  href={contactHref}
                   location="blog"
                   className="text-[15px] uppercase tracking-[0.04em] text-maroon underline underline-offset-4 hover:text-signal"
                 >
-                  Обсудить систему обучения →
+                  Обсудить задачу бесплатно →
                 </CtaLink>
               </div>
             </div>
@@ -217,7 +203,7 @@ export default function BlogPage() {
         )}
 
         <section className="bg-cream px-[22px] py-10">
-          <p className="m-0 mx-auto max-w-[1080px] text-[14px] leading-[1.6] text-graphite/60">
+          <p className="m-0 mx-auto max-w-[1080px] text-[14px] leading-[1.6] text-graphite/70">
             Блог ведёт {site.person}.{" "}
             <Link href="/about" className="whitespace-nowrap text-maroon underline underline-offset-4 hover:text-signal">
               Обо мне →

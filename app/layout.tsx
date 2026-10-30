@@ -22,6 +22,8 @@ const displayFont = Roboto_Condensed({
   variable: "--font-display",
 });
 
+// Site-wide defaults only. Canonical, URL, title and description are set per page
+// (lib/seo.ts) so error and utility pages never inherit the homepage's values.
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
@@ -30,34 +32,14 @@ export const metadata: Metadata = {
   },
   description: site.description,
   applicationName: site.name,
-  authors: [{ name: site.name, url: siteUrl }],
-  keywords: [
-    "система обучения сотрудников", "обучение сотрудников", "адаптация сотрудников",
-    "онбординг сотрудников", "корпоративная академия", "база знаний сотрудников",
-    "аттестация сотрудников", "автоматизация обучения сотрудников",
-  ],
-  alternates: { canonical: siteUrl },
-  openGraph: {
-    type: "website",
-    locale: "ru_RU",
-    url: siteUrl,
-    siteName: site.name,
-    title: site.title,
-    description: site.description,
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: site.name + " — системы обучения сотрудников для бизнеса", type: "image/png" }],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: site.title,
-    description: site.description,
-    images: ["/og.png"],
-  },
+  authors: [{ name: site.person, url: siteUrl + "/about" }],
+  openGraph: { siteName: site.name, locale: "ru_RU", type: "website" },
+  twitter: { card: "summary_large_image" },
   manifest: "/manifest.webmanifest",
-  robots: { index: true, follow: true },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#161826",
+  themeColor: "#0E0E11",
   width: "device-width",
   initialScale: 1,
 };
@@ -66,6 +48,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ru" className={inter.variable + " " + displayFont.variable}>
       <body className="font-sans antialiased">
+        <a
+          href="#main"
+          className="sr-only z-[70] bg-signal px-4 py-3 text-white focus:not-sr-only focus:fixed focus:left-3 focus:top-3"
+        >
+          Перейти к содержанию
+        </a>
         <SiteHeader />
         {children}
         <Footer />

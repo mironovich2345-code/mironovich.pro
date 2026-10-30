@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import CtaLink from "@/components/CtaLink";
 import Markdown from "@/components/Markdown";
-import { site, siteUrl } from "@/config/site";
+import { contactHref, site, siteUrl } from "@/config/site";
 import { formatDate, getPostBySlug, getPublishedPosts, getRoutablePosts, readingTimeLabel } from "@/lib/blog";
 import { jsonLd } from "@/lib/jsonld";
 
@@ -109,7 +109,7 @@ export default async function PostPage({ params }: Props) {
 
   return (
     <>
-      <main>
+      <main id="main">
         {/* Hero */}
         <section className="bg-graphite px-[22px] pb-14 pt-10 min-[560px]:pb-20 min-[560px]:pt-14">
           <div className="mx-auto max-w-[780px]">
@@ -177,7 +177,7 @@ export default async function PostPage({ params }: Props) {
             <div>
               <p className="m-0 text-[11px] uppercase tracking-[0.18em] text-maroon">01 / Автор</p>
               <p className="m-0 mt-2 text-[15px] text-graphite">{site.person}</p>
-              <p className="m-0 mt-1 text-[11px] uppercase tracking-[0.12em] text-graphite/50">{site.tagline}</p>
+              <p className="m-0 mt-1 text-[11px] uppercase tracking-[0.12em] text-graphite/65">{site.tagline}</p>
             </div>
             <Link href="/about" className="whitespace-nowrap text-[14px] uppercase tracking-[0.06em] text-maroon underline underline-offset-4 hover:text-signal">
               Обо мне →
@@ -189,17 +189,17 @@ export default async function PostPage({ params }: Props) {
         <section className="bg-maroon px-[22px] py-16 text-center min-[560px]:py-20">
           <div className="mx-auto max-w-[640px]">
             <h2 className="m-0 mb-5 text-balance font-display text-[clamp(28px,6vw,48px)] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-cream">
-              Есть похожая проблема в компании?
+              Есть похожая задача в компании?
             </h2>
             <p className="m-0 mb-8 text-pretty text-[15px] leading-[1.6] text-stone">
-              Можно начать с разбора текущего процесса обучения.
+              Первичное обсуждение бесплатно: разберёмся, что происходит и с чего разумно начать.
             </p>
             <CtaLink
-              href="/#contact"
+              href={contactHref}
               location="article"
               className="inline-flex min-h-[54px] items-center justify-center bg-signal px-9 text-base font-medium uppercase tracking-[0.04em] text-white transition-colors hover:bg-[#b82323]"
             >
-              Разобрать обучение →
+              Обсудить задачу бесплатно →
             </CtaLink>
           </div>
         </section>
@@ -216,7 +216,7 @@ export default async function PostPage({ params }: Props) {
                     href={"/blog/" + p.slug}
                     className="group flex flex-col gap-1.5 border-b border-graphite/15 py-6 transition-colors"
                   >
-                    <span className="text-[11px] uppercase tracking-[0.18em] text-graphite/50">{p.category}</span>
+                    <span className="text-[11px] uppercase tracking-[0.18em] text-graphite/65">{p.category}</span>
                     <span className="max-w-[48ch] text-balance font-display text-[clamp(19px,3.4vw,24px)] font-extrabold uppercase leading-[1.15] tracking-[-0.01em] text-graphite transition-colors group-hover:text-maroon">
                       {p.title}
                     </span>

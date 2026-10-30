@@ -1,30 +1,16 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import CtaLink from "@/components/CtaLink";
-import { site, siteUrl, socialProfiles } from "@/config/site";
+import { contactHref, site, siteUrl, socialProfiles } from "@/config/site";
+import { pageMetadata } from "@/lib/seo";
 import { jsonLd } from "@/lib/jsonld";
 
-const title = site.person + " — системы обучения сотрудников | " + site.name;
+const title = "Данил Миронович — автоматизация и разработка для бизнеса";
 const description =
-  "Данил Миронович — системы обучения и адаптации сотрудников, корпоративные базы знаний, автоматизация и AI для бизнеса.";
+  "От операционного управления к разработке: автоматизирую процессы и создаю цифровые инструменты, понимая задачи руководителя изнутри.";
 
 export const metadata: Metadata = {
-  title: { absolute: title },
-  description,
-  alternates: { canonical: siteUrl + "/about" },
-  openGraph: {
-    type: "profile",
-    firstName: "Данил",
-    lastName: "Миронович",
-    locale: "ru_RU",
-    url: siteUrl + "/about",
-    siteName: site.name,
-    title,
-    description,
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: site.name, type: "image/png" }],
-  },
-  twitter: { card: "summary_large_image", title, description, images: ["/og.png"] },
-  robots: { index: true, follow: true },
+  ...pageMetadata({ title, description, path: "/about", type: "profile" }),
 };
 
 // 03 / Чем занимаюсь сейчас — short route, no descriptions, two columns.
@@ -70,17 +56,15 @@ export default function AboutPage() {
       mainEntityOfPage: siteUrl + "/about",
       jobTitle: site.jobTitle,
       description:
-        "Занимается системами обучения и адаптации сотрудников. Пришёл к ним из операционного управления фитнес-бизнесом.",
-      image: siteUrl + "/images/danil-mironovich-main.webp",
+        "Автоматизирует бизнес-процессы, разрабатывает внутренние приложения и системы обучения сотрудников. Пришёл в разработку из операционного управления фитнес-бизнесом.",
+      image: siteUrl + "/images/danil-mironovich-editorial.webp",
       knowsAbout: [
-        "системы обучения сотрудников",
-        "адаптация сотрудников",
-        "корпоративное обучение",
-        "корпоративные академии",
-        "базы знаний",
-        "тестирование и аттестация сотрудников",
-        "автоматизация обучения",
-        "AI",
+        "автоматизация бизнес-процессов",
+        "интеграции CRM и API",
+        "внедрение ИИ в рабочие процессы",
+        "разработка внутренних приложений",
+        "системы обучения и адаптации сотрудников",
+        "операционное управление",
       ],
       ...(socialProfiles.length > 0 ? { sameAs: socialProfiles } : {}),
     },
@@ -88,7 +72,7 @@ export default function AboutPage() {
 
   return (
     <>
-      <main>
+      <main id="main">
         {/* 01 — Hero */}
         <section className="bg-graphite px-[22px] py-16 min-[560px]:py-24">
           <div className="mx-auto max-w-[1080px]">
@@ -234,11 +218,11 @@ export default function AboutPage() {
               Можно начать с разбора текущего процесса без готового технического задания.
             </p>
             <CtaLink
-              href="/#contact"
+              href={contactHref}
               location="about"
               className="inline-flex min-h-[56px] items-center justify-center bg-signal px-9 text-base font-medium uppercase tracking-[0.04em] text-white transition-colors hover:bg-[#b82323]"
             >
-              Разобрать систему обучения →
+              Обсудить задачу бесплатно →
             </CtaLink>
           </div>
         </section>

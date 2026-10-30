@@ -3,17 +3,17 @@ import { siteUrl } from "@/config/site";
 import { getPublishedPosts, lastBlogUpdate } from "@/lib/blog";
 
 // Published articles are added automatically. Drafts are never listed, and legal
-// pages are deliberately excluded — they are noindex, follow.
+// pages are deliberately excluded — they are noindex, follow. Static pages carry
+// no lastmod: a build timestamp would claim a change on every deploy.
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
   const blogUpdated = lastBlogUpdate();
 
   return [
-    { url: siteUrl + "/", lastModified, changeFrequency: "monthly", priority: 1 },
-    { url: siteUrl + "/about", lastModified, changeFrequency: "yearly", priority: 0.6 },
+    { url: siteUrl + "/", changeFrequency: "monthly", priority: 1 },
+    { url: siteUrl + "/about", changeFrequency: "yearly", priority: 0.6 },
     {
       url: siteUrl + "/blog",
-      lastModified: blogUpdated ? new Date(blogUpdated) : lastModified,
+      ...(blogUpdated ? { lastModified: new Date(blogUpdated) } : {}),
       changeFrequency: "weekly",
       priority: 0.7,
     },
