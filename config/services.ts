@@ -1,7 +1,6 @@
 /**
- * The three service directions — one source for the homepage, navigation, footer,
- * lead form and structured data. `href` points at the homepage section until the
- * dedicated /services/* pages ship; switching it here moves every link at once.
+ * The three service directions — one source for the homepage, /services catalogue,
+ * navigation, footer and structured data. Page content lives in content/services/.
  */
 
 export type ServiceSlug = "automation" | "apps" | "training";
@@ -22,6 +21,10 @@ export type Service = {
   href: string;
   /** schema.org Service.serviceType */
   serviceType: string;
+  /** /services catalogue: when this direction fits */
+  fit: string;
+  /** /services catalogue: three short example tasks */
+  examples: [string, string, string];
 };
 
 export const services: readonly Service[] = [
@@ -40,8 +43,10 @@ export const services: readonly Service[] = [
     ],
     gives:
       "Меньше ручных операций и ошибок при переносе данных. Руководитель получает актуальные цифры без ручной сводки.",
-    href: "/#automation",
+    href: "/services/automation",
     serviceType: "Автоматизация бизнес-процессов и внедрение ИИ",
+    fit: "Подходит, если команда тратит время на перенос данных, ручные отчёты и повторяющиеся операции.",
+    examples: ["Отчёт руководителю по расписанию", "Синхронизация CRM и таблиц", "Распределение заявок"],
   },
   {
     slug: "apps",
@@ -58,8 +63,10 @@ export const services: readonly Service[] = [
     ],
     gives:
       "Процесс в одном месте: роли, статусы, история. Прозрачность без постоянных вопросов «как там?».",
-    href: "/#apps",
+    href: "/services/apps",
     serviceType: "Разработка внутренних приложений для бизнеса",
+    fit: "Подходит, если процесс держится на таблицах и переписке, а готовые сервисы не закрывают специфику.",
+    examples: ["Личный кабинет клиента", "Панель руководителя", "Telegram Mini App"],
   },
   {
     slug: "training",
@@ -76,9 +83,16 @@ export const services: readonly Service[] = [
     ],
     gives:
       "Обучение по единому стандарту, которое не держится на одном человеке. Руководитель видит прогресс.",
-    href: "/#training",
+    href: "/services/training",
     serviceType: "Системы обучения и адаптации сотрудников",
+    fit: "Подходит, если обучение новичков зависит от конкретных людей и не даёт проверяемого результата.",
+    examples: ["Маршрут адаптации", "База знаний", "Аттестация сотрудников"],
   },
 ];
 
 export const serviceBySlug = (slug: ServiceSlug) => services.find((s) => s.slug === slug)!;
+
+export const isServiceSlug = (v: string): v is ServiceSlug => services.some((s) => s.slug === v);
+
+/** schema.org @id of a service — defined on its own page, referenced from the home and catalogue graphs. */
+export const serviceId = (siteUrl: string, slug: ServiceSlug) => siteUrl + "/services/" + slug + "#service";
