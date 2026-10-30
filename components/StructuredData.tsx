@@ -1,5 +1,5 @@
 import { homeFaq } from "./Faq";
-import { services } from "@/config/services";
+import { serviceId, services } from "@/config/services";
 import { site, siteUrl, socialProfiles } from "@/config/site";
 import { jsonLd } from "@/lib/jsonld";
 
@@ -53,7 +53,7 @@ export default function StructuredData() {
     },
     ...services.map((s) => ({
       "@type": "Service",
-      "@id": siteUrl + "/#service-" + s.slug,
+      "@id": serviceId(siteUrl, s.slug),
       name: s.title,
       serviceType: s.serviceType,
       description: s.lead + " " + s.gives,

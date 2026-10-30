@@ -1,9 +1,10 @@
+import Link from "next/link";
 import CtaLink from "./CtaLink";
 import SectionLabel from "./SectionLabel";
 import { services } from "@/config/services";
 import { contactHref } from "@/config/site";
 
-/** Three self-contained columns. Each carries the id the navigation links to. */
+/** Three self-contained columns, each leading to its service page. */
 export default function Services() {
   return (
     <section id="services" className="relative overflow-hidden bg-graphite px-[22px] py-16 min-[560px]:py-24">
@@ -18,10 +19,9 @@ export default function Services() {
           {services.map((s, i) => (
             <article
               key={s.slug}
-              id={s.slug}
               aria-labelledby={s.slug + "-title"}
               className={
-                "flex scroll-mt-20 flex-col gap-6 border-b border-cream/15 py-10 min-[900px]:border-b-0 min-[900px]:py-12 " +
+                "flex flex-col gap-6 border-b border-cream/15 py-10 min-[900px]:border-b-0 min-[900px]:py-12 " +
                 (i > 0 ? "min-[900px]:border-l min-[900px]:border-cream/15 min-[900px]:pl-8 " : "") +
                 (i < services.length - 1 ? "min-[900px]:pr-8" : "")
               }
@@ -60,13 +60,21 @@ export default function Services() {
                 <p className="m-0 text-pretty text-[14.5px] leading-[1.6] text-cream/80">{s.gives}</p>
               </div>
 
-              <CtaLink
-                href={contactHref}
-                location="services"
-                className="mt-auto inline-flex min-h-[44px] items-center text-[13px] uppercase tracking-[0.08em] text-cream underline decoration-cream/30 underline-offset-4 transition-colors hover:text-signal"
-              >
-                Обсудить задачу →
-              </CtaLink>
+              <div className="mt-auto flex flex-wrap items-center gap-x-6 gap-y-1">
+                <Link
+                  href={s.href}
+                  className="inline-flex min-h-[44px] items-center text-[13px] uppercase tracking-[0.08em] text-cream underline decoration-signal underline-offset-4 transition-colors hover:text-signal"
+                >
+                  Подробнее о направлении →
+                </Link>
+                <CtaLink
+                  href={contactHref}
+                  location="services"
+                  className="inline-flex min-h-[44px] items-center text-[13px] uppercase tracking-[0.08em] text-stone underline decoration-stone/40 underline-offset-4 transition-colors hover:text-cream"
+                >
+                  Обсудить задачу
+                </CtaLink>
+              </div>
             </article>
           ))}
         </div>

@@ -23,6 +23,7 @@ export default function Footer() {
               {serviceLinks.map((l) => (
                 <li key={l.href}><Link href={l.href} className={linkClass}>{l.label}</Link></li>
               ))}
+              <li><Link href="/services" className={linkClass}>Все услуги</Link></li>
             </ul>
           </nav>
 

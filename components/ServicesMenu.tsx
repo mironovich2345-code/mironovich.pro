@@ -72,6 +72,15 @@ export default function ServicesMenu({ links }: { links: NavLink[] }) {
               </Link>
             </li>
           ))}
+          <li className="mt-1 border-t border-cream/10 pt-1">
+            <Link
+              href="/services"
+              onClick={() => setOpen(false)}
+              className="flex min-h-[44px] items-center px-3 text-[13px] uppercase tracking-[0.08em] text-stone transition-colors hover:text-cream"
+            >
+              Все услуги →
+            </Link>
+          </li>
         </ul>
       )}
     </div>

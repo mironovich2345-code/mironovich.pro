@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { services } from "@/config/services";
 import { siteUrl } from "@/config/site";
 import { getPublishedPosts, lastBlogUpdate } from "@/lib/blog";
 
@@ -10,6 +11,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     { url: siteUrl + "/", changeFrequency: "monthly", priority: 1 },
+    { url: siteUrl + "/services", changeFrequency: "monthly", priority: 0.8 },
+    ...services.map((s) => ({ url: siteUrl + s.href, changeFrequency: "monthly" as const, priority: 0.9 })),
     { url: siteUrl + "/about", changeFrequency: "yearly", priority: 0.6 },
     {
       url: siteUrl + "/blog",

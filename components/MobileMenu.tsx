@@ -66,7 +66,13 @@ export default function MobileMenu({ services, links }: { services: NavLink[]; l
           className="fixed inset-x-0 bottom-0 top-[65px] z-40 overflow-y-auto border-t border-cream/10 bg-graphite px-[22px] pb-[calc(24px+env(safe-area-inset-bottom))] pt-4"
         >
           <nav aria-label="Основная навигация">
-            <p className="m-0 mb-1 mt-2 text-[11px] uppercase tracking-[0.22em] text-signal">Услуги</p>
+            <Link
+              href="/services"
+              onClick={close}
+              className="mb-1 mt-1 inline-flex min-h-[44px] items-center text-[11px] uppercase tracking-[0.22em] text-signal"
+            >
+              Услуги — все направления →
+            </Link>
             <ul className="m-0 mb-6 flex list-none flex-col border-t border-cream/10 p-0">
               {services.map((l) => (
                 <li key={l.href}>
