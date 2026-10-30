@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import {
-  HONEYPOT_FIELD, LEAD_LIMITS, directionLabel, isLeadDirection, leadFormExtended, validContact,
+  HONEYPOT_FIELD, LEAD_LIMITS, directionLabel, isLeadDirection, leadFormExtended, normalizePagePath, validContact,
 } from "@/lib/lead";
 
 export const runtime = "nodejs";
@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 type Lead = {
   name?: unknown; phone?: unknown; task?: unknown; consent?: unknown;
-  company?: unknown; direction?: unknown; attribution?: unknown;
+  company?: unknown; direction?: unknown; page?: unknown; attribution?: unknown;
   [HONEYPOT_FIELD]?: unknown;
 };
 
@@ -70,6 +70,7 @@ export async function POST(req: Request) {
   const phone = str(body.phone);
   const task = str(body.task);
   const attr = readAttribution(body.attribution);
+  const page = normalizePagePath(body.page);
   // Company and direction are only accepted once the extended form is switched on,
   // so the server never forwards data the published privacy policy does not cover.
   const company = leadFormExtended ? str(body.company) : "";
@@ -112,6 +113,7 @@ export async function POST(req: Request) {
       "<b>Контакт:</b>\n" + escapeHtml(phone) + "\n\n" +
       (isLeadDirection(direction) ? "<b>Направление:</b>\n" + escapeHtml(directionLabel(direction)) + "\n\n" : "") +
       "<b>Задача:</b>\n" + escapeHtml(task) + "\n\n" +
+      "<b>Страница:</b>\n" + escapeHtml(page) + "\n\n" +
       "<b>Дата:</b>\n" + escapeHtml(date) + "\n\n" +
       "<b>ИСТОЧНИК</b>\n" +
       "Source: " + escapeHtml(attr.utm_source) + "\n" +

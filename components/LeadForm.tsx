@@ -81,6 +81,8 @@ export default function LeadForm({ defaultDirection }: { defaultDirection?: Lead
           name, phone, task, consent,
           ...(leadFormExtended ? { company, direction } : {}),
           [HONEYPOT_FIELD]: trap,
+          // normalised against known routes on the server
+          page: window.location.pathname,
           attribution: getAttribution(),
         }),
       });

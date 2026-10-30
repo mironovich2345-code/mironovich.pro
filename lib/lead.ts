@@ -35,3 +35,25 @@ export const leadFormExtended = process.env.NEXT_PUBLIC_LEAD_FORM_EXTENDED === "
 
 /** Hidden field name for the spam trap. Must never match a real field. */
 export const HONEYPOT_FIELD = "website";
+
+/** Static routes a lead can be sent from. Articles are matched by pattern below. */
+const KNOWN_PAGES = new Set([
+  "/", "/services", "/services/automation", "/services/apps", "/services/training",
+  "/about", "/blog", "/contact", "/projects",
+]);
+
+/**
+ * Reduces whatever the client sent to a known site path, so the Telegram message
+ * never carries an arbitrary URL, query string or injected text. Anything that is
+ * not one of our routes becomes "unknown".
+ */
+export function normalizePagePath(v: unknown): string {
+  if (typeof v !== "string") return "unknown";
+  let path = v.trim().slice(0, 200).split(/[?#]/)[0];
+  if (!path.startsWith("/") || path.startsWith("//")) return "unknown";
+  if (path.length > 1) path = path.replace(/\/+$/, "");
+  path = path.toLowerCase();
+  if (KNOWN_PAGES.has(path)) return path;
+  if (/^\/blog\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(path) && path.length <= 120) return path;
+  return "unknown";
+}
