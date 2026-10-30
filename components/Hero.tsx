@@ -1,5 +1,4 @@
 import CtaLink from "./CtaLink";
-import { contactHref } from "@/config/site";
 
 /**
  * Deliberately short: kicker, H1, one-line subtitle, one CTA. Everything else
@@ -35,7 +34,7 @@ export default function Hero() {
           </p>
 
           <CtaLink
-            href={contactHref}
+            href="#contact"
             location="hero"
             className="inline-flex min-h-[56px] items-center justify-center whitespace-nowrap bg-signal px-5 text-center text-[14px] font-medium uppercase tracking-[0.04em] text-white transition-colors hover:bg-[#b82323] min-[400px]:px-8 min-[400px]:text-[15px] min-[400px]:tracking-[0.06em]"
           >

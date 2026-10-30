@@ -2,7 +2,6 @@ import Link from "next/link";
 import CtaLink from "./CtaLink";
 import SectionLabel from "./SectionLabel";
 import { services } from "@/config/services";
-import { contactHref } from "@/config/site";
 
 /** Three self-contained columns, each leading to its service page. */
 export default function Services() {
@@ -68,7 +67,7 @@ export default function Services() {
                   Подробнее о направлении →
                 </Link>
                 <CtaLink
-                  href={contactHref}
+                  href="#contact"
                   location="services"
                   className="inline-flex min-h-[44px] items-center text-[13px] uppercase tracking-[0.08em] text-stone underline decoration-stone/40 underline-offset-4 transition-colors hover:text-cream"
                 >

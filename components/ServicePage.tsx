@@ -369,9 +369,17 @@ function Related({ page, articles }: { page: ServicePageContent; articles: Post[
               </li>
             ))}
           </ul>
-          <Link href="/services" className="mt-5 inline-flex min-h-[44px] items-center text-[13px] uppercase tracking-[0.1em] text-maroon underline underline-offset-4 hover:text-signal">
-            Все услуги →
-          </Link>
+          <div className="mt-5 flex flex-wrap gap-x-6">
+            <Link href="/services" className="inline-flex min-h-[44px] items-center text-[13px] uppercase tracking-[0.1em] text-maroon underline underline-offset-4 hover:text-signal">
+              Все услуги →
+            </Link>
+            <Link href="/about" className="inline-flex min-h-[44px] items-center text-[13px] uppercase tracking-[0.1em] text-maroon underline underline-offset-4 hover:text-signal">
+              Обо мне →
+            </Link>
+            <Link href="/contact" className="inline-flex min-h-[44px] items-center text-[13px] uppercase tracking-[0.1em] text-maroon underline underline-offset-4 hover:text-signal">
+              Контакты →
+            </Link>
+          </div>
         </div>
 
         {articles.length > 0 && (

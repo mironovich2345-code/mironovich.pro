@@ -1,6 +1,5 @@
 import CtaLink from "./CtaLink";
 import SectionLabel from "./SectionLabel";
-import { contactHref } from "@/config/site";
 
 /**
  * Entry point to working together. The free first conversation and the paid
@@ -73,7 +72,7 @@ export default function Diagnostics() {
             Если для задачи не нужна разработка, я так и скажу.
           </p>
           <CtaLink
-            href={contactHref}
+            href="#contact"
             location="diagnostics"
             className="inline-flex min-h-[56px] items-center justify-center bg-signal px-8 text-[15px] font-medium uppercase tracking-[0.06em] text-white transition-colors hover:bg-[#b82323]"
           >

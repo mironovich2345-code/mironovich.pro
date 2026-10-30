@@ -34,6 +34,7 @@ export default function Footer() {
               {navLinks.map((l) => (
                 <li key={l.href}><Link href={l.href} className={linkClass}>{l.label}</Link></li>
               ))}
+              <li><Link href="/contact" className={linkClass}>Контакты</Link></li>
             </ul>
           </nav>
 
