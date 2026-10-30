@@ -1,58 +1,72 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import ConsentDialog from "./ConsentDialog";
 import { site } from "@/config/site";
 import { track, trackFormStartOnce } from "@/lib/analytics";
 import { getAttribution } from "@/lib/attribution";
+import {
+  HONEYPOT_FIELD, LEAD_DIRECTIONS, LEAD_LIMITS, leadFormExtended, validContact, type LeadDirection,
+} from "@/lib/lead";
 
-type Errors = Partial<Record<"name" | "phone" | "task" | "consent" | "form", string>>;
+type Field = "name" | "company" | "phone" | "direction" | "task" | "consent";
+type Errors = Partial<Record<Field, string>>;
 
-const LIMITS = { name: 100, phone: 40, task: 2000 };
-
-// accepts a phone number OR a Telegram username / t.me link
-export const validContact = (v: string) => {
-  const s = v.trim().replace(/^https?:\/\/t\.me\//i, "");
-  if (/^@?[a-zA-Z][a-zA-Z0-9_]{4,31}$/.test(s)) return true;
-  return s.replace(/\D/g, "").length >= 10;
-};
+/** Order the fields appear in — the first invalid one gets focus. */
+const FIELD_ORDER: Field[] = ["name", "company", "phone", "direction", "task", "consent"];
 
 const inputClass =
-  "min-h-[52px] border border-cream/20 bg-transparent px-4 text-base text-cream outline-none transition-colors placeholder:text-stone/70 focus:border-signal";
-const fieldLabelClass = "text-[13px] uppercase tracking-[0.06em] text-stone";
-const errorClass = "text-[12.5px] text-signal";
+  "min-h-[52px] w-full border border-cream/25 bg-transparent px-4 text-base text-cream outline-none transition-colors placeholder:text-stone focus:border-signal aria-[invalid=true]:border-signal";
+const labelClass = "text-[13px] uppercase tracking-[0.06em] text-stone";
+const errorClass = "text-[13px] text-signal";
 
-export default function LeadForm() {
+const errorId = (f: Field) => "lead-" + f + "-error";
+const describedBy = (f: Field, errors: Errors, extra?: string) =>
+  [errors[f] ? errorId(f) : "", extra ?? ""].filter(Boolean).join(" ") || undefined;
+
+export default function LeadForm({ defaultDirection }: { defaultDirection?: LeadDirection }) {
   const [name, setName] = useState("");
+  const [company, setCompany] = useState("");
   const [phone, setPhone] = useState("");
+  const [direction, setDirection] = useState<LeadDirection | "">(defaultDirection ?? "");
   const [task, setTask] = useState("");
   const [consent, setConsent] = useState(false);
-  const [company, setCompany] = useState(""); // honeypot — must stay empty
+  const [trap, setTrap] = useState(""); // honeypot — must stay empty
   const [errors, setErrors] = useState<Errors>({});
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [failed, setFailed] = useState(false);
   const [dialog, setDialog] = useState(false);
 
-  // one shared hook so any field can open the session
+  const refs = useRef<Partial<Record<Field, HTMLElement | null>>>({});
+  const bind = (f: Field) => (el: HTMLElement | null) => { refs.current[f] = el; };
+  const successRef = useRef<HTMLDivElement>(null);
+
+  const closeDialog = useCallback(() => setDialog(false), []);
+
   const onFieldTouch = () => trackFormStartOnce();
+  const clear = (f: Field) => setErrors((p) => ({ ...p, [f]: undefined }));
 
   const validate = (): Errors => {
     const e: Errors = {};
     if (name.trim().length < 2) e.name = "Укажите имя";
     if (!validContact(phone)) e.phone = "Укажите телефон или Telegram (@username)";
-    if (task.trim().length < 10) e.task = "Опишите текущее обучение хотя бы парой предложений";
-    if (task.trim().length > LIMITS.task) e.task = "Слишком длинное описание — до " + LIMITS.task + " символов";
+    if (leadFormExtended && !direction) e.direction = "Выберите направление или «Пока не знаю»";
+    if (task.trim().length < 10) e.task = "Опишите задачу хотя бы парой предложений";
+    if (task.trim().length > LEAD_LIMITS.task) e.task = "Слишком длинное описание — до " + LEAD_LIMITS.task + " символов";
     if (!consent) e.consent = "Нужно согласие на обработку данных";
     return e;
   };
 
   const onSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
+    if (sending) return;
     const e = validate();
     setErrors(e);
-    if (Object.keys(e).length) {
+    const firstInvalid = FIELD_ORDER.find((f) => e[f]);
+    if (firstInvalid) {
+      refs.current[firstInvalid]?.focus();
       track("lead_submit_error", { reason: "validation" });
       return;
     }
@@ -63,7 +77,12 @@ export default function LeadForm() {
       const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone, task, consent, company, attribution: getAttribution() }),
+        body: JSON.stringify({
+          name, phone, task, consent,
+          ...(leadFormExtended ? { company, direction } : {}),
+          [HONEYPOT_FIELD]: trap,
+          attribution: getAttribution(),
+        }),
       });
       const data: { ok?: boolean; delivered?: boolean } = await res.json().catch(() => ({}));
 
@@ -71,11 +90,8 @@ export default function LeadForm() {
       if (res.ok && data.ok === true && data.delivered === true) {
         setSent(true);
         const a = getAttribution();
-        track("lead_submit_success", {
-          utm_source: a.utm_source,
-          utm_medium: a.utm_medium,
-          utm_campaign: a.utm_campaign,
-        });
+        track("lead_submit_success", { utm_source: a.utm_source, utm_medium: a.utm_medium, utm_campaign: a.utm_campaign });
+        requestAnimationFrame(() => successRef.current?.focus());
       } else {
         setFailed(true);
         track("lead_submit_error", { reason: "delivery" });
@@ -88,144 +104,188 @@ export default function LeadForm() {
     }
   };
 
-  return (
-    <section id="contact" className="scroll-mt-3 bg-graphite px-[22px] py-16 min-[560px]:py-24">
-      <div className="mx-auto max-w-[1080px]">
-        <div className="mb-10 flex items-end justify-between gap-6 min-[560px]:mb-14">
-          <p className="m-0 text-[11px] uppercase tracking-[0.22em] text-signal">08 / Обсудить задачу</p>
-          <p className="m-0 hidden text-[11px] uppercase tracking-[0.22em] text-stone min-[560px]:block">Mironovich / 2026</p>
-        </div>
+  const errorCount = Object.values(errors).filter(Boolean).length;
 
-        <div className="grid gap-14 min-[900px]:grid-cols-[1fr_1.1fr] min-[900px]:gap-20">
-          <div>
-            <h2 className="m-0 mb-5 max-w-[14ch] text-balance font-display text-[clamp(34px,7vw,68px)] font-extrabold uppercase leading-[0.98] tracking-[-0.02em] text-cream">
-              Расскажите, как у вас обучают людей<span className="text-signal">.</span>
-            </h2>
-            <p className="m-0 max-w-[42ch] text-pretty text-[15.5px] leading-[1.65] text-stone">
-              Я посмотрю на текущий процесс и предложу, в каком направлении его можно систематизировать.
-            </p>
-          </div>
-
-          <div>
-            {sent ? (
-              <div role="status" className="flex items-start gap-3.5 border border-cream/15 p-6">
-                <span className="mt-2 h-[7px] w-[7px] flex-none rounded-full bg-signal" />
-                <div>
-                  <p className="m-0 font-display text-[20px] font-extrabold uppercase tracking-[-0.01em] text-cream">
-                    Заявка отправлена.
-                  </p>
-                  <p className="m-0 mt-1.5 text-[15px] leading-[1.55] text-stone">
-                    Свяжусь с вами для обсуждения текущего процесса обучения.
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <form noValidate onSubmit={onSubmit} className="flex flex-col gap-5">
-                {/* honeypot: hidden from humans, tempting for bots */}
-                <div aria-hidden className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden">
-                  <label htmlFor="company">Компания</label>
-                  <input
-                    id="company" name="company" type="text" tabIndex={-1} autoComplete="off"
-                    value={company} onChange={(e) => setCompany(e.target.value)}
-                  />
-                </div>
-
-                <label className="flex flex-col gap-2">
-                  <span className={fieldLabelClass}>Имя <span className="text-signal">*</span></span>
-                  <input
-                    type="text" name="name" autoComplete="name" placeholder="Как к вам обращаться?"
-                    maxLength={LIMITS.name} value={name}
-                    onFocus={onFieldTouch}
-                    onChange={(e) => { setName(e.target.value); setErrors((p) => ({ ...p, name: undefined })); }}
-                    aria-invalid={!!errors.name}
-                    className={inputClass}
-                  />
-                  {errors.name && <span className={errorClass}>{errors.name}</span>}
-                </label>
-
-                <label className="flex flex-col gap-2">
-                  <span className={fieldLabelClass}>Телефон или Telegram <span className="text-signal">*</span></span>
-                  <input
-                    type="text" name="phone" autoComplete="tel" autoCapitalize="off" autoCorrect="off" spellCheck={false}
-                    placeholder="+7 999 000-00-00 или @username"
-                    maxLength={LIMITS.phone} value={phone}
-                    onFocus={onFieldTouch}
-                    onChange={(e) => { setPhone(e.target.value); setErrors((p) => ({ ...p, phone: undefined })); }}
-                    aria-invalid={!!errors.phone}
-                    className={inputClass}
-                  />
-                  {errors.phone && <span className={errorClass}>{errors.phone}</span>}
-                </label>
-
-                <label className="flex flex-col gap-2">
-                  <span className={fieldLabelClass}>Как сейчас устроено обучение сотрудников? <span className="text-signal">*</span></span>
-                  <textarea
-                    name="task" rows={4} maxLength={LIMITS.task}
-                    placeholder="Например: новичков обучает управляющий, материалы лежат в Telegram и PDF, единых тестов и контроля прохождения нет."
-                    value={task}
-                    onFocus={onFieldTouch}
-                    onChange={(e) => { setTask(e.target.value); setErrors((p) => ({ ...p, task: undefined })); }}
-                    aria-invalid={!!errors.task}
-                    className="min-h-[124px] resize-y border border-cream/20 bg-transparent p-4 text-base leading-[1.5] text-cream outline-none transition-colors placeholder:text-stone/70 focus:border-signal"
-                  />
-                  <span className="self-end text-[12px] text-stone/70">{task.length} / {LIMITS.task}</span>
-                  {errors.task && <span className={errorClass}>{errors.task}</span>}
-                </label>
-
-                <label className="flex cursor-pointer items-start gap-3">
-                  <input
-                    type="checkbox" name="consent" checked={consent}
-                    onChange={(e) => { setConsent(e.target.checked); setErrors((p) => ({ ...p, consent: undefined })); }}
-                    className="mt-[1px] h-5 w-5 flex-none accent-[#D92D2D]"
-                  />
-                  <span className="text-[13.5px] leading-[1.45] text-stone">
-                    Я соглашаюсь на{" "}
-                    <button type="button" onClick={() => setDialog(true)} className="text-cream underline underline-offset-[3px] hover:text-signal">
-                      обработку персональных данных
-                    </button>
-                  </span>
-                </label>
-                {errors.consent && <span className={"-mt-2.5 " + errorClass}>{errors.consent}</span>}
-
-                {failed && (
-                  <div role="alert" className="border border-signal/40 p-4 text-[13.5px] leading-[1.55] text-cream">
-                    Не получилось доставить заявку. Попробуйте еще раз или напишите напрямую:{" "}
-                    <a
-                      href={site.telegram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() => track("telegram_fallback_click")}
-                      className="text-signal underline underline-offset-[3px]"
-                    >
-                      {site.telegram.replace("https://", "")}
-                    </a>
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={sending}
-                  className="mt-1 min-h-[58px] bg-signal text-base font-medium uppercase tracking-[0.04em] text-white transition-colors hover:bg-[#b82323] disabled:opacity-45"
-                >
-                  {sending ? "Отправляю…" : "Разобрать систему обучения"}
-                </button>
-                <p className="m-0 text-pretty text-center text-[13px] leading-[1.5] text-stone">
-                  После заявки я посмотрю описание и свяжусь с вами для уточнения деталей.
-                </p>
-
-                <p className="m-0 text-[12.5px] leading-[1.5] text-stone/70">
-                  Нажимая кнопку, вы принимаете{" "}
-                  <Link href="/consent" className="text-stone underline underline-offset-[3px] hover:text-cream">согласие на обработку данных</Link>{" "}
-                  и{" "}
-                  <Link href="/privacy" className="text-stone underline underline-offset-[3px] hover:text-cream">политику</Link>.
-                </p>
-              </form>
-            )}
-          </div>
+  if (sent) {
+    return (
+      <div ref={successRef} tabIndex={-1} role="status" className="flex items-start gap-3.5 border border-cream/20 p-6 outline-none">
+        <span aria-hidden className="mt-2 h-[7px] w-[7px] flex-none rounded-full bg-signal" />
+        <div>
+          <p className="m-0 font-display text-[20px] font-extrabold uppercase tracking-[-0.01em] text-cream">Заявка отправлена.</p>
+          <p className="m-0 mt-1.5 text-[15px] leading-[1.55] text-stone">Я изучу описание и свяжусь с вами, чтобы уточнить детали.</p>
         </div>
       </div>
+    );
+  }
 
-      <ConsentDialog open={dialog} onClose={() => setDialog(false)} />
-    </section>
+  return (
+    <>
+      <form noValidate onSubmit={onSubmit} aria-busy={sending} className="flex flex-col gap-5">
+        {/* honeypot: hidden from people and assistive tech, tempting for bots */}
+        <div aria-hidden className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden">
+          <label htmlFor="lead-trap">Сайт</label>
+          <input
+            id="lead-trap" name={HONEYPOT_FIELD} type="text" tabIndex={-1} autoComplete="off"
+            value={trap} onChange={(e) => setTrap(e.target.value)}
+          />
+        </div>
+
+        {errorCount > 0 && (
+          <p role="alert" className="m-0 border-l-2 border-signal pl-4 text-[14px] leading-[1.5] text-cream">
+            {errorCount === 1 ? "Проверьте отмеченное поле." : "Проверьте отмеченные поля: " + errorCount + "."}
+          </p>
+        )}
+
+        <div className="flex flex-col gap-2">
+          <label htmlFor="lead-name" className={labelClass}>
+            Имя <span aria-hidden className="text-signal">*</span>
+          </label>
+          <input
+            id="lead-name" ref={bind("name")} type="text" name="name" autoComplete="name" required aria-required
+            placeholder="Как к вам обращаться?" maxLength={LEAD_LIMITS.name} value={name}
+            onFocus={onFieldTouch}
+            onChange={(e) => { setName(e.target.value); clear("name"); }}
+            aria-invalid={!!errors.name} aria-describedby={describedBy("name", errors)}
+            className={inputClass}
+          />
+          {errors.name && <span id={errorId("name")} className={errorClass}>{errors.name}</span>}
+        </div>
+
+        {leadFormExtended && (
+          <div className="flex flex-col gap-2">
+            <label htmlFor="lead-company" className={labelClass}>
+              Компания <span className="normal-case tracking-normal text-stone">— необязательно</span>
+            </label>
+            <input
+              id="lead-company" ref={bind("company")} type="text" name="company" autoComplete="organization"
+              placeholder="Название или сфера бизнеса" maxLength={LEAD_LIMITS.company} value={company}
+              onFocus={onFieldTouch}
+              onChange={(e) => setCompany(e.target.value)}
+              className={inputClass}
+            />
+          </div>
+        )}
+
+        <div className="flex flex-col gap-2">
+          <label htmlFor="lead-phone" className={labelClass}>
+            Телефон или Telegram <span aria-hidden className="text-signal">*</span>
+          </label>
+          <input
+            id="lead-phone" ref={bind("phone")} type="text" name="phone" autoComplete="tel" required aria-required
+            autoCapitalize="off" autoCorrect="off" spellCheck={false}
+            placeholder="+7 999 000-00-00 или @username" maxLength={LEAD_LIMITS.phone} value={phone}
+            onFocus={onFieldTouch}
+            onChange={(e) => { setPhone(e.target.value); clear("phone"); }}
+            aria-invalid={!!errors.phone} aria-describedby={describedBy("phone", errors)}
+            className={inputClass}
+          />
+          {errors.phone && <span id={errorId("phone")} className={errorClass}>{errors.phone}</span>}
+        </div>
+
+        {leadFormExtended && (
+          <fieldset
+            className="m-0 flex flex-col gap-2 border-0 p-0"
+            aria-describedby={describedBy("direction", errors)}
+            aria-invalid={!!errors.direction}
+          >
+            <legend className={labelClass + " mb-2 p-0"}>
+              Направление <span aria-hidden className="text-signal">*</span>
+            </legend>
+            <div className="grid grid-cols-1 gap-2 min-[480px]:grid-cols-2">
+              {LEAD_DIRECTIONS.map((d, i) => (
+                <label
+                  key={d.value}
+                  className="flex min-h-[48px] cursor-pointer items-center gap-3 border border-cream/25 px-4 text-[15px] text-cream transition-colors hover:border-cream/50 has-[:checked]:border-signal has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-signal"
+                >
+                  <input
+                    ref={i === 0 ? bind("direction") : undefined}
+                    type="radio" name="direction" value={d.value} checked={direction === d.value}
+                    onFocus={onFieldTouch}
+                    onChange={() => { setDirection(d.value); clear("direction"); }}
+                    className="h-4 w-4 flex-none accent-[#D92D2D] focus-visible:outline-none"
+                  />
+                  {d.label}
+                </label>
+              ))}
+            </div>
+            {errors.direction && <span id={errorId("direction")} className={errorClass}>{errors.direction}</span>}
+          </fieldset>
+        )}
+
+        <div className="flex flex-col gap-2">
+          <label htmlFor="lead-task" className={labelClass}>
+            Описание задачи <span aria-hidden className="text-signal">*</span>
+          </label>
+          <textarea
+            id="lead-task" ref={bind("task")} name="task" rows={4} maxLength={LEAD_LIMITS.task} required aria-required
+            placeholder="Например: каждую неделю вручную собираем отчёт из CRM и таблиц, на это уходит полдня."
+            value={task}
+            onFocus={onFieldTouch}
+            onChange={(e) => { setTask(e.target.value); clear("task"); }}
+            aria-invalid={!!errors.task} aria-describedby={describedBy("task", errors, "lead-task-count")}
+            className="min-h-[124px] w-full resize-y border border-cream/25 bg-transparent p-4 text-base leading-[1.5] text-cream outline-none transition-colors placeholder:text-stone focus:border-signal aria-[invalid=true]:border-signal"
+          />
+          <span id="lead-task-count" className="self-end text-[12px] text-stone">
+            {task.length} / {LEAD_LIMITS.task}
+          </span>
+          {errors.task && <span id={errorId("task")} className={errorClass}>{errors.task}</span>}
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <div className="flex items-start gap-3">
+            <input
+              id="lead-consent" ref={bind("consent")} type="checkbox" name="consent" checked={consent} required aria-required
+              onChange={(e) => { setConsent(e.target.checked); clear("consent"); }}
+              aria-invalid={!!errors.consent} aria-describedby={describedBy("consent", errors)}
+              className="mt-[2px] h-5 w-5 flex-none cursor-pointer accent-[#D92D2D]"
+            />
+            <p className="m-0 text-[14px] leading-[1.5] text-stone">
+              <label htmlFor="lead-consent" className="cursor-pointer">Я соглашаюсь на обработку персональных данных</label>
+              {" "}
+              <button
+                type="button"
+                onClick={() => setDialog(true)}
+                className="inline-flex min-h-[24px] items-center text-cream underline underline-offset-[3px] hover:text-signal"
+              >
+                Подробнее
+              </button>
+            </p>
+          </div>
+          {errors.consent && <span id={errorId("consent")} className={errorClass}>{errors.consent}</span>}
+        </div>
+
+        {failed && (
+          <div role="alert" className="border border-signal/50 p-4 text-[14px] leading-[1.55] text-cream">
+            Не получилось доставить заявку. Попробуйте ещё раз или напишите напрямую:{" "}
+            <a
+              href={site.telegram}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => track("telegram_fallback_click")}
+              className="text-signal underline underline-offset-[3px]"
+            >
+              {site.telegram.replace("https://", "")}
+            </a>
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={sending}
+          className="mt-1 min-h-[58px] bg-signal text-base font-medium uppercase tracking-[0.04em] text-white transition-colors hover:bg-[#b82323] disabled:cursor-wait disabled:opacity-60"
+        >
+          {sending ? "Отправляю…" : "Отправить задачу"}
+        </button>
+
+        <p className="m-0 text-[13px] leading-[1.5] text-stone">
+          Нажимая кнопку, вы принимаете{" "}
+          <Link href="/consent" className="text-cream/80 underline underline-offset-[3px] hover:text-cream">согласие на обработку данных</Link>{" "}
+          и{" "}
+          <Link href="/privacy" className="text-cream/80 underline underline-offset-[3px] hover:text-cream">политику</Link>.
+        </p>
+      </form>
+
+      <ConsentDialog open={dialog} onClose={closeDialog} />
+    </>
   );
 }
