@@ -90,9 +90,11 @@ npm start            # прод-сервер на :3000 (PORT переопред
 
 ```
 app/
-  layout.tsx            метаданные, OpenGraph, Twitter, шрифт Inter (cyrillic)
+  layout.tsx            общие метаданные, шрифты, skip-link, шапка и футер
   page.tsx              сборка секций главной
-  globals.css           резеты, focus-visible, prefers-reduced-motion
+  not-found.tsx         своя 404 (noindex, без canonical)
+  error.tsx             страница ошибки с повтором
+  globals.css           резеты, focus-visible, scroll-padding под липкую шапку, reduced-motion
   about/page.tsx        /about — ProfilePage + Person JSON-LD
   blog/page.tsx         /blog — список опубликованных статей (Blog JSON-LD)
   blog/[slug]/page.tsx  /blog/<slug> — статья, BlogPosting JSON-LD, canonical, OG
@@ -100,20 +102,20 @@ app/
   consent/page.tsx      согласие на обработку данных (noindex, follow)
   api/lead/route.ts     приём заявки, honeypot, rate limit, отправка в Telegram
   robots.ts             robots.txt
-  sitemap.ts            sitemap.xml — /, /about, /blog и опубликованные статьи
+  sitemap.ts            sitemap.xml — /, /about, /blog и опубликованные статьи (lastmod только реальный)
   manifest.ts           web app manifest
   icon.png              favicon 512
   apple-icon.png        apple touch icon 180
   favicon.ico           классический favicon
 components/
-  Hero · Pains · Services · About · CaseStudy (+DashboardMockup)
-  Process · FirstReview · LeadForm (+ConsentDialog) · Faq
-  SecondaryCta · StickyCta · Reveal
-  SiteHeader (+MobileMenu) · Footer — подключены в layout.tsx, видны на всех страницах
+  Hero · Problems · Services · Scenarios · Diagnostics · About · Process · Faq
+  ContactSection (+LeadForm, ConsentDialog) · StickyCta · SectionLabel
+  SiteHeader (+ServicesMenu, MobileMenu) · Footer — подключены в layout.tsx, видны на всех страницах
   Markdown — рендер статей блога (серверный компонент)
   StructuredData · Analytics · CtaLink
 config/
-  site.ts               имя, описание, соцссылки из env, навигация
+  site.ts               имя, описание, соцссылки из env, навигация, projectsPublished
+  services.ts           три направления услуг — общий источник для главной, меню, футера, JSON-LD
 content/
   blog/                 статьи блога — по одному .md на статью (см. content/blog/README.md)
 lib/
@@ -122,6 +124,10 @@ lib/
   blog.ts               чтение и валидация статей, published/draft
   markdown.ts           небольшой Markdown-парсер без зависимостей
   jsonld.ts             безопасная сериализация JSON-LD
+  seo.ts                pageMetadata(): canonical, OG и Twitter для каждой страницы
+  lead.ts               общие правила формы: лимиты, направления, валидация контакта, флаг расширенной формы
+docs/
+  legal/                ПРОЕКТЫ политики и согласия — не опубликованы, ждут юриста и реквизитов
 public/
   images/               фотографии (webp)
   yandex_*.html         подтверждение Яндекс.Вебмастера — не удалять
@@ -130,9 +136,11 @@ public/
   icon-192.png icon-512.png  иконки для «на главный экран»
 ```
 
-Порядок секций главной: Hero → 01 Когда могу быть полезен → 02 Что можно
-сделать → 03 Обо мне → 04 Пример проекта → 05 Как я работаю → 06 Первый разбор
-→ 07 Консультация (форма) → FAQ → Secondary CTA → футер.
+Порядок секций главной: Hero → 01 Где теряется время → 02 Направления →
+03 Сценарии → 04 С чего начать (бесплатное обсуждение / платный аудит) →
+05 Обо мне → 06 Как я работаю → 07 Вопросы → 08 Заявка → футер.
+Блок проектов появится между 04 и 05, когда будет подтверждённый материал
+(`projectsPublished` в config/site.ts).
 
 ## Блог
 
