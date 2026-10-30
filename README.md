@@ -95,6 +95,8 @@ app/
   not-found.tsx         своя 404 (noindex, без canonical)
   error.tsx             страница ошибки с повтором
   globals.css           резеты, focus-visible, scroll-padding под липкую шапку, reduced-motion
+  services/page.tsx     /services — каталог трёх направлений (CollectionPage JSON-LD)
+  services/[slug]/      /services/automation|apps|training — страницы услуг (Service, FAQPage, BreadcrumbList)
   about/page.tsx        /about — ProfilePage + Person JSON-LD
   blog/page.tsx         /blog — список опубликованных статей (Blog JSON-LD)
   blog/[slug]/page.tsx  /blog/<slug> — статья, BlogPosting JSON-LD, canonical, OG
@@ -102,7 +104,7 @@ app/
   consent/page.tsx      согласие на обработку данных (noindex, follow)
   api/lead/route.ts     приём заявки, honeypot, rate limit, отправка в Telegram
   robots.ts             robots.txt
-  sitemap.ts            sitemap.xml — /, /about, /blog и опубликованные статьи (lastmod только реальный)
+  sitemap.ts            sitemap.xml — /, /services, страницы услуг, /about, /blog и статьи (lastmod только реальный)
   manifest.ts           web app manifest
   icon.png              favicon 512
   apple-icon.png        apple touch icon 180
@@ -110,6 +112,7 @@ app/
 components/
   Hero · Problems · Services · Scenarios · Diagnostics · About · Process · Faq
   ContactSection (+LeadForm, ConsentDialog) · StickyCta · SectionLabel
+  ServicePage — шаблон страницы услуги · Breadcrumbs
   SiteHeader (+ServicesMenu, MobileMenu) · Footer — подключены в layout.tsx, видны на всех страницах
   Markdown — рендер статей блога (серверный компонент)
   StructuredData · Analytics · CtaLink
@@ -118,6 +121,7 @@ config/
   services.ts           три направления услуг — общий источник для главной, меню, футера, JSON-LD
 content/
   blog/                 статьи блога — по одному .md на статью (см. content/blog/README.md)
+  services/             тексты страниц услуг: порядок блоков, задачи, уникальный блок, FAQ, стоимость
 lib/
   analytics.ts          track(), список событий, ID провайдеров из env
   attribution.ts        first-touch UTM + referrer + landing page
@@ -132,7 +136,8 @@ public/
   images/               фотографии (webp)
   yandex_*.html         подтверждение Яндекс.Вебмастера — не удалять
   zen_*.html            подтверждение Дзена — не удалять
-  og.png                превью для мессенджеров, 1200×630
+  og.png                превью для мессенджеров, 1200×630 (версия в lib/seo.ts → OG_IMAGE_PATH)
+  og/                   превью страниц услуг
   icon-192.png icon-512.png  иконки для «на главный экран»
 ```
 
