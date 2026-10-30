@@ -7,6 +7,7 @@ import Markdown from "@/components/Markdown";
 import { contactHref, site, siteUrl } from "@/config/site";
 import { formatDate, getPostBySlug, getPublishedPosts, getRoutablePosts, readingTimeLabel } from "@/lib/blog";
 import { jsonLd } from "@/lib/jsonld";
+import { OG_IMAGE_PATH, defaultImage } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const published = post.status === "published";
   const image = post.cover
     ? { url: post.cover.src, width: post.cover.width, height: post.cover.height, alt: post.cover.alt, type: post.cover.type }
-    : { url: "/og.png", width: 1200, height: 630, alt: site.name, type: "image/png" };
+    : defaultImage;
 
   return {
     title: { absolute: title },
@@ -91,7 +92,7 @@ export default async function PostPage({ params }: Props) {
         timeRequired: "PT" + post.readingTime + "M",
         image: post.cover
           ? [{ "@type": "ImageObject", url: siteUrl + post.cover.src, width: post.cover.width, height: post.cover.height }]
-          : [siteUrl + "/og.png"],
+          : [siteUrl + OG_IMAGE_PATH],
         author: { "@type": "Person", "@id": siteUrl + "/#person", name: site.person, url: siteUrl + "/about" },
         publisher: { "@type": "Person", "@id": siteUrl + "/#person", name: site.person, url: siteUrl },
         isPartOf: { "@type": "Blog", "@id": siteUrl + "/blog#blog", name: "Блог " + site.name, url: siteUrl + "/blog" },
