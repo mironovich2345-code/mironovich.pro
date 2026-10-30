@@ -36,7 +36,7 @@ export const leadFormExtended = process.env.NEXT_PUBLIC_LEAD_FORM_EXTENDED === "
 /** Hidden field name for the spam trap. Must never match a real field. */
 export const HONEYPOT_FIELD = "website";
 
-/** Static routes a lead can be sent from. Articles are matched by pattern below. */
+/** Static routes a lead can be sent from. Articles and case pages are matched by pattern below. */
 const KNOWN_PAGES = new Set([
   "/", "/services", "/services/automation", "/services/apps", "/services/training",
   "/about", "/blog", "/contact", "/projects",
@@ -54,6 +54,6 @@ export function normalizePagePath(v: unknown): string {
   if (path.length > 1) path = path.replace(/\/+$/, "");
   path = path.toLowerCase();
   if (KNOWN_PAGES.has(path)) return path;
-  if (/^\/blog\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(path) && path.length <= 120) return path;
+  if (/^\/(?:blog|projects)\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(path) && path.length <= 120) return path;
   return "unknown";
 }

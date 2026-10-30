@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { services } from "@/config/services";
-import { siteUrl } from "@/config/site";
+import { projectsPublished, siteUrl } from "@/config/site";
+import { projectsWithCase } from "@/content/projects";
 import { getPublishedPosts, lastBlogUpdate } from "@/lib/blog";
 
 // Published articles are added automatically. Drafts are never listed, and legal
@@ -13,7 +14,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: siteUrl + "/", changeFrequency: "monthly", priority: 1 },
     { url: siteUrl + "/services", changeFrequency: "monthly", priority: 0.8 },
     ...services.map((s) => ({ url: siteUrl + s.href, changeFrequency: "monthly" as const, priority: 0.9 })),
+    // /projects only once it has confirmed entries — an empty portfolio is noindex
+    ...(projectsPublished ? [{ url: siteUrl + "/projects", changeFrequency: "monthly" as const, priority: 0.7 }] : []),
+    ...projectsWithCase().map((p) => ({
+      url: siteUrl + "/projects/" + p.slug,
+      lastModified: new Date(p.caseStudy!.publishDate),
+      changeFrequency: "yearly" as const,
+      priority: 0.6,
+    })),
     { url: siteUrl + "/about", changeFrequency: "yearly", priority: 0.6 },
+    { url: siteUrl + "/contact", changeFrequency: "yearly", priority: 0.7 },
     {
       url: siteUrl + "/blog",
       ...(blogUpdated ? { lastModified: new Date(blogUpdated) } : {}),

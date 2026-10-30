@@ -1,4 +1,5 @@
 import { services } from "./services";
+import { projects } from "@/content/projects";
 
 export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://mironovich.pro").replace(/\/$/, "");
 
@@ -20,10 +21,10 @@ export const site = {
 } as const;
 
 /**
- * /projects is linked from the hero, navigation and footer only once it has
- * confirmed material. Until then nothing points at an empty page.
+ * /projects is linked from navigation, footer and the homepage, listed in the
+ * sitemap and indexable only once content/projects.ts has confirmed entries.
  */
-export const projectsPublished = false;
+export const projectsPublished = projects.length > 0;
 
 export type NavLink = { href: string; label: string };
 
@@ -37,11 +38,20 @@ export const navLinks: NavLink[] = [
   { href: "/blog", label: "Блог" },
 ];
 
-/** Where every «Обсудить задачу» CTA leads. Becomes /contact when that page ships. */
-export const contactHref = "/#contact";
+/** Where «Обсудить задачу» leads from pages without their own form section. */
+export const contactHref = "/contact";
 
 /** Configured profiles only — used for structured data. */
 export const socialProfiles = [envInstagram, envTelegram].filter(Boolean);
+
+/**
+ * Direct contacts shown on /contact. Only values set explicitly in the environment
+ * count as confirmed; the code defaults above are never listed there.
+ */
+export const confirmedContacts: { label: string; href: string; text: string }[] = [
+  ...(envTelegram ? [{ label: "Telegram", href: envTelegram, text: envTelegram.replace(/^https?:\/\//, "") }] : []),
+  ...(envInstagram ? [{ label: "Instagram", href: envInstagram, text: envInstagram.replace(/^https?:\/\//, "") }] : []),
+];
 
 /** Telegram deep link used as a fallback when the form cannot be delivered. */
 export const telegramFallback = site.telegram;
