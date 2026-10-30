@@ -1,81 +1,42 @@
-const steps = [
-  { title: "Разбор", body: "Изучаем, как сейчас проходит адаптация и обучение сотрудников." },
-  { title: "Архитектура", body: "Определяем роли, знания, этапы обучения, контрольные точки и требования руководителей." },
-  { title: "Контент", body: "Собираем существующие материалы и определяем, что нужно переработать, создать или структурировать." },
-  { title: "Система", body: "Проектируем и запускаем рабочий инструмент: обучение, база знаний, тесты, аттестации и управление." },
-  { title: "Развитие", body: "Собираем результаты, обновляем материалы и подключаем автоматизацию и AI там, где они дают реальную пользу." },
-];
+import SectionLabel from "./SectionLabel";
 
-// Mobile: Process + FirstReview compressed into one "how we start" block —
-// the two sections otherwise partly repeat each other at this length.
-const mobileSteps = [
-  { title: "Разбор", body: "Смотрим, как обучение работает сейчас." },
-  { title: "Архитектура", body: "Определяем роли, знания, маршрут и контрольные точки." },
-  { title: "Запуск", body: "Собираем первый рабочий этап системы." },
+const steps = [
+  { title: "Обсуждение задачи", body: "Бесплатно. Разбираемся, что происходит и где теряется время." },
+  {
+    title: "Описание процесса и требований",
+    body: "Фиксирую роли, данные, сценарии и ограничения. Если нужна глубина — отдельно согласуем аудит процессов.",
+  },
+  { title: "Выбор решения", body: "Сравниваю варианты, включая готовые сервисы и изменения без разработки." },
+  { title: "Прототип и разработка", body: "Начинаю с одного сценария, который приносит пользу первым." },
+  { title: "Тестирование и запуск", body: "Проверяю решение на реальной работе вместе с вашей командой." },
+  { title: "Поддержка и развитие", body: "По договорённости: объём и стоимость поддержки согласуются отдельно." },
 ];
 
 export default function Process() {
   return (
-    <section id="process" className="bg-graphite px-[22px] py-16 min-[560px]:py-24">
+    <section id="process" className="bg-cream px-[22px] py-16 min-[560px]:py-24">
       <div className="mx-auto max-w-[1080px]">
-        <div className="mb-10 flex items-end justify-between gap-6 min-[560px]:mb-14">
-          <p className="m-0 text-[11px] uppercase tracking-[0.22em] text-signal">06 / Как я работаю</p>
-          <p className="m-0 hidden text-[11px] uppercase tracking-[0.22em] text-stone min-[560px]:block">Process</p>
-        </div>
+        <SectionLabel index="06" label="Как я работаю" note="Шесть шагов" tone="light" />
 
-        {/* Mobile: merged compact version — replaces Process + FirstReview together. */}
-        <div className="min-[640px]:hidden">
-          <h2 className="m-0 mb-10 font-display text-[clamp(28px,6.6vw,40px)] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-cream">
-            Как начинаем
-          </h2>
+        <h2 className="m-0 mb-12 max-w-[20ch] text-balance font-display text-[clamp(30px,5.8vw,54px)] font-extrabold uppercase leading-[1.03] tracking-[-0.02em] text-graphite min-[560px]:mb-16">
+          От обсуждения задачи до работающего решения
+        </h2>
 
-          <ol className="m-0 flex list-none flex-col border-t border-cream/15 p-0">
-            {mobileSteps.map((s, i) => (
-              <li key={s.title} className="grid grid-cols-[64px_1fr] items-start gap-6 border-b border-cream/15 py-7">
-                <span className="font-display text-[clamp(28px,4.6vw,44px)] font-extrabold leading-none tracking-[-0.02em] text-cream/20">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <div>
-                  <p className="m-0 mb-1.5 text-[15px] uppercase tracking-[0.08em] text-cream">{s.title}</p>
-                  <p className="m-0 max-w-[46ch] text-pretty text-[14.5px] leading-[1.6] text-stone">{s.body}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
+        <ol className="m-0 grid list-none grid-cols-1 border-t border-graphite/15 p-0 min-[760px]:grid-cols-2 min-[1000px]:grid-cols-3">
+          {steps.map((s, i) => (
+            <li key={s.title} className="flex flex-col gap-3 border-b border-graphite/15 py-8 min-[760px]:pr-8">
+              <span className="font-display text-[clamp(30px,4vw,44px)] font-extrabold leading-none tracking-[-0.02em] text-graphite/30">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <h3 className="m-0 text-[15px] font-medium uppercase tracking-[0.06em] text-graphite">{s.title}</h3>
+              <p className="m-0 max-w-[40ch] text-pretty text-[14.5px] leading-[1.6] text-graphite/75">{s.body}</p>
+            </li>
+          ))}
+        </ol>
 
-          <p className="m-0 mt-10 max-w-[46ch] border-l-2 border-signal pl-5 text-pretty text-[clamp(17px,4vw,20px)] leading-[1.45] tracking-[-0.01em] text-cream">
-            Готовое техническое задание не требуется.
-          </p>
-        </div>
-
-        {/* Desktop: full 5-step Process — FirstReview follows as its own section. */}
-        <div className="hidden min-[640px]:block">
-          <h2 className="m-0 mb-12 max-w-[18ch] text-balance font-display text-[clamp(28px,5.6vw,48px)] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-cream min-[560px]:mb-16">
-            Сначала процесс. Потом инструмент.
-          </h2>
-
-          <ol className="m-0 flex list-none flex-col border-t border-cream/15 p-0">
-            {steps.map((s, i) => (
-              <li
-                key={s.title}
-                className="grid grid-cols-[64px_1fr] items-start gap-6 border-b border-cream/15 py-7 min-[760px]:grid-cols-[140px_1fr] min-[760px]:gap-10"
-              >
-                <span className="font-display text-[clamp(28px,4.6vw,44px)] font-extrabold leading-none tracking-[-0.02em] text-cream/20">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <div>
-                  <p className="m-0 mb-1.5 text-[15px] uppercase tracking-[0.08em] text-cream">{s.title}</p>
-                  <p className="m-0 max-w-[46ch] text-pretty text-[14.5px] leading-[1.6] text-stone">{s.body}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-
-          <p className="m-0 mt-12 max-w-[46ch] text-balance text-[clamp(19px,3.4vw,24px)] leading-[1.4] tracking-[-0.01em] text-cream min-[560px]:mt-16">
-            Не начинаю с выбора LMS или разработки приложения. Сначала нужно понять, как должна работать{" "}
-            <span className="text-signal">сама система обучения</span>.
-          </p>
-        </div>
+        <p className="m-0 mt-12 max-w-[52ch] border-l-2 border-signal pl-5 text-pretty text-[clamp(18px,2.6vw,22px)] leading-[1.45] tracking-[-0.01em] text-graphite min-[560px]:mt-16">
+          Готовое ТЗ не требуется. Небольшой первый этап позволяет проверить пользу до больших вложений.
+        </p>
       </div>
     </section>
   );

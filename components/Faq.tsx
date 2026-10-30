@@ -1,97 +1,75 @@
-const items: [string, string][] = [
+import SectionLabel from "./SectionLabel";
+
+/** Also feeds the FAQPage structured data, so markup always matches the visible text. */
+export const homeFaq: [string, string][] = [
   [
-    "Подойдёт ли такая система небольшой компании?",
-    "Да. Не обязательно начинать с большой корпоративной платформы. Сначала можно систематизировать один процесс, должность или этап адаптации.",
+    "Нужно ли готовое техническое задание?",
+    "Нет. Достаточно описать задачу и то, как процесс устроен сейчас. Требования формируются на этапе описания процесса.",
   ],
   [
-    "Что делать, если у нас ещё нет готовой программы обучения?",
-    "Это нормально. Можно начать с существующих регламентов, инструкций и того, как обучение фактически проходит сейчас.",
+    "Что входит в бесплатное обсуждение?",
+    "Разговор в переписке или на созвоне: вы описываете задачу, я задаю уточняющие вопросы. По итогам — возможные варианты решения и следующие шаги. Детальное изучение процессов, письменный отчёт и техническое задание в бесплатное обсуждение не входят.",
   ],
   [
-    "Можно ли использовать уже существующие PDF, инструкции и видео?",
-    "Да. Существующие материалы можно собрать, структурировать и встроить в новую систему вместо создания всего контента с нуля.",
+    "Сколько стоит работа?",
+    "Первичное обсуждение задачи бесплатно. Аудит бизнес-процессов, разработка, автоматизация и внедрение оцениваются отдельно, когда понятны задача и объём. На стоимость влияют количество систем и интеграций, сложность логики, требования к безопасности и сроки.",
   ],
   [
-    "Можно ли сделать разные программы для разных должностей?",
-    "Да. Сотрудники могут получать разные маршруты обучения в зависимости от роли, должности или этапа развития.",
+    "Можно ли начать с небольшого проекта?",
+    "Да. Часто разумнее сначала автоматизировать один процесс, проверить его в реальной работе и потом расширять.",
   ],
   [
-    "Как руководитель будет понимать, что сотрудник обучился?",
-    "Через прогресс, тестирование, аттестации и результаты прохождения программы.",
+    "Когда достаточно готового сервиса?",
+    "Когда он закрывает задачу без сложных обходных путей и дорогих доработок. Если это так, я скажу об этом прямо.",
   ],
   [
-    "Обязательно ли создавать отдельное приложение?",
-    "Нет. Формат выбирается после разбора процесса. Иногда достаточно более простого решения.",
+    "Можно ли интегрироваться с нашей CRM?",
+    "Если у системы есть API или другой поддерживаемый способ обмена данными — как правило, да. Конкретные возможности проверяются при обсуждении задачи.",
   ],
   [
-    "Можно ли внедрять систему постепенно?",
-    "Да. Обычно лучше начать с одного понятного этапа, проверить его в реальной работе и затем расширять систему.",
+    "Кто получает права на код?",
+    "Права на код и материалы, а также условия их передачи фиксируются в договоре до начала работ.",
   ],
   [
-    "Можно ли начать только с консультации?",
-    "Да. Первый шаг может быть только разбором текущего процесса и возможных вариантов решения.",
+    "Как организована поддержка после запуска?",
+    "Поддержка и её стоимость согласуются отдельно — в зависимости от решения и того, что нужно вашей команде.",
+  ],
+  [
+    "Как обеспечивается безопасность данных?",
+    "Доступы к системам, место хранения данных и требования к безопасности обсуждаются до начала работ и фиксируются в договоре. Если у компании есть требования службы безопасности, они учитываются при выборе решения.",
   ],
 ];
 
-// Mobile shows the 4 most common questions first; the rest sit behind a native
-// <details> disclosure ("Показать все вопросы") — no JS needed. Original
-// numbers are kept so a question means the same thing on every breakpoint.
-const primaryIdx = [0, 1, 5, 7];
-const secondaryIdx = [2, 3, 4, 6];
-
-const questionClass =
-  "flex-1 text-balance text-[clamp(17px,3.2vw,21px)] leading-[1.35] tracking-[-0.015em] text-graphite";
-const numberClass = "flex-none pt-1 font-display text-[13px] text-maroon";
-const plusClass =
-  "flex-none pt-0.5 font-display text-xl leading-none text-maroon transition-transform duration-200 group-open:rotate-45";
-const answerClass = "m-0 mb-7 max-w-[60ch] text-pretty text-[15px] leading-[1.6] text-graphite/60 min-[560px]:pl-[52px]";
-
-function FaqItem({ i }: { i: number }) {
-  const [q, a] = items[i];
-  return (
-    <details className="group border-b border-graphite/15">
-      <summary className="flex cursor-pointer list-none items-start gap-5 py-7 [&::-webkit-details-marker]:hidden">
-        <span className={numberClass}>{String(i + 1).padStart(2, "0")} /</span>
-        <span className={questionClass}>{q}</span>
-        <span className={plusClass}>+</span>
-      </summary>
-      <p className={answerClass}>{a}</p>
-    </details>
-  );
-}
-
 export default function Faq() {
   return (
-    <section id="faq" className="bg-cream px-[22px] pb-16 pt-16 min-[560px]:pt-24">
-      <div className="mx-auto max-w-[1080px]">
-        <div className="mb-10 flex items-end justify-between gap-6 min-[560px]:mb-14">
-          <p className="m-0 text-[11px] uppercase tracking-[0.22em] text-maroon">09 / FAQ</p>
-          <p className="m-0 hidden max-w-[42ch] text-[13px] leading-[1.6] text-graphite/50 min-[560px]:block">
-            Если вопроса здесь нет — напишите его прямо в форме выше.
-          </p>
-        </div>
+    <section id="faq" className="bg-cream px-[22px] pb-16 pt-4 min-[560px]:pb-24">
+      <div className="mx-auto max-w-[1080px] border-t border-graphite/15 pt-12 min-[560px]:pt-16">
+        <SectionLabel index="07" label="Вопросы" note="Если вопроса нет — задайте его в форме" tone="light" />
 
-        <h2 className="m-0 mb-12 font-display text-[clamp(28px,5.6vw,48px)] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-graphite min-[560px]:mb-16">
-          Вопросы
+        <h2 className="m-0 mb-10 font-display text-[clamp(30px,5.6vw,52px)] font-extrabold uppercase leading-[1.03] tracking-[-0.02em] text-graphite min-[560px]:mb-14">
+          Частые вопросы
         </h2>
 
-        {/* Mobile: 4 questions, then a disclosure for the rest. */}
-        <div className="flex flex-col border-t border-graphite/15 min-[640px]:hidden">
-          {primaryIdx.map((i) => <FaqItem key={i} i={i} />)}
-          <details className="group border-b border-graphite/15">
-            <summary className="flex cursor-pointer list-none items-center gap-5 py-6 text-[14px] uppercase tracking-[0.08em] text-maroon [&::-webkit-details-marker]:hidden">
-              <span>Показать все вопросы</span>
-              <span className="font-display text-base leading-none transition-transform duration-200 group-open:rotate-45">+</span>
-            </summary>
-            <div className="flex flex-col">
-              {secondaryIdx.map((i) => <FaqItem key={i} i={i} />)}
-            </div>
-          </details>
-        </div>
-
-        {/* Desktop: all 8, flat. */}
-        <div className="hidden flex-col border-t border-graphite/15 min-[640px]:flex">
-          {items.map((_, i) => <FaqItem key={i} i={i} />)}
+        <div className="flex flex-col border-t border-graphite/15">
+          {homeFaq.map(([q, a], i) => (
+            <details key={q} className="group border-b border-graphite/15">
+              <summary className="flex min-h-[64px] cursor-pointer list-none items-start gap-5 py-6 [&::-webkit-details-marker]:hidden">
+                <span aria-hidden className="flex-none pt-1 font-display text-[13px] text-maroon">
+                  {String(i + 1).padStart(2, "0")} /
+                </span>
+                <h3 className="m-0 flex-1 text-balance text-[clamp(17px,2.6vw,21px)] font-normal leading-[1.35] tracking-[-0.015em] text-graphite">
+                  {q}
+                </h3>
+                <span
+                  aria-hidden
+                  className="flex-none pt-0.5 font-display text-xl leading-none text-maroon transition-transform duration-200 group-open:rotate-45"
+                >
+                  +
+                </span>
+              </summary>
+              <p className="m-0 mb-7 max-w-[64ch] text-pretty text-[15px] leading-[1.65] text-graphite/75 min-[560px]:pl-[52px]">{a}</p>
+            </details>
+          ))}
         </div>
       </div>
     </section>

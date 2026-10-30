@@ -1,18 +1,15 @@
+import { homeFaq } from "./Faq";
+import { services } from "@/config/services";
 import { site, siteUrl, socialProfiles } from "@/config/site";
+import { jsonLd } from "@/lib/jsonld";
 
 /**
- * WebSite + Person + Service graph. Nothing here is invented: no awards, clients,
+ * Homepage graph: WebSite, Person, WebPage, one Service per direction and the
+ * visible FAQ. Nothing here is invented: no organisation, awards, clients,
  * ratings, prices or reviews, and sameAs is emitted only for profiles set in env.
  */
 export default function StructuredData() {
-  const knowsAbout = [
-    "системы обучения сотрудников",
-    "адаптация сотрудников",
-    "корпоративное обучение",
-    "базы знаний",
-    "автоматизация бизнес-процессов",
-    "AI",
-  ];
+  const person = { "@id": siteUrl + "/#person" };
 
   const graph: Record<string, unknown>[] = [
     {
@@ -22,34 +19,62 @@ export default function StructuredData() {
       url: siteUrl,
       inLanguage: "ru-RU",
       description: site.description,
-      publisher: { "@id": siteUrl + "/#person" },
+      publisher: person,
     },
     {
       "@type": "Person",
       "@id": siteUrl + "/#person",
       name: site.person,
+      alternateName: site.name,
       url: siteUrl,
+      image: siteUrl + "/images/danil-mironovich-editorial.webp",
       jobTitle: site.jobTitle,
-      knowsAbout,
+      knowsAbout: [
+        "автоматизация бизнес-процессов",
+        "интеграции CRM и API",
+        "внедрение ИИ в рабочие процессы",
+        "разработка внутренних приложений",
+        "личные кабинеты и административные панели",
+        "Telegram Mini Apps",
+        "системы обучения и адаптации сотрудников",
+        "операционное управление",
+      ],
       ...(socialProfiles.length > 0 ? { sameAs: socialProfiles } : {}),
     },
     {
-      "@type": "Service",
-      "@id": siteUrl + "/#service",
-      name: "Системы обучения сотрудников",
-      serviceType: "Разработка систем обучения и адаптации сотрудников",
-      description:
-        "Проектирование и запуск системы обучения сотрудников: адаптация новичков, корпоративная академия, база знаний, тестирование, аттестации, контроль прогресса, автоматизация и AI.",
-      provider: { "@id": siteUrl + "/#person" },
-      areaServed: "RU",
+      "@type": "WebPage",
+      "@id": siteUrl + "/#webpage",
       url: siteUrl,
+      name: site.title,
+      description: site.description,
+      inLanguage: "ru-RU",
+      isPartOf: { "@id": siteUrl + "/#website" },
+      about: person,
+    },
+    ...services.map((s) => ({
+      "@type": "Service",
+      "@id": siteUrl + "/#service-" + s.slug,
+      name: s.title,
+      serviceType: s.serviceType,
+      description: s.lead + " " + s.gives,
+      provider: person,
+      url: siteUrl + s.href,
+    })),
+    {
+      "@type": "FAQPage",
+      "@id": siteUrl + "/#faq",
+      mainEntity: homeFaq.map(([q, a]) => ({
+        "@type": "Question",
+        name: q,
+        acceptedAnswer: { "@type": "Answer", text: a },
+      })),
     },
   ];
 
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@graph": graph }) }}
+      dangerouslySetInnerHTML={{ __html: jsonLd({ "@context": "https://schema.org", "@graph": graph }) }}
     />
   );
 }

@@ -1,70 +1,68 @@
 import CtaLink from "./CtaLink";
+import { contactHref, projectsPublished } from "@/config/site";
 
+const tasks = ["Отчёты", "CRM и API", "Заявки и уведомления", "Внутренние приложения", "Дашборды", "Обучение сотрудников"];
+
+const secondaryClass =
+  "inline-flex min-h-[48px] items-center justify-center border border-cream/30 px-6 text-[14px] uppercase tracking-[0.06em] text-cream transition-colors hover:border-cream";
+
+/**
+ * Sized so H1, subtitle and the primary CTA fit the first screen at 1440×900,
+ * 390×844 and 375×667. The ghost wordmark is desktop-only texture.
+ */
 export default function Hero() {
   return (
-    <section id="hero" className="relative overflow-hidden bg-graphite px-[22px] pb-16 pt-8 min-[560px]:pb-24 min-[560px]:pt-12">
-      {/* Oversized ghost wordmark — pure typographic texture, not a badge or icon. */}
+    <section id="hero" className="relative overflow-hidden bg-graphite px-[22px] pb-14 pt-6 min-[560px]:pb-16 min-[560px]:pt-12">
       <p
         aria-hidden
-        className="pointer-events-none absolute right-0 top-0 select-none whitespace-nowrap font-display text-[clamp(140px,28vw,360px)] font-extrabold uppercase leading-none tracking-[-0.02em] text-cream/5"
+        className="pointer-events-none absolute -right-6 top-2 hidden select-none whitespace-nowrap font-display text-[clamp(140px,22vw,320px)] font-extrabold uppercase leading-none tracking-[-0.02em] text-cream/[0.04] min-[860px]:block"
       >
         Mironovich
       </p>
 
-      <div className="relative mx-auto flex max-w-[1080px] flex-col gap-10 min-[560px]:gap-14">
-        <div className="flex items-start justify-between gap-6 text-[11px] uppercase tracking-[0.22em] text-stone">
-          <p className="m-0">
-            Mironovich <span className="text-signal">/</span> Employee Training Systems
-          </p>
-          <p className="m-0 hidden min-[560px]:block">Mironovich / 2026</p>
-        </div>
+      <div className="relative mx-auto flex max-w-[1080px] flex-col gap-6 min-[560px]:gap-9">
+        <p className="m-0 text-[11px] uppercase leading-[1.6] tracking-[0.2em] text-stone">
+          Данил Миронович <span className="text-signal">/</span> Автоматизация · Приложения · Обучение
+        </p>
 
-        <h1 className="m-0 max-w-[13ch] font-display text-[clamp(42px,9.5vw,128px)] font-extrabold uppercase leading-[0.92] tracking-[-0.02em] text-cream">
-          Обучение
-          <br />
-          не должно
-          <br />
-          держаться
-          <br />
-          на одном
-          <br />
-          человеке<span className="text-signal">.</span>
+        <h1 className="m-0 font-display text-[clamp(38px,6.4vw,88px)] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-cream">
+          <span className="block">Меньше ручной работы.</span>{" "}
+          <span className="block">
+            Больше управляемости<span className="text-signal">.</span>
+          </span>
         </h1>
 
-        <div className="grid gap-8 border-t border-cream/15 pt-8 min-[760px]:grid-cols-[1fr_auto] min-[760px]:items-end">
-          <p className="m-0 max-w-[46ch] text-pretty text-[15.5px] leading-[1.6] text-stone min-[560px]:text-[17px]">
-            Системы обучения сотрудников: база знаний, тестирование, аттестация, контроль прогресса, автоматизация и AI.
+        <div className="grid gap-6 min-[860px]:grid-cols-[1fr_auto] min-[860px]:items-end min-[860px]:gap-12 min-[860px]:border-t min-[860px]:border-cream/15 min-[860px]:pt-8">
+          <p className="m-0 max-w-[54ch] text-pretty text-[16px] leading-[1.55] text-cream/80 min-[560px]:text-[18px]">
+            Автоматизирую бизнес-процессы, разрабатываю внутренние приложения и внедряю ИИ-инструменты. От разбора
+            задачи до работающего решения.
           </p>
-          <div className="flex flex-col items-start gap-3 min-[760px]:items-end">
+
+          <div className="flex flex-col gap-3 min-[480px]:flex-row min-[860px]:flex-col min-[860px]:items-stretch">
             <CtaLink
-              href="#contact"
+              href={contactHref}
               location="hero"
-              className="inline-flex min-h-[56px] items-center justify-center bg-signal px-9 text-[15px] font-medium uppercase tracking-[0.06em] text-white transition-colors hover:bg-[#b82323]"
+              className="inline-flex min-h-[56px] items-center justify-center whitespace-nowrap bg-signal px-5 text-center text-[14px] font-medium uppercase tracking-[0.04em] text-white transition-colors hover:bg-[#b82323] min-[400px]:px-8 min-[400px]:text-[15px] min-[400px]:tracking-[0.06em]"
             >
-              Разобрать систему обучения
+              Обсудить задачу бесплатно
             </CtaLink>
-            <a
-              href="#system"
-              className="text-[13px] text-stone underline decoration-stone/40 underline-offset-4 transition-colors hover:text-cream"
-            >
-              Из чего состоит система ↓
-            </a>
+            {projectsPublished ? (
+              <a href="/projects" className={secondaryClass}>Посмотреть проекты</a>
+            ) : (
+              <a href="#services" className={secondaryClass}>Направления работы ↓</a>
+            )}
           </div>
         </div>
 
-        {/* Mobile: trimmed to 3 directions so the tag row doesn't wrap into a paragraph. */}
-        <ul className="m-0 flex list-none flex-wrap gap-x-5 gap-y-2 border-t border-cream/10 p-0 pt-6 text-[11px] uppercase tracking-[0.16em] text-stone/80 min-[640px]:hidden">
-          <li>Адаптация</li>
-          <li>База знаний</li>
-          <li>Контроль</li>
-        </ul>
-        <ul className="m-0 hidden list-none flex-wrap gap-x-8 gap-y-2 border-t border-cream/10 p-0 pt-6 text-[11px] uppercase tracking-[0.16em] text-stone/80 min-[640px]:flex">
-          <li>Адаптация</li>
-          <li>Корпоративная академия</li>
-          <li>База знаний</li>
-          <li>Аттестации</li>
-          <li>Контроль прогресса</li>
-        </ul>
+        <div className="flex flex-col gap-4 border-t border-cream/15 pt-6">
+          <p className="m-0 max-w-[60ch] text-pretty text-[14px] leading-[1.6] text-stone">
+            Начинаем с бесплатного обсуждения задачи: разберёмся, что действительно стоит менять.{" "}
+            <span className="text-cream/80">Пришёл в разработку из операционного управления бизнесом.</span>
+          </p>
+          <ul className="m-0 flex list-none flex-wrap gap-x-6 gap-y-2 p-0 text-[11px] uppercase tracking-[0.16em] text-stone">
+            {tasks.map((t) => <li key={t}>{t}</li>)}
+          </ul>
+        </div>
       </div>
     </section>
   );

@@ -1,32 +1,35 @@
-import Hero from "@/components/Hero";
-import Pains from "@/components/Pains";
-import Services from "@/components/Services";
-import Shift from "@/components/Shift";
+import type { Metadata } from "next";
 import About from "@/components/About";
-import CaseStudy from "@/components/CaseStudy";
-import Process from "@/components/Process";
-import FirstReview from "@/components/FirstReview";
-import LeadForm from "@/components/LeadForm";
-import SecondaryCta from "@/components/SecondaryCta";
+import ContactSection from "@/components/ContactSection";
+import Diagnostics from "@/components/Diagnostics";
 import Faq from "@/components/Faq";
+import Hero from "@/components/Hero";
+import Problems from "@/components/Problems";
+import Process from "@/components/Process";
+import Scenarios from "@/components/Scenarios";
+import Services from "@/components/Services";
 import StickyCta from "@/components/StickyCta";
 import StructuredData from "@/components/StructuredData";
+import { site } from "@/config/site";
+import { pageMetadata } from "@/lib/seo";
 
+export const metadata: Metadata = pageMetadata({ title: site.title, description: site.description, path: "/" });
+
+// The projects block joins between Diagnostics and About once there is
+// confirmed material to show (config/site.ts → projectsPublished).
 export default function Page() {
   return (
     <>
-      <main>
+      <main id="main">
         <Hero />
-        <Pains />
+        <Problems />
         <Services />
-        <Shift />
-        <CaseStudy />
+        <Scenarios />
+        <Diagnostics />
         <About />
         <Process />
-        <FirstReview />
-        <LeadForm />
         <Faq />
-        <SecondaryCta />
+        <ContactSection />
       </main>
       <StickyCta />
       <StructuredData />

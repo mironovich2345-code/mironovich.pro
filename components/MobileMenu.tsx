@@ -2,67 +2,99 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CtaLink from "./CtaLink";
+import { contactHref, type NavLink } from "@/config/site";
 
-/** Plain disclosure below 760px: no animation, closes on link tap, route change and Escape. */
-export default function MobileMenu({ links }: { links: readonly { href: string; label: string }[] }) {
+const FOCUSABLE = 'a[href], button:not([disabled])';
+
+/**
+ * Full-screen menu below 860px: closes on link tap, route change and Escape,
+ * keeps Tab inside while open, locks page scroll and returns focus to the toggle.
+ */
+export default function MobileMenu({ services, links }: { services: NavLink[]; links: NavLink[] }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => setOpen(false), [pathname]);
 
   useEffect(() => {
     if (!open) return;
+    const toggle = toggleRef.current;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") return setOpen(false);
+      if (e.key !== "Tab" || !panelRef.current) return;
+      const items = [toggle, ...panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE)].filter(Boolean) as HTMLElement[];
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
     };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+      toggle?.focus();
+    };
   }, [open]);
 
   const close = () => setOpen(false);
+  const itemClass =
+    "flex min-h-[52px] items-center justify-between border-b border-cream/10 text-[16px] uppercase tracking-[0.04em] text-cream hover:text-signal";
 
   return (
-    <div className="min-[760px]:hidden">
+    <div className="min-[860px]:hidden">
       <button
+        ref={toggleRef}
         type="button"
         aria-expanded={open}
         aria-controls="mobile-menu"
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex min-h-[38px] items-center border border-cream/20 px-3.5 text-[13px] uppercase tracking-[0.06em] text-cream transition-colors hover:border-signal"
+        className="relative z-50 inline-flex min-h-[44px] items-center border border-cream/25 px-4 text-[13px] uppercase tracking-[0.06em] text-cream transition-colors hover:border-signal"
       >
         {open ? "Закрыть" : "Меню"}
       </button>
 
       {open && (
-        <nav
+        <div
+          ref={panelRef}
           id="mobile-menu"
-          aria-label="Основная навигация"
-          className="absolute inset-x-0 top-full border-y border-cream/10 bg-graphite px-[22px] pb-5 pt-2"
+          className="fixed inset-x-0 bottom-0 top-[65px] z-40 overflow-y-auto border-t border-cream/10 bg-graphite px-[22px] pb-[calc(24px+env(safe-area-inset-bottom))] pt-4"
         >
-          <ul className="m-0 flex list-none flex-col p-0">
-            {links.map((l) => (
-              <li key={l.href}>
-                <Link
-                  href={l.href}
-                  onClick={close}
-                  className="flex min-h-[48px] items-center border-b border-cream/10 text-[15px] uppercase tracking-[0.04em] text-stone hover:text-cream"
-                >
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <nav aria-label="Основная навигация">
+            <p className="m-0 mb-1 mt-2 text-[11px] uppercase tracking-[0.22em] text-signal">Услуги</p>
+            <ul className="m-0 mb-6 flex list-none flex-col border-t border-cream/10 p-0">
+              {services.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} onClick={close} className={itemClass}>
+                    {l.label} <span aria-hidden className="text-stone">→</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <ul className="m-0 flex list-none flex-col border-t border-cream/10 p-0">
+              {links.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} onClick={close} className={itemClass}>
+                    {l.label} <span aria-hidden className="text-stone">→</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
           <CtaLink
-            href="/#contact"
+            href={contactHref}
             location="header"
             onClick={close}
-            className="mt-4 flex min-h-[50px] items-center justify-center bg-signal text-[15px] font-medium uppercase tracking-[0.06em] text-white"
+            className="mt-8 flex min-h-[56px] items-center justify-center bg-signal text-[15px] font-medium uppercase tracking-[0.06em] text-white"
           >
-            Обсудить задачу
+            Обсудить задачу бесплатно
           </CtaLink>
-        </nav>
+        </div>
       )}
     </div>
   );
