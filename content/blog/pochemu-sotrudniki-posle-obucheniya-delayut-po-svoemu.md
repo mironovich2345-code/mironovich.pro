@@ -3,7 +3,8 @@ title: Почему сотрудники после обучения всё ра
 description: Пять причин, почему пройденное обучение не превращается в реальное поведение сотрудника на рабочем месте.
 slug: pochemu-sotrudniki-posle-obucheniya-delayut-po-svoemu
 publishDate: 2026-09-26
-category: Обучение сотрудников
+category: obuchenie-sotrudnikov
+related: kak-postroit-sistemu-obucheniya-s-nulya, kak-ponyat-chto-net-sistemy-obucheniya
 excerpt: Просмотр инструкции или прохождение курса ещё не означает, что сотрудник начнёт правильно действовать в реальной работе.
 readingTime: 6
 status: published

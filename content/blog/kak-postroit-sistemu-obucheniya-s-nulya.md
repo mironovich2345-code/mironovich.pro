@@ -3,7 +3,8 @@ title: Как построить систему обучения сотрудн�
 description: Практический план из пяти этапов: роли, маршрут сотрудника, контент, проверка знаний и аналитика обучения.
 slug: kak-postroit-sistemu-obucheniya-s-nulya
 publishDate: 2026-09-26
-category: Система обучения
+category: obuchenie-sotrudnikov
+related: kak-ponyat-chto-net-sistemy-obucheniya, pochemu-sotrudniki-posle-obucheniya-delayut-po-svoemu
 excerpt: Система обучения начинается не с выбора LMS. Сначала нужно определить роли, знания, маршрут сотрудника и способ проверки результата.
 readingTime: 7
 status: published

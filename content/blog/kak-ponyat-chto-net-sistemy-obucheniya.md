@@ -3,7 +3,8 @@ title: Как понять, что у компании нет системы о�
 description: 5 признаков, что обучение сотрудников в компании держится на отдельных людях, документах и ручной передаче знаний, а не на системе.
 slug: kak-ponyat-chto-net-sistemy-obucheniya
 publishDate: 2026-09-26
-category: Система обучения
+category: obuchenie-sotrudnikov
+related: kak-postroit-sistemu-obucheniya-s-nulya, kompaniya-zavisit-ot-odnogo-cheloveka
 excerpt: Если обучение зависит от конкретного руководителя, знания разбросаны по чатам, а результаты невозможно проверить — скорее всего, системы обучения у компании пока нет.
 readingTime: 5
 status: published

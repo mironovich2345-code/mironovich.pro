@@ -15,7 +15,7 @@ title: Как выстроить адаптацию новичка, чтобы �
 description: Одно-два предложения для поисковой выдачи и превью в мессенджерах, до 160 символов.
 slug: adaptatsiya-novichka-bez-zavisimosti-ot-rukovoditelya
 publishDate: 2026-10-01
-category: Адаптация
+category: obuchenie-sotrudnikov
 excerpt: Короткий анонс для карточки на странице /blog. Если не указан — берётся description.
 status: draft
 coverImage: /blog/adaptatsiya-novichka.png
@@ -40,7 +40,9 @@ coverImageAlt: Что описывает картинка — одной фра�
 | `description` | да | meta description, OpenGraph, JSON-LD |
 | `slug` | да | URL: `/blog/<slug>`. Латиница в нижнем регистре, цифры, дефисы. Уникальный |
 | `publishDate` | да | `ГГГГ-ММ-ДД` — `datePublished` |
-| `category` | да | Метка над заголовком: «Адаптация», «Базы знаний», «AI» и т. п. |
+| `category` | да | Один из slug: `avtomatizaciya`, `razrabotka-prilozheniy`, `ii-dlya-biznesa`, `obuchenie-sotrudnikov`, `effektivnost-biznesa` (справочник — `config/blog.ts`). Определяет страницу категории и связанную услугу |
+| `service` | нет | Услуга, на которую ведёт статья: `automation`, `apps`, `training` или `none`. По умолчанию — услуга категории |
+| `related` | нет | Slug связанных статей через запятую — показываются первыми в «Читать по теме». Остальные подбираются по категории и услуге |
 | `status` | да | `draft` — черновик, `published` — опубликована |
 | `excerpt` | нет | Анонс для списка `/blog`. По умолчанию — `description` |
 | `updatedDate` | нет | `ГГГГ-ММ-ДД` — `dateModified`. Указывать, только когда статью реально правили |
@@ -84,3 +86,13 @@ coverImageAlt: Что описывает картинка — одной фра�
 - [ ] картинка лежит в `public/`, есть `coverImageAlt`, оригинал не подменён
 - [ ] нет выдуманных клиентов, цифр, кейсов и отзывов
 - [ ] `npm run typecheck` и `npm run build` проходят
+
+## Категории
+
+Страница `/blog/category/<slug>` создаётся, только когда в категории есть
+опубликованная статья. В индекс и sitemap она попадает с 3 статей
+(`MIN_POSTS_TO_INDEX_CATEGORY` в `config/blog.ts`); до этого — `noindex, follow`.
+Пустые категории в фильтре блога не показываются.
+
+Темы будущих статей — в `docs/blog/content-plan.md`. Статьи из плана
+публикуются по одной, после согласования темы и текста.

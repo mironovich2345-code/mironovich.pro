@@ -4,7 +4,8 @@ seoTitle: Компания зависит от одного сотрудника
 description: Почему сильный сотрудник, через которого проходит вся информация и обучение, может стать точкой риска для компании.
 slug: kompaniya-zavisit-ot-odnogo-cheloveka
 publishDate: 2026-09-26
-category: Управление знаниями
+category: obuchenie-sotrudnikov
+related: kak-ponyat-chto-net-sistemy-obucheniya, stoimost-plohoy-adaptacii-sotrudnika
 excerpt: Если только один человек знает, как правильно обучать сотрудников и решать рабочие вопросы, компания хранит знания не в системе, а в человеке.
 readingTime: 5
 status: published

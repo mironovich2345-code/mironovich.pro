@@ -1,6 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { readImage, type ImageInfo } from "./image-size";
+import { blogCategories, categoryBySlug, isCategorySlug, type CategorySlug } from "@/config/blog";
+import { isServiceSlug, type ServiceSlug } from "@/config/services";
 import { parseMarkdown, plainWordCount, type Block } from "./markdown";
 
 /**
@@ -24,7 +26,12 @@ export type Post = {
   description: string;
   /** Short text for the /blog list; falls back to description */
   excerpt: string;
-  category: string;
+  /** One of config/blog.ts */
+  category: CategorySlug;
+  /** Service the article links to: frontmatter `service`, otherwise the category's */
+  service: ServiceSlug | null;
+  /** Slugs from frontmatter `related` — shown first in «Читать по теме» */
+  related: string[];
   /** YYYY-MM-DD */
   publishDate: string;
   /** YYYY-MM-DD, only when the article was actually revised */
@@ -44,6 +51,7 @@ export type Post = {
 const KEYS = [
   "title", "description", "slug", "publishDate", "updatedDate",
   "category", "readingTime", "excerpt", "status", "coverImage", "coverImageAlt", "order", "seoTitle",
+  "service", "related",
 ] as const;
 type Key = (typeof KEYS)[number];
 
@@ -94,6 +102,20 @@ function readPost(file: string): Post {
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
     throw fail("slug «" + slug + "» — только латиница в нижнем регистре, цифры и дефисы");
   }
+  // /blog/category/... is a section of its own
+  if (slug === "category") throw fail("slug «category» зарезервирован");
+
+  const category = meta.category!;
+  if (!isCategorySlug(category)) {
+    throw fail("category «" + category + "» — нужен один из: " + blogCategories.map((c) => c.slug).join(", "));
+  }
+  let service: ServiceSlug | null = categoryBySlug(category).service;
+  if (meta.service) {
+    if (meta.service !== "none" && !isServiceSlug(meta.service)) throw fail("service — automation, apps, training или none");
+    service = meta.service === "none" ? null : (meta.service as ServiceSlug);
+  }
+  const related = (meta.related ?? "").split(",").map((r) => r.trim()).filter(Boolean);
+
   const status = meta.status!;
   if (status !== "draft" && status !== "published") throw fail("status — draft или published, сейчас «" + status + "»");
 
@@ -146,7 +168,9 @@ function readPost(file: string): Post {
     seoTitle: meta.seoTitle || undefined,
     description: meta.description!,
     excerpt: meta.excerpt || meta.description!,
-    category: meta.category!,
+    category,
+    service,
+    related,
     publishDate,
     updatedDate,
     readingTime,
@@ -204,6 +228,37 @@ export function getRoutablePosts(): Post[] {
 
 export function getPostBySlug(slug: string): Post | undefined {
   return getRoutablePosts().find((p) => p.slug === slug);
+}
+
+/** Published articles of one category, newest first. */
+export function getPostsByCategory(slug: CategorySlug): Post[] {
+  return getPublishedPosts().filter((p) => p.category === slug);
+}
+
+/** Categories that have at least one published article, in the order of config/blog.ts. */
+export function categoriesWithPosts() {
+  const posts = getPublishedPosts();
+  return blogCategories
+    .map((c) => ({ ...c, count: posts.filter((p) => p.category === c.slug).length }))
+    .filter((c) => c.count > 0);
+}
+
+/**
+ * «Читать по теме»: explicit `related` first, then the same category, then the
+ * same target service; newer first within each group. Only published articles.
+ */
+export function relatedPosts(post: Post, limit = 3): Post[] {
+  const others = getPublishedPosts().filter((p) => p.slug !== post.slug);
+  const score = (p: Post) =>
+    (post.related.includes(p.slug) ? 100 : 0) +
+    (p.category === post.category ? 10 : 0) +
+    (post.service && p.service === post.service ? 1 : 0);
+  return others
+    .map((p, i) => ({ p, s: score(p), i }))
+    .filter((x) => x.s > 0)
+    .sort((a, b) => b.s - a.s || a.i - b.i)
+    .slice(0, limit)
+    .map((x) => x.p);
 }
 
 /** Latest change across published articles, YYYY-MM-DD. */

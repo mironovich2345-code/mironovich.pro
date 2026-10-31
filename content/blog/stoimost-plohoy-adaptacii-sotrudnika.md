@@ -3,7 +3,8 @@ title: Сколько бизнесу стоит плохая адаптация 
 description: Из каких скрытых расходов складывается плохая адаптация: время руководителя, ошибки, недополученный результат, увольнения и повторный найм.
 slug: stoimost-plohoy-adaptacii-sotrudnika
 publishDate: 2026-09-26
-category: Адаптация сотрудников
+category: obuchenie-sotrudnikov
+related: kak-postroit-sistemu-obucheniya-s-nulya, kompaniya-zavisit-ot-odnogo-cheloveka
 excerpt: Зарплата новичка — далеко не единственная стоимость адаптации. Большая часть расходов обычно находится в работе руководителей, ошибках и потерянном результате.
 readingTime: 6
 status: published
