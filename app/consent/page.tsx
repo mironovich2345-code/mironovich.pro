@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { contacts } from "@/config/contacts";
+import LegalDocument from "@/components/LegalDocument";
+import { getLegalDoc, legalMode } from "@/lib/legal";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -34,7 +36,19 @@ const blocks: { heading: string; items: string[] }[] = [
   }
 ];
 
+/**
+ * New text from content/legal/consent.md once config/legal.ts says it is published
+ * (or as a marked draft with LEGAL_PREVIEW=1 on staging); the current wording otherwise.
+ */
 export default function Page() {
+  const doc = getLegalDoc("consent");
+  const mode = legalMode(doc);
+  if (mode !== "legacy") return <LegalDocument doc={doc} mode={mode} other={{ href: "/privacy", label: "Политика обработки персональных данных" }} />;
+  return <LegacyPage />;
+}
+
+/** The wording currently live on mironovich.pro — unchanged. */
+function LegacyPage() {
   return (
     <main id="main" className="mx-auto max-w-[720px] px-[22px] py-16">
       <h1 className="m-0 mb-6 font-display text-[clamp(28px,6vw,44px)] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-cream">
