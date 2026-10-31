@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { consentVersion } from "@/config/legal";
 import {
   HONEYPOT_FIELD, LEAD_LIMITS, REDACTED, directionLabel, isLeadDirection, leadFormExtended, looksPersonal, normalizePagePath, validContact,
 } from "@/lib/lead";
@@ -149,6 +150,8 @@ export async function POST(req: Request) {
       "<b>Задача:</b>\n" + escapeHtml(task) + "\n\n" +
       "<b>Страница:</b>\n" + escapeHtml(page) + "\n\n" +
       "<b>Дата:</b>\n" + escapeHtml(date) + "\n\n" +
+      // which consent text was accepted — the checkbox is required, the server rejects leads without it
+      "<b>Согласие на обработку ПД:</b>\nполучено, редакция " + escapeHtml(consentVersion) + "\n\n" +
       "<b>ИСТОЧНИК</b>\n" +
       "Source: " + escapeHtml(attr.utm_source) + "\n" +
       "Medium: " + escapeHtml(attr.utm_medium) + "\n" +

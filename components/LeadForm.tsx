@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useRef, useState } from "react";
 import ConsentDialog from "./ConsentDialog";
+import { consentLabel, legal } from "@/config/legal";
 import ContactLink from "./ContactLink";
 import { contacts } from "@/config/contacts";
 import { track, trackFormStartOnce } from "@/lib/analytics";
@@ -243,7 +244,7 @@ export default function LeadForm({ defaultDirection }: { defaultDirection?: Lead
               className="mt-[2px] h-5 w-5 flex-none cursor-pointer accent-[#D92D2D]"
             />
             <p className="m-0 text-[14px] leading-[1.5] text-stone">
-              <label htmlFor="lead-consent" className="cursor-pointer">Я соглашаюсь на обработку персональных данных</label>
+              <label htmlFor="lead-consent" className="cursor-pointer">{consentLabel}</label>
               {" "}
               <button
                 type="button"
@@ -274,12 +275,20 @@ export default function LeadForm({ defaultDirection }: { defaultDirection?: Lead
           {sending ? "Отправляю…" : "Отправить задачу"}
         </button>
 
-        <p className="m-0 text-[13px] leading-[1.5] text-stone">
-          Нажимая кнопку, вы принимаете{" "}
-          <Link href="/consent" className="text-cream/80 underline underline-offset-[3px] hover:text-cream">согласие на обработку данных</Link>{" "}
-          и{" "}
-          <Link href="/privacy" className="text-cream/80 underline underline-offset-[3px] hover:text-cream">политику</Link>.
-        </p>
+        {legal.published ? (
+          // the approved consent is a separate document and is not bundled with the policy
+          <p className="m-0 text-[13px] leading-[1.5] text-stone">
+            Как обрабатываются данные — в{" "}
+            <Link href="/privacy" className="text-cream/80 underline underline-offset-[3px] hover:text-cream">Политике обработки персональных данных</Link>.
+          </p>
+        ) : (
+          <p className="m-0 text-[13px] leading-[1.5] text-stone">
+            Нажимая кнопку, вы принимаете{" "}
+            <Link href="/consent" className="text-cream/80 underline underline-offset-[3px] hover:text-cream">согласие на обработку данных</Link>{" "}
+            и{" "}
+            <Link href="/privacy" className="text-cream/80 underline underline-offset-[3px] hover:text-cream">политику</Link>.
+          </p>
+        )}
       </form>
 
       <ConsentDialog open={dialog} onClose={closeDialog} />
