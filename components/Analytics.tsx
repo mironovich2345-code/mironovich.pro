@@ -37,8 +37,10 @@ export default function Analytics() {
           m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
           k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
           (window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");
-          ym(${Number(metricaId)},"init",{defer:true,clickmap:true,trackLinks:true,accurateTrackBounce:true});
-          ym(${Number(metricaId)},"hit",location.href,{title:document.title,referer:document.referrer});`}
+          (function(){var id=${Number(metricaId)},r="";
+          try{var ru=new URL(document.referrer);r=ru.origin+ru.pathname}catch(e){}
+          ym(id,"init",{defer:true,clickmap:true,trackLinks:true,accurateTrackBounce:true});
+          ym(id,"hit",(window.__mrnvSafeUrl||function(){return location.href})(),{title:document.title,referer:r});})();`}
         </Script>
       )}
 

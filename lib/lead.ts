@@ -57,3 +57,19 @@ export function normalizePagePath(v: unknown): string {
   if (/^\/(?:blog|blog\/category|projects)\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(path) && path.length <= 120) return path;
   return "unknown";
 }
+
+/**
+ * True when a value looks like personal data: an e-mail, a phone-like run of
+ * digits, a mailto:/tel: link or a long numeric id. Used to drop such values
+ * from UTM tags and query strings before they reach a lead or analytics.
+ */
+export function looksPersonal(v: string): boolean {
+  const s = v.trim();
+  if (!s) return false;
+  if (/@|%40|mailto:|tel:/i.test(s)) return true;
+  // 7+ digits once spaces, brackets, dashes and plus are ignored: phone numbers, passport/INN-like ids
+  return /\d{7,}/.test(s.replace(/[\s()+\-.]/g, ""));
+}
+
+/** Marker that replaces a value removed by looksPersonal(). */
+export const REDACTED = "redacted";

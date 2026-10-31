@@ -5,6 +5,8 @@
  * timestamp, all kept in the visitor's own localStorage.
  */
 
+import { REDACTED, looksPersonal } from "./lead";
+
 const KEY = "mrnv_attr_v1";
 
 export const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const;
@@ -35,8 +37,11 @@ export const emptyAttribution = (): Attribution => ({
   firstSeenAt: UNKNOWN,
 });
 
-/** Printable text only, collapsed and capped — UTM values come straight from the URL. */
-const cleanUtm = (v: string | null) => (v ?? "").replace(/[\u0000-\u001f\u007f<>]/g, "").trim().slice(0, 100);
+/** Printable text only, capped; values that look like an e-mail or phone are replaced. */
+const cleanUtm = (v: string | null) => {
+  const t = (v ?? "").replace(/[\u0000-\u001f\u007f<>]/g, "").trim().slice(0, 100);
+  return looksPersonal(t) ? REDACTED : t;
+};
 
 /** Referrer reduced to its origin: full referring URLs can carry personal data in the path or query. */
 function refOrigin(ref: string): string {

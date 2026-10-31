@@ -18,7 +18,7 @@
  *   counted twice.
  */
 
-import { normalizePagePath } from "./lead";
+import { REDACTED, looksPersonal, normalizePagePath } from "./lead";
 
 export type AnalyticsEvent =
   | "service_view"
@@ -65,7 +65,9 @@ export const safeToken = (v: unknown, max = 60): string =>
 function clean(params: EventParams): Record<string, string> {
   const out: Record<string, string> = {};
   for (const k of ALLOWED_KEYS) {
-    const v = safeToken(params[k]);
+    const raw = params[k];
+    // check before tokenising: «ivan@mail.ru» would otherwise survive as «ivanmail.ru»
+    const v = typeof raw === "string" && looksPersonal(raw) ? REDACTED : safeToken(raw);
     if (v) out[k] = v;
   }
   return out;

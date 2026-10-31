@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import {
-  HONEYPOT_FIELD, LEAD_LIMITS, directionLabel, isLeadDirection, leadFormExtended, normalizePagePath, validContact,
+  HONEYPOT_FIELD, LEAD_LIMITS, REDACTED, directionLabel, isLeadDirection, leadFormExtended, looksPersonal, normalizePagePath, validContact,
 } from "@/lib/lead";
 
 export const runtime = "nodejs";
@@ -27,7 +27,10 @@ const UTM_FIELDS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "
  *  http(s) origin, the landing page must be one of the site's own routes. */
 function readAttribution(v: unknown) {
   const src = (typeof v === "object" && v !== null ? v : {}) as Record<string, unknown>;
-  const text = (x: unknown) => (typeof x === "string" ? x.replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0, 100) : "");
+  const text = (x: unknown) => {
+    const t = typeof x === "string" ? x.replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0, 100) : "";
+    return looksPersonal(t) ? REDACTED : t;
+  };
   const out = {} as Record<AttrField, string>;
   for (const k of UTM_FIELDS) out[k] = text(src[k]) || (k === "utm_source" || k === "utm_medium" ? "direct" : "unknown");
 
@@ -35,7 +38,7 @@ function readAttribution(v: unknown) {
   if (typeof src.referrer === "string" && src.referrer !== "direct") {
     try {
       const u = new URL(src.referrer);
-      if (u.protocol === "http:" || u.protocol === "https:") referrer = u.origin;
+      if ((u.protocol === "http:" || u.protocol === "https:") && !looksPersonal(u.hostname)) referrer = u.origin;
     } catch {
       /* keep direct */
     }

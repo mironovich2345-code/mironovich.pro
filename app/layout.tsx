@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Roboto_Condensed } from "next/font/google";
+import Script from "next/script";
 import Analytics from "@/components/Analytics";
 import Footer from "@/components/Footer";
 import SiteHeader from "@/components/SiteHeader";
 import { site, siteUrl } from "@/config/site";
+import { urlHygieneScript } from "@/lib/url-hygiene";
 import "./globals.css";
 
 const inter = Inter({
@@ -48,6 +50,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ru" className={inter.variable + " " + displayFont.variable}>
       <body className="font-sans antialiased">
+        {/* strips personal data from the query string before analytics or attribution read it */}
+        <Script id="url-hygiene" strategy="beforeInteractive">
+          {urlHygieneScript}
+        </Script>
         <a
           href="#main"
           className="sr-only z-[70] bg-signal px-4 py-3 text-white focus:not-sr-only focus:fixed focus:left-3 focus:top-3"
