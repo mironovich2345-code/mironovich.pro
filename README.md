@@ -55,10 +55,12 @@ cp .env.example .env.local
 
 | Переменная | Поведение по умолчанию |
 |---|---|
-| `NEXT_PUBLIC_TELEGRAM_URL` | fallback из `config/site.ts`, `sameAs` в JSON-LD не выводится |
+| `NEXT_PUBLIC_TELEGRAM_URL` | подтверждённый адрес из `config/contacts.ts`; некорректная или старая ссылка игнорируется |
 | `NEXT_PUBLIC_INSTAGRAM_URL` | то же |
-| `NEXT_PUBLIC_YANDEX_METRICA_ID` | скрипт не загружается |
-| `NEXT_PUBLIC_GA_ID` | скрипт не загружается |
+| `NEXT_PUBLIC_YANDEX_METRICA_ID` | скрипт не загружается (принимаются только цифры) |
+| `NEXT_PUBLIC_GA_ID` | скрипт не загружается (формат `G-XXXX`) |
+| `NEXT_PUBLIC_ANALYTICS_CONSENT` | пусто — счётчики грузятся сразу; `required` — только после согласия в баннере |
+| `NEXT_PUBLIC_LEAD_FORM_EXTENDED` | поля «Компания» и «Направление» выключены |
 | `LEAD_TIMEZONE` | `Europe/Moscow` |
 
 Всё с префиксом `NEXT_PUBLIC_` попадает в клиентский бандл и публично видно.
@@ -123,7 +125,8 @@ components/
   Markdown — рендер статей блога (серверный компонент)
   StructuredData · Analytics · CtaLink
 config/
-  site.ts               имя, описание, соцссылки из env, навигация, projectsPublished
+  site.ts               имя, описание, навигация, projectsPublished
+  contacts.ts           единственный источник ссылок на Telegram и Instagram
   services.ts           три направления услуг — общий источник для главной, меню, футера, JSON-LD
   blog.ts               пять категорий блога и порог индексации страницы категории
 content/
@@ -137,9 +140,11 @@ lib/
   markdown.ts           небольшой Markdown-парсер без зависимостей
   jsonld.ts             безопасная сериализация JSON-LD
   seo.ts                pageMetadata(): canonical, OG и Twitter для каждой страницы
+  consent.ts            режим согласия на аналитику
   lead.ts               общие правила формы: лимиты, направления, валидация контакта, флаг расширенной формы
 docs/
-  legal/                ПРОЕКТЫ политики и согласия — не опубликованы, ждут юриста и реквизитов
+  legal/                ПРОЕКТЫ политики и согласия + аудит обработки данных — не опубликованы
+  release/              план релиза и отката, настройка аналитики, тест доставки в Telegram
   blog/content-plan.md  контент-план на 55 статей — на согласовании, статьи не созданы
 public/
   images/               фотографии (webp)

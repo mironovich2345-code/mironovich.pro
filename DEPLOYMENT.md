@@ -57,8 +57,10 @@ TELEGRAM_BOT_TOKEN=<из шага 8>
 TELEGRAM_CHAT_ID=<из шага 8>
 ```
 
-Опционально: `NEXT_PUBLIC_TELEGRAM_URL`, `NEXT_PUBLIC_INSTAGRAM_URL`,
-`NEXT_PUBLIC_YANDEX_METRICA_ID`, `NEXT_PUBLIC_GA_ID`, `LEAD_TIMEZONE`.
+Опционально: `NEXT_PUBLIC_YANDEX_METRICA_ID`, `NEXT_PUBLIC_GA_ID`, `LEAD_TIMEZONE`.
+Контакты Telegram и Instagram заданы в `config/contacts.ts`; переменные
+`NEXT_PUBLIC_TELEGRAM_URL` / `NEXT_PUBLIC_INSTAGRAM_URL` нужны только чтобы их
+заменить. Полный список и порядок релиза — `docs/release/release-plan.md`.
 
 Важно: `NEXT_PUBLIC_*` вшиваются в бандл **на этапе сборки**. После их
 изменения нужен новый деплой (Redeploy), а не restart.
@@ -124,9 +126,8 @@ HSTS с `preload` действует два года — это нормальн
 
 1. metrika.yandex.ru → создать счётчик на `mironovich.pro`.
 2. Номер счётчика → `NEXT_PUBLIC_YANDEX_METRICA_ID` в Railway → Redeploy.
-3. Создать цели типа «JavaScript-событие» с идентификаторами:
-   `lead_submit_success`, `form_start`, `cta_click`,
-   `telegram_fallback_click`, `lead_submit_error`.
+3. Создать цели типа «JavaScript-событие» — список и порядок в
+   `docs/release/analytics.md` (основная: `lead_submit_success`).
 4. Проверить в отчёте «Сводка», что визиты пошли.
 
 Пока переменная пустая, скрипт не загружается и домен Метрики не открывается в CSP.
