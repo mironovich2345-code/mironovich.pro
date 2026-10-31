@@ -101,7 +101,8 @@ app/
   contact/page.tsx      /contact — форма, следующие шаги, только подтверждённые контакты (ContactPage)
   projects/page.tsx     /projects — портфолио по статусам; пока список пуст: noindex, нет в sitemap и меню
   projects/[slug]/      страницы кейсов — только для проектов с caseStudy
-  blog/page.tsx         /blog — список опубликованных статей (Blog JSON-LD)
+  blog/page.tsx         /blog — фильтр по категориям, список статей, «О чём этот блог» (Blog JSON-LD)
+  blog/category/[category]/  страницы категорий: только с опубликованными статьями, в индексе с 3 статей
   blog/[slug]/page.tsx  /blog/<slug> — статья, BlogPosting JSON-LD, canonical, OG
   privacy/page.tsx      политика обработки данных (noindex, follow)
   consent/page.tsx      согласие на обработку данных (noindex, follow)
@@ -117,12 +118,14 @@ components/
   ContactSection (+LeadForm, ConsentDialog) · StickyCta · SectionLabel
   ServicePage — шаблон страницы услуги · Breadcrumbs
   ProjectCard · ProjectsByStatus · HomeProjects — портфолио
+  BlogCategoryNav · PostList — навигация и список статей блога
   SiteHeader (+ServicesMenu, MobileMenu) · Footer — подключены в layout.tsx, видны на всех страницах
   Markdown — рендер статей блога (серверный компонент)
   StructuredData · Analytics · CtaLink
 config/
   site.ts               имя, описание, соцссылки из env, навигация, projectsPublished
   services.ts           три направления услуг — общий источник для главной, меню, футера, JSON-LD
+  blog.ts               пять категорий блога и порог индексации страницы категории
 content/
   blog/                 статьи блога — по одному .md на статью (см. content/blog/README.md)
   services/             тексты страниц услуг: порядок блоков, задачи, уникальный блок, FAQ, стоимость
@@ -137,6 +140,7 @@ lib/
   lead.ts               общие правила формы: лимиты, направления, валидация контакта, флаг расширенной формы
 docs/
   legal/                ПРОЕКТЫ политики и согласия — не опубликованы, ждут юриста и реквизитов
+  blog/content-plan.md  контент-план на 55 статей — на согласовании, статьи не созданы
 public/
   images/               фотографии (webp)
   yandex_*.html         подтверждение Яндекс.Вебмастера — не удалять
