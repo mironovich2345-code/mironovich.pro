@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useCallback, useRef, useState } from "react";
 import ConsentDialog from "./ConsentDialog";
-import { site } from "@/config/site";
+import ContactLink from "./ContactLink";
+import { contacts } from "@/config/contacts";
 import { track, trackFormStartOnce } from "@/lib/analytics";
 import { getAttribution } from "@/lib/attribution";
 import {
@@ -259,15 +260,9 @@ export default function LeadForm({ defaultDirection }: { defaultDirection?: Lead
         {failed && (
           <div role="alert" className="border border-signal/50 p-4 text-[14px] leading-[1.55] text-cream">
             Не получилось доставить заявку. Попробуйте ещё раз или напишите напрямую:{" "}
-            <a
-              href={site.telegram}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => track("telegram_fallback_click")}
-              className="text-signal underline underline-offset-[3px]"
-            >
-              {site.telegram.replace("https://", "")}
-            </a>
+            <ContactLink contact={contacts.telegram} location="form_fallback" className="text-signal underline underline-offset-[3px]">
+              {contacts.telegram.text}
+            </ContactLink>
           </div>
         )}
 

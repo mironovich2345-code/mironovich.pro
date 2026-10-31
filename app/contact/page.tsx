@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import ContactLink from "@/components/ContactLink";
 import LeadForm from "@/components/LeadForm";
 import { services } from "@/config/services";
 import { confirmedContacts, site, siteUrl } from "@/config/site";
@@ -151,7 +152,7 @@ export default function ContactPage() {
   );
 }
 
-/** Rendered only for contacts set explicitly in the environment (config/site.ts → confirmedContacts). */
+/** Owner-confirmed contacts from config/contacts.ts. */
 function ContactList({ tone = "dark" }: { tone?: "dark" | "light" }) {
   const head = tone === "dark" ? "text-stone" : "text-graphite/65";
   const link = tone === "dark" ? "text-cream hover:text-signal" : "text-graphite hover:text-maroon";
@@ -160,11 +161,11 @@ function ContactList({ tone = "dark" }: { tone?: "dark" | "light" }) {
       <h2 className={"m-0 mb-3 text-[12px] font-normal uppercase tracking-[0.18em] " + head}>Написать напрямую</h2>
       <ul className="m-0 flex list-none flex-col gap-1 p-0">
         {confirmedContacts.map((c) => (
-          <li key={c.label}>
-            <a href={c.href} target="_blank" rel="noopener noreferrer" className={"inline-flex min-h-[44px] items-center gap-3 text-[16px] transition-colors " + link}>
+          <li key={c.channel}>
+            <ContactLink contact={c} location="contact_page" className={"inline-flex min-h-[44px] items-center gap-3 text-[16px] transition-colors " + link}>
               <span className="text-[12px] uppercase tracking-[0.14em] opacity-70">{c.label}</span>
               {c.text}
-            </a>
+            </ContactLink>
           </li>
         ))}
       </ul>

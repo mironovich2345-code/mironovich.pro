@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { site } from "@/config/site";
+import { contacts } from "@/config/contacts";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -55,8 +55,8 @@ export default function Page() {
 
       <p className="m-0 mt-10 text-[13px] text-stone">
         Вопросы по обработке данных — в Telegram:{" "}
-        <a href={site.telegram} target="_blank" rel="noopener noreferrer" className="text-cream underline hover:text-signal underline-offset-[3px]">
-          {site.telegram.replace("https://", "")}
+        <a href={contacts.telegram.href} target="_blank" rel="noopener noreferrer" className="text-cream underline hover:text-signal underline-offset-[3px]">
+          {contacts.telegram.text}
         </a>
       </p>
 

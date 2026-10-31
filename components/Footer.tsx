@@ -1,4 +1,6 @@
 import Link from "next/link";
+import ContactLink from "./ContactLink";
+import { contactList } from "@/config/contacts";
 import { navLinks, serviceLinks, site } from "@/config/site";
 
 const linkClass = "inline-flex min-h-[32px] items-center text-stone transition-colors hover:text-cream";
@@ -41,8 +43,9 @@ export default function Footer() {
           <div className="flex flex-col">
             <p className={headClass}>Связь и документы</p>
             <ul className="m-0 flex list-none flex-col p-0 text-[14px]">
-              <li><a href={site.telegram} target="_blank" rel="noopener noreferrer" className={linkClass}>Telegram</a></li>
-              <li><a href={site.instagram} target="_blank" rel="noopener noreferrer" className={linkClass}>Instagram</a></li>
+              {contactList.map((c) => (
+                <li key={c.channel}><ContactLink contact={c} location="footer" className={linkClass} /></li>
+              ))}
               <li><Link href="/privacy" className={linkClass}>Политика конфиденциальности</Link></li>
               <li><Link href="/consent" className={linkClass}>Согласие на обработку ПД</Link></li>
             </ul>
