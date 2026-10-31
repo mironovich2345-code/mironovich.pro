@@ -127,12 +127,14 @@ components/
 config/
   site.ts               имя, описание, навигация, projectsPublished
   contacts.ts           единственный источник ссылок на Telegram и Instagram
+  legal.ts              публикация новых юридических текстов (published), редакция согласия
   services.ts           три направления услуг — общий источник для главной, меню, футера, JSON-LD
   blog.ts               пять категорий блога и порог индексации страницы категории
 content/
   blog/                 статьи блога — по одному .md на статью (см. content/blog/README.md)
   services/             тексты страниц услуг: порядок блоков, задачи, уникальный блок, FAQ, стоимость
   projects.ts           портфолио: статус, задача, что сделано; добавлять только с подтверждением владельца
+  legal/                политика и согласие (проекты владельца); публикуются через config/legal.ts
 lib/
   analytics.ts          track(), список событий, ID провайдеров из env
   attribution.ts        first-touch UTM + referrer + landing page

@@ -28,6 +28,14 @@
 6. `NEXT_PUBLIC_TELEGRAM_URL` и `NEXT_PUBLIC_INSTAGRAM_URL` в production заданы
    подтверждёнными адресами (нужно для безопасного отката, см. ниже).
 
+## Публикация юридических текстов (после юридического Go)
+
+Отдельным коммитом **до** merge: заполнить поля в `content/legal/*.md`,
+`published: true` в `config/legal.ts`; в Railway production —
+`NEXT_PUBLIC_ANALYTICS_CONSENT=required`. Сборка проверит отсутствие
+незаполненных полей и включённый режим согласия. Подробно —
+`docs/legal/README.md`, «Как опубликовать».
+
 ## Merge и деплой
 
 1. Зафиксировать точку отката:
