@@ -6,6 +6,7 @@ import Faq from "./Faq";
 import Scenarios from "./Scenarios";
 import SectionLabel from "./SectionLabel";
 import StickyCta from "./StickyCta";
+import TrackServiceView from "./TrackServiceView";
 import { serviceBySlug, services } from "@/config/services";
 import type { ServicePageContent } from "@/content/services";
 import type { Item, SectionKey, UniqueBlock } from "@/content/services/types";
@@ -461,6 +462,7 @@ export default function ServicePage({
         <ContactSection index={pad(n + 1)} title={page.form.title} lead={page.form.lead} />
       </main>
       <StickyCta />
+      <TrackServiceView service={page.slug} />
     </>
   );
 }

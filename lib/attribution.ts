@@ -35,24 +35,38 @@ export const emptyAttribution = (): Attribution => ({
   firstSeenAt: UNKNOWN,
 });
 
+/** Printable text only, collapsed and capped — UTM values come straight from the URL. */
+const cleanUtm = (v: string | null) => (v ?? "").replace(/[\u0000-\u001f\u007f<>]/g, "").trim().slice(0, 100);
+
+/** Referrer reduced to its origin: full referring URLs can carry personal data in the path or query. */
+function refOrigin(ref: string): string {
+  try {
+    const u = new URL(ref);
+    return u.protocol === "http:" || u.protocol === "https:" ? u.origin : "";
+  } catch {
+    return "";
+  }
+}
+
 /** Reads the current URL + referrer into a first-touch record. */
 function capture(): Attribution {
   const url = new URL(window.location.href);
   const p = url.searchParams;
-  const val = (k: UtmKey) => (p.get(k) || "").trim().slice(0, 120);
+  const val = (k: UtmKey) => cleanUtm(p.get(k));
 
   const hasUtm = UTM_KEYS.some((k) => val(k) !== "");
-  const ref = (document.referrer || "").slice(0, 300);
-  const sameHost = ref.includes(window.location.host);
+  const origin = refOrigin(document.referrer || "");
+  const external = origin !== "" && origin !== window.location.origin;
 
   return {
-    utm_source: val("utm_source") || (hasUtm ? UNKNOWN : ref && !sameHost ? new URL(ref).hostname : DIRECT),
-    utm_medium: val("utm_medium") || (ref && !sameHost ? "referral" : DIRECT),
+    utm_source: val("utm_source") || (hasUtm ? UNKNOWN : external ? new URL(origin).hostname : DIRECT),
+    utm_medium: val("utm_medium") || (external ? "referral" : DIRECT),
     utm_campaign: val("utm_campaign") || UNKNOWN,
     utm_content: val("utm_content") || UNKNOWN,
     utm_term: val("utm_term") || UNKNOWN,
-    referrer: ref && !sameHost ? ref : DIRECT,
-    landingPage: url.pathname + (url.search || ""),
+    referrer: external ? origin : DIRECT,
+    // path only — the query string may hold anything, UTM values are kept above
+    landingPage: url.pathname.slice(0, 200),
     firstSeenAt: new Date().toISOString(),
   };
 }
