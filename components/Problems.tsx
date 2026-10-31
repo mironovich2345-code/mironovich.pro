@@ -59,7 +59,7 @@ export default function Problems() {
                 key={it.situation}
                 className="grid grid-cols-[44px_1fr] gap-x-4 gap-y-4 border-b border-graphite/15 py-7 min-[860px]:grid-cols-[72px_1.1fr_1fr_1fr] min-[860px]:gap-x-8 min-[860px]:py-9"
               >
-                <span className="font-display text-[clamp(24px,3vw,36px)] font-extrabold leading-none tracking-[-0.02em] text-graphite/30">
+                <span className="font-display text-[clamp(24px,3vw,36px)] font-extrabold leading-none tracking-[-0.02em] text-graphite/50">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <h3 className="m-0 text-balance text-[clamp(19px,2.4vw,23px)] font-medium leading-[1.25] tracking-[-0.01em] text-graphite">

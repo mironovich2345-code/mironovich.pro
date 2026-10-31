@@ -18,6 +18,15 @@ body {
 /* signal red keeps ≥3:1 against both graphite (4.0) and cream (4.2) */
 :focus-visible { outline: 2px solid #D92D2D; outline-offset: 3px; }
 
+/*
+ * Signal red as TEXT. The brand red #D92D2D stays for fills, borders and the focus
+ * ring, but as small text it falls short of WCAG AA (4.0:1 on graphite, 4.2:1 on
+ * cream). Text uses the nearest compliant shade for each surface.
+ */
+.text-signal { color: #E5484D; }            /* graphite: 4.9:1 */
+.bg-maroon .text-signal { color: #F06262; } /* maroon: 4.9:1 */
+.bg-cream .text-signal { color: #C42828; }  /* cream: 5.0:1 */
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
   html { scroll-behavior: auto; }

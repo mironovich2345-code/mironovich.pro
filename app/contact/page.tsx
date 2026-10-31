@@ -96,7 +96,7 @@ export default function ContactPage() {
             <ol className="m-0 grid list-none grid-cols-1 border-t border-graphite/15 p-0 min-[760px]:grid-cols-2 min-[1000px]:grid-cols-4">
               {steps.map((s, i) => (
                 <li key={s.title} className="flex flex-col gap-2 border-b border-graphite/15 py-7 min-[760px]:pr-6">
-                  <span className="font-display text-[clamp(30px,4vw,44px)] font-extrabold leading-none text-graphite/30">
+                  <span className="font-display text-[clamp(30px,4vw,44px)] font-extrabold leading-none text-graphite/50">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <h3 className="m-0 text-[15px] font-medium uppercase tracking-[0.04em] text-graphite">{s.title}</h3>

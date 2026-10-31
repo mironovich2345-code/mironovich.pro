@@ -37,7 +37,7 @@ export default function Diagnostics() {
                 ["Определяем следующие шаги", "Возможные варианты решения и с чего разумно начать."],
               ].map(([title, body], i) => (
                 <li key={title} className="grid grid-cols-[36px_1fr] gap-3">
-                  <span className="font-display text-[20px] font-extrabold leading-none text-graphite/30">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="font-display text-[20px] font-extrabold leading-none text-graphite/50">{String(i + 1).padStart(2, "0")}</span>
                   <div>
                     <p className="m-0 mb-1 text-[15px] font-medium text-graphite">{title}</p>
                     <p className="m-0 text-pretty text-[14.5px] leading-[1.55] text-graphite/75">{body}</p>

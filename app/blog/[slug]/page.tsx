@@ -130,7 +130,7 @@ export default async function PostPage({ params }: Props) {
             <p className="m-0 mb-6 text-pretty text-[clamp(17px,3.4vw,20px)] leading-[1.55] text-cream/80">{post.excerpt}</p>
 
             <p className="m-0 text-[13.5px] leading-[1.7] text-stone">
-              <Link href="/about" className="text-cream transition-colors hover:text-signal">
+              <Link href="/about" className="text-cream underline decoration-cream/40 underline-offset-4 transition-colors hover:text-signal">
                 {site.person}
               </Link>
               <span aria-hidden> · </span>

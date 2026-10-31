@@ -25,7 +25,7 @@ export default function Process() {
         <ol className="m-0 grid list-none grid-cols-1 border-t border-graphite/15 p-0 min-[760px]:grid-cols-2 min-[1000px]:grid-cols-3">
           {steps.map((s, i) => (
             <li key={s.title} className="flex flex-col gap-3 border-b border-graphite/15 py-8 min-[760px]:pr-8">
-              <span className="font-display text-[clamp(30px,4vw,44px)] font-extrabold leading-none tracking-[-0.02em] text-graphite/30">
+              <span className="font-display text-[clamp(30px,4vw,44px)] font-extrabold leading-none tracking-[-0.02em] text-graphite/50">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <h3 className="m-0 text-[15px] font-medium uppercase tracking-[0.06em] text-graphite">{s.title}</h3>

@@ -19,7 +19,7 @@ const heading: Record<Tone, string> = { dark: "text-cream", light: "text-graphit
 const body: Record<Tone, string> = { dark: "text-cream/80", light: "text-graphite/75" };
 const muted: Record<Tone, string> = { dark: "text-stone", light: "text-graphite/65" };
 const rule: Record<Tone, string> = { dark: "border-cream/15", light: "border-graphite/15" };
-const numberTone: Record<Tone, string> = { dark: "text-cream/25", light: "text-graphite/30" };
+const numberTone: Record<Tone, string> = { dark: "text-cream/40", light: "text-graphite/50" };
 
 const h2Class = "m-0 max-w-[20ch] text-balance font-display text-[clamp(30px,5.4vw,52px)] font-extrabold uppercase leading-[1.03] tracking-[-0.02em]";
 const ctaClass =
