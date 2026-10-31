@@ -2,22 +2,36 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { readConsent, saveConsent } from "@/lib/consent";
+import { CONSENT_OPEN_EVENT, readConsent, revokeConsent, saveConsent, type ConsentChoice } from "@/lib/consent";
 
 /**
- * Shown only when NEXT_PUBLIC_ANALYTICS_CONSENT=required and no choice is stored.
- * DRAFT wording — must be approved together with the privacy policy before the
- * mode is switched on.
+ * Shown when NEXT_PUBLIC_ANALYTICS_CONSENT=required and no choice is stored, or
+ * when reopened from the footer. DRAFT wording — to be approved together with
+ * the privacy policy before the mode is switched on.
  */
 export default function ConsentBanner() {
   const [open, setOpen] = useState(false);
+  const [current, setCurrent] = useState<ConsentChoice | null>(null);
 
-  useEffect(() => setOpen(readConsent() === null), []);
+  useEffect(() => {
+    const c = readConsent();
+    setCurrent(c);
+    setOpen(c === null);
+    const reopen = () => {
+      setCurrent(readConsent());
+      setOpen(true);
+    };
+    window.addEventListener(CONSENT_OPEN_EVENT, reopen);
+    return () => window.removeEventListener(CONSENT_OPEN_EVENT, reopen);
+  }, []);
 
   if (!open) return null;
 
-  const choose = (c: "granted" | "denied") => {
+  const choose = (c: ConsentChoice) => {
+    // withdrawing a previous «yes» must also remove the counters' cookies
+    if (c === "denied" && current === "granted") return revokeConsent();
     saveConsent(c);
+    setCurrent(c);
     setOpen(false);
   };
 
@@ -29,7 +43,8 @@ export default function ConsentBanner() {
     >
       <div className="mx-auto flex max-w-[1080px] flex-col gap-4 min-[760px]:flex-row min-[760px]:items-center min-[760px]:justify-between">
         <p className="m-0 max-w-[62ch] text-[14px] leading-[1.55] text-cream/85">
-          Сайт может использовать Яндекс Метрику и Google Analytics для обезличенной статистики посещений.{" "}
+          Сайт может использовать Яндекс Метрику и Google Analytics для обезличенной статистики посещений.
+          {current && <> Сейчас: {current === "granted" ? "разрешено" : "отклонено"}.</>}{" "}
           <Link href="/privacy" className="text-cream underline underline-offset-[3px] hover:text-signal">
             Подробнее
           </Link>

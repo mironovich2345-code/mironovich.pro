@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ConsentSettingsButton from "./ConsentSettingsButton";
 import ContactLink from "./ContactLink";
 import { contactList } from "@/config/contacts";
 import { navLinks, serviceLinks, site } from "@/config/site";
@@ -48,6 +49,7 @@ export default function Footer() {
               ))}
               <li><Link href="/privacy" className={linkClass}>Политика конфиденциальности</Link></li>
               <li><Link href="/consent" className={linkClass}>Согласие на обработку ПД</Link></li>
+              <ConsentSettingsButton className={linkClass} />
             </ul>
           </div>
         </div>

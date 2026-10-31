@@ -37,3 +37,29 @@ export function saveConsent(choice: ConsentChoice) {
 
 /** Whether analytics may load right now. */
 export const analyticsAllowed = (choice: ConsentChoice | null) => !consentRequired || choice === "granted";
+
+/** Footer «Настройки аналитики» reopens the banner through this event. */
+export const CONSENT_OPEN_EVENT = "mrnv:consent-open";
+
+export const openConsentSettings = () => window.dispatchEvent(new Event(CONSENT_OPEN_EVENT));
+
+/** Cookie names set by Yandex Metrica and GA4 on this site's domain. */
+const ANALYTICS_COOKIE = /^(_ym|_ga|_gid|_gat)/;
+
+/**
+ * Withdrawal: store «denied», delete the counters' first-party cookies on this
+ * host and its parent domains, then reload so no analytics code stays in memory.
+ */
+export function revokeConsent() {
+  saveConsent("denied");
+  const host = window.location.hostname;
+  const parts = host.split(".");
+  const domains = [""];
+  for (let i = 0; i < parts.length - 1; i++) domains.push("; domain=." + parts.slice(i).join("."));
+  for (const c of document.cookie.split(";")) {
+    const name = c.split("=")[0].trim();
+    if (!ANALYTICS_COOKIE.test(name)) continue;
+    for (const d of domains) document.cookie = name + "=; Max-Age=0; path=/" + d;
+  }
+  window.location.reload();
+}
