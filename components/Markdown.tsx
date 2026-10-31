@@ -40,13 +40,25 @@ const inline = (text: string) => renderInline(parseInline(text));
 const bullet =
   "relative pl-[22px] before:absolute before:left-0 before:top-[0.72em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-signal";
 
-function renderBlock(b: Block, i: number): ReactNode {
+/** Anchor of the n-th H2 (1-based) — shared by the headings and the table of contents. */
+const sectionId = (n: number) => "razdel-" + n;
+
+/** Plain text of an inline-markdown string, for the table of contents. */
+const plain = (text: string) => text.replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").replace(/[*_`]/g, "");
+
+/** H2 sections of an article, in order, with the ids the rendered headings carry. */
+export function tableOfContents(blocks: Block[]): { id: string; text: string }[] {
+  return blocks.filter((b): b is Block & { type: "h2"; text: string } => b.type === "h2").map((b, i) => ({ id: sectionId(i + 1), text: plain(b.text) }));
+}
+
+function renderBlock(b: Block, i: number, h2n: number): ReactNode {
   switch (b.type) {
     case "h2":
       return (
         <h2
           key={i}
-          className="m-0 mb-5 mt-14 text-balance font-display text-[clamp(26px,4.4vw,34px)] font-extrabold uppercase leading-[1.15] tracking-[-0.015em] text-graphite"
+          id={sectionId(h2n)}
+          className="m-0 mb-5 mt-14 scroll-mt-24 text-balance font-display text-[clamp(26px,4.4vw,34px)] font-extrabold uppercase leading-[1.15] tracking-[-0.015em] text-graphite"
         >
           {inline(b.text)}
         </h2>
@@ -125,5 +137,6 @@ function renderBlock(b: Block, i: number): ReactNode {
 
 /** Renders the block list produced by lib/markdown.ts. Server component — ships no client JS. */
 export default function Markdown({ blocks }: { blocks: Block[] }) {
-  return <div>{blocks.map(renderBlock)}</div>;
+  let h2n = 0;
+  return <div>{blocks.map((b, i) => renderBlock(b, i, b.type === "h2" ? ++h2n : h2n))}</div>;
 }

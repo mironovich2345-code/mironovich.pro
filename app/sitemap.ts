@@ -2,7 +2,8 @@ import type { MetadataRoute } from "next";
 import { services } from "@/config/services";
 import { projectsPublished, siteUrl } from "@/config/site";
 import { projectsWithCase } from "@/content/projects";
-import { getPublishedPosts, lastBlogUpdate } from "@/lib/blog";
+import { MIN_POSTS_TO_INDEX_CATEGORY, categoryHref } from "@/config/blog";
+import { categoriesWithPosts, getPostsByCategory, getPublishedPosts, lastBlogUpdate } from "@/lib/blog";
 
 // Published articles are added automatically. Drafts are never listed, and legal
 // pages are deliberately excluded — they are noindex, follow. Static pages carry
@@ -30,6 +31,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.7,
     },
+    // only categories with enough articles to be indexable
+    ...categoriesWithPosts()
+      .filter((c) => c.count >= MIN_POSTS_TO_INDEX_CATEGORY)
+      .map((c) => {
+        const latest = getPostsByCategory(c.slug).map((p) => p.updatedDate ?? p.publishDate).sort().pop()!;
+        return { url: siteUrl + categoryHref(c.slug), lastModified: new Date(latest), changeFrequency: "weekly" as const, priority: 0.6 };
+      }),
     ...getPublishedPosts().map((p) => ({
       url: siteUrl + "/blog/" + p.slug,
       lastModified: new Date(p.updatedDate ?? p.publishDate),
