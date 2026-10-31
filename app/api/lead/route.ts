@@ -14,21 +14,34 @@ type Lead = {
 
 /** First-touch attribution sent by the form. Never required — a missing or
  *  malformed block degrades to direct / unknown and never fails the lead. */
-const ATTR_FIELDS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "referrer", "landingPage"] as const;
+type AttrField = "utm_source" | "utm_medium" | "utm_campaign" | "utm_content" | "utm_term" | "referrer" | "landingPage";
 
 const str = (v: unknown) => (typeof v === "string" ? v.trim() : "");
 const escapeHtml = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const clamp = (s: string, max: number) => (s.length > max ? s.slice(0, max) + "…" : s);
 
+const UTM_FIELDS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const;
+
+/** Never trust the client: UTM is printable text capped at 100, referrer is reduced to an
+ *  http(s) origin, the landing page must be one of the site's own routes. */
 function readAttribution(v: unknown) {
   const src = (typeof v === "object" && v !== null ? v : {}) as Record<string, unknown>;
-  const out: Record<string, string> = {};
-  for (const k of ATTR_FIELDS) {
-    const raw = typeof src[k] === "string" ? (src[k] as string).trim() : "";
-    const fallback = k === "utm_source" || k === "utm_medium" || k === "referrer" ? "direct" : "unknown";
-    out[k] = (raw || fallback).slice(0, 200);
+  const text = (x: unknown) => (typeof x === "string" ? x.replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0, 100) : "");
+  const out = {} as Record<AttrField, string>;
+  for (const k of UTM_FIELDS) out[k] = text(src[k]) || (k === "utm_source" || k === "utm_medium" ? "direct" : "unknown");
+
+  let referrer = "direct";
+  if (typeof src.referrer === "string" && src.referrer !== "direct") {
+    try {
+      const u = new URL(src.referrer);
+      if (u.protocol === "http:" || u.protocol === "https:") referrer = u.origin;
+    } catch {
+      /* keep direct */
+    }
   }
+  out.referrer = referrer;
+  out.landingPage = normalizePagePath(src.landingPage);
   return out;
 }
 
@@ -46,10 +59,31 @@ const rateLimited = (ip: string) => {
 const fail = (error: string, status: number) =>
   NextResponse.json({ ok: false, delivered: false, error }, { status });
 
+/** Client address for rate limiting. Best effort: forwarded headers can be set by the client,
+ *  so this only slows casual spam; abuse protection belongs at the edge (proxy / WAF). */
+const clientIp = (req: Request) =>
+  req.headers.get("x-real-ip")?.trim() || req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+
+/** Browsers always send Origin on a cross-site POST; reject one that is not this host. */
+function foreignOrigin(req: Request): boolean {
+  const origin = req.headers.get("origin");
+  if (!origin) return false;
+  try {
+    return new URL(origin).host !== req.headers.get("host");
+  } catch {
+    return true;
+  }
+}
+
 export async function POST(req: Request) {
+  if (foreignOrigin(req)) return fail("forbidden", 403);
   if (req.headers.get("content-type")?.includes("application/json") !== true) {
     return fail("bad_content_type", 415);
   }
+  // refuse oversized bodies before reading them
+  if (Number(req.headers.get("content-length") ?? 0) > LEAD_LIMITS.payload * 4) return fail("too_large", 413);
+  // every attempt counts, valid or not, so invalid floods are throttled too
+  if (rateLimited(clientIp(req))) return fail("rate_limited", 429);
 
   const raw = await req.text();
   if (raw.length > LEAD_LIMITS.payload) return fail("too_large", 413);
@@ -87,9 +121,6 @@ export async function POST(req: Request) {
   ) {
     return fail("too_long", 422);
   }
-
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  if (rateLimited(ip)) return fail("rate_limited", 429);
 
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
