@@ -5,7 +5,7 @@ import BlogCategoryNav from "@/components/BlogCategoryNav";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import CtaLink from "@/components/CtaLink";
 import PostList from "@/components/PostList";
-import { blogCategories, categoryBySlug, categoryHref } from "@/config/blog";
+import { categoryBySlug, categoryHref } from "@/config/blog";
 import { contactHref, site, siteUrl } from "@/config/site";
 import { categoriesWithPosts, formatDate, getPublishedPosts, readingTimeLabel } from "@/lib/blog";
 import { jsonLd } from "@/lib/jsonld";
@@ -25,7 +25,7 @@ const crumbs = [
 export default function BlogPage() {
   const posts = getPublishedPosts();
   const [featured, ...rest] = posts;
-  const withPosts = new Set(categoriesWithPosts().map((c) => c.slug));
+  const categories = categoriesWithPosts();
   const url = siteUrl + "/blog";
 
   const structuredData = {
@@ -142,31 +142,29 @@ export default function BlogPage() {
           </section>
         )}
 
-        {/* What the blog covers — every category is described; only those with articles are links */}
-        <section className="bg-cream px-[22px] py-16 min-[560px]:py-24">
-          <div className="mx-auto max-w-[1080px]">
-            <h2 className="m-0 mb-10 max-w-[18ch] text-balance font-display text-[clamp(28px,4.6vw,44px)] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-graphite min-[560px]:mb-14">
-              О чём этот блог
-            </h2>
-            <ul className="m-0 grid list-none grid-cols-1 border-t border-graphite/15 p-0 min-[760px]:grid-cols-2 min-[760px]:gap-x-12">
-              {blogCategories.map((c) => (
-                <li key={c.slug} className="border-b border-graphite/15 py-6">
-                  <h3 className="m-0 mb-2 font-display text-[clamp(19px,2.4vw,23px)] font-extrabold uppercase leading-[1.15] text-graphite">
-                    {withPosts.has(c.slug) ? (
+        {/* What the blog covers — a category appears here only once it has a published article */}
+        {categories.length > 0 && (
+          <section className="bg-cream px-[22px] py-16 min-[560px]:py-24">
+            <div className="mx-auto max-w-[1080px]">
+              <h2 className="m-0 mb-10 max-w-[18ch] text-balance font-display text-[clamp(28px,4.6vw,44px)] font-extrabold uppercase leading-[1.05] tracking-[-0.02em] text-graphite min-[560px]:mb-14">
+                Разделы блога
+              </h2>
+              <ul className="m-0 grid list-none grid-cols-1 border-t border-graphite/15 p-0 min-[760px]:grid-cols-2 min-[760px]:gap-x-12">
+                {categories.map((c) => (
+                  <li key={c.slug} className="border-b border-graphite/15 py-6">
+                    <h3 className="m-0 mb-2 font-display text-[clamp(19px,2.4vw,23px)] font-extrabold uppercase leading-[1.15] text-graphite">
                       <Link href={categoryHref(c.slug)} className="transition-colors hover:text-maroon">
                         {c.name} →
                       </Link>
-                    ) : (
-                      c.name
-                    )}
-                  </h3>
-                  <p className="m-0 max-w-[50ch] text-pretty text-[15px] leading-[1.6] text-graphite/75">{c.description}</p>
-                  {!withPosts.has(c.slug) && <p className="m-0 mt-2 text-[12px] uppercase tracking-[0.14em] text-graphite/65">Материалы готовятся</p>}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
+                    </h3>
+                    <p className="m-0 max-w-[50ch] text-pretty text-[15px] leading-[1.6] text-graphite/75">{c.description}</p>
+                    <p className="m-0 mt-2 text-[12px] uppercase tracking-[0.14em] text-graphite/65">Статей: {c.count}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        )}
 
         <section className="bg-maroon px-[22px] py-14 min-[560px]:py-20">
           <div className="mx-auto flex max-w-[1080px] flex-col gap-6 min-[760px]:flex-row min-[760px]:items-center min-[760px]:justify-between">
