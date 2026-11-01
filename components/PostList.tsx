@@ -13,7 +13,7 @@ export default function PostList({ posts, startAt = 1, headingLevel = "h3" }: { 
         return (
           <li key={p.slug} className="grid grid-cols-1 gap-5 border-b border-cream/15 py-9 min-[640px]:grid-cols-[88px_1fr] min-[640px]:gap-8">
             <span className="font-display text-[18px] font-extrabold text-signal">№ {String(i + startAt).padStart(2, "0")}</span>
-            <div className="grid gap-5 min-[700px]:grid-cols-[140px_1fr] min-[700px]:items-start">
+            <div className="grid gap-5 min-[700px]:grid-cols-[180px_1fr] min-[1000px]:grid-cols-[220px_1fr] min-[700px]:items-start">
               {p.cover && (
                 <Link href={"/blog/" + p.slug} aria-hidden tabIndex={-1} className="hidden min-[700px]:block">
                   <Image
@@ -21,7 +21,7 @@ export default function PostList({ posts, startAt = 1, headingLevel = "h3" }: { 
                     alt=""
                     width={p.cover.width}
                     height={p.cover.height}
-                    sizes="140px"
+                    sizes="220px"
                     className="block h-auto w-full opacity-90 transition-opacity hover:opacity-100"
                   />
                 </Link>
