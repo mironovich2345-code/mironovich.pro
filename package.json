@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
-    "audit": "npm audit --omit=dev"
+    "audit": "npm audit --omit=dev",
+    "test": "node --test --experimental-strip-types \"tests/*.test.mjs\"",
+    "release:check": "node scripts/release-check.mjs"
   },
   "dependencies": {
     "next": "15.5.28",

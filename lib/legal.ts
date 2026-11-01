@@ -5,6 +5,7 @@ import { parseMarkdown, type Block } from "./markdown";
 import { gaId, metricaId } from "./analytics";
 import { consentRequired } from "./consent";
 import { legal } from "@/config/legal";
+import { findPlaceholders } from "./release-guard.mjs";
 
 /**
  * Privacy policy and consent texts from content/legal/. Read at build time.
@@ -22,8 +23,6 @@ export type LegalSlug = "privacy" | "consent";
 export type LegalDoc = { slug: LegalSlug; title: string; edition: string; blocks: Block[]; placeholders: string[] };
 export type LegalMode = "published" | "preview" | "legacy";
 
-// any bracketed note written in capitals — [УТОЧНИТЬ …], [ОПИСАТЬ …] — or ⟦…⟧
-const PLACEHOLDER = /\[[А-ЯЁA-Z][А-ЯЁA-Z ]{3,}[^\]]*\]|⟦[^⟧]*⟧/g;
 
 export function getLegalDoc(slug: LegalSlug): LegalDoc {
   const file = path.join(process.cwd(), "content", "legal", slug + ".md");
@@ -39,7 +38,7 @@ export function getLegalDoc(slug: LegalSlug): LegalDoc {
     title: meta.title,
     edition: meta.edition,
     blocks: parseMarkdown(body, readImage),
-    placeholders: [...new Set(body.match(PLACEHOLDER) ?? [])],
+    placeholders: findPlaceholders(body),
   };
 }
 

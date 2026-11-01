@@ -1,3 +1,6 @@
+import { PHASE_PRODUCTION_BUILD } from "next/constants.js";
+import { runReleaseGuard } from "./lib/release-guard.mjs";
+
 // Same validation as lib/analytics.ts: a malformed id disables the provider and its hosts.
 const rawMetrica = (process.env.NEXT_PUBLIC_YANDEX_METRICA_ID || "").trim();
 const rawGa = (process.env.NEXT_PUBLIC_GA_ID || "").trim();
@@ -56,4 +59,14 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+// Production release guard: a production build stops if the legal texts are not
+// published and filled in, or analytics do not match the consent banner.
+// Staging and local builds only get a report. See docs/release/release-guard.md.
+export default function config(phase) {
+  if (phase === PHASE_PRODUCTION_BUILD && !process.env.__MRNV_RELEASE_GUARD_DONE) {
+    process.env.__MRNV_RELEASE_GUARD_DONE = "1"; // Next loads the config more than once per build
+    const result = runReleaseGuard();
+    if (result.blocked) throw new Error(result.message);
+  }
+  return nextConfig;
+}
