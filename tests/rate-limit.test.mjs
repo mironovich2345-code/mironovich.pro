@@ -1,7 +1,7 @@
 // node --test (see package.json "test"); TypeScript sources are loaded with type stripping
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { clientIp, createRateLimiter } from "../lib/rate-limit.ts";
+import { clientIpSource, clientKey, createLeadLimiter, createRateLimiter } from "../lib/rate-limit.ts";
 
 const clock = (start = 1_000_000) => {
   const c = { t: start, now: () => c.t };
@@ -83,30 +83,67 @@ test("memory: 100 000 distinct IPs never exceed maxKeys", () => {
 
 const h = (o) => new Headers(o);
 
-test("clientIp: X-Real-IP (set by Railway's edge) wins over X-Forwarded-For", () => {
-  assert.equal(clientIp(h({ "x-real-ip": "203.0.113.9", "x-forwarded-for": "198.51.100.1" })), "203.0.113.9");
+test("source: no header is trusted unless RATE_LIMIT_CLIENT_IP says so", () => {
+  assert.equal(clientIpSource(undefined), "none");
+  assert.equal(clientIpSource(""), "none");
+  assert.equal(clientIpSource("yes"), "none");
+  assert.equal(clientIpSource(" X-Real-IP "), "x-real-ip");
+  assert.equal(clientIpSource("x-forwarded-for"), "x-forwarded-for");
+  assert.equal(clientKey(h({ "x-real-ip": "203.0.113.9" }), "none"), null, "untrusted → no per-client key");
 });
 
-test("clientIp: only the rightmost X-Forwarded-For entry is used — client-sent entries are ignored", () => {
-  // the client sends "1.1.1.1"; the proxy appends the real address
-  assert.equal(clientIp(h({ "x-forwarded-for": "1.1.1.1, 203.0.113.9" })), "203.0.113.9");
-  // rotating spoofed prefixes map to the same bucket
-  const a = clientIp(h({ "x-forwarded-for": "9.9.9.1, 203.0.113.9" }));
-  const b = clientIp(h({ "x-forwarded-for": "9.9.9.2, 203.0.113.9" }));
+test("x-real-ip source: the header as set by the edge; X-Forwarded-For is ignored", () => {
+  assert.equal(clientKey(h({ "x-real-ip": "203.0.113.9", "x-forwarded-for": "198.51.100.1" }), "x-real-ip"), "203.0.113.9");
+  assert.equal(clientKey(h({ "x-forwarded-for": "198.51.100.1" }), "x-real-ip"), "missing");
+  assert.equal(clientKey(h({ "x-real-ip": "2001:db8::1" }), "x-real-ip"), "2001:db8::1");
+});
+
+test("x-forwarded-for source: only the rightmost entry; client-sent prefixes are ignored", () => {
+  assert.equal(clientKey(h({ "x-forwarded-for": "1.1.1.1, 203.0.113.9" }), "x-forwarded-for"), "203.0.113.9");
+  const a = clientKey(h({ "x-forwarded-for": "9.9.9.1, 203.0.113.9" }), "x-forwarded-for");
+  const b = clientKey(h({ "x-forwarded-for": "9.9.9.2, 203.0.113.9" }), "x-forwarded-for");
   assert.equal(a, b);
+  assert.equal(clientKey(h({ "x-real-ip": "1.2.3.4" }), "x-forwarded-for"), "missing", "X-Real-IP not consulted");
 });
 
-test("clientIp: garbage values share one bucket instead of minting new counters", () => {
-  assert.equal(clientIp(h({ "x-real-ip": "random-" + Math.random() })), "invalid");
-  assert.equal(clientIp(h({ "x-forwarded-for": "1.1.1.1, not-an-ip" })), "invalid");
-  assert.equal(clientIp(h({})), "unknown");
-  assert.equal(clientIp(h({ "x-real-ip": "2001:db8::1" })), "2001:db8::1");
+test("garbage or missing values share one key instead of minting new counters", () => {
+  assert.equal(clientKey(h({ "x-real-ip": "random-" + Math.random() }), "x-real-ip"), "invalid");
+  assert.equal(clientKey(h({ "x-forwarded-for": "1.1.1.1, not-an-ip" }), "x-forwarded-for"), "invalid");
+  assert.equal(clientKey(h({}), "x-real-ip"), "missing");
 });
 
-test("spoofed X-Forwarded-For behind a proxy does not bypass the limit", () => {
+const run = (limit, headersList) => headersList.map((x) => limit(h(x)));
+
+test("fallback (no trusted source): rotating spoofed headers hit the global ceiling of 10", () => {
   const c = clock();
-  const rl = createRateLimiter({ now: c.now, timer: false });
-  const results = [];
-  for (let i = 0; i < 7; i++) results.push(rl.limited(clientIp(h({ "x-forwarded-for": "10.0.0." + i + ", 203.0.113.9" }))));
-  assert.deepEqual(results, [false, false, false, false, false, true, true]);
+  const limit = createLeadLimiter({ source: "none", now: c.now, timer: false });
+  const spoofed = Array.from({ length: 12 }, (_, i) => ({ "x-real-ip": "198.51.100." + i, "x-forwarded-for": "10.0.0." + i }));
+  assert.deepEqual(run(limit, spoofed), [...Array(10).fill(false), true, true]);
+  c.t += 60_000;
+  assert.equal(limit(h({})), false, "released after the window");
+});
+
+test("trusted x-real-ip but a spoofable edge: spoofing is still capped by the global limit", () => {
+  // worst case — the header turns out to be client-controlled
+  const c = clock();
+  const limit = createLeadLimiter({ source: "x-real-ip", now: c.now, timer: false });
+  const spoofed = Array.from({ length: 15 }, (_, i) => ({ "x-real-ip": "198.51.100." + i }));
+  assert.equal(run(limit, spoofed).filter((x) => !x).length, 10);
+});
+
+test("trusted source: one client gets 5, and its excess does not exhaust the shared allowance", () => {
+  const c = clock();
+  const limit = createLeadLimiter({ source: "x-real-ip", now: c.now, timer: false });
+  const flood = run(limit, Array(50).fill({ "x-real-ip": "203.0.113.1" }));
+  assert.deepEqual(flood.slice(0, 7), [false, false, false, false, false, true, true]);
+  assert.equal(flood.filter((x) => !x).length, 5);
+  // other visitors still get through: 10 − 5 = 5 shared slots left
+  assert.deepEqual(run(limit, [{ "x-real-ip": "203.0.113.2" }, { "x-real-ip": "203.0.113.3" }]), [false, false]);
+});
+
+test("x-forwarded-for source: spoofed prefixes behind a proxy do not bypass the per-client limit", () => {
+  const c = clock();
+  const limit = createLeadLimiter({ source: "x-forwarded-for", now: c.now, timer: false });
+  const r = run(limit, Array.from({ length: 7 }, (_, i) => ({ "x-forwarded-for": "10.0.0." + i + ", 203.0.113.9" })));
+  assert.deepEqual(r, [false, false, false, false, false, true, true]);
 });

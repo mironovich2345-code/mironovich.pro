@@ -54,27 +54,58 @@ export function createRateLimiter({
   return { limited, sweep, size: () => hits.size, stamps: (ip: string) => hits.get(ip)?.length ?? 0 };
 }
 
+/** Where the client address comes from. Set only after it was verified on staging. */
+export type ClientIpSource = "x-real-ip" | "x-forwarded-for" | "none";
+
+/** Reads RATE_LIMIT_CLIENT_IP. Anything else — including unset — means "none": no header is trusted. */
+export function clientIpSource(value: string | undefined): ClientIpSource {
+  const v = (value ?? "").trim().toLowerCase();
+  return v === "x-real-ip" || v === "x-forwarded-for" ? v : "none";
+}
+
 /**
- * Client address for rate limiting.
+ * Client key for the per-client limit, or null when the address cannot be trusted.
  *
- * Railway's edge overwrites X-Real-IP and X-Forwarded-For on every request it
- * forwards, so X-Real-IP is the client address for public traffic. Without it,
- * only the RIGHTMOST X-Forwarded-For entry is used — the one appended by the
- * nearest proxy; leftmost entries are whatever the client sent. Anything that is
- * not a valid IP (or no header at all) falls into one shared bucket, so made-up
- * header values cannot mint fresh counters.
- *
- * Assumes the app is reachable only through the edge. A request that reaches the
- * port directly (private network, TCP proxy, local `next start`) can set these
- * headers itself — see docs/release/rate-limit.md.
+ * Request headers are client-controlled unless a proxy in front overwrites them,
+ * so none is trusted by default (`none` → null → only the global limit applies).
+ * After a staging test confirms that Railway's edge overwrites the header
+ * (docs/release/rate-limit.md), set RATE_LIMIT_CLIENT_IP:
+ * - `x-real-ip` — the header as set by the edge;
+ * - `x-forwarded-for` — its RIGHTMOST entry (appended by the nearest proxy;
+ *   leftmost entries are whatever the client sent).
+ * A value that is not an IP address, or a missing header, yields one shared
+ * key, so made-up values cannot mint fresh counters.
  */
-export function clientIp(headers: Headers): string {
-  const real = headers.get("x-real-ip")?.trim();
-  if (real) return isIP(real) ? real : "invalid";
-  const forwarded = headers.get("x-forwarded-for");
-  if (forwarded) {
-    const last = forwarded.split(",").pop()?.trim() ?? "";
-    return isIP(last) ? last : "invalid";
-  }
-  return "unknown";
+export function clientKey(headers: Headers, source: ClientIpSource): string | null {
+  if (source === "none") return null;
+  const raw =
+    source === "x-real-ip"
+      ? headers.get("x-real-ip")?.trim()
+      : headers.get("x-forwarded-for")?.split(",").pop()?.trim();
+  if (!raw) return "missing";
+  return isIP(raw) ? raw : "invalid";
+}
+
+/**
+ * The form's two-level limit:
+ * 1. per client — `perClient` a window, only when the client address is trusted;
+ * 2. for everyone together — `overall` accepted attempts a window, whatever the
+ *    headers say: the hard ceiling when per-client keys are spoofed or unavailable.
+ * A client already over its own limit does not use up the shared allowance.
+ */
+export function createLeadLimiter({
+  source,
+  perClient = 5,
+  overall = 10,
+  windowMs = 60_000,
+  now,
+  timer = true,
+}: { source: ClientIpSource; perClient?: number; overall?: number; windowMs?: number; now?: () => number; timer?: boolean }) {
+  const clients = createRateLimiter({ windowMs, max: perClient, maxKeys: 5000, now, timer });
+  const everyone = createRateLimiter({ windowMs, max: overall, maxKeys: 1, now, timer });
+  return (headers: Headers): boolean => {
+    const key = clientKey(headers, source);
+    if (key !== null && clients.limited(key)) return true;
+    return everyone.limited("*");
+  };
 }

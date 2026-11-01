@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { consentVersion } from "@/config/legal";
-import { clientIp, createRateLimiter } from "@/lib/rate-limit";
+import { clientIpSource, createLeadLimiter } from "@/lib/rate-limit";
 import {
   HONEYPOT_FIELD, LEAD_LIMITS, REDACTED, directionLabel, isLeadDirection, leadFormExtended, looksPersonal, normalizePagePath, validContact,
 } from "@/lib/lead";
@@ -50,10 +50,10 @@ function readAttribution(v: unknown) {
   return out;
 }
 
-// in-memory rate limit (per warm instance): 5 requests a minute per IP, every IP
-// forgotten within a minute of its last request — enough to stop casual spam
-const limiter = createRateLimiter({ windowMs: 60_000, max: 5, maxKeys: 5000 });
-const rateLimited = limiter.limited;
+// In-memory rate limits (per warm instance) — docs/release/rate-limit.md:
+// 5 a minute per client when its address is trusted (RATE_LIMIT_CLIENT_IP, set
+// only after the staging check), and 10 a minute for everyone together, always.
+const rateLimited = createLeadLimiter({ source: clientIpSource(process.env.RATE_LIMIT_CLIENT_IP) });
 
 const fail = (error: string, status: number) =>
   NextResponse.json({ ok: false, delivered: false, error }, { status });
@@ -77,7 +77,7 @@ export async function POST(req: Request) {
   // refuse oversized bodies before reading them
   if (Number(req.headers.get("content-length") ?? 0) > LEAD_LIMITS.payload * 4) return fail("too_large", 413);
   // every attempt counts, valid or not, so invalid floods are throttled too
-  if (rateLimited(clientIp(req.headers))) return fail("rate_limited", 429);
+  if (rateLimited(req.headers)) return fail("rate_limited", 429);
 
   const raw = await req.text();
   if (raw.length > LEAD_LIMITS.payload) return fail("too_large", 413);
