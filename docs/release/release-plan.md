@@ -62,7 +62,7 @@
 | Заголовки | `curl -sI https://mironovich.pro` | CSP с доменами Метрики и GA, HSTS, X-Frame-Options |
 | Консоль браузера | DevTools | Нет ошибок CSP |
 | Файлы подтверждения | `/yandex_bf4d8bb8201490e1.html`, `/zen_...html` | 200 |
-| Favicon: файлы | `curl -sI https://mironovich.pro/favicon.ico` и то же для `/icon1.png`, `/icon2.png`, `/apple-icon.png`, `/icon-192.png`, `/icon-512.png` | 200, `image/x-icon` / `image/png` |
+| Favicon: файлы | `curl -sI https://mironovich.pro/favicon.ico` и то же для `/icon-48.png`, `/icon-192.png`, `/apple-touch-icon.png`, `/icon-512.png` | 200, `image/x-icon` / `image/png` |
 | Favicon: в браузере | Вкладка на компьютере (светлая и тёмная тема), «На экран Домой» на iPhone и Android | Графитовый квадрат, белая «M» с красной точкой; старой синей «M» нет (при старой — обновить кэш, Ctrl+F5) |
 
 ## Откат
@@ -115,7 +115,10 @@
      Яндекс — то же, скриншоты. Если через 4 недели старая — проверить, что
      `/favicon.ico` и ссылки `rel="icon"` на главной отдают новую иконку, и
      повторить запрос переобхода.
-   - Старый адрес `/icon.png` теперь отвечает 404 — это ожидаемо: страницы
-     ссылаются на `/icon1.png` и `/icon2.png`.
+   - Старые адреса `/icon.png`, `/icon1.png`, `/icon2.png`, `/apple-icon.png`
+     отвечают 404 — это ожидаемо: страницы ссылаются на `/favicon.ico?v=2`,
+     `/icon-48.png?v=2`, `/icon-192.png?v=2`, `/apple-touch-icon.png?v=2`. Если
+     вкладка браузера всё ещё показывает старую иконку — после деплоя это
+     кэш браузера; версия `?v=` в адресе заставляет его загрузить новую.
 6. Полевые Core Web Vitals (LCP, CLS, INP) появятся в Search Console / CrUX только
    при достаточном трафике — до этого есть лишь лабораторные замеры.

@@ -18,16 +18,60 @@ type Errors = Partial<Record<Field, string>>;
 /** Order the fields appear in — the first invalid one gets focus. */
 const FIELD_ORDER: Field[] = ["name", "company", "phone", "direction", "task", "consent"];
 
-const inputClass =
-  "min-h-[52px] w-full border border-cream/25 bg-transparent px-4 text-base text-cream outline-none transition-colors placeholder:text-stone focus:border-signal aria-[invalid=true]:border-signal";
-const labelClass = "text-[13px] uppercase tracking-[0.06em] text-stone";
+/**
+ * Two looks, one form: `default` (contact page, home «Обсудить задачу» section) and
+ * `compact` (home Hero — darker fields, thinner borders, tighter rhythm). Submission,
+ * validation, honeypot and analytics are shared; `idPrefix` keeps ids unique when
+ * two forms are on one page.
+ */
+const STYLES = {
+  default: {
+    form: "flex flex-col gap-5",
+    field: "flex flex-col gap-2",
+    input:
+      "min-h-[52px] w-full border border-cream/25 bg-transparent px-4 text-base text-cream outline-none transition-colors placeholder:text-stone focus:border-signal aria-[invalid=true]:border-signal",
+    textarea:
+      "min-h-[124px] w-full resize-y border border-cream/25 bg-transparent p-4 text-base leading-[1.5] text-cream outline-none transition-colors placeholder:text-stone focus:border-signal aria-[invalid=true]:border-signal",
+    rows: 4,
+    label: "text-[13px] uppercase tracking-[0.06em] text-stone",
+    submit: "mt-1 min-h-[58px] bg-signal text-base font-medium uppercase tracking-[0.04em] text-white transition-colors hover:bg-[#b82323] disabled:cursor-wait disabled:opacity-60",
+    note: "m-0 text-[13px] leading-[1.5] text-stone",
+    consent: "m-0 text-[14px] leading-[1.5] text-stone",
+  },
+  compact: {
+    form: "flex flex-col gap-3.5",
+    field: "flex flex-col gap-1.5",
+    input:
+      "min-h-[48px] w-full border border-cream/15 bg-black/30 px-3.5 text-base text-cream outline-none transition-colors placeholder:text-stone/80 hover:border-cream/30 focus:border-signal aria-[invalid=true]:border-signal",
+    textarea:
+      "min-h-[92px] w-full resize-y border border-cream/15 bg-black/30 px-3.5 py-3 text-base leading-[1.45] text-cream outline-none transition-colors placeholder:text-stone/80 hover:border-cream/30 focus:border-signal aria-[invalid=true]:border-signal",
+    rows: 3,
+    label: "text-[12px] uppercase tracking-[0.08em] text-stone",
+    submit: "mt-1 min-h-[52px] bg-signal text-[15px] font-medium uppercase tracking-[0.06em] text-white transition-colors hover:bg-[#b82323] disabled:cursor-wait disabled:opacity-60",
+    note: "m-0 text-[12px] leading-[1.5] text-stone",
+    consent: "m-0 text-[13px] leading-[1.45] text-stone",
+  },
+} as const;
 const errorClass = "text-[13px] text-signal";
 
-const errorId = (f: Field) => "lead-" + f + "-error";
-const describedBy = (f: Field, errors: Errors, extra?: string) =>
-  [errors[f] ? errorId(f) : "", extra ?? ""].filter(Boolean).join(" ") || undefined;
-
-export default function LeadForm({ defaultDirection }: { defaultDirection?: LeadDirection }) {
+export default function LeadForm({
+  defaultDirection,
+  variant = "default",
+  idPrefix = "lead",
+  submitLabel = "Отправить задачу",
+}: {
+  defaultDirection?: LeadDirection;
+  variant?: keyof typeof STYLES;
+  idPrefix?: string;
+  submitLabel?: string;
+}) {
+  const st = STYLES[variant];
+  const inputClass = st.input;
+  const labelClass = st.label;
+  const id = (f: string) => idPrefix + "-" + f;
+  const errorId = (f: Field) => id(f + "-error");
+  const describedBy = (f: Field, errors: Errors, extra?: string) =>
+    [errors[f] ? errorId(f) : "", extra ?? ""].filter(Boolean).join(" ") || undefined;
   const [name, setName] = useState("");
   const [company, setCompany] = useState("");
   const [phone, setPhone] = useState("");
@@ -124,12 +168,12 @@ export default function LeadForm({ defaultDirection }: { defaultDirection?: Lead
 
   return (
     <>
-      <form noValidate onSubmit={onSubmit} aria-busy={sending} className="flex flex-col gap-5">
+      <form noValidate onSubmit={onSubmit} aria-busy={sending} className={st.form}>
         {/* honeypot: hidden from people and assistive tech, tempting for bots */}
         <div aria-hidden className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden">
-          <label htmlFor="lead-trap">Сайт</label>
+          <label htmlFor={id("trap")}>Сайт</label>
           <input
-            id="lead-trap" name={HONEYPOT_FIELD} type="text" tabIndex={-1} autoComplete="off"
+            id={id("trap")} name={HONEYPOT_FIELD} type="text" tabIndex={-1} autoComplete="off"
             value={trap} onChange={(e) => setTrap(e.target.value)}
           />
         </div>
@@ -140,12 +184,12 @@ export default function LeadForm({ defaultDirection }: { defaultDirection?: Lead
           </p>
         )}
 
-        <div className="flex flex-col gap-2">
-          <label htmlFor="lead-name" className={labelClass}>
+        <div className={st.field}>
+          <label htmlFor={id("name")} className={labelClass}>
             Имя <span aria-hidden className="text-signal">*</span>
           </label>
           <input
-            id="lead-name" ref={bind("name")} type="text" name="name" autoComplete="name" required aria-required
+            id={id("name")} ref={bind("name")} type="text" name="name" autoComplete="name" required aria-required
             placeholder="Как к вам обращаться?" maxLength={LEAD_LIMITS.name} value={name}
             onFocus={onFieldTouch}
             onChange={(e) => { setName(e.target.value); clear("name"); }}
@@ -156,12 +200,12 @@ export default function LeadForm({ defaultDirection }: { defaultDirection?: Lead
         </div>
 
         {leadFormExtended && (
-          <div className="flex flex-col gap-2">
-            <label htmlFor="lead-company" className={labelClass}>
+          <div className={st.field}>
+            <label htmlFor={id("company")} className={labelClass}>
               Компания <span className="normal-case tracking-normal text-stone">— необязательно</span>
             </label>
             <input
-              id="lead-company" ref={bind("company")} type="text" name="company" autoComplete="organization"
+              id={id("company")} ref={bind("company")} type="text" name="company" autoComplete="organization"
               placeholder="Название или сфера бизнеса" maxLength={LEAD_LIMITS.company} value={company}
               onFocus={onFieldTouch}
               onChange={(e) => setCompany(e.target.value)}
@@ -170,12 +214,12 @@ export default function LeadForm({ defaultDirection }: { defaultDirection?: Lead
           </div>
         )}
 
-        <div className="flex flex-col gap-2">
-          <label htmlFor="lead-phone" className={labelClass}>
+        <div className={st.field}>
+          <label htmlFor={id("phone")} className={labelClass}>
             Телефон или Telegram <span aria-hidden className="text-signal">*</span>
           </label>
           <input
-            id="lead-phone" ref={bind("phone")} type="text" name="phone" autoComplete="tel" required aria-required
+            id={id("phone")} ref={bind("phone")} type="text" name="phone" autoComplete="tel" required aria-required
             autoCapitalize="off" autoCorrect="off" spellCheck={false}
             placeholder="+7 999 000-00-00 или @username" maxLength={LEAD_LIMITS.phone} value={phone}
             onFocus={onFieldTouch}
@@ -216,35 +260,35 @@ export default function LeadForm({ defaultDirection }: { defaultDirection?: Lead
           </fieldset>
         )}
 
-        <div className="flex flex-col gap-2">
-          <label htmlFor="lead-task" className={labelClass}>
+        <div className={st.field}>
+          <label htmlFor={id("task")} className={labelClass}>
             Описание задачи <span aria-hidden className="text-signal">*</span>
           </label>
           <textarea
-            id="lead-task" ref={bind("task")} name="task" rows={4} maxLength={LEAD_LIMITS.task} required aria-required
+            id={id("task")} ref={bind("task")} name="task" rows={st.rows} maxLength={LEAD_LIMITS.task} required aria-required
             placeholder="Например: каждую неделю вручную собираем отчёт из CRM и таблиц, на это уходит полдня."
             value={task}
             onFocus={onFieldTouch}
             onChange={(e) => { setTask(e.target.value); clear("task"); }}
-            aria-invalid={!!errors.task} aria-describedby={describedBy("task", errors, "lead-task-count")}
-            className="min-h-[124px] w-full resize-y border border-cream/25 bg-transparent p-4 text-base leading-[1.5] text-cream outline-none transition-colors placeholder:text-stone focus:border-signal aria-[invalid=true]:border-signal"
+            aria-invalid={!!errors.task} aria-describedby={describedBy("task", errors, id("task-count"))}
+            className={st.textarea}
           />
-          <span id="lead-task-count" className="self-end text-[12px] text-stone">
+          <span id={id("task-count")} className="self-end text-[12px] text-stone">
             {task.length} / {LEAD_LIMITS.task}
           </span>
           {errors.task && <span id={errorId("task")} className={errorClass}>{errors.task}</span>}
         </div>
 
-        <div className="flex flex-col gap-2">
+        <div className={st.field}>
           <div className="flex items-start gap-3">
             <input
-              id="lead-consent" ref={bind("consent")} type="checkbox" name="consent" checked={consent} required aria-required
+              id={id("consent")} ref={bind("consent")} type="checkbox" name="consent" checked={consent} required aria-required
               onChange={(e) => { setConsent(e.target.checked); clear("consent"); }}
               aria-invalid={!!errors.consent} aria-describedby={describedBy("consent", errors)}
               className="mt-[2px] h-5 w-5 flex-none cursor-pointer accent-[#D92D2D]"
             />
-            <p className="m-0 text-[14px] leading-[1.5] text-stone">
-              <label htmlFor="lead-consent" className="cursor-pointer">{consentLabel}</label>
+            <p className={st.consent}>
+              <label htmlFor={id("consent")} className="cursor-pointer">{consentLabel}</label>
               {" "}
               <button
                 type="button"
@@ -270,19 +314,19 @@ export default function LeadForm({ defaultDirection }: { defaultDirection?: Lead
         <button
           type="submit"
           disabled={sending}
-          className="mt-1 min-h-[58px] bg-signal text-base font-medium uppercase tracking-[0.04em] text-white transition-colors hover:bg-[#b82323] disabled:cursor-wait disabled:opacity-60"
+          className={st.submit}
         >
-          {sending ? "Отправляю…" : "Отправить задачу"}
+          {sending ? "Отправляю…" : submitLabel}
         </button>
 
         {legal.published ? (
           // the approved consent is a separate document and is not bundled with the policy
-          <p className="m-0 text-[13px] leading-[1.5] text-stone">
+          <p className={st.note}>
             Как обрабатываются данные — в{" "}
             <Link href="/privacy" className="text-cream/80 underline underline-offset-[3px] hover:text-cream">Политике обработки персональных данных</Link>.
           </p>
         ) : (
-          <p className="m-0 text-[13px] leading-[1.5] text-stone">
+          <p className={st.note}>
             Нажимая кнопку, вы принимаете{" "}
             <Link href="/consent" className="text-cream/80 underline underline-offset-[3px] hover:text-cream">согласие на обработку данных</Link>{" "}
             и{" "}

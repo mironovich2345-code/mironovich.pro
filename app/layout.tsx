@@ -4,7 +4,7 @@ import Script from "next/script";
 import Analytics from "@/components/Analytics";
 import Footer from "@/components/Footer";
 import SiteHeader from "@/components/SiteHeader";
-import { site, siteUrl } from "@/config/site";
+import { ICON_VERSION, site, siteUrl } from "@/config/site";
 import { consentPrecheckScript, consentRequired } from "@/lib/consent";
 import { urlHygieneScript } from "@/lib/url-hygiene";
 import "./globals.css";
@@ -39,6 +39,16 @@ export const metadata: Metadata = {
   openGraph: { siteName: site.name, locale: "ru_RU", type: "website" },
   twitter: { card: "summary_large_image" },
   manifest: "/manifest.webmanifest",
+  // Declared explicitly (not app/ file conventions) so every URL carries ?v=:
+  // a changed icon then reaches browsers that cached the previous one.
+  icons: {
+    icon: [
+      { url: "/favicon.ico?v=" + ICON_VERSION, sizes: "16x16 32x32 48x48" },
+      { url: "/icon-48.png?v=" + ICON_VERSION, type: "image/png", sizes: "48x48" },
+      { url: "/icon-192.png?v=" + ICON_VERSION, type: "image/png", sizes: "192x192" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png?v=" + ICON_VERSION, type: "image/png", sizes: "180x180" }],
+  },
 };
 
 export const viewport: Viewport = {

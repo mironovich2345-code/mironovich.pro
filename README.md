@@ -123,9 +123,9 @@ app/
   robots.ts             robots.txt
   sitemap.ts            sitemap.xml — /, /services, страницы услуг, /about, /blog и статьи (lastmod только реальный)
   manifest.ts           web app manifest
-  icon.png              favicon 512
-  apple-icon.png        apple touch icon 180
-  favicon.ico           классический favicon
+  layout.tsx → metadata.icons — ссылки на иконки с ?v=ICON_VERSION (config/site.ts);
+                        сами файлы — public/favicon.ico, icon-48.png, icon-192.png,
+                        apple-touch-icon.png, icon-512.png (генератор: assets/favicon/generate.py)
 components/
   Hero · Problems · Services · Scenarios · Diagnostics · About · Process · Faq
   ContactSection (+LeadForm, ConsentDialog) · StickyCta · SectionLabel

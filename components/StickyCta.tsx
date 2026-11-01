@@ -20,7 +20,11 @@ export default function StickyCta() {
       const r = form?.getBoundingClientRect();
       const formOnScreen = r ? r.top < window.innerHeight * 0.85 && r.bottom > 0 : false;
 
-      setShow(pastHero && !formOnScreen);
+      // …and at the end of the page, where it would sit on the footer wordmark
+      const footer = document.querySelector("footer")?.getBoundingClientRect();
+      const footerOnScreen = footer ? footer.top < window.innerHeight : false;
+
+      setShow(pastHero && !formOnScreen && !footerOnScreen);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);

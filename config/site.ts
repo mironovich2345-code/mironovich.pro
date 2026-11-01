@@ -39,6 +39,16 @@ export const navLinks: NavLink[] = [
 /** Where «Обсудить задачу» leads from pages without their own form section. */
 export const contactHref = "/contact";
 
+/**
+ * Version appended to favicon URLs (app/layout.tsx → metadata.icons). Browsers keep
+ * favicons in their own cache keyed by URL; bump this after changing the icon.
+ * "2" = the «M.» mark (graphite, white M, red dot) replacing the old blue M.
+ */
+export const ICON_VERSION = "2";
+
+/** Header CTA (desktop and mobile menu): the form on the home page first screen. */
+export const heroFormHref = "/#hero-form";
+
 /** Public profiles for JSON-LD sameAs — config/contacts.ts. */
 export const socialProfiles = sameAs;
 

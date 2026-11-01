@@ -2,7 +2,7 @@ import Link from "next/link";
 import CtaLink from "./CtaLink";
 import MobileMenu from "./MobileMenu";
 import ServicesMenu from "./ServicesMenu";
-import { contactHref, navLinks, serviceLinks, site } from "@/config/site";
+import { heroFormHref, navLinks, serviceLinks, site } from "@/config/site";
 
 /**
  * Sticky editorial top bar: wordmark, «Услуги» group, page links, one CTA.
@@ -32,7 +32,7 @@ export default function SiteHeader() {
             </Link>
           ))}
           <CtaLink
-            href={contactHref}
+            href={heroFormHref}
             location="header"
             className="inline-flex min-h-[44px] items-center bg-signal px-5 text-[13px] font-medium uppercase tracking-[0.06em] text-white transition-colors hover:bg-[#b82323]"
           >

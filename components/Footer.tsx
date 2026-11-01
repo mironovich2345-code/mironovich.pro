@@ -59,12 +59,16 @@ export default function Footer() {
           <p className="m-0 text-[12px] text-cream/60">mironovich.pro</p>
         </div>
 
-        <p
-          aria-hidden
-          className="mt-6 select-none overflow-hidden whitespace-nowrap font-display text-[clamp(64px,17vw,220px)] font-extrabold uppercase leading-none tracking-[-0.02em] text-cream"
-        >
-          Mironovich
-        </p>
+        {/* «MIRONOVICH» is 5.24em wide in the display face: 18.8cqi of the container
+            (≈ width / 5.32) fills the full width at every screen size without overflow. */}
+        <div className="mt-6 [container-type:inline-size]">
+          <p
+            aria-hidden
+            className="m-0 select-none whitespace-nowrap font-display text-[length:18.8cqi] font-extrabold uppercase leading-none tracking-[-0.02em] text-cream"
+          >
+            Mironovich
+          </p>
+        </div>
       </div>
     </footer>
   );

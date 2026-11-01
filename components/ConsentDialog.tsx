@@ -56,7 +56,7 @@ export default function ConsentDialog({ open, onClose }: { open: boolean; onClos
     <div
       role="dialog"
       aria-modal="true"
-      aria-labelledby="consent-title"
+      aria-labelledby="consent-dialog-title"
       onClick={onClose}
       className="fixed inset-0 z-[60] flex items-end justify-center bg-graphite/80 backdrop-blur-sm"
     >
@@ -66,7 +66,7 @@ export default function ConsentDialog({ open, onClose }: { open: boolean; onClos
         className="max-h-[86vh] w-full max-w-[620px] overflow-y-auto border-t border-cream/15 bg-graphite px-[22px] pb-[34px] pt-[26px]"
       >
         <div className="mb-4 flex items-start justify-between gap-4 border-b border-cream/15 pb-4">
-          <h2 id="consent-title" className="m-0 text-xl font-medium tracking-[-0.02em] text-cream">
+          <h2 id="consent-dialog-title" className="m-0 text-xl font-medium tracking-[-0.02em] text-cream">
             Согласие на обработку персональных данных
           </h2>
           <button

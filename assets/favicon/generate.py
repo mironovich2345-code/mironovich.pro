@@ -16,12 +16,15 @@ sharp at 16 px and 32 px. Rasters are drawn 16× larger and box-downsampled
 
 Outputs (paths relative to the repository root):
     assets/favicon/favicon.svg    vector master (not served)
-    app/favicon.ico               16, 32, 48 (PNG-compressed entries)
-    app/icon1.png                 48×48    <link rel="icon">
-    app/icon2.png                 192×192  <link rel="icon">
-    app/apple-icon.png            180×180  <link rel="apple-touch-icon">, opaque
-    public/icon-192.png           web app manifest
+    public/favicon.ico            16, 32, 48 (PNG-compressed entries)
+    public/icon-48.png            48×48    <link rel="icon">
+    public/icon-192.png           192×192  <link rel="icon"> and web app manifest
+    public/apple-touch-icon.png   180×180  <link rel="apple-touch-icon">, opaque
     public/icon-512.png           web app manifest
+
+The <link> tags are declared in app/layout.tsx (metadata.icons) with a ?v=
+version: after changing the icon, bump ICON_VERSION in config/site.ts so
+browsers that cached the previous favicon fetch the new one.
 """
 import io
 import struct
@@ -103,17 +106,16 @@ def write_ico(path, sizes):
 
 def main():
     (ROOT / "assets/favicon/favicon.svg").write_text(svg())
-    write_ico(ROOT / "app/favicon.ico", [16, 32, 48])
+    write_ico(ROOT / "public/favicon.ico", [16, 32, 48])
     for rel, size in [
-        ("app/icon1.png", 48),
-        ("app/icon2.png", 192),
-        ("app/apple-icon.png", 180),
+        ("public/icon-48.png", 48),
         ("public/icon-192.png", 192),
+        ("public/apple-touch-icon.png", 180),
         ("public/icon-512.png", 512),
     ]:
         (ROOT / rel).write_bytes(png_bytes(render(size)))
         print("wrote", rel)
-    print("wrote app/favicon.ico, assets/favicon/favicon.svg")
+    print("wrote public/favicon.ico, assets/favicon/favicon.svg")
 
 
 if __name__ == "__main__":
