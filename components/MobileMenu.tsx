@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import CtaLink from "./CtaLink";
 import { contactHref, type NavLink } from "@/config/site";
 
@@ -11,9 +12,15 @@ const FOCUSABLE = 'a[href], button:not([disabled])';
 /**
  * Full-screen menu below 860px: closes on link tap, route change and Escape,
  * keeps Tab inside while open, locks page scroll and returns focus to the toggle.
+ *
+ * The panel is portalled into <body>: the sticky header uses backdrop-filter,
+ * which would make it the containing block of a `position: fixed` child and
+ * clip the panel to the header's height. Its top edge follows the header's
+ * actual bottom.
  */
 export default function MobileMenu({ services, links }: { services: NavLink[]; links: NavLink[] }) {
   const [open, setOpen] = useState(false);
+  const [top, setTop] = useState(65);
   const pathname = usePathname();
   const toggleRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -53,17 +60,22 @@ export default function MobileMenu({ services, links }: { services: NavLink[]; l
         type="button"
         aria-expanded={open}
         aria-controls="mobile-menu"
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          const header = toggleRef.current?.closest("header");
+          if (header) setTop(Math.round(header.getBoundingClientRect().bottom));
+          setOpen((v) => !v);
+        }}
         className="relative z-50 inline-flex min-h-[44px] items-center border border-cream/25 px-4 text-[13px] uppercase tracking-[0.06em] text-cream transition-colors hover:border-signal"
       >
         {open ? "Закрыть" : "Меню"}
       </button>
 
-      {open && (
+      {open && createPortal(
         <div
           ref={panelRef}
           id="mobile-menu"
-          className="fixed inset-x-0 bottom-0 top-[65px] z-40 overflow-y-auto border-t border-cream/10 bg-graphite px-[22px] pb-[calc(24px+env(safe-area-inset-bottom))] pt-4"
+          style={{ top }}
+          className="fixed inset-x-0 bottom-0 z-40 overflow-y-auto border-t border-cream/10 bg-graphite px-[22px] pb-[calc(24px+env(safe-area-inset-bottom))] pt-4"
         >
           <nav aria-label="Основная навигация">
             <Link
@@ -100,7 +112,8 @@ export default function MobileMenu({ services, links }: { services: NavLink[]; l
           >
             Обсудить задачу бесплатно
           </CtaLink>
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   );

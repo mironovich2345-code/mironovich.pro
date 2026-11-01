@@ -164,6 +164,7 @@ test("LEGAL_PREVIEW / SITE_NOINDEX in production and edition mismatch → refuse
   const env = { ...PROD, ...IDS };
   assert.match(checkRelease({ ...filled, docs, env: { ...env, LEGAL_PREVIEW: "1" } }).errors.join(), /LEGAL_PREVIEW/);
   assert.match(checkRelease({ ...filled, docs, env: { ...env, SITE_NOINDEX: "1" } }).errors.join(), /SITE_NOINDEX/);
+  assert.match(checkRelease({ ...filled, docs, env: { ...env, NEXT_PUBLIC_CONSENT_PREVIEW: "1" } }).errors.join(), /CONSENT_PREVIEW/);
   assert.match(checkRelease({ legal: { published: true, edition: "2027-01-01" }, docs, env }).errors.join(), /edition/);
 });
 

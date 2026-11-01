@@ -14,7 +14,15 @@ import { metricaId } from "./analytics";
 
 export type ConsentChoice = "granted" | "denied";
 
-export const consentRequired = Boolean(metricaId);
+/**
+ * Preview only (NEXT_PUBLIC_CONSENT_PREVIEW=1, no Metrica ID): show the banner and
+ * «Настройки аналитики» so the design can be checked, while nothing can load —
+ * there is no counter. A production build with this variable is refused
+ * (lib/release-guard.mjs).
+ */
+export const consentPreview = !metricaId && process.env.NEXT_PUBLIC_CONSENT_PREVIEW === "1";
+
+export const consentRequired = Boolean(metricaId) || consentPreview;
 
 const KEY = "mrnv_analytics_consent_v1";
 export const CONSENT_EVENT = "mrnv:consent";
