@@ -58,11 +58,11 @@ test("no switch-off: unrelated or made-up variables do not change the target", (
   }
 });
 
-test("current repository: a production build is refused (old texts, 7 open fields)", () => {
+test("current repository: a production build is refused (old texts, 6 open fields)", () => {
   const r = runReleaseGuard({ cwd: repo, env: { ...PROD, ...IDS }, log: quiet });
   assert.equal(r.blocked, true);
   assert.match(r.message, /published=false/);
-  assert.match(r.message, /privacy\.md: незаполненные поля \(6\)/);
+  assert.match(r.message, /privacy\.md: незаполненные поля \(5\)/);
   assert.match(r.message, /consent\.md: незаполненные поля \(1\)/);
   assert.match(r.message, /Обойти проверку нельзя/);
 });
