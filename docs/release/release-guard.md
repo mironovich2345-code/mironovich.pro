@@ -60,6 +60,7 @@ production-сборкой. Такая сборка проверяется, а н
 | `config/legal.json`: `published` не `true` | Старые тексты не соответствуют фактической обработке (`go-no-go.md`, «Правило») |
 | В `content/legal/*.md` остались `[УТОЧНИТЬ …]`, `[ОПИСАТЬ …]`, `⟦…⟧` | Незаполненные поля |
 | `edition` в документе ≠ `config/legal.json` | Редакция в заявках и на сайте разойдётся |
+| `NEXT_PUBLIC_CONSENT_PREVIEW` задан | Показ баннера без счётчика — только для preview |
 | `LEGAL_PREVIEW=1` | Проекты с пометкой «Проект» не для production |
 | `SITE_NOINDEX=1` | Production закрыт от поиска |
 | `RATE_LIMIT_CLIENT_IP` не пусто и не `x-real-ip` / `x-forwarded-for` | Опечатка молча выключит лимит по IP |
