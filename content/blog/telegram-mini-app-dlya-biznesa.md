@@ -8,15 +8,15 @@ category: razrabotka-prilozheniy
 related: stoimost-razrabotki-prilozheniya-dlya-biznesa, crm-pod-zadachi-ili-gotovaya-sistema
 excerpt: Mini App — веб-приложение внутри Telegram. Удобно, когда клиенты или сотрудники уже там. Разбираем возможности, ограничения, сценарии и факторы стоимости.
 status: published
-coverImage: /blog/telegram-mini-app-dlya-biznesa.png
-coverImageAlt: Возможности Telegram Mini Apps для бизнеса
+coverImage: /blog/covers/telegram-mini-app-dlya-biznesa.png
+coverImageAlt: Макет телефона с мини-приложением внутри мессенджера: каталог, кнопка оформления заказа и подписи — вход без регистрации, уведомления от бота, оплата по правилам Telegram
 ---
 
 Telegram Mini App — это веб-приложение, которое открывается внутри Telegram: из бота, по кнопке меню или по прямой ссылке. Пользователю не нужно ничего устанавливать и регистрироваться — он уже авторизован в Telegram. Для бизнеса это способ дать клиентам или сотрудникам полноценный интерфейс там, где они и так проводят время.
 
 Разберём, что умеют Mini Apps, где они уместны, чем отличаются от обычного бота и сайта и от чего зависит стоимость разработки. Описание возможностей опирается на официальную документацию Telegram для разработчиков — [core.telegram.org/bots/webapps](https://core.telegram.org/bots/webapps).
 
-![Возможности Telegram Mini Apps для бизнеса](/blog/telegram-mini-app-dlya-biznesa.png "Возможности и сценарии. Ниже — подробнее.")
+![Макет телефона с мини-приложением внутри мессенджера: каталог, кнопка оформления заказа и подписи — вход без регистрации, уведомления от бота, оплата по правилам Telegram](/blog/covers/telegram-mini-app-dlya-biznesa.png)
 
 ## Что умеет Mini App
 

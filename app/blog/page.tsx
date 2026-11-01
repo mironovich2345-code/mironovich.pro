@@ -90,7 +90,7 @@ export default function BlogPage() {
                         height={featured.cover.height}
                         sizes="(max-width: 860px) 100vw, 50vw"
                         priority
-                        className="block aspect-[4/3] w-full object-cover"
+                        className="block h-auto w-full"
                       />
                     </Link>
                   )}

@@ -22,7 +22,7 @@ export default function PostList({ posts, startAt = 1, headingLevel = "h3" }: { 
                     width={p.cover.width}
                     height={p.cover.height}
                     sizes="140px"
-                    className="block aspect-[4/3] w-full object-cover opacity-90 transition-opacity hover:opacity-100"
+                    className="block h-auto w-full opacity-90 transition-opacity hover:opacity-100"
                   />
                 </Link>
               )}
