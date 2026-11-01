@@ -117,6 +117,11 @@ const apps: ServicePageContent = {
       "Поддержка и её стоимость согласуются отдельно. Права на код и условия их передачи фиксируются в договоре.",
     ],
   ],
+  relatedArticles: [
+    "stoimost-razrabotki-prilozheniya-dlya-biznesa",
+    "crm-pod-zadachi-ili-gotovaya-sistema",
+    "telegram-mini-app-dlya-biznesa",
+  ],
   form: {
     title: "Расскажите, какой процесс хотите перенести в приложение",
     lead: "Опишите, как всё устроено сейчас: где хранятся данные, кто участвует, что неудобно. Первичное обсуждение бесплатно.",

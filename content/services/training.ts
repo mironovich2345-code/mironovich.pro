@@ -110,11 +110,9 @@ const training: ServicePageContent = {
     ],
   ],
   relatedArticles: [
-    "kak-ponyat-chto-net-sistemy-obucheniya",
     "kak-postroit-sistemu-obucheniya-s-nulya",
-    "kompaniya-zavisit-ot-odnogo-cheloveka",
-    "pochemu-sotrudniki-posle-obucheniya-delayut-po-svoemu",
-    "stoimost-plohoy-adaptacii-sotrudnika",
+    "adaptaciya-novyh-sotrudnikov-pervye-30-dney",
+    "avtomatizaciya-obucheniya-sotrudnikov",
   ],
   form: {
     title: "Расскажите, как сейчас устроено обучение",

@@ -14,13 +14,15 @@ export default function BlogCategoryNav({ active }: { active?: CategorySlug }) {
     "inline-flex min-h-[44px] flex-none items-center gap-2 whitespace-nowrap border px-4 text-[13px] uppercase tracking-[0.08em] transition-colors";
   const on = "border-signal bg-signal text-white";
   const off = "border-cream/25 text-cream hover:border-cream";
+  // the count is dimmed on dark chips only: dimmed white on the red active chip fails contrast
+  const count = (isOn: boolean) => (isOn ? undefined : "opacity-70");
 
   return (
     <nav aria-label="Категории блога" className="-mx-[22px] overflow-x-auto px-[22px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <ul className="m-0 flex w-max list-none gap-2 p-0">
         <li>
           <Link href="/blog" aria-current={active ? undefined : "page"} className={chip + " " + (active ? off : on)}>
-            Все статьи <span className="opacity-70">{total}</span>
+            Все статьи <span className={count(!active)}>{total}</span>
           </Link>
         </li>
         {categories.map((c) => (
@@ -30,7 +32,7 @@ export default function BlogCategoryNav({ active }: { active?: CategorySlug }) {
               aria-current={active === c.slug ? "page" : undefined}
               className={chip + " " + (active === c.slug ? on : off)}
             >
-              {c.short} <span className="opacity-70">{c.count}</span>
+              {c.short} <span className={count(active === c.slug)}>{c.count}</span>
             </Link>
           </li>
         ))}

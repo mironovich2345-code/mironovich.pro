@@ -385,7 +385,7 @@ function Related({ page, articles }: { page: ServicePageContent; articles: Post[
 
         {articles.length > 0 && (
           <div>
-            <h2 className="m-0 mb-6 text-[12px] font-normal uppercase tracking-[0.18em] text-graphite/65">Статьи по теме</h2>
+            <h2 className="m-0 mb-6 text-[12px] font-normal uppercase tracking-[0.18em] text-graphite/65">Полезные материалы</h2>
             <ul className="m-0 flex list-none flex-col border-t border-graphite/15 p-0">
               {articles.map((a) => (
                 <li key={a.slug}>
