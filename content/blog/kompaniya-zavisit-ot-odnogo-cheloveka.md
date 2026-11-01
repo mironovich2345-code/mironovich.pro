@@ -9,8 +9,8 @@ related: kak-ponyat-chto-net-sistemy-obucheniya, stoimost-plohoy-adaptacii-sotru
 excerpt: Если только один человек знает, как правильно обучать сотрудников и решать рабочие вопросы, компания хранит знания не в системе, а в человеке.
 readingTime: 5
 status: published
-coverImage: /blog/kompaniya-zavisit-ot-odnogo-cheloveka.png
-coverImageAlt: Что происходит с компанией, когда знания и обучение зависят от одного сотрудника
+coverImage: /blog/covers/kompaniya-zavisit-ot-odnogo-cheloveka.png
+coverImageAlt: Схема: новички, коллеги, клиенты и руководитель обращаются к одному сотруднику; база знаний компании пустует
 order: 5
 ---
 

@@ -119,6 +119,8 @@ const automation: ServicePageContent = {
     "kakie-processy-avtomatizirovat",
     "stoimost-vnedreniya-ii-v-biznes",
     "ii-assistent-dlya-biznesa",
+    "avtomatizaciya-otdela-prodazh",
+    "avtomatizaciya-biznesa-bez-programmista",
   ],
   form: {
     title: "Опишите процесс, который отнимает больше всего времени",

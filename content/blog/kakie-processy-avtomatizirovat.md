@@ -5,7 +5,7 @@ description: Как выбрать первый процесс для автом
 slug: kakie-processy-avtomatizirovat
 publishDate: 2026-11-01
 category: avtomatizaciya
-related: stoimost-vnedreniya-ii-v-biznes, ii-assistent-dlya-biznesa
+related: avtomatizaciya-otdela-prodazh, stoimost-vnedreniya-ii-v-biznes, ii-assistent-dlya-biznesa
 excerpt: Первым стоит автоматизировать не самый заметный процесс, а тот, где много повторений, понятные правила и ошибки обходятся дорого. Разбираем, как его найти.
 status: published
 coverImage: /blog/covers/kakie-processy-avtomatizirovat.png

@@ -8,8 +8,8 @@ related: kak-postroit-sistemu-obucheniya-s-nulya, kak-ponyat-chto-net-sistemy-ob
 excerpt: Просмотр инструкции или прохождение курса ещё не означает, что сотрудник начнёт правильно действовать в реальной работе.
 readingTime: 6
 status: published
-coverImage: /blog/pochemu-sotrudniki-posle-obucheniya-delayut-po-svoemu.png
-coverImageAlt: Пять причин, почему сотрудники после обучения продолжают работать по-своему
+coverImage: /blog/covers/pochemu-sotrudniki-posle-obucheniya-delayut-po-svoemu.png
+coverImageAlt: Схема: обучение отмечено как «пройдено», но на работе путь сотрудника отклоняется от стандарта; разрыв между знанием и навыком
 order: 4
 ---
 

@@ -8,8 +8,8 @@ related: kak-postroit-sistemu-obucheniya-s-nulya, kompaniya-zavisit-ot-odnogo-ch
 excerpt: Зарплата новичка — далеко не единственная стоимость адаптации. Большая часть расходов обычно находится в работе руководителей, ошибках и потерянном результате.
 readingTime: 6
 status: published
-coverImage: /blog/stoimost-plohoy-adaptacii-sotrudnika.png
-coverImageAlt: Пять видов потерь бизнеса из-за плохой адаптации нового сотрудника
+coverImage: /blog/covers/stoimost-plohoy-adaptacii-sotrudnika.png
+coverImageAlt: Айсберг расходов на адаптацию: над водой — зарплата и поиск сотрудника, под водой — время руководителя, ошибки, медленный выход на результат, повторный найм и впечатление клиента
 order: 3
 ---
 

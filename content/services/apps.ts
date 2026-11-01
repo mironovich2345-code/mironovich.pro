@@ -121,6 +121,8 @@ const apps: ServicePageContent = {
     "stoimost-razrabotki-prilozheniya-dlya-biznesa",
     "crm-pod-zadachi-ili-gotovaya-sistema",
     "telegram-mini-app-dlya-biznesa",
+    "razrabotka-crm-dlya-biznesa",
+    "lichnyy-kabinet-klienta",
   ],
   form: {
     title: "Расскажите, какой процесс хотите перенести в приложение",

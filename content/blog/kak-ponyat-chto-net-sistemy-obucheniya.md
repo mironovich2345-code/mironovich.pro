@@ -8,8 +8,8 @@ related: kak-postroit-sistemu-obucheniya-s-nulya, kompaniya-zavisit-ot-odnogo-ch
 excerpt: Если обучение зависит от конкретного руководителя, знания разбросаны по чатам, а результаты невозможно проверить — скорее всего, системы обучения у компании пока нет.
 readingTime: 5
 status: published
-coverImage: /blog/kak-ponyat-chto-net-sistemy-obucheniya.png
-coverImageAlt: Пять признаков отсутствия системы обучения сотрудников в компании
+coverImage: /blog/covers/kak-ponyat-chto-net-sistemy-obucheniya.png
+coverImageAlt: Лист самопроверки из пяти признаков отсутствия системы обучения: знания разбросаны, каждый учит по-своему, нет маршрута новичка, результат не проверить, уход человека ломает процесс
 order: 2
 ---
 

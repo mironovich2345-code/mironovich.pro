@@ -5,7 +5,7 @@ description: Когда достаточно готовой CRM, когда ну
 slug: crm-pod-zadachi-ili-gotovaya-sistema
 publishDate: 2026-11-01
 category: razrabotka-prilozheniy
-related: stoimost-razrabotki-prilozheniya-dlya-biznesa, kakie-processy-avtomatizirovat
+related: razrabotka-crm-dlya-biznesa, stoimost-razrabotki-prilozheniya-dlya-biznesa, kakie-processy-avtomatizirovat
 excerpt: Готовая CRM быстрее и дешевле на старте, собственная — гибче под нестандартный процесс. Разбираем, по каким признакам выбирать и что часто упускают.
 status: published
 coverImage: /blog/covers/crm-pod-zadachi-ili-gotovaya-sistema.png

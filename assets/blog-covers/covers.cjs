@@ -301,6 +301,212 @@ const COVERS = {
       </svg>`;
     },
   },
+  // 10. Self-check: five signs, all ticked
+  "kak-ponyat-chto-net-sistemy-obucheniya": {
+    label: "Обучение / 01",
+    title: "Нет системы обучения<i>?</i>",
+    sub: "Пять признаков, что обучение держится на людях, а не на системе",
+    alt: "Лист самопроверки из пяти признаков отсутствия системы обучения: знания разбросаны, каждый учит по-своему, нет маршрута новичка, результат не проверить, уход человека ломает процесс",
+    svg: () => {
+      const rows = ["Знания разбросаны", "Каждый учит по-своему", "Нет маршрута новичка", "Результат не проверить", "Уход человека ломает процесс"];
+      return `
+      <svg width="480" height="448" viewBox="0 0 480 448">
+        <rect x="4" y="4" width="472" height="440" fill="${C.paper}" stroke="${C.ink}" stroke-width="2"/>
+        ${T(32, 44, "Самопроверка", { size: 13, cls: "mo" })}
+        ${T(448, 44, "5 / 5", { size: 13, cls: "mo", fill: C.red, anchor: "end" })}
+        <line x1="32" y1="62" x2="448" y2="62" stroke="${C.ink}" stroke-width="2"/>
+        ${rows.map((r, i) => {
+          const y = 112 + i * 66;
+          return `<rect x="32" y="${y - 24}" width="32" height="32" fill="none" stroke="${C.ink}" stroke-width="2"/>
+            <path d="M38 ${y - 9} l8 9 l16 -20" fill="none" stroke="${C.red}" stroke-width="4"/>
+            ${T(84, y - 1, r, { size: 19, w: 600 })}
+            ${i < 4 ? `<line x1="32" y1="${y + 26}" x2="448" y2="${y + 26}" stroke="${C.soft}" stroke-width="2"/>` : ""}`;
+        }).join("")}
+      </svg>`;
+    },
+  },
+
+  // 11. Iceberg: visible vs hidden costs
+  "stoimost-plohoy-adaptacii-sotrudnika": {
+    label: "Обучение / 03",
+    title: "Сколько стоит плохая адаптация<i>?</i>",
+    sub: "Зарплата и поиск — только видимая часть расходов",
+    alt: "Айсберг расходов на адаптацию: над водой — зарплата и поиск сотрудника, под водой — время руководителя, ошибки, медленный выход на результат, повторный найм и впечатление клиента",
+    svg: () => {
+      const hidden = ["Время руководителя", "Ошибки", "Медленный выход на результат", "Повторный найм", "Впечатление клиента"];
+      return `
+      <svg width="480" height="448" viewBox="0 0 480 448">
+        <path d="M168 120 L212 34 L248 70 L282 22 L322 120 Z" fill="${C.paper}" stroke="${C.ink}" stroke-width="2"/>
+        ${T(245, 104, "Зарплата и поиск", { size: 14, w: 700, anchor: "middle" })}
+        <line x1="4" y1="120" x2="476" y2="120" stroke="${C.ink}" stroke-width="2"/>
+        ${[0, 1, 2].map((i) => `<path d="M${20 + i * 160} 132 q20 -8 40 0 t40 0" fill="none" stroke="${C.stone}" stroke-width="1.5"/>`).join("")}
+        <path d="M168 120 L322 120 L410 250 L360 380 L240 432 L110 360 L72 230 Z" fill="${C.red}"/>
+        ${T(14, 112, "видно", { size: 11, cls: "mo", fill: C.stone })}
+        ${T(14, 150, "не видно", { size: 11, cls: "mo", fill: C.stone })}
+        ${hidden.map((s, i) => T(240, 172 + i * 48, s, { size: 16, w: 600, fill: "#fff", anchor: "middle" })).join("")}
+      </svg>`;
+    },
+  },
+
+  // 12. Plan vs reality: the path splits after "Пройдено"
+  "pochemu-sotrudniki-posle-obucheniya-delayut-po-svoemu": {
+    label: "Обучение / 04",
+    title: "Почему делают по-своему<i>?</i>",
+    sub: "Пройденный курс ещё не означает новое поведение на работе",
+    alt: "Схема: обучение отмечено как «пройдено», но на работе путь сотрудника отклоняется от стандарта; разрыв между знанием и навыком",
+    svg: () => `
+      <svg width="480" height="448" viewBox="0 0 480 448">
+        <rect x="4" y="150" width="128" height="76" fill="${C.paper}" stroke="${C.ink}" stroke-width="2"/>
+        ${T(68, 184, "Обучение", { size: 18, cls: "rc", anchor: "middle" })}
+        <rect x="40" y="198" width="56" height="18" fill="${C.ink}"/>
+        ${T(68, 211, "пройдено", { size: 9, cls: "mo", fill: "#fff", anchor: "middle" })}
+        <line x1="132" y1="188" x2="196" y2="188" stroke="${C.ink}" stroke-width="3"/>
+        <circle cx="204" cy="188" r="8" fill="${C.ink}"/>
+        <line x1="212" y1="188" x2="460" y2="188" stroke="${C.ink}" stroke-width="3" stroke-dasharray="10 8"/>
+        <path d="M452 180 l12 8 l-12 8" fill="none" stroke="${C.ink}" stroke-width="3"/>
+        ${T(330, 172, "Стандарт", { size: 15, w: 700, anchor: "middle" })}
+        <path d="M212 192 C 270 214, 300 330, 452 348" fill="none" stroke="${C.red}" stroke-width="5"/>
+        <path d="M440 336 l16 13 l-19 7" fill="none" stroke="${C.red}" stroke-width="5"/>
+        ${T(452, 384, "Как на самом деле", { size: 15, w: 700, fill: C.red, anchor: "end" })}
+        <line x1="380" y1="198" x2="380" y2="330" stroke="${C.stone}" stroke-width="1.5" stroke-dasharray="3 5"/>
+        ${T(392, 270, "разрыв", { size: 11, cls: "mo", fill: C.stone })}
+        ${T(4, 60, "Знание", { size: 13, cls: "mo", fill: C.stone })}
+        ${T(4, 86, "≠ навык", { size: 26, cls: "rc" })}
+        ${T(4, 432, "Теория, нет стандарта, устаревшие материалы, другой пример руководителя", { size: 12, fill: C.stone })}
+      </svg>`,
+  },
+
+  // 13. Hub: everything goes through one person
+  "kompaniya-zavisit-ot-odnogo-cheloveka": {
+    label: "Обучение / 05",
+    title: "Компания зависит от одного человека<i>.</i>",
+    sub: "Пока он на месте, проблема почти незаметна",
+    alt: "Схема: новички, коллеги, клиенты и руководитель обращаются к одному сотруднику; база знаний компании пустует",
+    svg: () => {
+      const nodes = [["Новички", 70, 60], ["Коллеги", 410, 60], ["Клиенты", 70, 300], ["Руководитель", 410, 300]];
+      return `
+      <svg width="480" height="448" viewBox="0 0 480 448">
+        ${nodes.map(([, x, y]) => `<line x1="${x}" y1="${y}" x2="240" y2="180" stroke="${C.ink}" stroke-width="2"/>`).join("")}
+        ${nodes.map(([s, x, y]) => `<rect x="${x - 62}" y="${y - 22}" width="124" height="44" fill="${C.paper}" stroke="${C.ink}" stroke-width="2"/>${T(x, y + 6, s, { size: 15, w: 600, anchor: "middle" })}`).join("")}
+        <circle cx="240" cy="180" r="66" fill="${C.red}"/>
+        ${T(240, 174, "Один", { size: 22, cls: "rc", fill: "#fff", anchor: "middle" })}
+        ${T(240, 198, "сотрудник", { size: 22, cls: "rc", fill: "#fff", anchor: "middle" })}
+        <rect x="150" y="372" width="180" height="56" fill="none" stroke="${C.stone}" stroke-width="2" stroke-dasharray="6 6"/>
+        ${T(240, 398, "База знаний", { size: 15, w: 600, fill: C.stone, anchor: "middle" })}
+        ${T(240, 418, "пусто", { size: 11, cls: "mo", fill: C.red, anchor: "middle" })}
+      </svg>`;
+    },
+  },
+
+  // 14. Sales pipeline with automation marks
+  "avtomatizaciya-otdela-prodazh": {
+    label: "Автоматизация / 02",
+    title: "Автоматизация отдела продаж<i>.</i>",
+    sub: "Заявки не теряются, напоминания приходят вовремя, отчёт собирается сам",
+    alt: "Воронка продаж из пяти этапов — заявка, квалификация, предложение, договор, оплата — с отметками автоматических действий: распределение, напоминание, документ, отчёт",
+    svg: () => {
+      const st = [["Заявка", "распределение"], ["Квалификация", ""], ["Предложение", "напоминание"], ["Договор", "документ"], ["Оплата", "отчёт"]];
+      return `
+      <svg width="480" height="448" viewBox="0 0 480 448">
+        ${T(4, 18, "Воронка", { size: 13, cls: "mo" })}
+        ${st.map(([s, a], i) => {
+          const w = 300 - i * 46, x = 4 + (300 - w) / 2, y = 40 + i * 78;
+          return `<rect x="${x}" y="${y}" width="${w}" height="58" fill="${i === 4 ? C.ink : C.paper}" stroke="${C.ink}" stroke-width="2"/>
+            ${T(154, y + 36, s, { size: 17, cls: "rc", fill: i === 4 ? "#fff" : C.ink, anchor: "middle" })}
+            ${a ? `<line x1="${x + w}" y1="${y + 29}" x2="318" y2="${y + 29}" stroke="${C.red}" stroke-width="2" stroke-dasharray="4 4"/>
+              <path d="M330 ${y + 14} l-8 16 h8 l-6 14 l16 -20 h-9 l6 -10 Z" fill="${C.red}"/>
+              ${T(352, y + 35, a, { size: 15, w: 600 })}` : ""}`;
+        }).join("")}
+        ${T(476, 18, "авто", { size: 13, cls: "mo", fill: C.red, anchor: "end" })}
+      </svg>`;
+    },
+  },
+
+  // 15. Building blocks chain and the limit line
+  "avtomatizaciya-biznesa-bez-programmista": {
+    label: "Автоматизация / 03",
+    title: "Автоматизация без программиста<i>.</i>",
+    sub: "Что можно собрать самому из готовых инструментов — и где у этого предел",
+    alt: "Цепочка автоматизации из готовых блоков «форма — таблица — уведомление» и граница, за которой нужен разработчик: сложная логика, редкие системы, права доступа, надёжность и объём",
+    svg: () => {
+      const blocks = [["Форма", 12], ["Таблица", 172], ["Чат", 332]];
+      const beyond = ["Сложная логика", "Редкие системы", "Права доступа", "Надёжность и объём"];
+      return `
+      <svg width="480" height="448" viewBox="0 0 480 448">
+        ${T(4, 18, "Сами", { size: 13, cls: "mo" })}
+        ${blocks.map(([s, x], i) => `<rect x="${x}" y="40" width="136" height="76" fill="${C.paper}" stroke="${C.ink}" stroke-width="2"/>
+          ${T(x + 68, 84, s, { size: 20, cls: "rc", anchor: "middle" })}
+          ${T(x + 12, 58, i === 0 ? "если" : i === 1 ? "то" : "и", { size: 10, cls: "mo", fill: C.red })}
+          ${i < 2 ? `<line x1="${x + 136}" y1="78" x2="${x + 160}" y2="78" stroke="${C.ink}" stroke-width="2"/><path d="M${x + 152} 72 l8 6 l-8 6" fill="none" stroke="${C.ink}" stroke-width="2"/>` : ""}`).join("")}
+        ${T(12, 148, "Уведомления, перенос данных, напоминания, шаблоны", { size: 13, fill: C.stone })}
+        <line x1="0" y1="184" x2="480" y2="184" stroke="${C.red}" stroke-width="4"/>
+        <rect x="364" y="170" width="116" height="28" fill="${C.red}"/>
+        ${T(422, 189, "предел", { size: 12, cls: "mo", fill: "#fff", anchor: "middle" })}
+        ${T(4, 226, "Нужен разработчик", { size: 13, cls: "mo" })}
+        ${beyond.map((s, i) => {
+          const x = 4 + (i % 2) * 240, y = 246 + Math.floor(i / 2) * 92;
+          return `<rect x="${x}" y="${y}" width="228" height="76" fill="none" stroke="${C.ink}" stroke-width="2" stroke-dasharray="6 6"/>${T(x + 18, y + 44, s, { size: 15, w: 700 })}`;
+        }).join("")}
+      </svg>`;
+    },
+  },
+
+  // 16. Stages without dates
+  "razrabotka-crm-dlya-biznesa": {
+    label: "Приложения / 04",
+    title: "Разработка CRM для бизнеса<i>.</i>",
+    sub: "Этапы, сроки и бюджет — от обследования до запуска и развития",
+    alt: "Диаграмма этапов разработки CRM без дат: обследование, прототип, первая версия, перенос данных, запуск и развитие; сроки зависят от объёма",
+    svg: () => {
+      const st = [["Обследование", 0, 90], ["Прототип", 70, 100], ["Первая версия", 150, 170], ["Перенос данных", 250, 110], ["Запуск", 330, 70], ["Развитие", 380, 92]];
+      return `
+      <svg width="480" height="448" viewBox="0 0 480 448">
+        <rect x="4" y="4" width="472" height="392" fill="${C.paper}" stroke="${C.ink}" stroke-width="2"/>
+        ${T(24, 38, "План работ", { size: 13, cls: "mo" })}
+        ${T(456, 38, "без дат", { size: 13, cls: "mo", fill: C.red, anchor: "end" })}
+        <line x1="24" y1="54" x2="456" y2="54" stroke="${C.ink}" stroke-width="2"/>
+        ${st.map(([s, x, w], i) => {
+          const y = 72 + i * 52, last = i === 5, mid = i === 2;
+          return `${T(24, y + 22, s, { size: 13, w: 600 })}
+            <rect x="${136 + x * 0.68}" y="${y + 6}" width="${w * 0.68}" height="22" fill="${mid ? C.red : last ? "none" : C.ink}" stroke="${C.ink}" stroke-width="${last ? 2 : 0}" ${last ? 'stroke-dasharray="5 4"' : ""}/>`;
+        }).join("")}
+        ${T(4, 432, "Сроки зависят от ролей, процессов, интеграций и данных", { size: 14, fill: C.stone })}
+      </svg>`;
+    },
+  },
+
+  // 17. Client account mock with integrations
+  "lichnyy-kabinet-klienta": {
+    label: "Приложения / 05",
+    title: "Личный кабинет клиента<i>.</i>",
+    sub: "Заказы, документы и оплата — клиент видит сам, без звонка менеджеру",
+    alt: "Макет личного кабинета клиента с разделами «Заказы», «Документы», «Оплата», «Обращения» и линиями интеграции с CRM, учётной системой и платёжным сервисом",
+    svg: () => {
+      const menu = ["Заказы", "Документы", "Оплата", "Обращения"];
+      return `
+      <svg width="480" height="448" viewBox="0 0 480 448">
+        <rect x="4" y="4" width="472" height="320" fill="${C.paper}" stroke="${C.ink}" stroke-width="2"/>
+        <rect x="4" y="4" width="472" height="34" fill="${C.ink}"/>
+        ${[0, 1, 2].map((i) => `<circle cx="${24 + i * 18}" cy="21" r="5" fill="${i === 0 ? C.red : "#55524C"}"/>`).join("")}
+        ${T(104, 26, "Личный кабинет", { size: 12, cls: "mo", fill: "#fff" })}
+        <rect x="4" y="38" width="128" height="286" fill="#F8F6F1"/>
+        <line x1="132" y1="38" x2="132" y2="324" stroke="${C.ink}" stroke-width="2"/>
+        ${menu.map((s, i) => `${i === 0 ? `<rect x="4" y="${54 + i * 44}" width="6" height="30" fill="${C.red}"/>` : ""}${T(22, 74 + i * 44, s, { size: 15, w: i === 0 ? 700 : 500 })}`).join("")}
+        ${[["Заказ № 1", "в работе", true], ["Заказ № 2", "отгружен", false], ["Заказ № 3", "доставлен", false]].map(([n, s, a], i) => {
+          const y = 58 + i * 82;
+          return `<rect x="152" y="${y}" width="304" height="66" fill="none" stroke="${C.ink}" stroke-width="1.5"/>
+            ${T(168, y + 28, n, { size: 15, w: 700 })}
+            <rect x="168" y="${y + 38}" width="200" height="8" fill="${C.soft}"/><rect x="168" y="${y + 38}" width="${a ? 110 : 200}" height="8" fill="${a ? C.red : C.ink}"/>
+            ${T(440, y + 28, s, { size: 11, cls: "mo", fill: a ? C.red : C.stone, anchor: "end" })}`;
+        }).join("")}
+        ${["CRM", "Учёт", "Оплата"].map((s, i) => {
+          const x = 30 + i * 150;
+          return `<line x1="${x + 60}" y1="324" x2="${x + 60}" y2="380" stroke="${C.ink}" stroke-width="2" stroke-dasharray="4 4"/>
+            <rect x="${x}" y="380" width="120" height="48" fill="${C.ink}"/>${T(x + 60, 410, s, { size: 16, cls: "rc", fill: "#fff", anchor: "middle" })}`;
+        }).join("")}
+      </svg>`;
+    },
+  },
 };
 
 const page = (c) => `<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body>
