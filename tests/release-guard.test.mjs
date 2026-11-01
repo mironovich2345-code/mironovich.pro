@@ -26,19 +26,36 @@ function fixture({ published, fill = false, edit = (s) => s } = {}) {
   return dir;
 }
 
-test("target: local, staging and preview builds are not production", () => {
-  assert.equal(releaseTarget({}).production, false);
+test("target: non-production only when the site URL is explicitly non-public", () => {
   assert.equal(releaseTarget({ NEXT_PUBLIC_SITE_URL: "https://mironovich-staging.up.railway.app" }).production, false);
   assert.equal(releaseTarget({ RAILWAY_ENVIRONMENT_NAME: "staging", NEXT_PUBLIC_SITE_URL: "https://x.up.railway.app" }).production, false);
   assert.equal(releaseTarget({ NEXT_PUBLIC_SITE_URL: "http://localhost:3000" }).production, false);
 });
 
-test("target: production is detected by the public URL or by Railway — either is enough", () => {
+test("target: fail-closed — no variables at all means production (the build bakes in the public URL)", () => {
+  const t = releaseTarget({});
+  assert.equal(t.production, true);
+  assert.match(t.reason, /не задан/);
+  assert.match(t.reason, /не передана в сборку/);
+  // Railway variables missing at build time, staging name only at runtime: still checked
+  assert.equal(releaseTarget({ RAILWAY_ENVIRONMENT_NAME: "staging" }).production, true);
+  assert.equal(releaseTarget({ NEXT_PUBLIC_SITE_URL: "   " }).production, true);
+});
+
+test("target: production by the public URL or by Railway — either is enough", () => {
   assert.equal(releaseTarget(PROD).production, true);
   assert.equal(releaseTarget({ NEXT_PUBLIC_SITE_URL: " HTTPS://MIRONOVICH.PRO/ " }).production, true);
   assert.equal(releaseTarget({ NEXT_PUBLIC_SITE_URL: "https://www.mironovich.pro" }).production, true);
-  assert.equal(releaseTarget({ RAILWAY_ENVIRONMENT_NAME: "production" }).production, true);
-  assert.equal(releaseTarget({ RAILWAY_ENVIRONMENT_NAME: "staging", ...PROD }).production, true);
+  assert.equal(releaseTarget({ RAILWAY_ENVIRONMENT_NAME: "production", NEXT_PUBLIC_SITE_URL: "https://x.up.railway.app" }).production, true);
+  assert.equal(releaseTarget({ RAILWAY_ENVIRONMENT_NAME: "Production", NEXT_PUBLIC_SITE_URL: "https://x.up.railway.app" }).production, true);
+  assert.equal(releaseTarget({ RAILWAY_ENVIRONMENT: "production", NEXT_PUBLIC_SITE_URL: "http://localhost:3000" }).production, true);
+});
+
+test("no switch-off: unrelated or made-up variables do not change the target", () => {
+  for (const extra of [{ __MRNV_RELEASE_GUARD_DONE: "1" }, { SKIP_RELEASE_GUARD: "1" }, { NODE_ENV: "development" }, { CI: "1" }]) {
+    assert.equal(releaseTarget({ ...PROD, ...extra }).production, true);
+    assert.equal(runReleaseGuard({ cwd: repo, env: { ...PROD, ...extra }, log: quiet }).blocked, true);
+  }
 });
 
 test("current repository: a production build is refused (old texts, 9 open fields)", () => {
@@ -59,11 +76,27 @@ test("current repository: staging and local builds are never blocked, only repor
   });
   assert.equal(staging.blocked, false);
   assert.ok(warned.some((m) => m.includes("published=false")));
-  assert.equal(runReleaseGuard({ cwd: repo, env: {}, log: quiet }).blocked, false);
+  assert.equal(runReleaseGuard({ cwd: repo, env: { NEXT_PUBLIC_SITE_URL: "http://localhost:3000" }, log: quiet }).blocked, false);
 });
 
 test("forced production check (npm run release:check -- --production) uses the same rules", () => {
-  assert.equal(runReleaseGuard({ cwd: repo, env: {}, forceProduction: true, log: quiet }).blocked, true);
+  assert.equal(runReleaseGuard({ cwd: repo, env: { NEXT_PUBLIC_SITE_URL: "http://localhost:3000" }, forceProduction: true, log: quiet }).blocked, true);
+});
+
+test("the target is always printed, so Railway build logs show what the guard saw", () => {
+  const lines = [];
+  runReleaseGuard({ cwd: repo, env: { NEXT_PUBLIC_SITE_URL: "https://s.up.railway.app", RAILWAY_ENVIRONMENT_NAME: "staging" }, log: { log: (m) => lines.push(m), warn() {} } });
+  assert.match(lines[0], /цель сборки: не production \(NEXT_PUBLIC_SITE_URL=https:\/\/s\.up\.railway\.app; RAILWAY_ENVIRONMENT_NAME=staging\)/);
+});
+
+test("rate limit source: invalid value refused in production, unset is the safe fallback (warning)", () => {
+  const docs = docsOf(fixture({ fill: true }));
+  const env = { ...PROD, ...IDS, NEXT_PUBLIC_ANALYTICS_CONSENT: "required" };
+  assert.match(checkRelease({ ...filled, docs, env: { ...env, RATE_LIMIT_CLIENT_IP: "true" } }).errors.join(), /RATE_LIMIT_CLIENT_IP/);
+  const unset = checkRelease({ ...filled, docs, env });
+  assert.equal(unset.errors.length, 0);
+  assert.ok(unset.warnings.some((w) => w.includes("общий лимит")));
+  assert.equal(checkRelease({ ...filled, docs, env: { ...env, RATE_LIMIT_CLIENT_IP: "x-real-ip" } }).warnings.some((w) => w.includes("RATE_LIMIT")), false);
 });
 
 test("published but placeholders left → refused", () => {

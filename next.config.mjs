@@ -62,11 +62,14 @@ const nextConfig = {
 // Production release guard: a production build stops if the legal texts are not
 // published and filled in, or analytics do not match the consent banner.
 // Staging and local builds only get a report. See docs/release/release-guard.md.
+// Deliberately no environment variable can switch it off. Next may load the
+// config in several processes; each one checks again (same result).
+const checked = Symbol.for("mrnv.release-guard");
 export default function config(phase) {
-  if (phase === PHASE_PRODUCTION_BUILD && !process.env.__MRNV_RELEASE_GUARD_DONE) {
-    process.env.__MRNV_RELEASE_GUARD_DONE = "1"; // Next loads the config more than once per build
+  if (phase === PHASE_PRODUCTION_BUILD && !globalThis[checked]) {
     const result = runReleaseGuard();
     if (result.blocked) throw new Error(result.message);
+    globalThis[checked] = true;
   }
   return nextConfig;
 }

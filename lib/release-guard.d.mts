@@ -1,5 +1,6 @@
 // Types for lib/release-guard.mjs (TypeScript imports it in lib/legal.ts).
 export declare const PRODUCTION_ORIGINS: string[];
+export declare const DEFAULT_SITE_URL: string;
 export declare const PLACEHOLDER_SOURCE: string;
 export declare const METRICA_ID: RegExp;
 export declare const GA_ID: RegExp;
