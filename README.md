@@ -34,7 +34,8 @@ npm audit            # уязвимости зависимостей
 npm run lint         # eslint
 npm run typecheck    # tsc --noEmit
 npm test             # модульные тесты: лимит заявок, проверка релиза (Node 22.6+)
-npm run build        # прод-сборка
+npm run build        # прод-сборка (= production-релиз: работает release guard)
+npm run build:local  # локальная прод-сборка с http://localhost:3000, guard не блокирует
 npm run release:check -- --production   # готов ли код к production-релизу
 ```
 
@@ -91,11 +92,13 @@ npm run build
 npm start            # прод-сервер на :3000 (PORT переопределяется окружением)
 ```
 
-Сборка с `NEXT_PUBLIC_SITE_URL=https://mironovich.pro` (или в окружении Railway
-`production`) — это production-релиз: до начала сборки работает
-`lib/release-guard.mjs`, который остановит её при неопубликованных или
-незаполненных юридических текстах и при аналитике без режима согласия
-(`docs/release/release-guard.md`). Локальные и staging-сборки не блокируются.
+Любая `next build` считается production-релизом, если `NEXT_PUBLIC_SITE_URL`
+явно не указывает на другой адрес (staging, localhost), а окружение Railway — не
+`production`. До начала сборки работает `lib/release-guard.mjs`: он остановит
+production-сборку при неопубликованных или незаполненных юридических текстах и
+при аналитике без режима согласия (`docs/release/release-guard.md`). Staging
+(`NEXT_PUBLIC_SITE_URL=https://…up.railway.app`) и `npm run build:local` не
+блокируются.
 
 ## Структура проекта
 

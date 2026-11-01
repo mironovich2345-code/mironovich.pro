@@ -31,8 +31,8 @@
 | 5 | 6 заявок за минуту | 6-я — ошибка и ссылка на Telegram; в чате ≤ 5 | |
 | 6 | `TELEGRAM_CHAT_ID` = `1` → Redeploy → заявка | «Не получилось доставить…», **нет** «отправлена»; в Logs `[lead] telegram rejected the message` | |
 | 7 | Вернуть chat_id → Redeploy → заявка | Доставлена | |
-| 8 | Подмена IP: команда из `docs/release/rate-limit.md`, «Проверка на staging» | `422 422 422 422 422 429 429` — подставленные адреса игнорируются | |
-| 9 | В логах сборки staging (Deployments → Build Logs) | Строка `[release-guard] не production (Railway environment «staging»)` | |
+| 8 | Подмена IP: `RATE_LIMIT_CLIENT_IP=x-real-ip` в staging → Redeploy → шаги 2–3 из `docs/release/rate-limit.md`, «Проверка на staging» (компьютер + телефон через мобильный интернет) | С компьютера `422 ×5, 429, 429`; с телефона сразу после — заявка отправлена | |
+| 9 | Лог сборки staging (Deployments → Build Logs), строка `[release-guard] цель сборки` | `не production (NEXT_PUBLIC_SITE_URL=https://…up.railway.app; RAILWAY_ENVIRONMENT_NAME=staging)`. Если вместо `staging` — `не передана в сборку`, сообщить Claude (защита работает, но по одному признаку) | |
 
 Прислать Claude только колонку ✓/✗ и тексты ошибок без токенов. После теста —
 удалить тестовые сообщения; staging можно оставить.
@@ -59,6 +59,8 @@ Railway → **production** → сервис → **Variables**. Значения 
 - есть ли у сервиса HTTP-логи и какой срок их хранения;
 - Settings → Deploy → **Replicas = 1** (лимит заявок считается в памяти
   каждой реплики, `docs/release/rate-limit.md`);
+- `RATE_LIMIT_CLIENT_IP` — **не задан**, пока строка 8 staging-теста не
+  пройдена; после успешной проверки задать `x-real-ip` (в момент релиза);
 - нет ли прокси (например, Cloudflare) перед доменом — в DNS `mironovich.pro`
   должен указывать прямо на Railway.
 
