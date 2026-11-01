@@ -61,9 +61,8 @@ cp .env.example .env.local
 |---|---|
 | `NEXT_PUBLIC_TELEGRAM_URL` | подтверждённый адрес из `config/contacts.ts`; некорректная или старая ссылка игнорируется |
 | `NEXT_PUBLIC_INSTAGRAM_URL` | то же |
-| `NEXT_PUBLIC_YANDEX_METRICA_ID` | скрипт не загружается (принимаются только цифры) |
-| `NEXT_PUBLIC_GA_ID` | скрипт не загружается (формат `G-XXXX`) |
-| `NEXT_PUBLIC_ANALYTICS_CONSENT` | пусто — счётчики грузятся сразу; `required` — только после согласия в баннере |
+| `NEXT_PUBLIC_YANDEX_METRICA_ID` | Метрики и баннера нет (принимаются только цифры). С ID — баннер, Метрика только после «Разрешить» |
+| `RATE_LIMIT_CLIENT_IP` | безопасный режим лимита заявок (`docs/release/rate-limit.md`) |
 | `NEXT_PUBLIC_LEAD_FORM_EXTENDED` | поля «Компания» и «Направление» выключены |
 | `LEAD_TIMEZONE` | `Europe/Moscow` |
 
@@ -96,7 +95,7 @@ npm start            # прод-сервер на :3000 (PORT переопред
 явно не указывает на другой адрес (staging, localhost), а окружение Railway — не
 `production`. До начала сборки работает `lib/release-guard.mjs`: он остановит
 production-сборку при неопубликованных или незаполненных юридических текстах и
-при аналитике без режима согласия (`docs/release/release-guard.md`). Staging
+при упоминании отключённого GA4 в текстах (`docs/release/release-guard.md`). Staging
 (`NEXT_PUBLIC_SITE_URL=https://…up.railway.app`) и `npm run build:local` не
 блокируются.
 
@@ -155,7 +154,7 @@ lib/
   markdown.ts           небольшой Markdown-парсер без зависимостей
   jsonld.ts             безопасная сериализация JSON-LD
   seo.ts                pageMetadata(): canonical, OG и Twitter для каждой страницы
-  consent.ts            режим согласия на аналитику
+  consent.ts            согласие на Метрику (обязательно всегда), отзыв, удаление cookies
   rate-limit.ts         лимит заявок: 5/мин на IP, TTL, ограничение памяти (docs/release/rate-limit.md)
   release-guard.mjs     проверка production-релиза при сборке (docs/release/release-guard.md)
   lead.ts               общие правила формы: лимиты, направления, валидация контакта, флаг расширенной формы
@@ -195,21 +194,26 @@ sitemap и структурированные данные появятся са
 
 ## Аналитика
 
-Опциональна. Пока в env нет ни одного ID, ни один внешний скрипт не
-загружается и в CSP не открывается ни один внешний домен — поэтому
-cookie-баннера пока и нет.
+Только Яндекс Метрика; Google Analytics 4 отключён окончательно (код, CSP и
+тексты). Без `NEXT_PUBLIC_YANDEX_METRICA_ID` внешние скрипты не загружаются и
+баннера нет. С ID показывается cookie-баннер, и Метрика загружается только
+после «Разрешить»; отказ и отзыв — без загрузки, отзыв удаляет `_ym*` из
+cookies и localStorage. Подробно — `docs/release/analytics.md`, перечень
+cookies и хранилища — `docs/legal/cookies-inventory.md`.
 
-Компоненты не знают, какая система подключена: они вызывают `track()` из
-`lib/analytics.ts`. Чтобы позже добавить управление согласием, достаточно
-закрыть условием два `<Script>` в `components/Analytics.tsx`.
+Компоненты вызывают `track()` из `lib/analytics.ts` и не обращаются к `ym`
+напрямую.
 
 | Событие | Когда | Параметры |
 |---|---|---|
-| `cta_click` | клик по CTA | `location`: `hero` · `sticky` · `first_review` · `secondary` · `header` · `about` · `article` · `blog` |
+| `service_view` | открыта страница услуги | `service` |
+| `cta_click` | клик по CTA | `location` (полный список — `lib/analytics.ts`) |
 | `form_start` | первое взаимодействие с полем формы, один раз за сессию | — |
 | `lead_submit_success` | Telegram подтвердил доставку | `utm_source`, `utm_medium`, `utm_campaign` |
 | `lead_submit_error` | заявка не ушла | `reason`: `validation` · `network` · `delivery` |
-| `telegram_fallback_click` | клик по резервной ссылке Telegram | — |
+| `contact_click` | клик по Telegram / Instagram | `channel`, `location` |
+
+Все события уходят в Метрику как цели (`reachGoal`).
 
 Имя, контакт и текст задачи в аналитику не передаются никогда.
 

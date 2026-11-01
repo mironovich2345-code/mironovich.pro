@@ -11,11 +11,11 @@
 | `TELEGRAM_BOT_TOKEN` | **да** | токен от @BotFather, серверная | доставка заявок | Форма честно показывает ошибку доставки (503) и ссылку на Telegram |
 | `TELEGRAM_CHAT_ID` | **да** | число (может быть с минусом для групп), серверная | чат для заявок | То же |
 | `NEXT_PUBLIC_YANDEX_METRICA_ID` | да (счётчик подключён) | только цифры, 5–12 | Яндекс Метрика | Счётчик **молча не загрузится** — проверить формат |
-| `NEXT_PUBLIC_GA_ID` | да (подключён) | `G-` + латиница/цифры, например `G-ABC123XYZ` | GA4 | Счётчик **молча не загрузится**; старый формат `UA-…` не поддерживается |
+| `NEXT_PUBLIC_GA_ID` | **не используется** | — | GA4 отключён 01.11.2026 | Новая версия переменную не читает. Удаление (решение владельца, в любой момент) сразу отключит GA4 и на действующем сайте — см. «Откат» |
 | `NEXT_PUBLIC_TELEGRAM_URL` | рекомендуется | `https://t.me/mironovich_pro` | Ссылка на Telegram | Код и так использует этот адрес; см. «Откат» ниже — почему лучше задать |
 | `NEXT_PUBLIC_INSTAGRAM_URL` | рекомендуется | `https://www.instagram.com/mironovich.pro/` | Ссылка на Instagram | То же |
 | `LEAD_TIMEZONE` | нет | IANA, например `Europe/Moscow` | Дата в сообщении бота | `Europe/Moscow` |
-| `NEXT_PUBLIC_ANALYTICS_CONSENT` | **`required` одновременно с публикацией новых текстов** (до этого — не задавать) | пусто или `required` | Баннер согласия на аналитику | Пусто — счётчики грузятся сразу (как сейчас). При `published: true` в `config/legal.json` и заданных ID счётчиков сборка без `required` остановится |
+| `NEXT_PUBLIC_ANALYTICS_CONSENT` | **не нужна** | — | Прежний переключатель баннера | Новая версия не читает: при ID Метрики баннер и согласие обязательны всегда. Можно удалить |
 | `NEXT_PUBLIC_LEAD_FORM_EXTENDED` | **не задавать** | пусто или `1` | Поля «Компания» и «Направление» | Выключены |
 | `RATE_LIMIT_CLIENT_IP` | **только после проверки на staging** (`rate-limit.md`) | пусто, `x-real-ip` или `x-forwarded-for` | Какой заголовок считать адресом клиента для лимита 5/мин | Пусто — безопасный режим: только общий лимит 10/мин. Другое значение — production-сборка остановится |
 | `SITE_NOINDEX` | **не задавать** в production | пусто или `1` | Закрывает сайт от поисковиков | — |
@@ -23,7 +23,7 @@
 | `NODE_ENV` | не трогать | — | Railway / Next задают сами | — |
 
 Проверка перед релизом: в Railway → production → Variables есть все строки «да»,
-нет `SITE_NOINDEX`, `NEXT_PUBLIC_LEAD_FORM_EXTENDED`, `NEXT_PUBLIC_ANALYTICS_CONSENT`,
+нет `SITE_NOINDEX`, `LEGAL_PREVIEW`, `NEXT_PUBLIC_LEAD_FORM_EXTENDED`,
 а `NEXT_PUBLIC_TELEGRAM_URL` / `NEXT_PUBLIC_INSTAGRAM_URL` — либо не заданы, либо
 содержат подтверждённые адреса (не `t.me/mironovich` и не `instagram.com/mironovich`).
 
@@ -42,7 +42,8 @@ staging), `TELEGRAM_BOT_TOKEN` и `TELEGRAM_CHAT_ID` **тестового** бо
 |---|---|---|
 | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `NEXT_PUBLIC_SITE_URL`, ID счётчиков, `LEAD_TIMEZONE` | используются | используются так же |
 | `NEXT_PUBLIC_TELEGRAM_URL` / `NEXT_PUBLIC_INSTAGRAM_URL` | необязательны (адреса в коде) | **без них прежняя версия показывает старые `t.me/mironovich` и `instagram.com/mironovich`** |
-| `NEXT_PUBLIC_ANALYTICS_CONSENT`, `NEXT_PUBLIC_LEAD_FORM_EXTENDED`, `SITE_NOINDEX`, `LEGAL_PREVIEW` | новые | игнорируются |
+| `NEXT_PUBLIC_LEAD_FORM_EXTENDED`, `SITE_NOINDEX`, `LEGAL_PREVIEW`, `RATE_LIMIT_CLIENT_IP` | новые | игнорируются |
+| `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_ANALYTICS_CONSENT` | не читаются | `NEXT_PUBLIC_GA_ID` прежней версией используется: **удаление сейчас отключит GA4 и на действующем сайте** (Railway пересоберёт `main`, прежний код без ID GA4 не загружает). Откат после релиза тогда тоже будет без GA4 — это совпадает с решением отключить его |
 
 Поэтому рекомендуется **задать** `NEXT_PUBLIC_TELEGRAM_URL` и
 `NEXT_PUBLIC_INSTAGRAM_URL` подтверждёнными адресами: новая версия их примет,

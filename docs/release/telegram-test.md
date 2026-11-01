@@ -47,10 +47,8 @@ chat_id никуда не пересылать — ни в чат с Claude, н�
    | `LEGAL_PREVIEW` | `1` — по желанию: увидеть проекты политики и согласия на `/privacy`, `/consent` |
 
    **Не задавать** в staging: `NEXT_PUBLIC_YANDEX_METRICA_ID`,
-   `NEXT_PUBLIC_GA_ID` (тест не попадёт в статистику),
-   `NEXT_PUBLIC_LEAD_FORM_EXTENDED`. По желанию для отдельной проверки баннера:
-   `NEXT_PUBLIC_ANALYTICS_CONSENT=required` (без ID счётчиков баннер не
-   появится — для проверки баннера нужны тестовые ID, см. шаг 4).
+   `NEXT_PUBLIC_LEAD_FORM_EXTENDED`. Баннер появляется только при ID Метрики —
+   для его проверки нужен тестовый ID, см. шаг 4.
 7. Дождаться статуса деплоя **Active / Success**.
 
 Production при этом не меняется: другое окружение, другой домен, другие

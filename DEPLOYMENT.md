@@ -57,7 +57,7 @@ TELEGRAM_BOT_TOKEN=<из шага 8>
 TELEGRAM_CHAT_ID=<из шага 8>
 ```
 
-Опционально: `NEXT_PUBLIC_YANDEX_METRICA_ID`, `NEXT_PUBLIC_GA_ID`, `LEAD_TIMEZONE`.
+Опционально: `NEXT_PUBLIC_YANDEX_METRICA_ID`, `LEAD_TIMEZONE`, `RATE_LIMIT_CLIENT_IP`. GA4 не используется — `NEXT_PUBLIC_GA_ID` можно удалить.
 Контакты Telegram и Instagram заданы в `config/contacts.ts`; переменные
 `NEXT_PUBLIC_TELEGRAM_URL` / `NEXT_PUBLIC_INSTAGRAM_URL` нужны только чтобы их
 заменить. Полный список и порядок релиза — `docs/release/release-plan.md`.

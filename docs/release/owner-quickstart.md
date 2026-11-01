@@ -47,11 +47,11 @@ Railway → **production** → сервис → **Variables**. Значения 
 | `NEXT_PUBLIC_SITE_URL` | `https://mironovich.pro` (без `/` в конце) |
 | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | заданы (боевые) |
 | `NEXT_PUBLIC_YANDEX_METRICA_ID` | только цифры |
-| `NEXT_PUBLIC_GA_ID` | начинается с `G-` (если GA4 оставляем) |
+| `NEXT_PUBLIC_GA_ID` | не используется (GA4 отключён) — не мешает; удалить можно позже |
 | `NEXT_PUBLIC_TELEGRAM_URL` | не задана **или** `https://t.me/mironovich_pro` |
 | `NEXT_PUBLIC_INSTAGRAM_URL` | не задана **или** `https://www.instagram.com/mironovich.pro/` |
 | `SITE_NOINDEX`, `LEGAL_PREVIEW`, `NEXT_PUBLIC_LEAD_FORM_EXTENDED` | **отсутствуют** |
-| `NEXT_PUBLIC_ANALYTICS_CONSENT` | отсутствует до юридического Go, затем `required` |
+| `NEXT_PUBLIC_ANALYTICS_CONSENT` | не используется (согласие обязательно в коде) — не нужна |
 
 Дополнительно посмотреть (нужно для юриста, `docs/legal/data-flow.md`):
 - сервис → **Settings → Region** — в каком регионе работает сайт;
