@@ -86,7 +86,7 @@ export default function ConsentBanner() {
     >
       <div className="mb-2 flex items-center gap-2.5">
         {/* cookie mark — decorative */}
-        <svg aria-hidden width="18" height="18" viewBox="0 0 24 24" fill="none" className="flex-none text-signal">
+        <svg aria-hidden width="15" height="15" viewBox="0 0 24 24" fill="none" className="flex-none text-signal">
           <path
             d="M21 12.5A9 9 0 1 1 11.5 3a3.5 3.5 0 0 0 4 4 3.5 3.5 0 0 0 4 4 3 3 0 0 0 1.5 1.5Z"
             stroke="currentColor"
@@ -106,8 +106,14 @@ export default function ConsentBanner() {
         Мы используем cookies для анализа посещаемости и улучшения сайта. Вы можете разрешить или отклонить аналитику.
       </p>
       {current && (
-        <p className="m-0 mt-1.5 text-[12.5px] leading-[1.45] text-stone">
-          Сейчас: аналитика {current === "granted" ? "разрешена" : "отклонена"}.
+        <p className="m-0 mt-2.5 flex items-center gap-2 text-[12.5px] leading-[1.45] text-cream/85">
+          <span
+            aria-hidden
+            className={`h-2 w-2 flex-none rounded-full ${current === "granted" ? "bg-[#3FB27F]" : "bg-stone"}`}
+          />
+          <span>
+            Текущий выбор: аналитика <strong className="font-medium text-cream">{current === "granted" ? "разрешена" : "отклонена"}</strong>
+          </span>
         </p>
       )}
 
@@ -131,9 +137,9 @@ export default function ConsentBanner() {
 
       <Link
         href="/privacy"
-        className="mt-2.5 inline-flex min-h-[28px] items-center text-[12.5px] text-stone underline underline-offset-[3px] transition-colors hover:text-cream"
+        className="mt-2.5 inline-flex min-h-[28px] items-center text-[12.5px] text-cream/75 underline decoration-cream/40 underline-offset-[3px] transition-colors hover:text-cream hover:decoration-cream"
       >
-        Подробнее в Политике конфиденциальности
+        Подробнее о cookies
       </Link>
     </div>
   );
