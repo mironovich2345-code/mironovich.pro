@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { consentVersion } from "@/config/legal";
+import { clientIp, createRateLimiter } from "@/lib/rate-limit";
 import {
   HONEYPOT_FIELD, LEAD_LIMITS, REDACTED, directionLabel, isLeadDirection, leadFormExtended, looksPersonal, normalizePagePath, validContact,
 } from "@/lib/lead";
@@ -49,24 +50,13 @@ function readAttribution(v: unknown) {
   return out;
 }
 
-// naive in-memory rate limit (per warm instance) — enough to stop casual spam
-const hits = new Map<string, number[]>();
-const rateLimited = (ip: string) => {
-  const now = Date.now();
-  const recent = (hits.get(ip) ?? []).filter((t) => now - t < 60_000);
-  recent.push(now);
-  hits.set(ip, recent);
-  if (hits.size > 5000) hits.clear();
-  return recent.length > 5;
-};
+// in-memory rate limit (per warm instance): 5 requests a minute per IP, every IP
+// forgotten within a minute of its last request — enough to stop casual spam
+const limiter = createRateLimiter({ windowMs: 60_000, max: 5, maxKeys: 5000 });
+const rateLimited = limiter.limited;
 
 const fail = (error: string, status: number) =>
   NextResponse.json({ ok: false, delivered: false, error }, { status });
-
-/** Client address for rate limiting. Best effort: forwarded headers can be set by the client,
- *  so this only slows casual spam; abuse protection belongs at the edge (proxy / WAF). */
-const clientIp = (req: Request) =>
-  req.headers.get("x-real-ip")?.trim() || req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
 
 /** Browsers always send Origin on a cross-site POST; reject one that is not this host. */
 function foreignOrigin(req: Request): boolean {
@@ -87,7 +77,7 @@ export async function POST(req: Request) {
   // refuse oversized bodies before reading them
   if (Number(req.headers.get("content-length") ?? 0) > LEAD_LIMITS.payload * 4) return fail("too_large", 413);
   // every attempt counts, valid or not, so invalid floods are throttled too
-  if (rateLimited(clientIp(req))) return fail("rate_limited", 429);
+  if (rateLimited(clientIp(req.headers))) return fail("rate_limited", 429);
 
   const raw = await req.text();
   if (raw.length > LEAD_LIMITS.payload) return fail("too_large", 413);
