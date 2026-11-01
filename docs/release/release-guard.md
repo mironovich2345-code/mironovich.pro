@@ -111,7 +111,7 @@ npm run release:check -- --production
 | `npm run build` без переменных | **Остановлена** — fail-closed (адрес по умолчанию) |
 | Прежний флаг `__MRNV_RELEASE_GUARD_DONE=1` + адрес production | **Остановлена** — флага больше нет |
 | `RAILWAY_ENVIRONMENT_NAME=production` + адрес staging | **Остановлена** |
-| `NEXT_PUBLIC_SITE_URL=https://mironovich.pro`, текущие тексты | **Остановлена**: published=false, 7 + 2 поля |
+| `NEXT_PUBLIC_SITE_URL=https://mironovich.pro`, текущие тексты | **Остановлена**: published=false, 6 + 1 поле |
 | Staging: окружение `staging`, адрес `*.up.railway.app`, `SITE_NOINDEX=1` | Собрана, список — предупреждением |
 | `npm run build:local` | Собрана |
 | `next dev` с production-переменными | Работает, проверка не запускается |
