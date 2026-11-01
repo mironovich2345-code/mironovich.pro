@@ -15,7 +15,7 @@
 | `NEXT_PUBLIC_TELEGRAM_URL` | рекомендуется | `https://t.me/mironovich_pro` | Ссылка на Telegram | Код и так использует этот адрес; см. «Откат» ниже — почему лучше задать |
 | `NEXT_PUBLIC_INSTAGRAM_URL` | рекомендуется | `https://www.instagram.com/mironovich.pro/` | Ссылка на Instagram | То же |
 | `LEAD_TIMEZONE` | нет | IANA, например `Europe/Moscow` | Дата в сообщении бота | `Europe/Moscow` |
-| `NEXT_PUBLIC_ANALYTICS_CONSENT` | **`required` одновременно с публикацией новых текстов** (до этого — не задавать) | пусто или `required` | Баннер согласия на аналитику | Пусто — счётчики грузятся сразу (как сейчас). При `published: true` в `config/legal.ts` и заданных ID счётчиков сборка без `required` остановится |
+| `NEXT_PUBLIC_ANALYTICS_CONSENT` | **`required` одновременно с публикацией новых текстов** (до этого — не задавать) | пусто или `required` | Баннер согласия на аналитику | Пусто — счётчики грузятся сразу (как сейчас). При `published: true` в `config/legal.json` и заданных ID счётчиков сборка без `required` остановится |
 | `NEXT_PUBLIC_LEAD_FORM_EXTENDED` | **не задавать** | пусто или `1` | Поля «Компания» и «Направление» | Выключены |
 | `SITE_NOINDEX` | **не задавать** в production | пусто или `1` | Закрывает сайт от поисковиков | — |
 | `LEGAL_PREVIEW` | **не задавать** в production | пусто или `1` | Показывает проекты политики и согласия с пометкой «Проект» | — |

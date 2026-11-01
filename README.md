@@ -31,11 +31,14 @@ npm run dev          # http://localhost:3000
 
 ```bash
 npm audit            # уязвимости зависимостей
+npm run lint         # eslint
 npm run typecheck    # tsc --noEmit
+npm test             # модульные тесты: лимит заявок, проверка релиза (Node 22.6+)
 npm run build        # прод-сборка
+npm run release:check -- --production   # готов ли код к production-релизу
 ```
 
-Нужен Node.js 18.18+ (проверить: `node -v`).
+Нужен Node.js 18.18+ (проверить: `node -v`); для `npm test` — 22.6+.
 
 ## Environment variables
 
@@ -88,6 +91,12 @@ npm run build
 npm start            # прод-сервер на :3000 (PORT переопределяется окружением)
 ```
 
+Сборка с `NEXT_PUBLIC_SITE_URL=https://mironovich.pro` (или в окружении Railway
+`production`) — это production-релиз: до начала сборки работает
+`lib/release-guard.mjs`, который остановит её при неопубликованных или
+незаполненных юридических текстах и при аналитике без режима согласия
+(`docs/release/release-guard.md`). Локальные и staging-сборки не блокируются.
+
 ## Структура проекта
 
 ```
@@ -127,14 +136,15 @@ components/
 config/
   site.ts               имя, описание, навигация, projectsPublished
   contacts.ts           единственный источник ссылок на Telegram и Instagram
-  legal.ts              публикация новых юридических текстов (published), редакция согласия
+  legal.json            переключатель публикации юридических текстов (published) и редакция
+  legal.ts              чтение legal.json, редакция согласия, текст галочки
   services.ts           три направления услуг — общий источник для главной, меню, футера, JSON-LD
   blog.ts               пять категорий блога и порог индексации страницы категории
 content/
   blog/                 статьи блога — по одному .md на статью (см. content/blog/README.md)
   services/             тексты страниц услуг: порядок блоков, задачи, уникальный блок, FAQ, стоимость
   projects.ts           портфолио: статус, задача, что сделано; добавлять только с подтверждением владельца
-  legal/                политика и согласие (проекты владельца); публикуются через config/legal.ts
+  legal/                политика и согласие (проекты владельца); публикуются через config/legal.json
 lib/
   analytics.ts          track(), список событий, ID провайдеров из env
   attribution.ts        first-touch UTM + referrer + landing page
@@ -143,6 +153,8 @@ lib/
   jsonld.ts             безопасная сериализация JSON-LD
   seo.ts                pageMetadata(): canonical, OG и Twitter для каждой страницы
   consent.ts            режим согласия на аналитику
+  rate-limit.ts         лимит заявок: 5/мин на IP, TTL, ограничение памяти (docs/release/rate-limit.md)
+  release-guard.mjs     проверка production-релиза при сборке (docs/release/release-guard.md)
   lead.ts               общие правила формы: лимиты, направления, валидация контакта, флаг расширенной формы
 docs/
   legal/                ПРОЕКТЫ политики и согласия + аудит обработки данных — не опубликованы

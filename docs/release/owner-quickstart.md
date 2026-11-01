@@ -31,6 +31,8 @@
 | 5 | 6 заявок за минуту | 6-я — ошибка и ссылка на Telegram; в чате ≤ 5 | |
 | 6 | `TELEGRAM_CHAT_ID` = `1` → Redeploy → заявка | «Не получилось доставить…», **нет** «отправлена»; в Logs `[lead] telegram rejected the message` | |
 | 7 | Вернуть chat_id → Redeploy → заявка | Доставлена | |
+| 8 | Подмена IP: команда из `docs/release/rate-limit.md`, «Проверка на staging» | `422 422 422 422 422 429 429` — подставленные адреса игнорируются | |
+| 9 | В логах сборки staging (Deployments → Build Logs) | Строка `[release-guard] не production (Railway environment «staging»)` | |
 
 Прислать Claude только колонку ✓/✗ и тексты ошибок без токенов. После теста —
 удалить тестовые сообщения; staging можно оставить.
@@ -54,7 +56,16 @@ Railway → **production** → сервис → **Variables**. Значения 
 Дополнительно посмотреть (нужно для юриста, `docs/legal/data-flow.md`):
 - сервис → **Settings → Region** — в каком регионе работает сайт;
 - **Settings / Deploy** — версия Node.js ≥ 18.18;
-- есть ли у сервиса HTTP-логи и какой срок их хранения.
+- есть ли у сервиса HTTP-логи и какой срок их хранения;
+- Settings → Deploy → **Replicas = 1** (лимит заявок считается в памяти
+  каждой реплики, `docs/release/rate-limit.md`);
+- нет ли прокси (например, Cloudflare) перед доменом — в DNS `mironovich.pro`
+  должен указывать прямо на Railway.
+
+**После merge** production-сборка в Railway остановится с сообщением
+`[release-guard] production-сборка остановлена`, пока не опубликованы новые
+тексты, — это ожидаемо; работающий сайт при этом не меняется
+(`docs/release/release-guard.md`).
 
 Прислать Claude: «все строки совпадают» или какие нет (без значений) + регион.
 

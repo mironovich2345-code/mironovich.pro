@@ -31,7 +31,7 @@
 ## Публикация юридических текстов (после юридического Go)
 
 Отдельным коммитом **до** merge: заполнить поля в `content/legal/*.md`,
-`published: true` в `config/legal.ts`; в Railway production —
+`published: true` в `config/legal.json`; в Railway production —
 `NEXT_PUBLIC_ANALYTICS_CONSENT=required`. Сборка проверит отсутствие
 незаполненных полей и включённый режим согласия. Подробно —
 `docs/legal/README.md`, «Как опубликовать».
