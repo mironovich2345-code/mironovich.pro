@@ -1,0 +1,83 @@
+diff --git a/app/api/lead/route.ts b/app/api/lead/route.ts
+index 4ceee90..617c20a 100644
+--- a/app/api/lead/route.ts
++++ b/app/api/lead/route.ts
+@@ -1,5 +1,6 @@
+ import { NextResponse } from "next/server";
+ import { consentVersion } from "@/config/legal";
++import { createRateLimiter } from "@/lib/rate-limit";
+ import {
+   HONEYPOT_FIELD, LEAD_LIMITS, REDACTED, directionLabel, isLeadDirection, leadFormExtended, looksPersonal, normalizePagePath, validContact,
+ } from "@/lib/lead";
+@@ -49,16 +50,10 @@ function readAttribution(v: unknown) {
+   return out;
+ }
+ 
+-// naive in-memory rate limit (per warm instance) — enough to stop casual spam
+-const hits = new Map<string, number[]>();
+-const rateLimited = (ip: string) => {
+-  const now = Date.now();
+-  const recent = (hits.get(ip) ?? []).filter((t) => now - t < 60_000);
+-  recent.push(now);
+-  hits.set(ip, recent);
+-  if (hits.size > 5000) hits.clear();
+-  return recent.length > 5;
+-};
++// in-memory rate limit (per warm instance): 5 requests a minute per IP, every IP
++// forgotten within a minute of its last request — enough to stop casual spam
++const limiter = createRateLimiter({ windowMs: 60_000, max: 5, maxKeys: 5000 });
++const rateLimited = limiter.limited;
+ 
+ const fail = (error: string, status: number) =>
+   NextResponse.json({ ok: false, delivered: false, error }, { status });
+diff --git a/lib/rate-limit.ts b/lib/rate-limit.ts
+new file mode 100644
+index 0000000..340bcf0
+--- /dev/null
++++ b/lib/rate-limit.ts
+@@ -0,0 +1,45 @@
++/**
++ * Fixed-window rate limiter kept in process memory (per warm instance).
++ *
++ * Every IP is forgotten at most `windowMs` after its last request: a sweep runs
++ * on a timer and on each call, so addresses never linger until a restart. The
++ * number of tracked addresses is capped; when full, the least recently seen are
++ * evicted first (instead of wiping everyone's counters at once).
++ */
++export function createRateLimiter({
++  windowMs = 60_000,
++  max = 5,
++  maxKeys = 5000,
++  now = () => Date.now(),
++  timer = true,
++}: { windowMs?: number; max?: number; maxKeys?: number; now?: () => number; timer?: boolean } = {}) {
++  // insertion order = recency: an IP is re-inserted on every request
++  const hits = new Map<string, number[]>();
++  let lastSweep = 0;
++
++  const sweep = (t = now()) => {
++    for (const [ip, times] of hits) {
++      if (t - times[times.length - 1] >= windowMs) hits.delete(ip);
++    }
++    lastSweep = t;
++  };
++
++  if (timer) {
++    const id = setInterval(() => sweep(), windowMs);
++    // never keep the process alive just for this
++    (id as { unref?: () => void }).unref?.();
++  }
++
++  const limited = (ip: string): boolean => {
++    const t = now();
++    if (t - lastSweep >= windowMs) sweep(t);
++    const recent = (hits.get(ip) ?? []).filter((x) => t - x < windowMs);
++    recent.push(t);
++    hits.delete(ip);
++    hits.set(ip, recent);
++    while (hits.size > maxKeys) hits.delete(hits.keys().next().value as string);
++    return recent.length > max;
++  };
++
++  return { limited, sweep, size: () => hits.size };
++}
