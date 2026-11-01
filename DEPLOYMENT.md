@@ -19,7 +19,7 @@ npm run typecheck
 npm run build
 ```
 
-Нужен Node.js 18.18+ (`node -v`). Все четыре команды должны пройти без ошибок.
+Нужен Node.js 22.x (`node -v`; закреплено в `engines`). Все четыре команды должны пройти без ошибок.
 
 ## 2. GitHub
 
@@ -198,7 +198,7 @@ https://mironovich.pro/?utm_source=instagram&utm_medium=social&utm_campaign=prof
 ## Launch checklist
 
 ### Локально
-- [ ] `node -v` ≥ 18.18
+- [ ] `node -v` — 22.x
 - [ ] `npm ci` прошёл
 - [ ] `npm audit` без критичных уязвимостей
 - [ ] `npm run typecheck` чистый

@@ -39,7 +39,7 @@ npm run build:local  # локальная прод-сборка с http://localh
 npm run release:check -- --production   # готов ли код к production-релизу
 ```
 
-Нужен Node.js 18.18+ (проверить: `node -v`); для `npm test` — 22.6+.
+Нужен Node.js **22.x** (закреплено в `package.json` → `engines`; проверить: `node -v`). `npm run build` первой строкой печатает версии Node.js и npm.
 
 ## Environment variables
 

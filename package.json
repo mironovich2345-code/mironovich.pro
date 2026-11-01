@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/print-versions.mjs",
     "build": "next build",
     "build:local": "node scripts/build-local.mjs",
     "start": "next start",
@@ -31,7 +32,7 @@
     "typescript": "^5.7.3"
   },
   "engines": {
-    "node": ">=18.18.0"
+    "node": "22.x"
   },
   "overrides": {
     "next": {

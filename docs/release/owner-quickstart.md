@@ -55,7 +55,7 @@ Railway → **production** → сервис → **Variables**. Значения 
 
 Дополнительно посмотреть (нужно для юриста, `docs/legal/data-flow.md`):
 - сервис → **Settings → Region** — в каком регионе работает сайт;
-- **Settings / Deploy** — версия Node.js ≥ 18.18;
+- версия Node.js — в журнале сборки строка `[build] Node.js v22.…, npm …`;
 - есть ли у сервиса HTTP-логи и какой срок их хранения;
 - Settings → Deploy → **Replicas = 1** (лимит заявок считается в памяти
   каждой реплики, `docs/release/rate-limit.md`);

@@ -21,7 +21,8 @@
 2. Решения по блокерам (см. отчёт этапа H): юридические тексты, тест Telegram.
 3. Последний коммит ветки собран без ошибок: `npm ci && npm run lint && npm run
    typecheck && npm run build && npm audit --omit=dev`.
-4. Проверить в Railway, что **Node.js ≥ 18.18** (Next 15.5) и что
+4. Проверить в журнале сборки Railway строку `[build] Node.js v22.…` (Node закреплён
+   в `engines`: `22.x`) и что
    переменные из таблицы выше заданы.
 5. Staging-проверка пройдена (`docs/release/telegram-test.md`): реальная заявка,
    ошибки, лимит, резервная ссылка.

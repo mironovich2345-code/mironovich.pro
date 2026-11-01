@@ -28,7 +28,7 @@
 а `NEXT_PUBLIC_TELEGRAM_URL` / `NEXT_PUBLIC_INSTAGRAM_URL` — либо не заданы, либо
 содержат подтверждённые адреса (не `t.me/mironovich` и не `instagram.com/mironovich`).
 
-Node.js: Next 15.5 требует **18.18 или новее** (проверено на 22.x).
+Node.js: закреплён **22.x** (`package.json` → `engines`), Railway выбирает версию по этому полю. Фактические версии Node.js и npm печатаются первой строкой сборки (`[build] …`).
 
 ## Staging
 
