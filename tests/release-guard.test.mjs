@@ -8,7 +8,7 @@ import { checkRelease, findPlaceholders, releaseTarget, runReleaseGuard } from "
 const repo = path.resolve(import.meta.dirname, "..");
 const quiet = { log() {}, warn() {} };
 const PROD = { NEXT_PUBLIC_SITE_URL: "https://mironovich.pro" };
-const IDS = { NEXT_PUBLIC_YANDEX_METRICA_ID: "12345678", NEXT_PUBLIC_GA_ID: "G-TEST1234" };
+const IDS = { NEXT_PUBLIC_YANDEX_METRICA_ID: "12345678" };
 
 /** Copy of the repo's legal sources in a temp dir, optionally edited. */
 function fixture({ published, fill = false, edit = (s) => s } = {}) {
@@ -59,7 +59,7 @@ test("no switch-off: unrelated or made-up variables do not change the target", (
 });
 
 test("current repository: a production build is refused (old texts, 9 open fields)", () => {
-  const r = runReleaseGuard({ cwd: repo, env: { ...PROD, ...IDS, NEXT_PUBLIC_ANALYTICS_CONSENT: "required" }, log: quiet });
+  const r = runReleaseGuard({ cwd: repo, env: { ...PROD, ...IDS }, log: quiet });
   assert.equal(r.blocked, true);
   assert.match(r.message, /published=false/);
   assert.match(r.message, /privacy\.md: незаполненные поля \(7\)/);
@@ -91,7 +91,7 @@ test("the target is always printed, so Railway build logs show what the guard sa
 
 test("rate limit source: invalid value refused in production, unset is the safe fallback (warning)", () => {
   const docs = docsOf(fixture({ fill: true }));
-  const env = { ...PROD, ...IDS, NEXT_PUBLIC_ANALYTICS_CONSENT: "required" };
+  const env = { ...PROD, ...IDS };
   assert.match(checkRelease({ ...filled, docs, env: { ...env, RATE_LIMIT_CLIENT_IP: "true" } }).errors.join(), /RATE_LIMIT_CLIENT_IP/);
   const unset = checkRelease({ ...filled, docs, env });
   assert.equal(unset.errors.length, 0);
@@ -100,7 +100,7 @@ test("rate limit source: invalid value refused in production, unset is the safe 
 });
 
 test("published but placeholders left → refused", () => {
-  const r = runReleaseGuard({ cwd: fixture({ published: true }), env: { ...PROD, ...IDS, NEXT_PUBLIC_ANALYTICS_CONSENT: "required" }, log: quiet });
+  const r = runReleaseGuard({ cwd: fixture({ published: true }), env: { ...PROD, ...IDS }, log: quiet });
   assert.equal(r.blocked, true);
   assert.doesNotMatch(r.message, /published=false/);
   assert.match(r.message, /незаполненные поля/);
@@ -110,7 +110,7 @@ test("filled, published, consent required → passes, and says it is not legal a
   const logs = [];
   const r = runReleaseGuard({
     cwd: fixture({ published: true, fill: true }),
-    env: { ...PROD, ...IDS, NEXT_PUBLIC_ANALYTICS_CONSENT: "required" },
+    env: { ...PROD, ...IDS },
     log: { log: (m) => logs.push(m), warn: (m) => logs.push(m) },
   });
   assert.equal(r.blocked, false, r.message);
@@ -118,7 +118,7 @@ test("filled, published, consent required → passes, and says it is not legal a
 });
 
 test("filled but still published=false → refused (old texts)", () => {
-  const r = runReleaseGuard({ cwd: fixture({ published: false, fill: true }), env: { ...PROD, ...IDS, NEXT_PUBLIC_ANALYTICS_CONSENT: "required" }, log: quiet });
+  const r = runReleaseGuard({ cwd: fixture({ published: false, fill: true }), env: { ...PROD, ...IDS }, log: quiet });
   assert.equal(r.blocked, true);
   assert.match(r.message, /published=false/);
 });
@@ -126,34 +126,42 @@ test("filled but still published=false → refused (old texts)", () => {
 const filled = { legal: { published: true, edition: "2026-11-01" } };
 const docsOf = (dir) => Object.fromEntries(["privacy", "consent"].map((s) => [s, fs.readFileSync(path.join(dir, "content", "legal", s + ".md"), "utf8")]));
 
-test("analytics without consent mode → refused; invalid consent value → refused", () => {
+test("GA4 is gone: no GA variable is needed, and a leftover one does not block (warning only)", () => {
   const docs = docsOf(fixture({ fill: true }));
-  assert.match(checkRelease({ ...filled, docs, env: { ...PROD, ...IDS } }).errors.join("\n"), /≠required/);
-  assert.match(checkRelease({ ...filled, docs, env: { ...PROD, ...IDS, NEXT_PUBLIC_ANALYTICS_CONSENT: "Required" } }).errors.join("\n"), /допустимо только/);
-  assert.equal(checkRelease({ ...filled, docs, env: { ...PROD, NEXT_PUBLIC_ANALYTICS_CONSENT: "required", ...IDS } }).errors.length, 0);
+  const clean = checkRelease({ ...filled, docs, env: { ...PROD, ...IDS } });
+  assert.deepEqual(clean.errors, []);
+  const leftover = checkRelease({ ...filled, docs, env: { ...PROD, ...IDS, NEXT_PUBLIC_GA_ID: "G-OLD1234", NEXT_PUBLIC_ANALYTICS_CONSENT: "required" } });
+  assert.deepEqual(leftover.errors, []);
+  assert.ok(leftover.warnings.some((w) => w.includes("NEXT_PUBLIC_GA_ID")));
+  assert.ok(leftover.warnings.some((w) => w.includes("NEXT_PUBLIC_ANALYTICS_CONSENT")));
 });
 
-test("no counters at all and no consent mode → allowed (nothing loads); policy mismatch is a warning", () => {
+test("no Metrica at all → allowed; policy naming Metrica without a counter is a warning", () => {
   const r = checkRelease({ ...filled, docs: docsOf(fixture({ fill: true })), env: PROD });
-  assert.equal(r.errors.length, 0);
-  assert.ok(r.warnings.some((w) => w.includes("Google Analytics")));
+  assert.deepEqual(r.errors, []);
+  assert.ok(r.warnings.some((w) => w.includes("Яндекс Метрику")));
 });
 
-test("malformed counter IDs → refused (they would silently not load)", () => {
-  const docs = docsOf(fixture({ fill: true }));
-  const r = checkRelease({ ...filled, docs, env: { ...PROD, NEXT_PUBLIC_ANALYTICS_CONSENT: "required", NEXT_PUBLIC_YANDEX_METRICA_ID: "ym-1", NEXT_PUBLIC_GA_ID: "UA-1-1" } });
-  assert.equal(r.errors.length, 2);
+test("malformed Metrica ID → refused (it would silently not load)", () => {
+  const r = checkRelease({ ...filled, docs: docsOf(fixture({ fill: true })), env: { ...PROD, NEXT_PUBLIC_YANDEX_METRICA_ID: "ym-1" } });
+  assert.equal(r.errors.length, 1);
 });
 
-test("GA4 enabled but the policy does not name it → refused", () => {
-  const docs = docsOf(fixture({ fill: true, edit: (md) => md.replaceAll("Google Analytics 4", "сервис статистики").replaceAll("GA4", "сервис") }));
-  const r = checkRelease({ ...filled, docs, env: { ...PROD, ...IDS, NEXT_PUBLIC_ANALYTICS_CONSENT: "required" } });
-  assert.match(r.errors.join("\n"), /GA4 включён, но политика его не называет/);
+test("legal texts that still mention Google Analytics / GA4 → refused", () => {
+  for (const add of ["Используется Google Analytics 4.", "Данные GA4.", "cookies `_ga*`."]) {
+    const docs = docsOf(fixture({ fill: true, edit: (md, slug) => (slug === "privacy" ? md + "\n" + add + "\n" : md) }));
+    assert.match(checkRelease({ ...filled, docs, env: { ...PROD, ...IDS } }).errors.join(), /Google Analytics \/ GA4/, add);
+  }
+});
+
+test("Metrica enabled but the policy does not name it → refused", () => {
+  const docs = docsOf(fixture({ fill: true, edit: (md, slug) => (slug === "privacy" ? md.replaceAll("Яндекс Метрик", "сервис статистик") : md) }));
+  assert.match(checkRelease({ ...filled, docs, env: { ...PROD, ...IDS } }).errors.join(), /Метрика включена/);
 });
 
 test("LEGAL_PREVIEW / SITE_NOINDEX in production and edition mismatch → refused", () => {
   const docs = docsOf(fixture({ fill: true }));
-  const env = { ...PROD, ...IDS, NEXT_PUBLIC_ANALYTICS_CONSENT: "required" };
+  const env = { ...PROD, ...IDS };
   assert.match(checkRelease({ ...filled, docs, env: { ...env, LEGAL_PREVIEW: "1" } }).errors.join(), /LEGAL_PREVIEW/);
   assert.match(checkRelease({ ...filled, docs, env: { ...env, SITE_NOINDEX: "1" } }).errors.join(), /SITE_NOINDEX/);
   assert.match(checkRelease({ legal: { published: true, edition: "2027-01-01" }, docs, env }).errors.join(), /edition/);
