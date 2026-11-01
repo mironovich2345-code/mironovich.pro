@@ -63,3 +63,10 @@ export function revokeConsent() {
   }
   window.location.reload();
 }
+
+/**
+ * Runs in <head> before the first paint (consent-required mode only): marks <html>
+ * when a choice is already stored, so the server-rendered banner stays hidden for
+ * returning visitors instead of flashing until hydration.
+ */
+export const consentPrecheckScript = `try{var c=localStorage.getItem("${KEY}");if(c==="granted"||c==="denied")document.documentElement.classList.add("mrnv-consent-set")}catch(e){}`;

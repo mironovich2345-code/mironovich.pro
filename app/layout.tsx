@@ -5,6 +5,7 @@ import Analytics from "@/components/Analytics";
 import Footer from "@/components/Footer";
 import SiteHeader from "@/components/SiteHeader";
 import { site, siteUrl } from "@/config/site";
+import { consentPrecheckScript, consentRequired } from "@/lib/consent";
 import { urlHygieneScript } from "@/lib/url-hygiene";
 import "./globals.css";
 
@@ -48,22 +49,30 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru" className={inter.variable + " " + displayFont.variable}>
+    <html lang="ru" className={inter.variable + " " + displayFont.variable} suppressHydrationWarning>
+      {consentRequired && (
+        <head>
+          {/* plain inline script, not next/script: it must run before the first paint */}
+          <script dangerouslySetInnerHTML={{ __html: consentPrecheckScript }} />
+        </head>
+      )}
       <body className="font-sans antialiased">
         {/* strips personal data from the query string before analytics or attribution read it */}
         <Script id="url-hygiene" strategy="beforeInteractive">
           {urlHygieneScript}
         </Script>
+
         <a
           href="#main"
           className="sr-only z-[70] bg-signal px-4 py-3 text-white focus:not-sr-only focus:fixed focus:left-3 focus:top-3"
         >
           Перейти к содержанию
         </a>
+        {/* early in the DOM: the consent panel (fixed) is reached right after the skip link */}
+        <Analytics />
         <SiteHeader />
         {children}
         <Footer />
-        <Analytics />
       </body>
     </html>
   );

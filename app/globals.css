@@ -31,3 +31,6 @@ body {
   *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
   html { scroll-behavior: auto; }
 }
+
+/* consent-required mode: a stored choice hides the server-rendered banner before paint */
+.mrnv-consent-set [data-consent-banner]:not([data-reopened]) { display: none; }
