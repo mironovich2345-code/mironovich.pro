@@ -4,7 +4,7 @@
  * - keeps only utm_* (unless the value looks like an e-mail / phone), yclid,
  *   gclid and _ym_debug in the address bar and drops every other query
  *   parameter with history.replaceState — so a link like ?email=… never
- *   reaches Metrica, GA4 or the lead attribution;
+ *   reaches Metrica or the lead attribution;
  * - exposes window.__mrnvSafeUrl(), the page URL for analytics hits with a
  *   path that looks personal replaced by /redacted.
  *

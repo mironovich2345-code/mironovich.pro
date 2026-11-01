@@ -3,22 +3,15 @@ import { runReleaseGuard } from "./lib/release-guard.mjs";
 
 // Same validation as lib/analytics.ts: a malformed id disables the provider and its hosts.
 const rawMetrica = (process.env.NEXT_PUBLIC_YANDEX_METRICA_ID || "").trim();
-const rawGa = (process.env.NEXT_PUBLIC_GA_ID || "").trim();
 const metricaId = /^\d{5,12}$/.test(rawMetrica) ? rawMetrica : "";
-const gaId = /^G-[A-Z0-9]{4,20}$/.test(rawGa) ? rawGa : "";
 
 // Analytics hosts are added to the CSP only when the matching ID is set, so a
 // site without analytics keeps the strictest possible policy.
 const ymHosts = metricaId ? ["https://mc.yandex.ru", "https://mc.yandex.com"] : [];
-// GA4 loads from googletagmanager and sends hits to regional *.google-analytics.com /
-// *.analytics.google.com endpoints.
-const gaScriptHosts = gaId ? ["https://www.googletagmanager.com"] : [];
-const gaDataHosts = gaId
-  ? ["https://www.googletagmanager.com", "https://*.google-analytics.com", "https://*.analytics.google.com"]
-  : [];
-const scriptHosts = [...ymHosts, ...gaScriptHosts];
-const connectHosts = [...ymHosts, ...gaDataHosts];
-const imgHosts = [...ymHosts, ...gaDataHosts];
+// Only Yandex Metrica (GA4 removed): no Google hosts in the CSP at all.
+const scriptHosts = ymHosts;
+const connectHosts = ymHosts;
+const imgHosts = ymHosts;
 const join = (list) => (list.length ? " " + list.join(" ") : "");
 
 const securityHeaders = [

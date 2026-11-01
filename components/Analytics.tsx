@@ -4,24 +4,24 @@ import Script from "next/script";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import ConsentBanner from "./ConsentBanner";
-import { gaId, metricaId, trackPageView } from "@/lib/analytics";
+import { metricaId, trackPageView } from "@/lib/analytics";
 import { initAttribution } from "@/lib/attribution";
-import { CONSENT_EVENT, analyticsAllowed, consentRequired, readConsent, type ConsentChoice } from "@/lib/consent";
+import { CONSENT_EVENT, analyticsAllowed, clearLegacyGaCookies, consentRequired, readConsent, type ConsentChoice } from "@/lib/consent";
 
 /**
  * Captures first-touch attribution (used only inside a submitted lead) and loads
- * Yandex Metrica and/or GA4 when their ids are set and consent allows it.
+ * Yandex Metrica — only when its ID is set AND the visitor pressed «Разрешить».
  *
- * Metrica: `defer: true` turns off its automatic hit; the init script sends the
- * first page view itself and PageViewTracker sends one hit per later App Router
- * navigation. GA4: page views come from `config` and Enhanced Measurement only.
- * Advertising storage and signals stay off.
+ * `defer: true` turns off Metrica's automatic hit; the init script sends the
+ * first page view itself and PageViewTracker one hit per later App Router
+ * navigation. No other analytics provider exists (GA4 removed 2026-11-01).
  */
 export default function Analytics() {
-  const [allowed, setAllowed] = useState(!consentRequired);
+  const [allowed, setAllowed] = useState(false);
 
   useEffect(() => {
     initAttribution();
+    clearLegacyGaCookies();
     if (!consentRequired) return;
     setAllowed(analyticsAllowed(readConsent()));
     const onChange = (e: Event) => setAllowed(analyticsAllowed((e as CustomEvent<ConsentChoice>).detail));
@@ -44,17 +44,6 @@ export default function Analytics() {
         </Script>
       )}
 
-      {allowed && gaId && (
-        <>
-          <Script src={"https://www.googletagmanager.com/gtag/js?id=" + gaId} strategy="afterInteractive" />
-          <Script id="ga-init" strategy="afterInteractive">
-            {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
-            gtag("consent","default",{analytics_storage:"granted",ad_storage:"denied",ad_user_data:"denied",ad_personalization:"denied"});
-            gtag("js",new Date());
-            gtag("config","${gaId}",{allow_google_signals:false,allow_ad_personalization_signals:false});`}
-          </Script>
-        </>
-      )}
 
       {allowed && metricaId && <PageViewTracker />}
       {consentRequired && <ConsentBanner />}

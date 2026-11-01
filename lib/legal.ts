@@ -2,8 +2,6 @@ import fs from "node:fs";
 import path from "node:path";
 import { readImage } from "./image-size";
 import { parseMarkdown, type Block } from "./markdown";
-import { gaId, metricaId } from "./analytics";
-import { consentRequired } from "./consent";
 import { legal } from "@/config/legal";
 import { findPlaceholders } from "./release-guard.mjs";
 
@@ -12,9 +10,8 @@ import { findPlaceholders } from "./release-guard.mjs";
  *
  * Which version a page shows:
  * - legal.published → the new text; the build FAILS if any [УТОЧНИТЬ …] / [ОПИСАТЬ …] / ⟦…⟧
- *   placeholder remains, if the edition does not match config/legal.ts, or (for
- *   the policy) if analytics would load without the consent banner although the
- *   policy says it loads only after permission;
+ *   placeholder remains or the edition does not match config/legal.json
+ *   (analytics always waits for consent — lib/consent.ts);
  * - LEGAL_PREVIEW=1 (staging only) → the draft, marked «Проект», noindex;
  * - otherwise → the current published wording.
  */
@@ -49,9 +46,6 @@ export function legalMode(doc: LegalDoc): LegalMode {
     }
     if (doc.edition !== legal.edition) {
       throw new Error("[legal] " + doc.slug + ".md: edition " + doc.edition + " не совпадает с config/legal.ts (" + legal.edition + ")");
-    }
-    if (doc.slug === "privacy" && (metricaId || gaId) && !consentRequired) {
-      throw new Error("[legal] политика обещает аналитику только после согласия — задайте NEXT_PUBLIC_ANALYTICS_CONSENT=required");
     }
     return "published";
   }

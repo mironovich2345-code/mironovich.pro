@@ -1,7 +1,7 @@
 /**
- * The single seam between the UI and the analytics providers (Yandex Metrica
- * and GA4). Components call track(...) / trackPageView(...) and never touch
- * ym or gtag directly.
+ * The single seam between the UI and analytics (Yandex Metrica only — GA4 was
+ * removed for good on 2026-11-01). Components call track(...) /
+ * trackPageView(...) and never touch ym directly.
  *
  * Privacy rules enforced here, not left to callers:
  * - only the event names below exist;
@@ -9,13 +9,9 @@
  *   [a-z0-9_.-/] token — no names, contacts, task text, emails or free text;
  * - page is always a normalised site path (lib/lead → normalizePagePath).
  *
- * Page views:
- * - Metrica is initialised without its automatic hit (defer) and every page view,
- *   the first included, is sent once from PageViewTracker via trackPageView().
- * - GA4 keeps its own page_view: the initial one from `config` and the App Router
- *   navigations through Enhanced Measurement («page changes based on browser
- *   history events»). We never send page_view to GA ourselves, so it cannot be
- *   counted twice.
+ * Page views: Metrica is initialised without its automatic hit (defer); the
+ * init script sends the first one and PageViewTracker one per App Router
+ * navigation, via trackPageView().
  */
 
 import { REDACTED, looksPersonal, normalizePagePath } from "./lead";
@@ -47,16 +43,13 @@ export type EventParams = {
 
 const ALLOWED_KEYS = ["location", "service", "channel", "reason", "utm_source", "utm_medium", "utm_campaign"] as const;
 
-/** IDs are interpolated into inline scripts and the CSP, so anything malformed disables the provider. */
+/** The ID is interpolated into an inline script and the CSP, so anything malformed disables Metrica. */
 const rawMetrica = process.env.NEXT_PUBLIC_YANDEX_METRICA_ID?.trim() || "";
-const rawGa = process.env.NEXT_PUBLIC_GA_ID?.trim() || "";
 export const metricaId = /^\d{5,12}$/.test(rawMetrica) ? rawMetrica : "";
-export const gaId = /^G-[A-Z0-9]{4,20}$/.test(rawGa) ? rawGa : "";
-export const analyticsEnabled = Boolean(metricaId || gaId);
+export const analyticsEnabled = Boolean(metricaId);
 
 type Ym = (id: number, action: string, ...rest: unknown[]) => void;
-type Gtag = (command: string, ...rest: unknown[]) => void;
-type AnalyticsWindow = { ym?: Ym; gtag?: Gtag; mrnvEvents?: unknown[] };
+type AnalyticsWindow = { ym?: Ym; mrnvEvents?: unknown[] };
 
 /** Short, safe token: lowercase latin, digits and _ . - / ; anything else is dropped. */
 export const safeToken = (v: unknown, max = 60): string =>
@@ -80,11 +73,10 @@ export function track(event: AnalyticsEvent, params: EventParams = {}) {
   const w = window as unknown as AnalyticsWindow;
   const payload = { ...clean(params), page: currentPage() };
 
-  // Debug trace in our own array — not gtag's dataLayer, which could turn it into extra GA events.
+  // Debug trace for tests and ?_ym_debug sessions
   (w.mrnvEvents = w.mrnvEvents || []).push({ event, ...payload });
 
   if (metricaId && typeof w.ym === "function") w.ym(Number(metricaId), "reachGoal", event, payload);
-  if (gaId && typeof w.gtag === "function") w.gtag("event", event, payload);
 }
 
 /** One Metrica hit per page view (see the note at the top). */

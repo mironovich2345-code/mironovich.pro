@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { CONSENT_OPEN_EVENT, readConsent, revokeConsent, saveConsent, type ConsentChoice } from "@/lib/consent";
 
 /**
- * Compact consent panel, shown when NEXT_PUBLIC_ANALYTICS_CONSENT=required and no
+ * Compact consent panel, shown when Yandex Metrica is configured and no
  * choice is stored, or when reopened from «Настройки аналитики» in the footer.
  * Wording approved by the owner; the full list of analytics services is in the
  * privacy policy. Declining affects analytics only — the lead form always works.
