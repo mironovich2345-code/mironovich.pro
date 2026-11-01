@@ -46,9 +46,6 @@ export const contactHref = "/contact";
  */
 export const ICON_VERSION = "2";
 
-/** Header CTA (desktop and mobile menu): the form on the home page first screen. */
-export const heroFormHref = "/#hero-form";
-
 /** Public profiles for JSON-LD sameAs — config/contacts.ts. */
 export const socialProfiles = sameAs;
 

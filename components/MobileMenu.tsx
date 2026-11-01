@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import CtaLink from "./CtaLink";
-import { heroFormHref, type NavLink } from "@/config/site";
+import { contactHref, type NavLink } from "@/config/site";
 
 const FOCUSABLE = 'a[href], button:not([disabled])';
 
@@ -105,7 +105,7 @@ export default function MobileMenu({ services, links }: { services: NavLink[]; l
             </ul>
           </nav>
           <CtaLink
-            href={heroFormHref}
+            href={contactHref}
             location="header"
             onClick={close}
             className="mt-8 flex min-h-[56px] items-center justify-center bg-signal text-[15px] font-medium uppercase tracking-[0.06em] text-white"

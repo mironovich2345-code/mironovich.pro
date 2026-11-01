@@ -1,25 +1,25 @@
-import LeadForm from "./LeadForm";
+import CtaLink from "./CtaLink";
+import { contactHref } from "@/config/site";
 
 /**
- * First screen: the headline on the left (≈62%), the lead form on the right
- * (≈38%); on phones the headline, subtitle and form stack in that order.
+ * First screen: the four-line headline and subtitle on the left (≈62%), one large
+ * accent button to the contact page on the right; on phones the button follows
+ * the subtitle. The form itself lives on /contact (and in the lower section).
  *
- * Headline size. The four lines are set in the display face at the largest size
- * at which the longest line, «РЕЗУЛЬТАТА.», still fits the column: that line is
- * 5.44em wide (measured in Roboto Condensed ExtraBold with -0.02em tracking), so
- * 18cqi of the column (≈ width / 5.55) always fits with a small margin. On wide
- * screens it is also capped by the viewport height so headline and form stay on
- * the first screen. No line can wrap, overflow or scroll sideways.
+ * Headline size. The longest line, «РЕЗУЛЬТАТА.», is 5.44em wide in the display
+ * face (Roboto Condensed ExtraBold, -0.02em tracking), so 18cqi of the column
+ * (≈ width / 5.55) always fits with a small margin. On wide screens it is also
+ * capped by the viewport height so the first screen holds the whole composition.
  *
- * The ghost wordmark is desktop-only texture behind everything at 4% opacity.
- * The header CTA points here (#hero-form); the lower «Обсудить задачу» section
- * keeps its own form.
+ * The button is a tall block anchored to the bottom of the text column, so the
+ * right column reads as part of the composition rather than empty space.
+ * The ghost wordmark is desktop-only texture at 4% opacity.
  */
 export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative overflow-hidden bg-graphite px-[22px] pb-12 pt-7 min-[560px]:pb-16 min-[560px]:pt-12 min-[960px]:pb-14 min-[960px]:pt-10"
+      className="relative overflow-hidden bg-graphite px-[22px] pb-12 pt-7 min-[560px]:pb-16 min-[560px]:pt-12 min-[960px]:pb-16 min-[960px]:pt-12"
     >
       <p
         aria-hidden
@@ -28,7 +28,7 @@ export default function Hero() {
         Mironovich
       </p>
 
-      <div className="relative mx-auto grid max-w-[1080px] gap-10 min-[960px]:grid-cols-[minmax(0,1.65fr)_minmax(320px,1fr)] min-[960px]:items-center min-[960px]:gap-14">
+      <div className="relative mx-auto grid max-w-[1080px] gap-8 min-[960px]:grid-cols-[minmax(0,1.65fr)_minmax(300px,1fr)] min-[960px]:items-end min-[960px]:gap-14">
         <div className="flex min-w-0 flex-col gap-5 [container-type:inline-size] min-[560px]:gap-8">
           <p className="m-0 text-[11px] uppercase tracking-[0.22em] text-stone">
             Автоматизация <span className="text-signal">·</span> Приложения <span className="text-signal">·</span> ИИ
@@ -48,11 +48,20 @@ export default function Hero() {
           </p>
         </div>
 
-        <div id="hero-form" className="min-w-0 scroll-mt-24 border-t border-cream/15 pt-8 min-[960px]:border-l min-[960px]:border-t-0 min-[960px]:pl-10 min-[960px]:pt-0">
-          <h2 className="m-0 mb-5 font-display text-[26px] font-extrabold uppercase leading-[1] tracking-[-0.01em] text-cream min-[960px]:text-[28px]">
-            Обсудим вашу задачу?
-          </h2>
-          <LeadForm variant="compact" idPrefix="hero-lead" submitLabel="Отправить заявку" />
+        <div className="min-w-0 min-[960px]:border-l min-[960px]:border-cream/15 min-[960px]:pl-10">
+          <p className="m-0 mb-4 hidden text-[11px] uppercase tracking-[0.22em] text-stone min-[960px]:block">
+            Первичное обсуждение <span className="text-signal">—</span> бесплатно
+          </p>
+          <CtaLink
+            href={contactHref}
+            location="hero"
+            className="group flex min-h-[64px] w-full items-center justify-between gap-4 bg-signal px-6 font-display text-[22px] font-extrabold uppercase leading-none tracking-[0.01em] text-white transition-colors hover:bg-[#b82323] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream min-[560px]:min-h-[72px] min-[560px]:text-[26px] min-[960px]:min-h-[clamp(180px,24vh,240px)] min-[960px]:flex-col min-[960px]:items-start min-[960px]:justify-between min-[960px]:p-8 min-[960px]:text-[clamp(30px,2.6vw,38px)]"
+          >
+            <span>Обсудить задачу</span>
+            <span aria-hidden className="text-[1.1em] leading-none transition-transform group-hover:translate-x-1 min-[960px]:self-end">
+              →
+            </span>
+          </CtaLink>
         </div>
       </div>
     </section>
