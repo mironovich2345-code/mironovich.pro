@@ -36,7 +36,11 @@ export default function MobileMenu({ services, links }: { services: NavLink[]; l
       const items = [toggle, ...panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE)].filter(Boolean) as HTMLElement[];
       const first = items[0];
       const last = items[items.length - 1];
-      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      // The panel is portalled after the page. Bridge both directions between
+      // the toggle and its first link instead of following background DOM order.
+      if (!e.shiftKey && document.activeElement === toggle) { e.preventDefault(); items[1]?.focus(); }
+      else if (e.shiftKey && document.activeElement === items[1]) { e.preventDefault(); toggle?.focus(); }
+      else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
       else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
     };
     window.addEventListener("keydown", onKey);

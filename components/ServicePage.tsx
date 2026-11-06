@@ -278,11 +278,11 @@ function Process({ page, tone, index }: { page: ServicePageContent; tone: Tone; 
     <Section tone={tone}>
       <SectionLabel index={index} label="Этапы" tone={tone} />
       <h2 className={h2Class + " mb-12 min-[560px]:mb-14 " + heading[tone]}>{page.process.title}</h2>
-      <ol className={"m-0 grid list-none grid-cols-1 border-t p-0 min-[760px]:grid-cols-5 " + rule[tone]}>
+      <ol className={"m-0 grid list-none grid-cols-1 border-t p-0 min-[760px]:grid-cols-2 min-[1100px]:grid-cols-5 " + rule[tone]}>
         {page.process.items.map((s, i) => (
           <li
             key={s.title}
-            className={"flex flex-col gap-2 border-b py-6 min-[760px]:border-b-0 min-[760px]:py-8 min-[760px]:pr-5 " + (i > 0 ? "min-[760px]:border-l min-[760px]:pl-5 " : "") + rule[tone]}
+            className={"flex flex-col gap-2 border-b py-6 min-[1100px]:border-b-0 min-[760px]:py-8 min-[760px]:pr-5 " + (i > 0 ? "min-[1100px]:border-l min-[1100px]:pl-5 " : "") + rule[tone]}
           >
             <span className="font-display text-[15px] font-extrabold text-signal">{pad(i + 1)}</span>
             <h3 className={"m-0 text-[15px] font-medium uppercase tracking-[0.04em] " + heading[tone]}>{s.title}</h3>
@@ -295,7 +295,6 @@ function Process({ page, tone, index }: { page: ServicePageContent; tone: Tone; 
 }
 
 function Start({ page, tone, index }: { page: ServicePageContent; tone: Tone; index: string }) {
-  const service = serviceBySlug(page.slug);
   return (
     <Section id="start" tone={tone}>
       <SectionLabel index={index} label="Как начать" note="Цены не публикуются — оценка после обсуждения" tone={tone} />
@@ -317,13 +316,12 @@ function Start({ page, tone, index }: { page: ServicePageContent; tone: Tone; in
           <p className={"m-0 inline-flex w-fit border px-3 py-1.5 text-[12px] font-medium uppercase tracking-[0.12em] " + (tone === "dark" ? "border-cream text-cream" : "border-graphite text-graphite")}>
             Платная услуга
           </p>
-          <h3 className={"m-0 font-display text-[24px] font-extrabold uppercase leading-[1.1] " + heading[tone]}>Аудит бизнес-процессов</h3>
+          <h3 className={"m-0 font-display text-[24px] font-extrabold uppercase leading-[1.1] " + heading[tone]}>{page.engagement?.title ?? "Аудит бизнес-процессов"}</h3>
           <p className={"m-0 text-pretty text-[15px] leading-[1.6] " + body[tone]}>
-            Когда нужна глубина: детальное изучение процессов, поиск узких мест и подготовка рекомендаций. Объём и
-            стоимость согласуются заранее.
+            {page.engagement?.body ?? "Когда нужна глубина: детальное изучение процессов, поиск узких мест и подготовка рекомендаций. Объём и стоимость согласуются заранее."}
           </p>
           <p className={"m-0 text-pretty text-[13.5px] leading-[1.55] " + muted[tone]}>
-            Разработка и внедрение оцениваются отдельно, когда понятны задача и объём.
+            {page.engagement?.note ?? "Разработка и внедрение оцениваются отдельно, когда понятны задача и объём."}
           </p>
         </div>
         <div className={"flex flex-col gap-4 py-8 min-[960px]:border-l min-[960px]:pl-8 " + rule[tone]}>
@@ -341,7 +339,7 @@ function Start({ page, tone, index }: { page: ServicePageContent; tone: Tone; in
 
       <div className={"mt-4 flex flex-col gap-5 border-t pt-10 min-[760px]:flex-row min-[760px]:items-center min-[760px]:justify-between " + rule[tone]}>
         <p className={"m-0 max-w-[40ch] text-pretty text-[clamp(17px,2.2vw,20px)] leading-[1.45] " + heading[tone]}>
-          Не уверены, нужна ли {service.slug === "training" ? "отдельная система" : service.slug === "apps" ? "разработка" : "автоматизация"}? Это выясняется на первом обсуждении.
+          Не уверены, с чего начать? Определим следующий шаг на первом обсуждении.
         </p>
         <CtaLink href="#contact" location="service_page" className={ctaClass}>
           Обсудить задачу бесплатно
@@ -370,6 +368,13 @@ function Related({ page, articles }: { page: ServicePageContent; articles: Post[
               </li>
             ))}
           </ul>
+          {page.specialisations && <div className="mt-8">
+            <h3 className="m-0 mb-3 text-[12px] uppercase tracking-[0.16em] text-graphite/65">Подробнее о решениях</h3>
+            {page.specialisations.map((slug) => {
+              const s = serviceBySlug(slug);
+              return <Link key={slug} href={s.href} className="flex min-h-[44px] items-center py-2 text-[15px] text-maroon underline underline-offset-4">{s.title} →</Link>;
+            })}
+          </div>}
           <div className="mt-5 flex flex-wrap gap-x-6">
             <Link href="/services" className="inline-flex min-h-[44px] items-center text-[13px] uppercase tracking-[0.1em] text-maroon underline underline-offset-4 hover:text-signal">
               Все услуги →

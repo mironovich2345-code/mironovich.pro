@@ -9,9 +9,9 @@ import { siteUrl } from "@/config/site";
 import { jsonLd } from "@/lib/jsonld";
 import { breadcrumbList, pageMetadata } from "@/lib/seo";
 
-const title = "Услуги: автоматизация, приложения и обучение — MIRONOVICH";
+const title = "Внешний CTO, разработка и сопровождение — услуги MIRONOVICH";
 const description =
-  "Три направления работы: автоматизация бизнес-процессов и ИИ, разработка приложений для бизнеса, системы обучения сотрудников. Как выбрать и с чего начать.";
+  "Четыре направления: внешний CTO, разработка и автоматизация, техническое сопровождение и независимая экспертиза. Выбор формата работы под задачу бизнеса.";
 
 export const metadata: Metadata = pageMetadata({ title, description, path: "/services" });
 
@@ -24,7 +24,7 @@ const ctaClass =
   "inline-flex min-h-[56px] items-center justify-center whitespace-nowrap bg-signal px-5 text-center text-[14px] font-medium uppercase tracking-[0.04em] text-white transition-colors hover:bg-[#b82323] min-[400px]:px-8 min-[400px]:text-[15px] min-[400px]:tracking-[0.06em]";
 
 /**
- * Catalogue of the three directions. Deliberately different from the homepage
+ * Catalogue of the four directions. Deliberately different from the homepage
  * services block: it answers «which one fits me» (fit + example tasks) and sends
  * the visitor on to the full page, instead of repeating what each one includes.
  */
@@ -69,12 +69,11 @@ export default function ServicesIndex() {
           <div className="relative mx-auto flex max-w-[1080px] flex-col gap-5 min-[560px]:gap-8">
             <Breadcrumbs items={crumbs} />
             <h1 className="m-0 max-w-[16ch] text-balance font-display text-[clamp(36px,6.4vw,84px)] font-extrabold uppercase leading-[0.96] tracking-[-0.02em] text-cream">
-              Три направления работы<span className="text-signal">.</span>
+              Технологический партнёр для бизнеса<span className="text-signal">.</span>
             </h1>
             <div className="flex flex-col gap-6 min-[860px]:flex-row min-[860px]:items-end min-[860px]:justify-between min-[860px]:gap-12 min-[860px]:border-t min-[860px]:border-cream/15 min-[860px]:pt-8">
               <p className="m-0 max-w-[50ch] text-pretty text-[16px] leading-[1.55] text-cream/80 min-[560px]:text-[18px]">
-                Каждое направление решает свой класс задач. Если непонятно, к какому относится ваша, — опишите
-                ситуацию, разберёмся на бесплатном обсуждении.
+                Помогаю выбрать решение, организовать реализацию и сопровождать продукт. Внешний CTO — это технологический руководитель, который подключается к задачам бизнеса в согласованном объёме.
               </p>
               <CtaLink href="#contact" location="services_index" className={ctaClass}>
                 Обсудить задачу бесплатно
@@ -132,8 +131,7 @@ export default function ServicesIndex() {
                 Задача на стыке направлений?
               </h2>
               <p className="m-0 max-w-[50ch] text-pretty text-[16px] leading-[1.6] text-cream/80">
-                Так бывает часто: приложение для обучения сотрудников или автоматические отчёты по результатам
-                аттестаций. Начните с описания ситуации — направление определим вместе.
+                Например, сначала нужно оценить чужой продукт, затем принять его на сопровождение и спланировать доработки. Формат работы определим после обсуждения.
               </p>
             </div>
             <div className="flex flex-col gap-3 border-t border-cream/15 pt-6 text-[14.5px] leading-[1.6] text-cream/80 min-[860px]:border-l min-[860px]:border-t-0 min-[860px]:pl-8 min-[860px]:pt-0">
@@ -142,8 +140,7 @@ export default function ServicesIndex() {
                 следующие шаги.
               </p>
               <p className="m-0">
-                <span className="text-cream">Аудит бизнес-процессов — платно.</span> Детальное изучение процессов и
-                рекомендации; объём и стоимость согласуются заранее.
+                <span className="text-cream">Технический разбор — платно.</span> Аудит, экспертиза и регулярное участие — отдельные форматы; объём и стоимость согласуются заранее.
               </p>
             </div>
           </div>

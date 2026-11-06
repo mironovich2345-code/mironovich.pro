@@ -14,6 +14,7 @@
  * navigation, via trackPageView().
  */
 
+import type { ServiceSlug } from "../config/services";
 import { REDACTED, looksPersonal, normalizePagePath } from "./lead";
 
 export type AnalyticsEvent =
@@ -33,7 +34,7 @@ export type ContactLocation = "footer" | "contact_page" | "form_fallback";
 /** Only non-identifying, low-cardinality values belong in here. */
 export type EventParams = {
   location?: CtaLocation | ContactLocation;
-  service?: "automation" | "apps" | "training";
+  service?: ServiceSlug;
   channel?: "telegram" | "instagram";
   reason?: "validation" | "network" | "delivery";
   utm_source?: string;

@@ -2,7 +2,7 @@ import type { ServiceSlug } from "@/config/services";
 
 export type Item = { title: string; body: string };
 
-/** The block only this page has — keeps the three pages from reading as clones. */
+/** The block only this page has — keeps the service pages from reading as clones. */
 export type UniqueBlock =
   | { kind: "limits"; label: string; title: string; intro: string; items: Item[] }
   | {
@@ -34,6 +34,8 @@ export type ServicePageContent = {
   unique: UniqueBlock;
   process: { title: string; items: Item[] };
   costFactors: string[];
+  engagement?: { title: string; body: string; note: string };
+  specialisations?: ServiceSlug[];
   faq: [string, string][];
   /** Article slugs; only published ones are rendered */
   relatedArticles?: string[];
