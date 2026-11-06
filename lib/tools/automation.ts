@@ -2,10 +2,10 @@ import { automationModel } from "../../config/automation-model.ts";
 import { numberField, record, round2, type Parsed } from "./input.ts";
 import { calculateLabor, type LaborInput } from "./labor.ts";
 
-export const processTypes = { reporting: "Отчётность", transfer: "Перенос данных", requests: "Обработка заявок", documents: "Документы", knowledge: "Поиск по знаниям", custom: "Другой процесс" } as const;
+export const processTypes = { reporting: "Отчётность", transfer: "Перенос данных", requests: "Обработка заявок", documents: "Документы", knowledge: "Поиск по знаниям", training: "Обучение сотрудников", custom: "Другой процесс" } as const;
 export const apiOptions = { yes: "Есть API", unknown: "Не знаю", no: "Нет API" } as const;
-export const dataOptions = { clean: "Структурированы", mixed: "Нужно привести в порядок", poor: "Разрозненные / низкое качество" } as const;
-export const loadOptions = { low: "До 100 операций в день", medium: "101–1 000 операций в день", high: "Более 1 000 операций в день" } as const;
+export const dataOptions = { clean: "Структурированы", mixed: "Нужно привести в порядок", poor: "Разрозненные / низкое качество", unknown: "Не знаю" } as const;
+export const loadOptions = { low: "До 100 операций в день", medium: "101–1 000 операций в день", high: "Более 1 000 операций в день", unknown: "Не знаю" } as const;
 export type AutomationInput = {
   processType: keyof typeof processTypes; employees: number; integrations: number;
   api: keyof typeof apiOptions; data: keyof typeof dataOptions; load: keyof typeof loadOptions;
@@ -46,7 +46,7 @@ export function recommend(i: AutomationInput): { approach: Approach; reason: str
   const prefix = i.ai ? "Для описанного типа задачи сначала стоит проверить решение без ИИ. " : "";
   if (i.interface || i.processType === "custom") return { approach: "Разработка приложения", usesAI: false, reason: prefix + "Указаны отдельный интерфейс или нестандартный процесс. Сначала сравните готовые продукты, затем уточните сценарии собственной разработки." };
   if (i.integrations > 0 && i.api === "yes") return { approach: "Интеграция существующих систем", usesAI: false, reason: prefix + "Есть системы с API: начните с поддерживаемого обмена данными и правил обработки. ИИ для переноса данных не требуется." };
-  if (i.processType === "requests" || (i.integrations > 0 && i.api !== "yes")) return { approach: "Готовый SaaS-сервис", usesAI: false, reason: prefix + "Сначала проверьте готовые сервисы и штатные коннекторы. Возможность связать ваши системы ещё не подтверждена; наличие подходящего продукта нужно проверить." };
+  if (i.processType === "requests" || i.processType === "training" || (i.integrations > 0 && i.api !== "yes")) return { approach: "Готовый SaaS-сервис", usesAI: false, reason: prefix + "Сначала проверьте готовые сервисы и штатные коннекторы. Возможность связать ваши системы ещё не подтверждена; наличие подходящего продукта нужно проверить." };
   if (i.integrations === 0 && i.load === "low" && !i.documents) return { approach: "Скрипт или небольшой внутренний инструмент", usesAI: false, reason: prefix + "Небольшая нагрузка и отсутствие интеграций позволяют начать с одного локального сценария без отдельного приложения." };
   return { approach: "Обычная автоматизация", usesAI: false, reason: prefix + "Начните с правил, шаблонов и обработки данных. Потребность в ИИ из выбранных параметров не следует." };
 }
@@ -59,6 +59,12 @@ export function calculateAutomation(raw: AutomationInput, labor?: LaborInput, mo
   if (!parsed.ok) throw new RangeError("Invalid automation input");
   const i = parsed.value;
   const recommendation = recommend(i);
+  if (i.data === "unknown" || i.load === "unknown") return {
+    version: model.version, recommendation, stages: [] as { name: string; hours: Range }[], hours: [0, 0] as Range,
+    complexity: "Нужно уточнить", pricingEnabled: false, budget: null, recurring: [] as { name: string; range: Range | null }[], recurringTotal: null,
+    potentialTimeValue: labor ? calculateLabor(labor).freedTimeValue : null, paybackMonths: null,
+    paybackReason: "Сначала нужно уточнить исходные данные.", risks: ["Состояние данных или объём работы неизвестны. Трудоёмкость не рассчитывается без этих ответов.", "Возможность подключения программ и последствия ошибок нужно проверить отдельно."],
+  };
   const factor = model.dataFactor[i.data] * model.loadFactor[i.load];
   const scale = (range: Range, multiplier = 1): [number, number] => [Math.ceil(range[0] * multiplier), Math.ceil(range[1] * multiplier)];
   const stages: { name: string; hours: Range }[] = [

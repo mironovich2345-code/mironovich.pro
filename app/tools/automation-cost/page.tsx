@@ -3,8 +3,8 @@ import AutomationCalculator from "@/components/tools/AutomationCalculator";
 import ToolPage from "@/components/tools/ToolPage";
 import { pageMetadata } from "@/lib/seo";
 
-const title = "Калькулятор автоматизации и внедрения ИИ";
-const description = "Определите подход к автоматизации, состав работ, сложность и риски. Денежные диапазоны отключены до утверждения расчётной модели владельцем.";
+const title = "Подберите способ автоматизации";
+const description = "Ответьте на несколько вопросов и узнайте, какое решение может подойти вашему бизнесу";
 export const metadata: Metadata = pageMetadata({ title: title + " — MIRONOVICH", description, path: "/tools/automation-cost" });
 const faq: [string, string][] = [
   ["Почему нет цены внедрения?", "Ставки, трудоёмкость и коэффициенты пока являются начальными гипотезами. Денежный расчёт включается отдельным флагом только после утверждения модели владельцем. Даже тогда результат будет предварительной оценкой, а не офертой."],

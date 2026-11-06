@@ -14,6 +14,6 @@ const faq: [string, string][] = [
 ];
 export default function Tools() {
   return <ToolPage path="/tools" title={title} description={description} faq={faq}>
-    <div className="grid gap-5 min-[760px]:grid-cols-2">{tools.map((tool) => <ToolCard key={tool.slug} tool={{ ...tool, description: tool.slug === "labor-cost" ? "Посчитайте, сколько времени и денег компания тратит на повторяющиеся операции" : "Получите предварительную оценку бюджета внедрения, ежемесячных расходов и окупаемости. Денежная часть будет доступна после утверждения модели." }} />)}</div>
+    <div className="grid gap-5 min-[760px]:grid-cols-2">{tools.map((tool) => <ToolCard key={tool.slug} tool={{ ...tool, description: tool.slug === "labor-cost" ? "Посчитайте, сколько времени и денег компания тратит на повторяющиеся операции" : "Ответьте на несколько вопросов и узнайте, какое решение может подойти вашему бизнесу." }} />)}</div>
   </ToolPage>;
 }

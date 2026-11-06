@@ -9,10 +9,10 @@ export const laborFields = {
   hourlyCost: { label: "Полная стоимость часа, ₽", min: 0, max: 1000000, integer: false },
   automationPercent: { label: "Потенциальная доля автоматизации, %", min: 0, max: 100, integer: false },
 } as const;
-export type LaborInput = { [K in keyof typeof laborFields]: number };
+export type LaborInput = { [K in Exclude<keyof typeof laborFields, "hourlyCost">]: number } & { hourlyCost: number | null };
 export type LaborResult = {
-  monthlyHours: number; monthlyCost: number; annualCost: number;
-  freedHours: number; freedTimeValue: number;
+  monthlyHours: number; monthlyCost: number | null; annualCost: number | null;
+  freedHours: number; freedTimeValue: number | null;
 };
 
 export function parseLaborInput(raw: unknown): Parsed<LaborInput> {
@@ -20,6 +20,7 @@ export function parseLaborInput(raw: unknown): Parsed<LaborInput> {
   if (!src) return { ok: false, errors: { form: "Нужны исходные параметры расчёта." } };
   const errors: Record<string, string> = {};
   for (const [key, spec] of Object.entries(laborFields)) {
+    if (key === "hourlyCost" && src[key] === null) continue;
     if (!numberField(src[key], spec.min, spec.max, spec.integer)) {
       errors[key] = `Введите ${spec.integer ? "целое число" : "число"} от ${spec.min} до ${spec.max}.`;
     }
@@ -27,7 +28,7 @@ export function parseLaborInput(raw: unknown): Parsed<LaborInput> {
   if (Object.keys(errors).length) return { ok: false, errors };
   const input = Object.fromEntries(Object.keys(laborFields).map((k) => [k, src[k]])) as LaborInput;
   const hours = input.employees * input.operationsPerDay * input.minutesPerOperation / 60 * input.workingDays;
-  if (hours > 100000000 || hours * input.hourlyCost * 12 > 1000000000000) {
+  if (hours > 100000000 || hours * (input.hourlyCost ?? 0) * 12 > 1000000000000) {
     return { ok: false, errors: { form: "Совокупный объём слишком велик. Разделите расчёт на отдельные процессы." } };
   }
   return { ok: true, value: input };
@@ -39,10 +40,10 @@ export function calculateLabor(raw: LaborInput): LaborResult {
   if (!parsed.ok) throw new RangeError("Invalid labor input");
   const i = parsed.value;
   const hours = i.employees * i.operationsPerDay * i.minutesPerOperation / 60 * i.workingDays;
-  const monthlyCost = round2(hours * i.hourlyCost);
+  const monthlyCost = i.hourlyCost === null ? null : round2(hours * i.hourlyCost);
   return {
-    monthlyHours: round2(hours), monthlyCost, annualCost: round2(monthlyCost * 12),
+    monthlyHours: round2(hours), monthlyCost, annualCost: monthlyCost === null ? null : round2(monthlyCost * 12),
     freedHours: round2(hours * i.automationPercent / 100),
-    freedTimeValue: round2(monthlyCost * i.automationPercent / 100),
+    freedTimeValue: monthlyCost === null ? null : round2(monthlyCost * i.automationPercent / 100),
   };
 }

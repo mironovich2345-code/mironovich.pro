@@ -1,133 +1,38 @@
 "use client";
-
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { automationModel } from "@/config/automation-model";
-import { apiOptions, calculateAutomation, dataOptions, defaultAutomation, loadOptions, parseAutomationInput, processTypes, type AutomationInput } from "@/lib/tools/automation";
-import { parseDecimal, type FieldErrors } from "@/lib/tools/input";
-import { calculateLabor, type LaborInput } from "@/lib/tools/labor";
+import { useEffect, useState } from "react";
+import { automationAnswers, type AutoAnswers } from "@/lib/tools/wizard";
+import { calculateAutomation } from "@/lib/tools/automation";
 import { decodeLaborTransfer, LABOR_STORAGE_KEY } from "@/lib/tools/storage";
-import { track } from "@/lib/analytics";
+import type { LaborInput } from "@/lib/tools/labor";
+import Wizard, { Choices, NumberAnswer, type Step } from "./Wizard";
 import ToolLead from "./ToolLead";
-import { buttonClass, controlClass, Field, Metric, numberText, rubles } from "./Fields";
-
-type Values = Omit<AutomationInput, "employees" | "integrations"> & { employees: string; integrations: string };
-const initial: Values = { ...defaultAutomation, employees: "3", integrations: "1" };
-const selectors = [
-  { key: "processType", label: "Тип процесса", options: processTypes },
-  { key: "api", label: "Доступность API", options: apiOptions },
-  { key: "data", label: "Состояние исходных данных", options: dataOptions },
-  { key: "load", label: "Предполагаемая нагрузка", options: loadOptions },
-] as const;
-const switches = [
-  { key: "interface", label: "Нужен отдельный пользовательский интерфейс" },
-  { key: "documents", label: "Нужна обработка документов" },
-  { key: "ai", label: "Хочу проверить применение ИИ" },
-  { key: "humanReview", label: "Результат будет проверять человек" },
-  { key: "support", label: "Нужно техническое сопровождение" },
-] as const;
-
+const initial: AutoAnswers = { task: "", systems: [], api: "unknown", data: "unknown", load: "unknown", employees: "", integrations: "", actions: [], ui: false, review: true, support: true, description: "" };
 export default function AutomationCalculator() {
-  const [values, setValues] = useState<Values>(initial);
-  const [description, setDescription] = useState("");
-  const [labor, setLabor] = useState<LaborInput | null>(null);
-  const [input, setInput] = useState<AutomationInput | null>(null);
-  const [errors, setErrors] = useState<FieldErrors>({});
-  const [economics, setEconomics] = useState({ enabled: false, benefit: "", residual: "0" });
-  const resultRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    try {
-      const raw = sessionStorage.getItem(LABOR_STORAGE_KEY);
-      const transfer = decodeLaborTransfer(raw);
-      if (transfer) {
-        setLabor(transfer); setValues((v) => ({ ...v, employees: String(transfer.employees) }));
-      } else if (raw) sessionStorage.removeItem(LABOR_STORAGE_KEY);
-    } catch { /* Storage may be disabled; standalone calculation still works. */ }
-  }, []);
-  const result = input ? calculateAutomation(input, labor ?? undefined) : null;
-  const range = (r: readonly number[]) => rubles(r[0]) + " — " + rubles(r[1]);
-  const update = <K extends keyof Values>(key: K, value: Values[K]) => { setValues({ ...values, [key]: value }); setInput(null); setErrors({}); };
-  const submit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const p = parseAutomationInput({ ...values, employees: parseDecimal(values.employees), integrations: parseDecimal(values.integrations), ...(economics.enabled ? { confirmedCashBenefit: parseDecimal(economics.benefit), residualManualCost: parseDecimal(economics.residual) } : {}) });
-    if (!p.ok) { setErrors(p.errors); setInput(null); document.getElementById("automation-" + Object.keys(p.errors)[0])?.focus(); return; }
-    setErrors({}); setInput(p.value); track("tool_calculate", { location: "tools" });
-    requestAnimationFrame(() => resultRef.current?.focus());
-  };
-  return <>
-    {labor && <div id="labor-transfer" className="mb-8 flex flex-wrap items-center justify-between gap-4 border border-cream/25 p-5" role="status">
-      <div><p className="m-0 text-sm text-cream">Данные ручного труда перенесены: {numberText(calculateLabor(labor).monthlyHours)} ч/мес.</p><p className="m-0 mt-2 text-xs leading-relaxed text-stone">Хранятся только в этой вкладке, до 24 часов. Название процесса и описание не переносятся.</p></div>
-      <button type="button" className="min-h-[44px] text-sm text-cream underline underline-offset-4" onClick={() => { setLabor(null); setInput(null); try { sessionStorage.removeItem(LABOR_STORAGE_KEY); } catch {} }}>Убрать данные</button>
-    </div>}
-    <div className="grid items-start gap-10 min-[1000px]:grid-cols-[1fr_1fr] min-[1000px]:gap-12">
-      <form noValidate onSubmit={submit} className="min-w-0">
-        <p className="m-0 mb-5 text-[12px] uppercase tracking-[0.16em] text-stone">01 / Условия задачи</p>
-        <p className="mb-6 text-[14px] leading-[1.6] text-stone">Начальные значения — пример. Отметьте реальные условия: инструмент предложит подход и состав работ. ИИ не включён по умолчанию.</p>
-        {Object.keys(errors).length > 0 && <p role="alert" className="border-l-2 border-signal pl-3 text-sm text-cream">Проверьте отмеченные поля.</p>}
-        <div className="grid min-w-0 gap-5 min-[560px]:grid-cols-2">
-          {selectors.map(({ key, label, options }) => <Field key={key} id={"automation-" + key} label={label} error={errors[key]}>
-            <select id={"automation-" + key} value={values[key]} onChange={(e) => update(key, e.target.value as never)} aria-invalid={!!errors[key]} className={controlClass}>
-              {Object.entries(options).map(([value, text]) => <option key={value} value={value}>{text}</option>)}
-            </select>
-          </Field>)}
-          {([{ key: "employees", label: "Количество сотрудников" }, { key: "integrations", label: "Количество интеграций" }] as const).map(({ key, label }) => <Field key={key} id={"automation-" + key} label={label} error={errors[key]} hint={key === "employees" ? "Для контекста задачи; бюджет не умножается на число людей." : "Отдельные связи с системами, от 0 до 20."}>
-            <input id={"automation-" + key} value={values[key]} inputMode="numeric" maxLength={8} aria-invalid={!!errors[key]} aria-describedby={"automation-" + key + (errors[key] ? "-error" : "-hint")} onChange={(e) => update(key, e.target.value)} className={controlClass} />
-          </Field>)}
-        </div>
-        <div className="my-6">
-          <Field id="automation-description" label="Краткое описание задачи — необязательно" hint="Не влияет на формулы. Остаётся в браузере; при обращении попадёт в редактируемое описание заявки.">
-            <textarea id="automation-description" value={description} onChange={(e) => setDescription(e.target.value)} rows={3} maxLength={1000} className={controlClass + " py-3"} />
-          </Field>
-        </div>
-        <fieldset className="m-0 flex min-w-0 flex-col border-0 border-t border-solid border-cream/20 p-0">
-          <legend className="mb-2 pr-3 text-[12px] uppercase tracking-[0.12em] text-stone">Требования</legend>
-          {switches.map(({ key, label }) => <label key={key} className="flex min-h-[52px] cursor-pointer items-center gap-3 border-b border-cream/15 py-3 text-[14px] leading-[1.5] text-cream"><input type="checkbox" checked={values[key]} onChange={(e) => update(key, e.target.checked)} className="h-5 w-5 shrink-0 accent-[#D92D2D]" />{label}</label>)}
-        </fieldset>
-        {automationModel.approvedByOwner && automationModel.publicPricingEnabled && <fieldset className="mt-6 min-w-0 border border-cream/20 p-4">
-          <legend className="px-2 text-sm text-cream">Экономика — необязательно</legend>
-          <label className="flex min-h-[44px] items-center gap-3 text-sm text-stone"><input type="checkbox" checked={economics.enabled} onChange={(e) => { setEconomics({ ...economics, enabled: e.target.checked }); setInput(null); }} className="h-5 w-5 accent-[#D92D2D]" />Есть данные для денежной окупаемости</label>
-          {economics.enabled && <div className="mt-4 grid gap-4">
-            <Field id="automation-confirmedCashBenefit" label="Подтверждённая денежная выгода, ₽/мес" hint="Без вычета регулярных расходов и остаточного ручного труда. Не подставляйте сюда стоимость высвобождаемого времени." error={errors.confirmedCashBenefit}><input id="automation-confirmedCashBenefit" inputMode="decimal" value={economics.benefit} onChange={(e) => { setEconomics({ ...economics, benefit: e.target.value }); setInput(null); }} className={controlClass} /></Field>
-            <Field id="automation-residualManualCost" label="Остаточные затраты ручной работы, ₽/мес" error={errors.residualManualCost}><input id="automation-residualManualCost" inputMode="decimal" value={economics.residual} onChange={(e) => { setEconomics({ ...economics, residual: e.target.value }); setInput(null); }} className={controlClass} /></Field>
-          </div>}
-        </fieldset>}
-        <button type="submit" className={buttonClass + " mt-7 w-full"}>Оценить подход и состав работ</button>
-      </form>
-
-      <div ref={resultRef} tabIndex={-1} aria-label="Результат оценки автоматизации" className="min-w-0 border border-cream/20 p-5 outline-none min-[560px]:p-7">
-        <p className="m-0 mb-4 text-[12px] uppercase tracking-[0.16em] text-stone">02 / Предварительная оценка</p>
-        {!result || !input ? <>
-          <h2 className="m-0 font-display text-3xl font-extrabold uppercase text-cream">Сначала подход. Потом бюджет.</h2>
-          <p className="mt-5 text-[16px] leading-[1.7] text-stone">Ответьте на вопросы, чтобы увидеть рекомендацию, этапы, сложность и риски. Это инженерная гипотеза по выбранным параметрам, а не коммерческое предложение.</p>
-          {!(automationModel.approvedByOwner && automationModel.publicPricingEnabled) && <p className="mt-6 border-l-2 border-signal pl-4 text-sm leading-relaxed text-cream/80">Денежная модель пока не утверждена владельцем. Публичные цены и срок окупаемости выключены. Расчёт ручного труда по вашим данным доступен полностью.</p>}
-        </> : <>
-          <h2 className="m-0 font-display text-3xl font-extrabold uppercase leading-tight text-cream">{result.recommendation.approach}</h2>
-          <p className="mt-4 text-[15px] leading-[1.7] text-cream/80">{result.recommendation.reason}</p>
-          <dl className="m-0">
-            <Metric primary label="Сложность по модели" value={result.complexity} />
-            <Metric label="Трудоёмкость — начальная гипотеза" value={`${result.hours[0]}–${result.hours[1]} ч`} note="Не оценка сроков в календарных днях. Реальный объём требует изучения задачи." />
-            {result.budget && <Metric label="Предварительный бюджет" value={range(result.budget)} note="Не оферта; точная оценка после разбора." />}
-          </dl>
-          {!result.pricingEnabled && <p className="border-l-2 border-signal pl-4 text-sm leading-relaxed text-cream/80">Бюджет и денежные диапазоны скрыты: модель не утверждена. Ниже — состав работ и гипотезы часов, которые ещё нужно проверить.</p>}
-          <h3 className="mb-4 mt-8 text-[13px] uppercase tracking-[0.12em] text-cream">Разбивка по этапам</h3>
-          <dl className="m-0">
-            {result.stages.map((s) => <div key={s.name} className="flex flex-wrap justify-between gap-x-4 gap-y-1 border-t border-cream/15 py-3 text-[14px]"><dt className="text-stone">{s.name}</dt><dd className="m-0 text-cream">{s.hours[1] ? `${s.hours[0]}–${s.hours[1]} ч` : "Не заложено"}</dd></div>)}
-          </dl>
-          <h3 className="mb-4 mt-8 text-[13px] uppercase tracking-[0.12em] text-cream">Регулярные расходы</h3>
-          <ul className="m-0 list-none p-0 text-[14px] leading-[1.6] text-stone">
-            {result.recurring.map((s, n) => <li key={s.name} className="border-t border-cream/15 py-3"><span className="text-cream">{s.name}:</span> {s.range ? range(s.range) + "/мес" : n === 2 && !result.recommendation.usesAI ? "ИИ не предлагается, расходы на модель не заложены." : n === 3 && !input.support ? "Не включено. Определите ответственного за поддержку." : "Нужно уточнить тарифы, нагрузку и условия. Сумма пока не опубликована."}</li>)}
-          </ul>
-          {labor && <p className="mt-6 border-t border-cream/20 pt-5 text-sm leading-relaxed text-stone">Из первого расчёта: потенциальная стоимость высвобождаемого времени — {rubles(result.potentialTimeValue ?? 0)}/мес. Это не подтверждённая денежная выгода и не основание обещать окупаемость.</p>}
-          <h3 className="mb-2 mt-7 text-[13px] uppercase tracking-[0.12em] text-cream">Окупаемость</h3>
-          {result.paybackMonths && <p className="font-display text-3xl text-cream">{numberText(result.paybackMonths[0])}–{numberText(result.paybackMonths[1])} мес.</p>}
-          <p className="text-[14px] leading-[1.6] text-stone">{result.paybackReason}</p>
-          <h3 className="mb-3 mt-7 text-[13px] uppercase tracking-[0.12em] text-cream">Риски и неизвестные</h3>
-          <ul className="m-0 space-y-3 pl-4 text-[14px] leading-[1.6] text-stone">{result.risks.map((r) => <li key={r}>{r}</li>)}</ul>
-          <ToolLead key={JSON.stringify([input, labor])} context={{ tool: "automation-cost", version: result.version, input, ...(labor ? { labor } : {}) }} description={description} />
-        </>}
-        <p className="mb-0 mt-6 break-words text-[11px] leading-relaxed text-stone">Модель: {automationModel.version} · {automationModel.date} · Начальные гипотезы, не рыночные данные.</p>
-        <Link href="/tools/labor-cost" className="mt-6 inline-flex min-h-[44px] items-center text-sm text-cream underline underline-offset-4">← Рассчитать стоимость ручного труда</Link>
-      </div>
-    </div>
-  </>;
+ const [a,set] = useState(initial); const [labor,setLabor] = useState<LaborInput | null>(null); const [done,setDone] = useState(false);
+ useEffect(() => { try { const l = decodeLaborTransfer(sessionStorage.getItem(LABOR_STORAGE_KEY)); if(l) {setLabor(l);set((v)=>({...v,employees:String(l.employees)}));} } catch {} },[]);
+ const update = <K extends keyof AutoAnswers>(key: K,value:AutoAnswers[K])=>set((v)=>({...v,[key]:value}));
+ const manual = a.systems.includes("manual");
+ const multi = (key:"systems"|"actions",v:string)=> { if(key==="systems") { const next=v==="manual" ? (manual?[]:["manual"]) : (a.systems.includes(v)?a.systems.filter(x=>x!==v):[...a.systems.filter(x=>x!=="manual"),v]);set((s)=>({...s,systems:next,api:"unknown",integrations:""}));} else update(key,a[key].includes(v)?a[key].filter(x=>x!==v):[...a[key],v]); };
+ const steps:Step[]=[
+ {id:"task",title:"Какую задачу вы хотите автоматизировать?",hint:"Выберите главную задачу. Остальные процессы можно разобрать отдельно.",content:<Choices name="task" value={a.task} options={{reporting:"Подготовка отчётов",requests:"Работа с клиентами и заявками",documents:"Заполнение документов",transfer:"Перенос данных",training:"Обучение сотрудников",knowledge:"Поиск информации",custom:"Другая задача"}} onChange={v=>update("task",v)}/>,validate:()=>a.task?null:"Выберите задачу."},
+ {id:"systems",title:"Какие программы используются в этом процессе?",hint:"Можно отметить несколько. Вариант «вручную» исключает подключение существующих программ.",content:<Choices name="systems" multi value={a.systems} options={{tables:"Excel или Google Таблицы",crm:"CRM — система работы с клиентами",messages:"Мессенджеры",several:"Несколько разных сервисов",manual:"Всё выполняется вручную",other:"Другое"}} onChange={v=>multi("systems",v)}/>,validate:()=>a.systems.length?null:"Выберите хотя бы один вариант."},
+ ...(!manual?[{id:"api",title:"Можно ли автоматически получать данные из ваших программ?",hint:"Обычно это делается через API — специальный способ обмена данными между программами. Если не знаете, это проверим при разборе.",content:<Choices name="api" value={a.api} options={{yes:"Да",no:"Нет",unknown:"Не знаю"}} onChange={v=>update("api",v)}/>,validate:()=>null}]:[]),
+ {id:"data",title:"Насколько упорядочены данные?",hint:"Не нужно разбираться в устройстве файлов. Выберите то, что ближе к вашей ситуации.",content:<Choices name="data" value={a.data} options={{clean:"Всё хранится в понятной системе",mixed:"Данные разбросаны по таблицам и сервисам",poor:"Много документов и неструктурированной информации",unknown:"Пока не знаю"}} onChange={v=>update("data",v)}/>,validate:()=>null},
+ {id:"load",title:"Как часто выполняется эта задача?",hint:"Уточнения ниже помогают понять масштаб. Интеграция — отдельная связь между программами.",content:<><Choices name="load" value={a.load} options={{low:"До 100 раз в день",medium:"От 101 до 1 000",high:"Более 1 000",unknown:"Не знаю"}} onChange={v=>update("load",v)}/><NumberAnswer id="auto-employees" label="Количество сотрудников" value={a.employees} onChange={v=>update("employees",v)}/>{!manual&&<NumberAnswer id="auto-integrations" label="Сколько связей между программами нужно?" value={a.integrations} onChange={v=>update("integrations",v)}/>}</>,validate:()=>{const p=automationAnswers({...a,task:a.task||"custom"});return !p.ok?Object.entries(p.errors).find(([k])=>["employees","integrations"].includes(k))?.[1]??null:null;}},
+ {id:"actions",title:"Что должно происходить автоматически?",hint:"Можно выбрать несколько действий. ИИ рассматривается для документов, поиска и смысловой обработки, но не предлагается для обычного переноса данных.",content:<Choices name="actions" multi value={a.actions} options={{transfer:"Передавать данные",documents:"Формировать документы",reports:"Подготавливать отчёты",answers:"Отвечать на вопросы",analysis:"Анализировать информацию",decisions:"Предлагать решения",other:"Другое"}} onChange={v=>multi("actions",v)}/>,validate:()=>a.actions.length?null:"Выберите действие."},
+ {id:"requirements",title:"Что ещё важно для вашей команды?",hint:"Эти условия уточним до начала работ. Регулярное сопровождение и сроки реакции согласуются отдельно.",content:<div>{([{key:"ui",label:"Нужен отдельный экран для сотрудников",hint:"Например, личный кабинет вместо работы в существующей программе."},{key:"review",label:"Человек должен проверять результат",hint:"Особенно важно там, где ошибка влияет на клиента или деньги."},{key:"support",label:"Нужна регулярная техническая поддержка",hint:"Обновления, исправления и развитие по договорённости."}] as const).map(x=><label key={x.key} className="flex min-h-[80px] items-start gap-4 border-b border-cream/20 py-4 text-cream"><input type="checkbox" className="mt-1 h-5 w-5 shrink-0 accent-[#D92D2D]" checked={a[x.key]} onChange={e=>update(x.key,e.target.checked)}/><span>{x.label}<span className="mt-2 block text-sm text-stone">{x.hint}</span></span></label>)}</div>,validate:()=>{const p=automationAnswers(a);return p.ok?null:Object.values(p.errors)[0];}}
+ ];
+ const parsed=automationAnswers(a);
+ if(!done||!parsed.ok)return <>{labor&&<p id="labor-transfer" role="status" className="mx-auto mb-6 max-w-[800px] text-sm text-stone">Данные ручного труда перенесены в этой вкладке. <button className="min-h-[44px] text-cream underline" onClick={()=>{setLabor(null);try{sessionStorage.removeItem(LABOR_STORAGE_KEY);}catch{}}}>Убрать данные</button></p>}<Wizard steps={steps} finish={()=>{setDone(true);requestAnimationFrame(()=>document.querySelector<HTMLElement>('[aria-label="Результат подбора автоматизации"]')?.focus());}}/></>;
+ const input=parsed.value,r=calculateAutomation(input,labor??undefined);
+ return <section tabIndex={-1} aria-label="Результат подбора автоматизации" className="mx-auto max-w-[800px] border border-cream/20 p-5 text-cream min-[560px]:p-10">
+ <p className="text-xs uppercase tracking-widest text-signal">Рекомендуемое решение</p><h2 className="font-display text-[clamp(26px,4vw,44px)] font-extrabold uppercase leading-tight">Вам, вероятнее всего, подойдёт: {r.recommendation.approach === "Готовый SaaS-сервис" ? "готовый сервис по подписке" : r.recommendation.approach}</h2><p className="text-base leading-relaxed text-stone">{r.recommendation.reason}</p>
+ <p className="my-6 border-y border-cream/20 py-5 text-lg">Ориентировочная сложность: <strong>{r.complexity}</strong></p>
+ <h3 className="text-xl">Основные этапы внедрения</h3><ol className="space-y-3 pl-5 text-stone"><li>Уточнить задачу и проверить данные.</li><li>Сравнить готовые решения и способы подключения.</li><li>Проверить первый сценарий и согласовать реализацию.</li><li>Запустить и определить порядок сопровождения.</li></ol>
+ <h3 className="mt-7 text-xl">Что нужно проверить</h3><ul className="space-y-3 pl-5 text-sm leading-relaxed text-stone">{r.risks.map(x=><li key={x}>{x}</li>)}</ul>
+ <details className="my-6 border-y border-cream/20 py-4 text-sm text-stone"><summary className="min-h-[44px] cursor-pointer text-cream">Подробнее о расчёте</summary>{r.stages.length?<dl>{r.stages.map(s=><div className="flex flex-wrap justify-between gap-2 py-2" key={s.name}><dt>{s.name}</dt><dd>{s.hours[0]}–{s.hours[1]} ч</dd></div>)}</dl>:<p>Состояние данных или нагрузка неизвестны: часы не подставляются автоматически.</p>}<p>Версия: {r.version}. Часы — начальные гипотезы, не сроки и не оферта. Денежная модель пока не утверждена.</p></details>
+ <button className="min-h-[48px] text-sm underline" onClick={()=>setDone(false)}>Изменить ответы</button><ToolLead context={{tool:"automation-cost",version:r.version,input,...(labor?{labor}:{})}}/>
+ <Link className="mt-6 inline-flex min-h-[44px] text-sm underline" href="/tools/labor-cost">Рассчитать ручной труд</Link>
+ </section>;
 }
