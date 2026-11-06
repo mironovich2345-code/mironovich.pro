@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Roboto_Condensed } from "next/font/google";
+import localFont from "next/font/local";
 import Script from "next/script";
 import Analytics from "@/components/Analytics";
 import Footer from "@/components/Footer";
@@ -9,18 +9,22 @@ import { consentPrecheckScript, consentRequired } from "@/lib/consent";
 import { urlHygieneScript } from "@/lib/url-hygiene";
 import "./globals.css";
 
-const inter = Inter({
-  subsets: ["latin", "cyrillic"],
-  weight: ["400", "500", "700"],
+const inter = localFont({
+  src: [
+    { path: "../assets/blog-covers/fonts/Inter-latin.woff2", weight: "100 900", style: "normal" },
+    { path: "../assets/blog-covers/fonts/Inter-cyrillic.woff2", weight: "100 900", style: "normal" },
+  ],
   display: "swap",
   variable: "--font-inter",
 });
 
 // Editorial display face — oversized headlines only (font-display utility). Chosen over
 // Inter 800 after a side-by-side check: condensed width reads closer to a magazine cover.
-const displayFont = Roboto_Condensed({
-  subsets: ["latin", "cyrillic"],
-  weight: ["700", "800"],
+const displayFont = localFont({
+  src: [
+    { path: "../assets/blog-covers/fonts/RobotoCondensed-latin.woff2", weight: "100 900", style: "normal" },
+    { path: "../assets/blog-covers/fonts/RobotoCondensed-cyrillic.woff2", weight: "100 900", style: "normal" },
+  ],
   display: "swap",
   variable: "--font-display",
 });

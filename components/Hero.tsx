@@ -1,4 +1,5 @@
 import CtaLink from "./CtaLink";
+import FitDisplay from "./FitDisplay";
 import { contactHref } from "@/config/site";
 
 /**
@@ -34,14 +35,14 @@ export default function Hero() {
             Автоматизация <span className="text-signal">·</span> Приложения <span className="text-signal">·</span> ИИ
           </p>
 
-          <h1 className="m-0 whitespace-nowrap font-display text-[length:18cqi] font-extrabold uppercase leading-[0.92] tracking-[-0.02em] text-cream min-[960px]:text-[length:min(18cqi,14.5vh)]">
+          <FitDisplay as="h1" className="m-0 whitespace-nowrap font-display [--display-size:18cqi] text-[length:calc(var(--display-size)*var(--display-fit,1))] font-extrabold uppercase leading-[0.92] tracking-[-0.02em] text-cream min-[960px]:[--display-size:min(18cqi,14.5vh)]">
             <span className="block">Меньше</span>{" "}
             <span className="block">рутины.</span>{" "}
             <span className="block">Больше</span>{" "}
             <span className="block">
               результата<span className="text-signal">.</span>
             </span>
-          </h1>
+          </FitDisplay>
 
           <p className="m-0 max-w-[40ch] text-pretty text-[17px] leading-[1.5] text-cream/80 min-[560px]:text-[19px]">
             Автоматизация процессов, разработка приложений и внедрение ИИ для бизнеса

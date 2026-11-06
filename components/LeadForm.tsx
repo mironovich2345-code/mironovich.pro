@@ -38,7 +38,7 @@ export default function LeadForm({ defaultDirection }: { defaultDirection?: Lead
   const [errors, setErrors] = useState<Errors>({});
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
-  const [failed, setFailed] = useState(false);
+  const [failed, setFailed] = useState<"delivery" | "rate_limited" | null>(null);
   const [dialog, setDialog] = useState(false);
 
   const refs = useRef<Partial<Record<Field, HTMLElement | null>>>({});
@@ -74,7 +74,7 @@ export default function LeadForm({ defaultDirection }: { defaultDirection?: Lead
     }
 
     setSending(true);
-    setFailed(false);
+    setFailed(null);
     try {
       const res = await fetch("/api/lead", {
         method: "POST",
@@ -97,11 +97,11 @@ export default function LeadForm({ defaultDirection }: { defaultDirection?: Lead
         track("lead_submit_success", { utm_source: a.utm_source, utm_medium: a.utm_medium, utm_campaign: a.utm_campaign });
         requestAnimationFrame(() => successRef.current?.focus());
       } else {
-        setFailed(true);
+        setFailed(res.status === 429 ? "rate_limited" : "delivery");
         track("lead_submit_error", { reason: "delivery" });
       }
     } catch {
-      setFailed(true);
+      setFailed("delivery");
       track("lead_submit_error", { reason: "network" });
     } finally {
       setSending(false);
@@ -260,7 +260,9 @@ export default function LeadForm({ defaultDirection }: { defaultDirection?: Lead
 
         {failed && (
           <div role="alert" className="border border-signal/50 p-4 text-[14px] leading-[1.55] text-cream">
-            Не получилось доставить заявку. Попробуйте ещё раз или напишите напрямую:{" "}
+            {failed === "rate_limited"
+              ? "Слишком много попыток. Подождите минуту и попробуйте снова или напишите напрямую:"
+              : "Не получилось доставить заявку. Попробуйте ещё раз или напишите напрямую:"}{" "}
             <ContactLink contact={contacts.telegram} location="form_fallback" className="text-signal underline underline-offset-[3px]">
               {contacts.telegram.text}
             </ContactLink>

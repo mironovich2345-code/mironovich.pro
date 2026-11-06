@@ -1,18 +1,13 @@
 import { NextResponse } from "next/server";
 import { consentVersion } from "@/config/legal";
 import { clientIpSource, createLeadLimiter } from "@/lib/rate-limit";
+import { readLeadRequest } from "@/lib/lead-request";
 import {
   HONEYPOT_FIELD, LEAD_LIMITS, REDACTED, directionLabel, isLeadDirection, leadFormExtended, looksPersonal, normalizePagePath, validContact,
 } from "@/lib/lead";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-
-type Lead = {
-  name?: unknown; phone?: unknown; task?: unknown; consent?: unknown;
-  company?: unknown; direction?: unknown; page?: unknown; attribution?: unknown;
-  [HONEYPOT_FIELD]?: unknown;
-};
 
 /** First-touch attribution sent by the form. Never required — a missing or
  *  malformed block degrades to direct / unknown and never fails the lead. */
@@ -71,7 +66,7 @@ function foreignOrigin(req: Request): boolean {
 
 export async function POST(req: Request) {
   if (foreignOrigin(req)) return fail("forbidden", 403);
-  if (req.headers.get("content-type")?.includes("application/json") !== true) {
+  if (req.headers.get("content-type")?.split(";", 1)[0].trim().toLowerCase() !== "application/json") {
     return fail("bad_content_type", 415);
   }
   // refuse oversized bodies before reading them
@@ -79,15 +74,9 @@ export async function POST(req: Request) {
   // every attempt counts, valid or not, so invalid floods are throttled too
   if (rateLimited(req.headers)) return fail("rate_limited", 429);
 
-  const raw = await req.text();
-  if (raw.length > LEAD_LIMITS.payload) return fail("too_large", 413);
-
-  let body: Lead;
-  try {
-    body = JSON.parse(raw) as Lead;
-  } catch {
-    return fail("bad_request", 400);
-  }
+  const parsed = await readLeadRequest(req, LEAD_LIMITS.payload);
+  if (!parsed.ok) return fail(parsed.error, parsed.status);
+  const body = parsed.body;
 
   // honeypot — rejected and never delivered
   if (str(body[HONEYPOT_FIELD]) !== "") {

@@ -162,7 +162,7 @@ function ContactList({ tone = "dark" }: { tone?: "dark" | "light" }) {
       <ul className="m-0 flex list-none flex-col gap-1 p-0">
         {confirmedContacts.map((c) => (
           <li key={c.channel}>
-            <ContactLink contact={c} location="contact_page" className={"inline-flex min-h-[44px] items-center gap-3 text-[16px] transition-colors " + link}>
+            <ContactLink contact={c} location="contact_page" className={"inline-flex max-w-full min-h-[44px] flex-wrap items-center gap-x-3 break-all text-[16px] transition-colors " + link}>
               <span className="text-[12px] uppercase tracking-[0.14em] opacity-70">{c.label}</span>
               {c.text}
             </ContactLink>
