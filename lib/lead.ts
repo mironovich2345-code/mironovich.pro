@@ -41,6 +41,7 @@ const KNOWN_PAGES = new Set([
   "/", "/services", "/services/automation", "/services/apps", "/services/training",
   "/about", "/blog", "/contact", "/projects",
   "/services/cto", "/services/development", "/services/support", "/services/expertise",
+  "/tools", "/tools/labor-cost", "/tools/automation-cost",
 ]);
 
 /**

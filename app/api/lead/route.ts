@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { consentVersion } from "@/config/legal";
 import { clientIpSource, createLeadLimiter } from "@/lib/rate-limit";
+import { parseToolContext, describeToolContext } from "@/lib/tools/context";
+import { formatLeadMessage } from "@/lib/lead-message";
 import { readLeadRequest } from "@/lib/lead-request";
 import {
   HONEYPOT_FIELD, LEAD_LIMITS, REDACTED, directionLabel, isLeadDirection, leadFormExtended, looksPersonal, normalizePagePath, validContact,
@@ -14,9 +16,6 @@ export const dynamic = "force-dynamic";
 type AttrField = "utm_source" | "utm_medium" | "utm_campaign" | "utm_content" | "utm_term" | "referrer" | "landingPage";
 
 const str = (v: unknown) => (typeof v === "string" ? v.trim() : "");
-const escapeHtml = (s: string) =>
-  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-const clamp = (s: string, max: number) => (s.length > max ? s.slice(0, max) + "…" : s);
 
 const UTM_FIELDS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const;
 
@@ -105,6 +104,9 @@ export async function POST(req: Request) {
     return fail("too_long", 422);
   }
 
+  const context = body.toolContext === undefined ? undefined : parseToolContext(body.toolContext);
+  if (context === null) return fail("invalid_tool_context", 400);
+
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
 
@@ -120,26 +122,12 @@ export async function POST(req: Request) {
     timeZone: process.env.LEAD_TIMEZONE || "Europe/Moscow",
   }).format(new Date());
 
-  const text = clamp(
-    "<b>НОВАЯ ЗАЯВКА С САЙТА</b>\n\n" +
-      "<b>Имя:</b>\n" + escapeHtml(name) + "\n\n" +
-      (company ? "<b>Компания:</b>\n" + escapeHtml(company) + "\n\n" : "") +
-      "<b>Контакт:</b>\n" + escapeHtml(phone) + "\n\n" +
-      (isLeadDirection(direction) ? "<b>Направление:</b>\n" + escapeHtml(directionLabel(direction)) + "\n\n" : "") +
-      "<b>Задача:</b>\n" + escapeHtml(task) + "\n\n" +
-      "<b>Страница:</b>\n" + escapeHtml(page) + "\n\n" +
-      "<b>Дата:</b>\n" + escapeHtml(date) + "\n\n" +
-      // which consent text was accepted — the checkbox is required, the server rejects leads without it
-      "<b>Согласие на обработку ПД:</b>\nполучено, редакция " + escapeHtml(consentVersion) + "\n\n" +
-      "<b>ИСТОЧНИК</b>\n" +
-      "Source: " + escapeHtml(attr.utm_source) + "\n" +
-      "Medium: " + escapeHtml(attr.utm_medium) + "\n" +
-      "Campaign: " + escapeHtml(attr.utm_campaign) + "\n" +
-      "Content: " + escapeHtml(attr.utm_content) + "\n" +
-      "Referrer: " + escapeHtml(attr.referrer) + "\n" +
-      "Landing: " + escapeHtml(attr.landingPage),
-    3800, // Telegram hard limit is 4096 characters
-  );
+  const text = formatLeadMessage({
+    name, phone, task, company,
+    direction: isLeadDirection(direction) ? directionLabel(direction) : "",
+    page, date, consentVersion, attribution: attr,
+    context: context ? describeToolContext(context) : "",
+  });
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 8000);

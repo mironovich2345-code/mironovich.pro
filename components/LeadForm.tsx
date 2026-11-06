@@ -8,6 +8,7 @@ import ContactLink from "./ContactLink";
 import { contacts } from "@/config/contacts";
 import { track, trackFormStartOnce } from "@/lib/analytics";
 import { getAttribution } from "@/lib/attribution";
+import type { ToolContext } from "@/lib/tools/context";
 import {
   HONEYPOT_FIELD, LEAD_DIRECTIONS, LEAD_LIMITS, leadFormExtended, validContact, type LeadDirection,
 } from "@/lib/lead";
@@ -27,12 +28,12 @@ const errorId = (f: Field) => "lead-" + f + "-error";
 const describedBy = (f: Field, errors: Errors, extra?: string) =>
   [errors[f] ? errorId(f) : "", extra ?? ""].filter(Boolean).join(" ") || undefined;
 
-export default function LeadForm({ defaultDirection }: { defaultDirection?: LeadDirection }) {
+export default function LeadForm({ defaultDirection, toolContext, defaultTask = "" }: { defaultDirection?: LeadDirection; toolContext?: ToolContext; defaultTask?: string }) {
   const [name, setName] = useState("");
   const [company, setCompany] = useState("");
   const [phone, setPhone] = useState("");
   const [direction, setDirection] = useState<LeadDirection | "">(defaultDirection ?? "");
-  const [task, setTask] = useState("");
+  const [task, setTask] = useState(defaultTask);
   const [consent, setConsent] = useState(false);
   const [trap, setTrap] = useState(""); // honeypot — must stay empty
   const [errors, setErrors] = useState<Errors>({});
@@ -81,6 +82,7 @@ export default function LeadForm({ defaultDirection }: { defaultDirection?: Lead
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name, phone, task, consent,
+          ...(toolContext ? { toolContext } : {}),
           ...(leadFormExtended ? { company, direction } : {}),
           [HONEYPOT_FIELD]: trap,
           // normalised against known routes on the server
