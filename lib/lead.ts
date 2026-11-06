@@ -40,6 +40,7 @@ export const HONEYPOT_FIELD = "website";
 const KNOWN_PAGES = new Set([
   "/", "/services", "/services/automation", "/services/apps", "/services/training",
   "/about", "/blog", "/contact", "/projects",
+  "/services/cto", "/services/development", "/services/support", "/services/expertise",
 ]);
 
 /**

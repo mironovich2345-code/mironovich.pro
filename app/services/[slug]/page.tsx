@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ServicePage from "@/components/ServicePage";
-import { isServiceSlug, serviceBySlug, serviceId, services } from "@/config/services";
+import { isServiceSlug, serviceBySlug, serviceId, allServices } from "@/config/services";
 import { site, siteUrl } from "@/config/site";
 import { servicePages } from "@/content/services";
 import { getPublishedPosts } from "@/lib/blog";
 import { jsonLd } from "@/lib/jsonld";
-import { breadcrumbList, pageMetadata } from "@/lib/seo";
+import { breadcrumbList, defaultImage, pageMetadata } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return services.map((s) => ({ slug: s.slug }));
+  return allServices.map((s) => ({ slug: s.slug }));
 }
 
 const crumbsFor = (slug: string, label: string) => [
@@ -30,13 +30,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: page.seo.title,
     description: page.seo.description,
     path: "/services/" + slug,
-    image: {
+    image: ["automation", "apps", "training"].includes(slug) ? {
       url: "/og/services-" + slug + ".png?v=1",
       width: 1200,
       height: 630,
       alt: site.name + ": " + page.h1,
       type: "image/png",
-    },
+    } : defaultImage,
   });
 }
 

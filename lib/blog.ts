@@ -111,7 +111,7 @@ function readPost(file: string): Post {
   }
   let service: ServiceSlug | null = categoryBySlug(category).service;
   if (meta.service) {
-    if (meta.service !== "none" && !isServiceSlug(meta.service)) throw fail("service — automation, apps, training или none");
+    if (meta.service !== "none" && !isServiceSlug(meta.service)) throw fail("service — slug опубликованной услуги или none");
     service = meta.service === "none" ? null : (meta.service as ServiceSlug);
   }
   const related = (meta.related ?? "").split(",").map((r) => r.trim()).filter(Boolean);

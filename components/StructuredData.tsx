@@ -30,6 +30,9 @@ export default function StructuredData() {
       image: siteUrl + "/images/danil-mironovich-editorial.webp",
       jobTitle: site.jobTitle,
       knowsAbout: [
+        "технологическая стратегия",
+        "техническое сопровождение IT-продуктов",
+        "оценка разработчиков и подрядчиков",
         "автоматизация бизнес-процессов",
         "интеграции CRM и API",
         "внедрение ИИ в рабочие процессы",

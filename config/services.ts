@@ -1,9 +1,9 @@
 /**
- * The three service directions — one source for the homepage, /services catalogue,
+ * The service registry — one source for the homepage, /services catalogue,
  * navigation, footer and structured data. Page content lives in content/services/.
  */
 
-export type ServiceSlug = "automation" | "apps" | "training";
+export type ServiceSlug = "cto" | "development" | "support" | "expertise" | "automation" | "apps" | "training";
 
 export type Service = {
   slug: ServiceSlug;
@@ -27,7 +27,7 @@ export type Service = {
   examples: [string, string, string];
 };
 
-export const services: readonly Service[] = [
+const legacyServices: readonly Service[] = [
   {
     slug: "automation",
     index: "01",
@@ -90,9 +90,52 @@ export const services: readonly Service[] = [
   },
 ];
 
-export const serviceBySlug = (slug: ServiceSlug) => services.find((s) => s.slug === slug)!;
+/** Primary commercial directions. Legacy specialisations remain published below. */
+export const services: readonly Service[] = [
+  {
+    slug: "cto", index: "01", label: "Внешний CTO", title: "Внешний CTO",
+    lead: "Помогаю управлять технологиями без технологического директора в штате.",
+    does: ["Технологическая стратегия и приоритеты", "Оценка бюджета и рисков", "Управление разработкой и подрядчиками"],
+    gives: "Понятный план действий и человек, с которым можно обсуждать технические решения на языке бизнеса.",
+    href: "/services/cto", serviceType: "Внешний технологический директор",
+    fit: "Когда технических решений много, а связать их с задачами бизнеса и контролировать выполнение некому.",
+    examples: ["Выбор готового продукта или разработки", "План развития IT-направления", "Контроль подрядчиков и бюджета"],
+  },
+  {
+    slug: "development", index: "02", label: "Разработка и автоматизация", title: "Разработка и автоматизация",
+    lead: "Создаю продукты и связываю системы, когда задача действительно требует разработки.",
+    does: ["Бизнес-приложения и Telegram Mini Apps", "Интеграции, отчётность и ИИ-ассистенты", "Системы обучения сотрудников"],
+    gives: "Решение под конкретный рабочий процесс — с требованиями, проверкой и планом сопровождения.",
+    href: "/services/development", serviceType: "Разработка цифровых продуктов и автоматизация",
+    fit: "Когда готовые инструменты не закрывают задачу или существующие системы нужно связать между собой.",
+    examples: ["Внутреннее приложение", "CRM-интеграция через API", "ИИ-ассистент для сотрудников"],
+  },
+  {
+    slug: "support", index: "03", label: "Техническое сопровождение", title: "Техническое сопровождение",
+    lead: "Беру на сопровождение действующие продукты и помогаю планировать их развитие.",
+    does: ["Работоспособность и исправление ошибок", "Обновления и сопровождение интеграций", "Планирование доработок и инфраструктуры"],
+    gives: "Регулярная работа с продуктом вместо поиска нового исполнителя при каждой проблеме. Объём и условия закрепляются в договоре.",
+    href: "/services/support", serviceType: "Техническое сопровождение и развитие IT-продуктов",
+    fit: "Когда приложение уже работает, но зависит от одного разработчика или осталось без технического владельца.",
+    examples: ["Приём продукта после ухода разработчика", "Сопровождение CRM и интеграций", "План регулярных обновлений"],
+  },
+  {
+    slug: "expertise", index: "04", label: "Техническая экспертиза", title: "Независимая техническая экспертиза",
+    lead: "Разбираю предложения, сметы и существующие продукты до того, как вы примете решение.",
+    does: ["Проверка сметы и технического задания", "Оценка разработчиков и подрядчиков", "Аудит продукта и рисков внедрения"],
+    gives: "Аргументы для решения: что проверить, какие вопросы задать и на каких условиях двигаться дальше.",
+    href: "/services/expertise", serviceType: "Независимая техническая экспертиза",
+    fit: "Когда нужно второе мнение о цене, исполнителе или технической готовности продукта.",
+    examples: ["Разбор предложения подрядчика", "Проверка компетенций кандидата", "Оценка рисков действующего продукта"],
+  },
+];
 
-export const isServiceSlug = (v: string): v is ServiceSlug => services.some((s) => s.slug === v);
+/** Every live URL, including the three original service pages and blog references. */
+export const allServices: readonly Service[] = [...services, ...legacyServices];
+
+export const serviceBySlug = (slug: ServiceSlug) => allServices.find((s) => s.slug === slug)!;
+
+export const isServiceSlug = (v: string): v is ServiceSlug => allServices.some((s) => s.slug === v);
 
 /** schema.org @id of a service — defined on its own page, referenced from the home and catalogue graphs. */
 export const serviceId = (siteUrl: string, slug: ServiceSlug) => siteUrl + "/services/" + slug + "#service";

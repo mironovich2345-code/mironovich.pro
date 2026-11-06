@@ -7,13 +7,13 @@ type OgImage = { url: string; width: number; height: number; alt: string; type?:
  * Site-wide share image. Bump the version whenever public/og.png is redrawn:
  * messengers cache previews by URL and would keep showing the old picture.
  */
-export const OG_IMAGE_PATH = "/og.png?v=2";
+export const OG_IMAGE_PATH = "/og/cto-positioning.png?v=1";
 
 export const defaultImage: OgImage = {
   url: OG_IMAGE_PATH,
   width: 1200,
   height: 630,
-  alt: site.name + ": Меньше рутины. Больше результата. Автоматизация, приложения, ИИ",
+  alt: site.name + ": Внешний технологический директор для бизнеса",
   type: "image/png",
 };
 
