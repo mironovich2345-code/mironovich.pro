@@ -13,11 +13,16 @@ export function escapedField(text: string, limit: number): string {
 
 export function formatLeadMessage(i: MessageInput): string {
   const field = (title: string, value: string, max: number) => value ? `<b>${title}:</b>\n${escapedField(value, max)}\n\n` : "";
-  return "<b>НОВАЯ ЗАЯВКА С САЙТА</b>\n\n" +
+  const diagnosis = i.context.includes("План:\n");
+  const prefix = "<b>НОВАЯ ЗАЯВКА С САЙТА</b>\n\n" +
     field("Имя", i.name, 160) + field("Компания", i.company, 160) + field("Контакт", i.phone, 100) +
-    field("Направление", i.direction, 80) + field("Задача", i.task, 1000) +
-    field("КОНТЕКСТ РАСЧЁТА", i.context, 1300) + field("Страница", i.page, 120) +
+    field("Направление", i.direction, 80);
+  const suffix = field("КОНТЕКСТ РАСЧЁТА", i.context, diagnosis ? 2200 : 1300) + field("Страница", i.page, 120) +
     field("Дата", i.date, 50) + field("Согласие на обработку ПД", "получено, редакция " + i.consentVersion, 80) +
     "<b>ИСТОЧНИК</b>\n" + ["utm_source", "utm_medium", "utm_campaign", "utm_content", "referrer", "landingPage"]
       .map((k) => `${k}: ${escapedField(i.attribution[k] || "unknown", 60)}`).join("\n");
+  // Reserve the complete structured plan, then use remaining Telegram space for the task.
+  const taskWrapper = field("Задача", "x", 2).length - 1;
+  const taskLimit = diagnosis ? Math.min(1000, 4095 - prefix.length - suffix.length - taskWrapper) : 1000;
+  return prefix + field("Задача", i.task, taskLimit) + suffix;
 }
