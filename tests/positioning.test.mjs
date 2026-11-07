@@ -21,8 +21,8 @@ test("primary directions coexist with original published specialisations", () =>
   }
 });
 
-test("future tools and their catalogue stay unavailable until implemented", () => {
-  assert.equal(toolsNavigation.enabled, false);
+test("implemented tools and their catalogue are enabled", () => {
+  assert.equal(toolsNavigation.enabled, true);
   assert.equal(tools.length, 2);
-  assert.ok(tools.every((tool) => tool.status === "coming-soon"));
+  assert.ok(tools.every((tool) => tool.status === "available"));
 });

@@ -18,6 +18,7 @@ import type { ServiceSlug } from "../config/services";
 import { REDACTED, looksPersonal, normalizePagePath } from "./lead";
 
 export type AnalyticsEvent =
+  | "tool_calculate"
   | "service_view"
   | "cta_click"
   | "form_start"
@@ -27,7 +28,7 @@ export type AnalyticsEvent =
 
 export type CtaLocation =
   | "hero" | "sticky" | "header" | "about" | "article" | "blog"
-  | "problems" | "services" | "diagnostics" | "not_found" | "service_page" | "services_index" | "projects";
+  | "problems" | "services" | "diagnostics" | "not_found" | "service_page" | "services_index" | "projects" | "tools";
 
 export type ContactLocation = "footer" | "contact_page" | "form_fallback";
 

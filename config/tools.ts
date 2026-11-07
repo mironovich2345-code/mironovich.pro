@@ -9,9 +9,9 @@ export type ToolDefinition = {
 
 /** Enable links only when the corresponding calculators have been implemented. */
 export const tools: readonly ToolDefinition[] = [
-  { slug: "labor-cost", href: "/tools/labor-cost", title: "Сколько стоит ручной труд?", description: "Посчитайте стоимость рутинных процессов.", status: "coming-soon", tone: "red" },
-  { slug: "automation-cost", href: "/tools/automation-cost", title: "Сколько стоит автоматизация?", description: "Оцените бюджет внедрения.", status: "coming-soon", tone: "dark" },
+  { slug: "labor-cost", href: "/tools/labor-cost", title: "Сколько стоит ручной труд?", description: "Посчитайте стоимость рутинных процессов.", status: "available", tone: "red" },
+  { slug: "automation-cost", href: "/tools/automation-cost", title: "Подберите способ автоматизации", description: "Узнайте, какое решение подходит вашей задаче.", status: "available", tone: "dark" },
 ];
 
 /** Requires a real /tools catalogue before enabling navigation. */
-export const toolsNavigation = { enabled: false, href: "/tools", label: "Инструменты" };
+export const toolsNavigation = { enabled: true, href: "/tools", label: "Инструменты" };

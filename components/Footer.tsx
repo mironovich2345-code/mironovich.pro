@@ -4,6 +4,7 @@ import ConsentSettingsButton from "./ConsentSettingsButton";
 import ContactLink from "./ContactLink";
 import { contactList } from "@/config/contacts";
 import { navLinks, serviceLinks, site } from "@/config/site";
+import { tools } from "@/config/tools";
 
 const linkClass = "inline-flex min-h-[32px] items-center text-stone transition-colors hover:text-cream";
 const headClass = "m-0 mb-3 text-[11px] uppercase tracking-[0.18em] text-cream/60";
@@ -37,6 +38,9 @@ export default function Footer() {
               <li><Link href="/" className={linkClass}>Главная</Link></li>
               {navLinks.map((l) => (
                 <li key={l.href}><Link href={l.href} className={linkClass}>{l.label}</Link></li>
+              ))}
+              {tools.filter((tool) => tool.status === "available").map((tool) => (
+                <li key={tool.href}><Link href={tool.href} className={linkClass}>{tool.title}</Link></li>
               ))}
               <li><Link href="/contact" className={linkClass}>Контакты</Link></li>
             </ul>
