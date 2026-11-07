@@ -13,8 +13,8 @@ export default function Wizard({ steps, finish }: { steps: Step[]; finish: () =>
     <h2 ref={heading} tabIndex={-1} className="m-0 text-balance font-display text-[clamp(26px,4vw,44px)] font-extrabold uppercase leading-tight text-cream outline-none scroll-mt-24">{step.title}</h2>
     <p className="mb-7 mt-4 text-[15px] leading-relaxed text-stone">{step.hint}</p>
     <div key={step.id}>{step.content}</div>
-    <div className="h-[96px] overflow-y-auto py-3 text-sm text-signal" role="alert">{error}</div>
-    <div className="flex gap-3"><button type="button" disabled={index === 0} className="min-h-[54px] border border-cream/30 px-5 text-sm text-cream disabled:opacity-30" onClick={() => move(index - 1)}>Назад</button><button type="submit" className={buttonClass + " grow"}>{index === steps.length - 1 ? "Показать результат" : "Продолжить"}</button></div>
+    {error && <p role="alert" className="mt-5 border-l-2 border-signal pl-3 text-sm leading-relaxed text-signal">{error}</p>}
+    <div className="mt-8 flex gap-3"><button type="button" disabled={index === 0} className="min-h-[54px] border border-cream/30 px-5 text-sm text-cream disabled:opacity-30" onClick={() => move(index - 1)}>Назад</button><button type="submit" className={buttonClass + " grow"}>{index === steps.length - 1 ? "Показать результат" : "Продолжить"}</button></div>
   </form>;
 }
 export function Choices({ name, options, value, onChange, multi = false }: { name: string; options: Record<string, string>; value: string | string[]; onChange: (value: string) => void; multi?: boolean }) {

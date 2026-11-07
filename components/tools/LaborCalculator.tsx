@@ -33,6 +33,6 @@ export default function LaborCalculator() {
     <button className="min-h-[48px] text-sm text-cream underline" onClick={() => setDone(false)}>Изменить ответы</button>
     <Link className={buttonClass + " mt-4 w-full"} href="/tools/automation-cost#labor-transfer" onClick={(e) => { try { sessionStorage.setItem(LABOR_STORAGE_KEY, encodeLaborTransfer(input)); } catch { e.preventDefault(); setTransferError(true); } }}>Узнать, как это автоматизировать →</Link>
     {transferError && <p role="alert" className="text-sm text-stone">Хранилище вкладки недоступно. <Link className="underline" href="/tools/automation-cost">Перейти без переноса</Link></p>}
-    <ToolLead context={{ tool: "labor-cost", version: LABOR_VERSION, input }} />
+    <ToolLead context={{ tool: "labor-cost", version: LABOR_VERSION, input }} variant="secondary" />
   </section>;
 }
