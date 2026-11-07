@@ -1,8 +1,10 @@
 import Link from "next/link";
+import FitDisplay from "./FitDisplay";
 import ConsentSettingsButton from "./ConsentSettingsButton";
 import ContactLink from "./ContactLink";
 import { contactList } from "@/config/contacts";
 import { navLinks, serviceLinks, site } from "@/config/site";
+import { tools } from "@/config/tools";
 
 const linkClass = "inline-flex min-h-[32px] items-center text-stone transition-colors hover:text-cream";
 const headClass = "m-0 mb-3 text-[11px] uppercase tracking-[0.18em] text-cream/60";
@@ -37,6 +39,9 @@ export default function Footer() {
               {navLinks.map((l) => (
                 <li key={l.href}><Link href={l.href} className={linkClass}>{l.label}</Link></li>
               ))}
+              {tools.filter((tool) => tool.status === "available").map((tool) => (
+                <li key={tool.href}><Link href={tool.href} className={linkClass}>{tool.title}</Link></li>
+              ))}
               <li><Link href="/contact" className={linkClass}>Контакты</Link></li>
             </ul>
           </nav>
@@ -62,12 +67,12 @@ export default function Footer() {
         {/* «MIRONOVICH» is 5.24em wide in the display face: 18.8cqi of the container
             (≈ width / 5.32) fills the full width at every screen size without overflow. */}
         <div className="mt-6 [container-type:inline-size]">
-          <p
-            aria-hidden
-            className="m-0 select-none whitespace-nowrap font-display text-[length:18.8cqi] font-extrabold uppercase leading-none tracking-[-0.02em] text-cream"
+          <FitDisplay
+            as="p" hidden
+            className="m-0 select-none whitespace-nowrap font-display [--display-size:18.8cqi] text-[length:calc(var(--display-size)*var(--display-fit,1))] font-extrabold uppercase leading-none tracking-[-0.02em] text-cream"
           >
             Mironovich
-          </p>
+          </FitDisplay>
         </div>
       </div>
     </footer>

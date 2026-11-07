@@ -21,13 +21,12 @@ export default function About() {
                 управление со стороны руководителя.
               </p>
               <p className="m-0 max-w-[56ch] text-pretty text-[16px] leading-[1.7] text-cream/80">
-                Поэтому сначала разбираюсь, как работает процесс и что мешает им управлять, и только потом выбираю
-                технологию.
+                Сегодня соединяю этот опыт с разработкой: помогаю выбрать решение, оценить исполнителей и вести продукт после запуска. Могу реализовать задачу сам или организовать работу специалистов.
               </p>
             </div>
 
             <p className="m-0 max-w-[34ch] text-balance border-l-2 border-signal pl-5 text-[clamp(19px,3vw,24px)] leading-[1.35] tracking-[-0.015em] text-cream">
-              Сначала процесс. Потом инструмент.
+              Сначала задача бизнеса. Потом технология.
             </p>
 
             <div className="flex flex-wrap items-center justify-between gap-4 border-t border-cream/15 pt-6">

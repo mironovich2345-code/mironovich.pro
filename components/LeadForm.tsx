@@ -8,6 +8,7 @@ import ContactLink from "./ContactLink";
 import { contacts } from "@/config/contacts";
 import { track, trackFormStartOnce } from "@/lib/analytics";
 import { getAttribution } from "@/lib/attribution";
+import type { ToolContext } from "@/lib/tools/context";
 import {
   HONEYPOT_FIELD, LEAD_DIRECTIONS, LEAD_LIMITS, leadFormExtended, validContact, type LeadDirection,
 } from "@/lib/lead";
@@ -27,18 +28,18 @@ const errorId = (f: Field) => "lead-" + f + "-error";
 const describedBy = (f: Field, errors: Errors, extra?: string) =>
   [errors[f] ? errorId(f) : "", extra ?? ""].filter(Boolean).join(" ") || undefined;
 
-export default function LeadForm({ defaultDirection }: { defaultDirection?: LeadDirection }) {
+export default function LeadForm({ defaultDirection, toolContext, defaultTask = "" }: { defaultDirection?: LeadDirection; toolContext?: ToolContext; defaultTask?: string }) {
   const [name, setName] = useState("");
   const [company, setCompany] = useState("");
   const [phone, setPhone] = useState("");
   const [direction, setDirection] = useState<LeadDirection | "">(defaultDirection ?? "");
-  const [task, setTask] = useState("");
+  const [task, setTask] = useState(defaultTask);
   const [consent, setConsent] = useState(false);
   const [trap, setTrap] = useState(""); // honeypot — must stay empty
   const [errors, setErrors] = useState<Errors>({});
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
-  const [failed, setFailed] = useState(false);
+  const [failed, setFailed] = useState<"delivery" | "rate_limited" | null>(null);
   const [dialog, setDialog] = useState(false);
 
   const refs = useRef<Partial<Record<Field, HTMLElement | null>>>({});
@@ -74,13 +75,14 @@ export default function LeadForm({ defaultDirection }: { defaultDirection?: Lead
     }
 
     setSending(true);
-    setFailed(false);
+    setFailed(null);
     try {
       const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name, phone, task, consent,
+          ...(toolContext ? { toolContext } : {}),
           ...(leadFormExtended ? { company, direction } : {}),
           [HONEYPOT_FIELD]: trap,
           // normalised against known routes on the server
@@ -97,11 +99,11 @@ export default function LeadForm({ defaultDirection }: { defaultDirection?: Lead
         track("lead_submit_success", { utm_source: a.utm_source, utm_medium: a.utm_medium, utm_campaign: a.utm_campaign });
         requestAnimationFrame(() => successRef.current?.focus());
       } else {
-        setFailed(true);
+        setFailed(res.status === 429 ? "rate_limited" : "delivery");
         track("lead_submit_error", { reason: "delivery" });
       }
     } catch {
-      setFailed(true);
+      setFailed("delivery");
       track("lead_submit_error", { reason: "network" });
     } finally {
       setSending(false);
@@ -260,7 +262,9 @@ export default function LeadForm({ defaultDirection }: { defaultDirection?: Lead
 
         {failed && (
           <div role="alert" className="border border-signal/50 p-4 text-[14px] leading-[1.55] text-cream">
-            Не получилось доставить заявку. Попробуйте ещё раз или напишите напрямую:{" "}
+            {failed === "rate_limited"
+              ? "Слишком много попыток. Подождите минуту и попробуйте снова или напишите напрямую:"
+              : "Не получилось доставить заявку. Попробуйте ещё раз или напишите напрямую:"}{" "}
             <ContactLink contact={contacts.telegram} location="form_fallback" className="text-signal underline underline-offset-[3px]">
               {contacts.telegram.text}
             </ContactLink>

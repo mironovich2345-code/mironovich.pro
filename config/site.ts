@@ -1,5 +1,6 @@
 import { contactList, contacts, sameAs } from "./contacts";
 import { services } from "./services";
+import { toolsNavigation } from "./tools";
 import { projects } from "@/content/projects";
 
 export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://mironovich.pro").replace(/\/$/, "");
@@ -7,12 +8,12 @@ export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://mironovich.
 export const site = {
   name: "MIRONOVICH",
   url: siteUrl,
-  tagline: "Автоматизация · Приложения · Обучение",
+  tagline: "Внешний CTO · Разработка · Сопровождение",
   person: "Данил Миронович",
-  jobTitle: "специалист по автоматизации бизнес-процессов и разработке цифровых решений",
-  title: "Автоматизация процессов и приложения для бизнеса — MIRONOVICH",
+  jobTitle: "внешний технологический директор и технический партнёр бизнеса",
+  title: "Внешний технологический директор для бизнеса — MIRONOVICH",
   description:
-    "Автоматизирую отчётность, интеграции CRM и ручные операции, разрабатываю внутренние приложения и системы обучения сотрудников. Данил Миронович.",
+    "Помогаю бизнесу выбирать, внедрять и сопровождать технологии. Внешний CTO, разработка, техническое сопровождение и экспертиза. Данил Миронович.",
   // owner-confirmed, see config/contacts.ts
   instagram: contacts.instagram.href,
   telegram: contacts.telegram.href,
@@ -32,8 +33,9 @@ export const serviceLinks: NavLink[] = services.map((s) => ({ href: s.href, labe
 /** Top-level links after the «Услуги» group. */
 export const navLinks: NavLink[] = [
   ...(projectsPublished ? [{ href: "/projects", label: "Проекты" }] : []),
-  { href: "/about", label: "Обо мне" },
+  ...(toolsNavigation.enabled ? [{ href: toolsNavigation.href, label: toolsNavigation.label }] : []),
   { href: "/blog", label: "Блог" },
+  { href: "/about", label: "Обо мне" },
 ];
 
 /** Where «Обсудить задачу» leads from pages without their own form section. */

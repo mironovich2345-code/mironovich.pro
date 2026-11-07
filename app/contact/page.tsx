@@ -10,7 +10,7 @@ import { breadcrumbList, pageMetadata } from "@/lib/seo";
 
 const title = "Контакты: обсудить задачу — MIRONOVICH";
 const description =
-  "Опишите задачу по автоматизации, разработке приложения или обучению сотрудников. Первичное обсуждение бесплатно: варианты решения и следующие шаги.";
+  "Обсудите техническое управление, разработку, сопровождение продукта или экспертизу с Данилом Мироновичем. Первичное обсуждение бесплатно.";
 
 export const metadata: Metadata = pageMetadata({ title, description, path: "/contact" });
 
@@ -28,7 +28,7 @@ const steps = [
   },
   {
     title: "Дальше — по вашему решению",
-    body: "Если нужна глубина — платный аудит процессов. Разработка и внедрение оцениваются отдельно.",
+    body: "Если нужен подробный разбор — согласуем отдельный этап. Реализация и регулярное сопровождение оцениваются отдельно.",
   },
 ];
 
@@ -68,7 +68,7 @@ export default function ContactPage() {
                   Обсудить задачу<span className="text-signal">.</span>
                 </h1>
                 <p className="m-0 max-w-[40ch] text-pretty text-[17px] leading-[1.55] text-cream/80">
-                  Расскажите, что хотите упростить или автоматизировать. Первичное обсуждение — бесплатно.
+                  Расскажите о продукте, идее или технической проблеме. Первичное обсуждение — бесплатно.
                 </p>
 
                 {confirmedContacts.length > 0 && (
@@ -134,7 +134,7 @@ export default function ContactPage() {
               <h2 className="m-0 mb-6 text-[12px] font-normal uppercase tracking-[0.18em] text-stone">Кто будет разбирать задачу</h2>
               <p className="m-0 mb-5 max-w-[46ch] text-pretty text-[16px] leading-[1.6] text-cream/80">
                 {site.person}. Пришёл в разработку из операционного управления бизнесом — поэтому смотрю на задачу и
-                как руководитель, и как разработчик.
+                как руководитель, и как разработчик. Помогаю выбрать решение, организовать работу и сопровождать продукт.
               </p>
               <Link
                 href="/about"
@@ -162,7 +162,7 @@ function ContactList({ tone = "dark" }: { tone?: "dark" | "light" }) {
       <ul className="m-0 flex list-none flex-col gap-1 p-0">
         {confirmedContacts.map((c) => (
           <li key={c.channel}>
-            <ContactLink contact={c} location="contact_page" className={"inline-flex min-h-[44px] items-center gap-3 text-[16px] transition-colors " + link}>
+            <ContactLink contact={c} location="contact_page" className={"inline-flex max-w-full min-h-[44px] flex-wrap items-center gap-x-3 break-all text-[16px] transition-colors " + link}>
               <span className="text-[12px] uppercase tracking-[0.14em] opacity-70">{c.label}</span>
               {c.text}
             </ContactLink>

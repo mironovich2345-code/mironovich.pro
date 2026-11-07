@@ -9,9 +9,9 @@ import { contactHref, site, siteUrl, socialProfiles } from "@/config/site";
 import { jsonLd } from "@/lib/jsonld";
 import { breadcrumbList, pageMetadata } from "@/lib/seo";
 
-const title = "Данил Миронович — автоматизация и разработка для бизнеса";
+const title = "Данил Миронович — внешний технологический директор";
 const description =
-  "От операционного управления к разработке: автоматизирую процессы и создаю цифровые инструменты, понимая задачи руководителя изнутри.";
+  "Внешний CTO и технический партнёр бизнеса. Управленческий опыт, разработка, выбор подрядчиков и сопровождение IT-продуктов.";
 
 export const metadata: Metadata = pageMetadata({ title, description, path: "/about", type: "profile" });
 
@@ -85,7 +85,7 @@ export default function AboutPage() {
         mainEntityOfPage: url,
         jobTitle: site.jobTitle,
         description:
-          "Пришёл в разработку из операционного управления: прошёл путь от ночного администратора до регионального директора сети фитнес-клубов. Занимается автоматизацией бизнес-процессов, разработкой приложений для бизнеса и системами обучения сотрудников.",
+          "Пришёл в разработку из операционного управления: прошёл путь от ночного администратора до регионального директора сети фитнес-клубов. Помогает бизнесу выбирать технологии, управлять разработкой и сопровождать продукты.",
         image: [siteUrl + "/images/danil-mironovich-editorial.webp", siteUrl + "/images/danil-mironovich-main.webp"],
         knowsAbout: [
           "автоматизация бизнес-процессов",
@@ -113,7 +113,7 @@ export default function AboutPage() {
                 Данил Миронович<span className="text-signal">.</span>
               </h1>
               <p className="m-0 max-w-[30ch] text-balance text-[clamp(18px,2.6vw,24px)] leading-[1.35] tracking-[-0.01em] text-cream/80">
-                Автоматизация и разработка цифровых решений для бизнеса.
+                Внешний технологический директор. Разработка и сопровождение продуктов для бизнеса.
               </p>
               <div className="flex flex-col gap-2.5 min-[480px]:flex-row min-[480px]:items-center min-[480px]:gap-6">
                 <CtaLink href={contactHref} location="about" className={ctaClass}>
@@ -206,13 +206,13 @@ export default function AboutPage() {
         {/* 04 — what I do now */}
         <section className="bg-cream px-[22px] py-16 min-[560px]:py-24">
           <div className="mx-auto max-w-[1080px]">
-            <SectionLabel index="03" label="Сейчас" note="Три направления" tone="light" />
+            <SectionLabel index="03" label="Сейчас" note="Четыре направления" tone="light" />
             <h2 className="m-0 mb-12 max-w-[18ch] text-balance font-display text-[clamp(30px,5.4vw,52px)] font-extrabold uppercase leading-[1.03] tracking-[-0.02em] text-graphite min-[560px]:mb-14">
               Чем занимаюсь сейчас
             </h2>
-            <ul className="m-0 grid list-none grid-cols-1 border-t border-graphite/15 p-0 min-[900px]:grid-cols-3">
+            <ul className="m-0 grid list-none grid-cols-1 border-t border-graphite/15 p-0 min-[900px]:grid-cols-2">
               {services.map((s, i) => (
-                <li key={s.slug} className={"border-b border-graphite/15 min-[900px]:border-b-0 " + (i > 0 ? "min-[900px]:border-l min-[900px]:pl-8 " : "") + (i < 2 ? "min-[900px]:pr-8" : "")}>
+                <li key={s.slug} className={"border-b border-graphite/15 " + (i % 2 === 1 ? "min-[900px]:border-l min-[900px]:pl-8 " : "") + (i % 2 === 0 ? "min-[900px]:pr-8" : "")}>
                   <Link href={s.href} className="group flex h-full flex-col gap-3 py-8">
                     <span className="font-display text-[clamp(36px,4vw,52px)] font-extrabold leading-none text-signal">{s.index}</span>
                     <h3 className="m-0 text-balance font-display text-[clamp(22px,2.6vw,28px)] font-extrabold uppercase leading-[1.08] text-graphite transition-colors group-hover:text-maroon">

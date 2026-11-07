@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
-import { services } from "@/config/services";
+import { tools } from "@/config/tools";
+import { allServices } from "@/config/services";
 import { projectsPublished, siteUrl } from "@/config/site";
 import { projectsWithCase } from "@/content/projects";
 import { MIN_POSTS_TO_INDEX_CATEGORY, categoryHref } from "@/config/blog";
@@ -13,8 +14,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     { url: siteUrl + "/", changeFrequency: "monthly", priority: 1 },
+    { url: siteUrl + "/tools", changeFrequency: "monthly", priority: 0.8 },
+    ...tools.filter((t) => t.status === "available").map((t) => ({ url: siteUrl + t.href, changeFrequency: "monthly" as const, priority: 0.8 })),
     { url: siteUrl + "/services", changeFrequency: "monthly", priority: 0.8 },
-    ...services.map((s) => ({ url: siteUrl + s.href, changeFrequency: "monthly" as const, priority: 0.9 })),
+    ...allServices.map((s) => ({ url: siteUrl + s.href, changeFrequency: "monthly" as const, priority: 0.9 })),
     // /projects only once it has confirmed entries — an empty portfolio is noindex
     ...(projectsPublished ? [{ url: siteUrl + "/projects", changeFrequency: "monthly" as const, priority: 0.7 }] : []),
     ...projectsWithCase().map((p) => ({
