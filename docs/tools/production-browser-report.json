@@ -1,0 +1,45 @@
+{
+  "viewports": [
+    {
+      "width": 320,
+      "page": "multiple-result",
+      "overflow": false
+    },
+    {
+      "width": 375,
+      "page": "multiple-result",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "page": "multiple-result",
+      "overflow": false
+    },
+    {
+      "width": 1024,
+      "page": "multiple-result",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "page": "multiple-result",
+      "overflow": false
+    }
+  ],
+  "scenarios": [
+    "Beginner: keyboard selection, result without systems, wages or API knowledge",
+    "Manager: presets, invalid count, independent totals, session transfer, consented lead payload (delivery mocked)",
+    "AI-first: notice/action, no free text or financial data sent, server disabled fallback preserves base result"
+  ],
+  "accessibility": [
+    {
+      "state": "beginner-result",
+      "violations": []
+    },
+    {
+      "state": "ai-result",
+      "violations": []
+    }
+  ],
+  "errors": []
+}

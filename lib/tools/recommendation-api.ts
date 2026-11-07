@@ -37,7 +37,11 @@ export function createRecommendationHandler({env=process.env,fetcher=fetch,now=(
   // The global limiter also covers malformed/disabled requests; no attacker-controlled IP is trusted by default.
   if(limited(req.headers))return reply(429,"Слишком много запросов. Базовый разбор остаётся доступным.");
   const origin=req.headers.get("origin");
-  if(!origin||origin!==new URL(req.url).origin||req.headers.get("sec-fetch-site")==="cross-site")return reply(403,"Запрос должен быть отправлен с сайта.");
+  let sameHost=false;
+  try { const source=new URL(origin??"");sameHost=["https:","http:"].includes(source.protocol)&&source.host===(req.headers.get("host")??new URL(req.url).host); } catch { /* invalid origin */ }
+  // Next/edge may expose an internal URL or HTTP protocol. Match the actual Host,
+  // as the existing lead endpoint does; never trust X-Forwarded-Host from a client.
+  if(!sameHost||req.headers.get("sec-fetch-site")==="cross-site")return reply(403,"Запрос должен быть отправлен с сайта.");
   if(!req.headers.get("content-type")?.toLowerCase().startsWith("application/json"))return reply(415,"Нужен JSON-запрос.");
   const body=await readLeadRequest(req,aiRecommendationsPolicy.maxRequestCharacters);
   if(!body.ok)return reply(body.status,"Некорректный или слишком большой запрос.");

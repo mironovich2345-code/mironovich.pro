@@ -70,3 +70,8 @@ export default function AutomationResult({ input, diagnosis, labor, description,
     <button type="button" className="mt-3 min-h-[48px] text-sm underline" onClick={edit}>Изменить ответы</button>
   </section>;
 }
+
+/** v2 cards deliberately contain catalog text, never model-authored financial claims. */
+export function GuidedResultCards({ cards }: { cards: ReturnType<typeof import("@/lib/tools/catalog").recommendationCards> }) {
+  return <div className="mt-7 grid gap-4 md:grid-cols-2">{cards.map((card,index)=><article key={card.task} className="min-w-0 break-words border border-cream/20 p-5"><p className="m-0 text-xs uppercase tracking-wider text-signal">{String(index+1).padStart(2,"0")} / {card.type}</p><h3 className="mt-2 text-xl font-semibold">{card.title}</h3><p className="text-sm text-stone">{card.problem}</p><p className="text-base leading-relaxed">{card.solution}</p><dl className="space-y-3 text-sm leading-relaxed">{[["Почему этот вариант",card.reason],["Что понадобится",card.requirements],["Что проверить",card.checks],["Как измерить эффект",card.measure],["Контроль",card.human]].map(([label,value])=><div key={label}><dt className="text-stone">{label}</dt><dd className="m-0">{value}</dd></div>)}</dl></article>)}</div>;
+}

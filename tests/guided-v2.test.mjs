@@ -84,3 +84,10 @@ test("only two external operations may be in flight",async()=>{
  const first=h(request()),second=h(request());await new Promise(resolve=>setTimeout(resolve,10));
  assert.equal((await h(request())).status,429);assert.equal((await first).status,502);assert.equal((await second).status,502);
 });
+
+test("same-host origin survives Next internal URL/proxy protocol without trusting forwarded host",async()=>{
+ const h=createRecommendationHandler({env:{}});
+ const internal=new Request('http://localhost:3000/api/tools/recommendation',{method:'POST',headers:{host:'example.test',origin:'https://example.test','content-type':'application/json'},body:JSON.stringify(body)});
+ assert.equal((await h(internal)).status,503);
+ const forged=request(body,{origin:'https://evil.test','x-forwarded-host':'evil.test'});assert.equal((await h(forged)).status,403);
+});
