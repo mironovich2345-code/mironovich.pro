@@ -91,3 +91,12 @@ test("same-host origin survives Next internal URL/proxy protocol without trustin
  assert.equal((await h(internal)).status,503);
  const forged=request(body,{origin:'https://evil.test','x-forwarded-host':'evil.test'});assert.equal((await h(forged)).status,403);
 });
+
+test("every selected process has a distinct practical first step without invented economics",()=>{
+ const tasks=["reporting","transfer","crm","documents","answers","training","control","calls","other"];
+ const cards=recommendationCards({...initialGuided(),tasks});
+ assert.equal(new Set(cards.map(c=>c.firstStep)).size,tasks.length);
+ for(const card of cards){assert.ok(card.firstStep.length>30);assert.doesNotMatch(card.firstStep,/[₽%]|экономи[яю]|окупаемость/i);}
+ assert.match(cards.find(c=>c.task==="calls").firstStep,/основание записи/);
+ assert.match(cards.find(c=>c.task==="crm").firstStep,/недавнюю заявку/);
+});

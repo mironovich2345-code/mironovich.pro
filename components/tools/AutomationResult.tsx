@@ -71,7 +71,28 @@ export default function AutomationResult({ input, diagnosis, labor, description,
   </section>;
 }
 
-/** v2 cards deliberately contain catalog text, never model-authored financial claims. */
+/** Only task-specific advice is repeated per process; shared pilot guidance lives once below. */
 export function GuidedResultCards({ cards }: { cards: ReturnType<typeof import("@/lib/tools/catalog").recommendationCards> }) {
-  return <div className="mt-7 grid gap-4 md:grid-cols-2">{cards.map((card,index)=><article key={card.task} className="min-w-0 break-words border border-cream/20 p-5"><p className="m-0 text-xs uppercase tracking-wider text-signal">{String(index+1).padStart(2,"0")} / {card.type}</p><h3 className="mt-2 text-xl font-semibold">{card.title}</h3><p className="text-sm text-stone">{card.problem}</p><p className="text-base leading-relaxed">{card.solution}</p><dl className="space-y-3 text-sm leading-relaxed">{[["Почему этот вариант",card.reason],["Что понадобится",card.requirements],["Что проверить",card.checks],["Как измерить эффект",card.measure],["Контроль",card.human]].map(([label,value])=><div key={label}><dt className="text-stone">{label}</dt><dd className="m-0">{value}</dd></div>)}</dl></article>)}</div>;
+  const [primary, ...others] = cards;
+  if (!primary) return null;
+  const content = (card: typeof primary, first: boolean) => <article aria-label={first ? "Первый процесс" : card.title} className="min-w-0 break-words">
+    <p className="mb-2 text-xs uppercase tracking-wider text-signal">{first ? "Начните с этого процесса" : "Ещё одна задача"} · {card.type}</p>
+    <h3 className="m-0 text-2xl font-semibold leading-snug">{card.title}</h3>
+    <p className="mb-2 mt-4 text-sm leading-relaxed text-stone">{card.problem}</p>
+    <p className="m-0 text-base leading-relaxed">{card.solution}</p>
+    <div className="mt-5 border-l-2 border-signal pl-4">
+      <p className="mb-1 text-sm font-semibold">Первый практический шаг</p>
+      <p className="m-0 text-sm leading-relaxed">{card.firstStep}</p>
+    </div>
+    <ResultSection title="Что проверить и как оценить результат">
+      <dl className="space-y-4"><div><dt className="font-medium text-cream">Перед запуском</dt><dd className="m-0 mt-1">{card.checks}</dd></div><div><dt className="font-medium text-cream">После пилота</dt><dd className="m-0 mt-1">{card.measure}</dd></div></dl>
+    </ResultSection>
+  </article>;
+  return <div className="mt-6">
+    {content(primary, true)}
+    {others.length > 0 && <details className="mt-5 border-y border-cream/20">
+      <summary className="min-h-[56px] cursor-pointer py-4 text-base font-medium">Другие выбранные задачи ({others.length})</summary>
+      <div className="grid gap-7 pb-5 md:grid-cols-2">{others.map(card => <div key={card.task}>{content(card, false)}</div>)}</div>
+    </details>}
+  </div>;
 }

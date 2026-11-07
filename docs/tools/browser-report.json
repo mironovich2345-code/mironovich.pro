@@ -77,7 +77,7 @@
     }
   ],
   "scenarios": [
-    "Beginner: keyboard selection, result without systems, wages or API knowledge",
+    "Beginner: practical first step visible at 375x812, heading without red focus box, keyboard focus preserved on summaries",
     "Manager: presets, invalid count, independent totals, session transfer, consented lead payload (delivery mocked)",
     "AI-first: notice/action, no free text or financial data sent, server disabled fallback preserves base result"
   ],

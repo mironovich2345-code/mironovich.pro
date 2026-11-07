@@ -13,6 +13,17 @@ export const catalog:Record<Task,Entry>={
  calls:{problem:"Разговоры приходится переслушивать для разбора качества.",solution:"При наличии законного основания протестируйте расшифровку и поиск тем; выводы проверяйте по записи, решения о людях оставляйте человеку.",allowed:["service","ai","wait"],check:"Основание записи, уведомления участников, доступы, хранение и точность русского распознавания.",measure:"Точность транскрипта и оценок на размеченной выборке, время проверки и ложные выводы."},
  other:{problem:"Состав и границы задачи пока не определены.",solution:"Опишите вход, результат, исполнителя и типичный пример. До проверки процесса разработку не заказывать.",allowed:["wait"],check:"Повторяемость, правила, исключения, чувствительность данных и права на их использование.",measure:"Замерьте время и ошибки на нескольких реальных выполнениях как исходную точку."},
 };
+export const firstSteps: Record<Task, string> = {
+ reporting: "Откройте последний отчёт и выпишите, откуда берётся каждый показатель.",
+ transfer: "Проследите путь одной записи: откуда её копируют, куда вставляют и какие поля переносят.",
+ crm: "Разберите недавнюю заявку: где она появилась, кто её получил и что произошло дальше.",
+ documents: "Возьмите типовой документ без реквизитов и отметьте поля, которые заполняются вручную.",
+ answers: "Соберите частые вопросы клиентов и согласуйте ответы на них с ответственным сотрудником.",
+ training: "Попросите наставника перечислить задания новичка и материалы, которые он выдаёт повторно.",
+ control: "Выберите одно типичное отклонение и договоритесь, кто должен получить уведомление.",
+ calls: "До работы с записями проверьте основание записи, уведомление участников и права доступа.",
+ other: "Опишите один пример: что поступает на вход, что делает сотрудник и какой результат нужен.",
+};
 const reasons:Record<Approach,string>={service:"Сначала проверьте стандартные возможности уже используемой или готовой программы.",integration:"Подходит при передаче между системами; доступный способ обмена ещё нужно подтвердить.",rules:"Повторяемые условия можно описать правилами, без языковой модели.",ai:"Полезность смысловой обработки — гипотеза для пилота, а не гарантия. Сначала сравните с правилами и готовым сервисом.",wait:"Сначала подтвердите необходимость, права и границы задачи."};
 export function baseApproach(task:Task,input:GuidedInput):Approach {
  if(task==="other")return "wait";
@@ -22,6 +33,6 @@ export function baseApproach(task:Task,input:GuidedInput):Approach {
 }
 export function recommendationCards(input:GuidedInput,choices?:{task:Task;approach:Approach}[]) {
  const ordered=choices??input.tasks.map(task=>({task,approach:baseApproach(task,input)}));
- return ordered.map(({task,approach})=>({task,title:taskLabels[task],problem:catalog[task].problem,solution:catalog[task].solution,type:approaches[approach],reason:reasons[approach],requirements:"Владелец процесса, пример без персональных данных и критерии приемки пилота.",checks:catalog[task].check,measure:catalog[task].measure,human:input.impact!=="low"||["documents","answers","calls"].includes(task)?"Результат подтверждает человек. Рискованные действия не выполняются автоматически.":"Назначьте ответственного и способ отмены ошибки."}));
+ return ordered.map(({task,approach})=>({task,title:taskLabels[task],problem:catalog[task].problem,solution:catalog[task].solution,firstStep:firstSteps[task],type:approaches[approach],reason:reasons[approach],requirements:"Владелец процесса, пример без персональных данных и критерии приемки пилота.",checks:catalog[task].check,measure:catalog[task].measure,human:input.impact!=="low"||["documents","answers","calls"].includes(task)?"Результат подтверждает человек. Рискованные действия не выполняются автоматически.":"Назначьте ответственного и способ отмены ошибки."}));
 }
 export const startSteps=["Выберите один процесс и назначьте ответственного.","Замерьте фактическое время и ошибки на небольшой выборке.","Проверьте готовые функции программ и возможность обмена.","Проведите пилот с проверкой человеком, затем сравните результат с исходными замерами."];
