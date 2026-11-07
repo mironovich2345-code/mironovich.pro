@@ -18,6 +18,10 @@ body {
 /* signal red keeps ≥3:1 against both graphite (4.0) and cream (4.2) */
 :focus-visible { outline: 2px solid #D92D2D; outline-offset: 3px; }
 
+/* A programmatically focused result heading is a reading target, not a control.
+ * Keep the global visible focus on links, buttons, inputs and disclosure summaries. */
+.tool-result-heading:focus { outline: none; }
+
 /*
  * Signal red as TEXT. The brand red #D92D2D stays for fills, borders and the focus
  * ring, but as small text it falls short of WCAG AA (4.0:1 on graphite, 4.2:1 on

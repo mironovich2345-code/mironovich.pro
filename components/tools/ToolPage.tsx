@@ -18,7 +18,7 @@ export default function ToolPage({ path, title, description, faq, children }: { 
       <div className="mx-auto max-w-[1080px]">
         <Breadcrumbs items={crumbs} />
         <p className="mb-5 mt-8 text-[11px] uppercase tracking-[0.18em] text-signal">MIRONOVICH / Бесплатные инструменты</p>
-        <h1 className="m-0 max-w-[24ch] text-balance font-display text-[clamp(32px,5.5vw,72px)] font-extrabold uppercase leading-[1.02] tracking-[-0.02em] text-cream">{title}<span className="text-signal">.</span></h1>
+        <h1 className="m-0 max-w-[24ch] text-balance font-display text-[clamp(32px,5.5vw,72px)] font-extrabold uppercase leading-[1.02] tracking-[-0.02em] text-cream">{title}{!/[?!…]$/.test(title) && <span className="text-signal">.</span>}</h1>
         <p className="mb-0 mt-6 max-w-[65ch] text-pretty text-[17px] leading-[1.65] text-cream/80">{description}</p>
       </div>
     </section>

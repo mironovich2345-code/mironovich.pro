@@ -1,0 +1,96 @@
+{
+  "viewports": [
+    {
+      "width": 320,
+      "page": "labor",
+      "overflow": false
+    },
+    {
+      "width": 320,
+      "page": "automation",
+      "overflow": false
+    },
+    {
+      "width": 375,
+      "page": "labor",
+      "overflow": false
+    },
+    {
+      "width": 375,
+      "page": "automation",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "page": "labor",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "page": "automation",
+      "overflow": false
+    },
+    {
+      "width": 1024,
+      "page": "labor",
+      "overflow": false
+    },
+    {
+      "width": 1024,
+      "page": "automation",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "page": "labor",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "page": "automation",
+      "overflow": false
+    },
+    {
+      "width": 320,
+      "page": "multiple-result",
+      "overflow": false
+    },
+    {
+      "width": 375,
+      "page": "multiple-result",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "page": "multiple-result",
+      "overflow": false
+    },
+    {
+      "width": 1024,
+      "page": "multiple-result",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "page": "multiple-result",
+      "overflow": false
+    }
+  ],
+  "scenarios": [
+    "Beginner: practical first step visible at 375x812, heading without red focus box, keyboard focus preserved on summaries",
+    "Manager: presets, invalid count, independent totals, session transfer, consented lead payload (delivery mocked)",
+    "Local-only: description and base result work, OpenAI controls absent from initial/result DOM on both calculators, zero AI requests"
+  ],
+  "accessibility": [
+    {
+      "state": "beginner-result",
+      "violations": []
+    },
+    {
+      "state": "local-only-result",
+      "violations": []
+    }
+  ],
+  "errors": [],
+  "aiRequests": 0
+}
