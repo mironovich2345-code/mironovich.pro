@@ -1,3 +1,5 @@
+import { recommendationCards } from "./catalog.ts";
+import { parseGuided, calculateGuided, GUIDED_VERSION, taskLabels, type GuidedInput } from "./guided.ts";
 import { applyDiagnosis, parseDiagnosis, errorImpacts, type DiagnosisInput } from "./diagnosis.ts";
 import { buildActionPlan } from "./action-plan.ts";
 import { automationModel } from "../../config/automation-model.ts";
@@ -6,6 +8,7 @@ import { parseAutomationInput, calculateAutomation, processTypes, type Automatio
 import { record } from "./input.ts";
 
 export type ToolContext =
+  | { tool: "labor-cost" | "automation-cost"; version: typeof GUIDED_VERSION; input: GuidedInput; guided: true }
   | { tool: "labor-cost"; version: string; input: LaborInput }
   | { tool: "automation-cost"; version: string; input: AutomationInput; labor?: LaborInput; diagnosis?: DiagnosisInput };
 
@@ -13,6 +16,10 @@ export type ToolContext =
 export function parseToolContext(raw: unknown): ToolContext | null {
   const src = record(raw);
   if (!src) return null;
+  if ((src.tool === "labor-cost" || src.tool === "automation-cost") && src.version === GUIDED_VERSION) {
+    const p=parseGuided(src.input);
+    return p ? { tool:src.tool,version:GUIDED_VERSION,input:p,guided:true } : null;
+  }
   if (src.tool === "labor-cost" && src.version === LABOR_VERSION) {
     const p = parseLaborInput(src.input);
     return p.ok ? { tool: "labor-cost", version: LABOR_VERSION, input: p.value } : null;
@@ -31,6 +38,15 @@ export function parseToolContext(raw: unknown): ToolContext | null {
 
 /** Called by the API; all results are recalculated using the current server model. */
 export function describeToolContext(context: ToolContext): string {
+  if ("guided" in context) {
+    const r=calculateGuided(context.input);
+    return `Разбор процессов · ${GUIDED_VERSION} · пересчитано сервером
+Сотрудников: ${context.input.employees}.
+${r.rows.map(row=>`${taskLabels[row.task]}: ${row.hours === null ? "время не измерено" : row.hours+" ч/мес"}; ${row.cost===null?"стоимость неизвестна":row.cost+" ₽ стоимости времени"}`).join("\n")}
+Итог независимых процессов: ${r.totalHours ?? "не сводится"} ч. Высвобождение времени — после пилота; денежная экономия не подтверждена.
+Базовые подходы: ${recommendationCards(context.input).map(c=>`${c.title}: ${c.type}`).join("; ")}.`;
+
+  }
   if (context.tool === "labor-cost") {
     const i = context.input, r = calculateLabor(i);
     return `Ручной труд · ${LABOR_VERSION}\nПроцесс: повторяющиеся операции (название не передаётся).\nСотрудников: ${i.employees}; операций/день на человека: ${i.operationsPerDay}; минут/операцию: ${i.minutesPerOperation}; дней/мес: ${i.workingDays}; ₽/час: ${i.hourlyCost ?? "неизвестно"}; автоматизация: ${i.automationPercent}%.\nПересчитано сервером: ${r.monthlyHours} ч/мес; ${r.monthlyCost === null ? "стоимость неизвестна" : r.monthlyCost + " ₽/мес; " + r.annualCost + " ₽/год"}; потенциально ${r.freedHours} ч и ${r.freedTimeValue === null ? "неизвестная стоимость" : r.freedTimeValue + " ₽ стоимости"} времени/мес. Это не подтверждённая денежная экономия.`;
