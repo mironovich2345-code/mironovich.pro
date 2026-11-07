@@ -1,3 +1,4 @@
+import { applyDiagnosis, businessGoals, needsHumanControl, type DiagnosisInput } from "./diagnosis.ts";
 import { automationModel } from "../../config/automation-model.ts";
 import { numberField, record, round2, type Parsed } from "./input.ts";
 import { calculateLabor, type LaborInput } from "./labor.ts";
@@ -40,12 +41,25 @@ export function parseAutomationInput(raw: unknown): Parsed<AutomationInput> {
 }
 
 export type Approach = "Обычная автоматизация" | "Интеграция существующих систем" | "Готовый SaaS-сервис" | "Скрипт или небольшой внутренний инструмент" | "Разработка приложения" | "ИИ-автоматизация";
-export function recommend(i: AutomationInput): { approach: Approach; reason: string; usesAI: boolean } {
-  const aiUseful = i.ai && (i.documents || i.processType === "documents" || i.processType === "knowledge");
-  if (aiUseful) return { approach: "ИИ-автоматизация", usesAI: true, reason: "В задаче есть работа с неструктурированным текстом или знаниями, и вы указали потребность в ИИ. Гипотезу нужно проверить пилотом на ваших примерах." };
+export function recommend(input: AutomationInput, diagnosis?: DiagnosisInput): { approach: Approach; reason: string; usesAI: boolean } {
+  const i = diagnosis ? applyDiagnosis(input, diagnosis) : input;
+  if (diagnosis) {
+    const result = i.processType === "requests" && ["service", "sales"].includes(diagnosis.goal) && !i.interface && !i.ai
+      ? { approach: "Готовый SaaS-сервис" as const, usesAI: false, reason: "Для выбранной цели сначала сравните готовые средства работы с заявками в CRM и сервисах. Их пригодность и способы подключения нужно проверить до разработки." }
+      : recommendBase(i, true);
+    const goal = diagnosis.goal === "unknown" ? " Главную бизнес-цель ещё нужно уточнить." : ` Главный ориентир: ${businessGoals[diagnosis.goal].toLowerCase()}.`;
+    const control = needsHumanControl(diagnosis) ? " Сначала тестовый запуск с проверкой человеком; бесконтрольный запуск не рекомендуется." : i.humanReview ? " Результат пилота проверяет сотрудник." : " До запуска согласуйте проверку и возможность остановки.";
+    return { ...result, reason: result.reason + goal + control };
+  }
+  return recommendBase(i);
+}
+function recommendBase(i: AutomationInput, diagnosed = false): { approach: Approach; reason: string; usesAI: boolean } {
+  const aiUseful = i.ai && (diagnosed || i.documents || i.processType === "documents" || i.processType === "knowledge");
+  if (aiUseful) return { approach: "ИИ-автоматизация", usesAI: true, reason: "Выбрана смысловая обработка текста или ответов. Сначала проверьте качество ИИ на примерах вашего процесса; это гипотеза, а не подтверждение реализуемости." };
   const prefix = i.ai ? "Для описанного типа задачи сначала стоит проверить решение без ИИ. " : "";
-  if (i.interface || i.processType === "custom") return { approach: "Разработка приложения", usesAI: false, reason: prefix + "Указаны отдельный интерфейс или нестандартный процесс. Сначала сравните готовые продукты, затем уточните сценарии собственной разработки." };
-  if (i.integrations > 0 && i.api === "yes") return { approach: "Интеграция существующих систем", usesAI: false, reason: prefix + "Есть системы с API: начните с поддерживаемого обмена данными и правил обработки. ИИ для переноса данных не требуется." };
+  if (i.interface || (!diagnosed && i.processType === "custom")) return { approach: "Разработка приложения", usesAI: false, reason: prefix + "Указаны отдельный интерфейс или нестандартный процесс. Сначала сравните готовые продукты, затем уточните сценарии собственной разработки." };
+  if (diagnosed && i.processType === "custom") return { approach: "Обычная автоматизация", usesAI: false, reason: "Описание нестандартной задачи требует технической проверки. Начните с правил и одного проверяемого сценария; необходимость отдельного приложения пока не подтверждена." };
+  if (i.integrations > 0 && i.api === "yes") return { approach: "Интеграция существующих систем", usesAI: false, reason: prefix + "По вашему ответу обмен данными доступен. Проверьте документацию, права и ограничения конкретных программ; затем начните с одного обмена данными по правилам." };
   if (i.processType === "requests" || i.processType === "training" || (i.integrations > 0 && i.api !== "yes")) return { approach: "Готовый SaaS-сервис", usesAI: false, reason: prefix + "Сначала проверьте готовые сервисы и штатные коннекторы. Возможность связать ваши системы ещё не подтверждена; наличие подходящего продукта нужно проверить." };
   if (i.integrations === 0 && i.load === "low" && !i.documents) return { approach: "Скрипт или небольшой внутренний инструмент", usesAI: false, reason: prefix + "Небольшая нагрузка и отсутствие интеграций позволяют начать с одного локального сценария без отдельного приложения." };
   return { approach: "Обычная автоматизация", usesAI: false, reason: prefix + "Начните с правил, шаблонов и обработки данных. Потребность в ИИ из выбранных параметров не следует." };
@@ -54,11 +68,11 @@ export function recommend(i: AutomationInput): { approach: Approach; reason: str
 export type Range = readonly [number, number];
 type Model = typeof automationModel;
 export type ModelInput = Omit<Model, "approvedByOwner" | "publicPricingEnabled"> & { approvedByOwner: boolean; publicPricingEnabled: boolean };
-export function calculateAutomation(raw: AutomationInput, labor?: LaborInput, model: ModelInput = automationModel) {
+export function calculateAutomation(raw: AutomationInput, labor?: LaborInput, model: ModelInput = automationModel, diagnosis?: DiagnosisInput) {
   const parsed = parseAutomationInput(raw);
   if (!parsed.ok) throw new RangeError("Invalid automation input");
-  const i = parsed.value;
-  const recommendation = recommend(i);
+  const i = diagnosis ? applyDiagnosis(parsed.value, diagnosis) : parsed.value;
+  const recommendation = recommend(i, diagnosis);
   if (i.data === "unknown" || i.load === "unknown") return {
     version: model.version, recommendation, stages: [] as { name: string; hours: Range }[], hours: [0, 0] as Range,
     complexity: "Нужно уточнить", pricingEnabled: false, budget: null, recurring: [] as { name: string; range: Range | null }[], recurringTotal: null,
