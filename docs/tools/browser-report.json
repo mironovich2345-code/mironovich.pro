@@ -79,7 +79,7 @@
   "scenarios": [
     "Beginner: practical first step visible at 375x812, heading without red focus box, keyboard focus preserved on summaries",
     "Manager: presets, invalid count, independent totals, session transfer, consented lead payload (delivery mocked)",
-    "AI-first: notice/action, no free text or financial data sent, server disabled fallback preserves base result"
+    "Local-only: description and base result work, OpenAI controls absent from initial/result DOM on both calculators, zero AI requests"
   ],
   "accessibility": [
     {
@@ -87,9 +87,10 @@
       "violations": []
     },
     {
-      "state": "ai-result",
+      "state": "local-only-result",
       "violations": []
     }
   ],
-  "errors": []
+  "errors": [],
+  "aiRequests": 0
 }

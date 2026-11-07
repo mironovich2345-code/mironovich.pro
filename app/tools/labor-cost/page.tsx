@@ -3,6 +3,9 @@ import LaborCalculator from "@/components/tools/LaborCalculator";
 import ToolPage from "@/components/tools/ToolPage";
 import { pageMetadata } from "@/lib/seo";
 
+// Availability is evaluated per request, not frozen into a build-time/static page.
+export const dynamic = "force-dynamic";
+
 const title = "На что ваши сотрудники тратят время?";
 const description = "Выберите повторяющиеся задачи — подскажем, какие можно автоматизировать";
 export const metadata: Metadata = pageMetadata({ title: "Калькулятор стоимости ручного труда — MIRONOVICH", description, path: "/tools/labor-cost" });

@@ -1,3 +1,4 @@
+import { recommendationAvailable } from "./recommendation-availability.ts";
 import { parseGuided, type Task, type GuidedInput } from "./guided.ts";
 import { catalog, recommendationCards, type Approach } from "./catalog.ts";
 import { record } from "./input.ts";
@@ -48,7 +49,7 @@ export function createRecommendationHandler({env=process.env,fetcher=fetch,now=(
   const input=parseRecommendationRequest(body.body);
   if(!input)return reply(422,"Подтвердите уведомление и отправьте только выбранные обезличенные параметры.");
   if(env.AI_RECOMMENDATIONS_ENABLED!=="true"||!legalApproved)return reply(503,"ИИ-разбор пока выключен. Используйте базовую рекомендацию без внешней обработки.");
-  if(!env.OPENAI_API_KEY||!["gpt-5.4-mini", "gpt-5.4-mini-2026-03-17"].includes(env.OPENAI_MODEL??""))return reply(503,"ИИ-разбор не настроен. Базовая рекомендация доступна.");
+  if(!recommendationAvailable(env,legalApproved))return reply(503,"ИИ-разбор не настроен. Базовая рекомендация доступна.");
   const today=Math.floor(now()/86400000);if(day!==today){day=today;attempts=0;}
   if(attempts>=aiRecommendationsPolicy.maxDailyRequestsPerInstance||inFlight>=2)return reply(429,"Достигнут лимит ИИ-разборов. Вернитесь позже или используйте базовый разбор.");
   // Reserve before awaiting. No retries/refunds: failures and timeouts also consume the local budget.

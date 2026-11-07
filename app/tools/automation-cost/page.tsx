@@ -3,6 +3,9 @@ import AutomationCalculator from "@/components/tools/AutomationCalculator";
 import ToolPage from "@/components/tools/ToolPage";
 import { pageMetadata } from "@/lib/seo";
 
+// Availability is evaluated per request, not frozen into a build-time/static page.
+export const dynamic = "force-dynamic";
+
 const title = "Подберите способ автоматизации";
 const description = "Ответьте на несколько вопросов и узнайте, какое решение может подойти вашему бизнесу";
 export const metadata: Metadata = pageMetadata({ title: title + " — MIRONOVICH", description, path: "/tools/automation-cost" });

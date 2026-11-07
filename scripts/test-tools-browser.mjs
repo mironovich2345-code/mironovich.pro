@@ -11,18 +11,21 @@ const out=process.env.TOOLS_SCREENSHOTS_DIR||path.resolve(__dirname,'../docs/too
 fs.mkdirSync(out,{recursive:true});
 (async()=>{
  const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||(fs.existsSync('/usr/bin/chromium')?'/usr/bin/chromium':undefined),headless:true,args:['--no-sandbox']});
- const report={viewports:[],scenarios:[],accessibility:[],errors:[]};
+ const report={viewports:[],scenarios:[],accessibility:[],errors:[],aiRequests:0};
  const url=process.env.TOOLS_BASE_URL||'http://127.0.0.1:3000';
- async function pageFor(width){const context=await browser.newContext({viewport:{width,height:1000}});const p=await context.newPage();p.on('pageerror',e=>report.errors.push(e.message));return p;}
+ async function pageFor(width){const context=await browser.newContext({viewport:{width,height:1000}});const p=await context.newPage();p.on('pageerror',e=>report.errors.push(e.message));p.on('request',r=>{if(r.url().includes('/api/tools/recommendation'))report.aiRequests++;});return p;}
  async function visit(p,path){await p.goto(url+path,{waitUntil:'networkidle',timeout:120000});}
  async function overflow(p){return p.evaluate(()=>document.documentElement.scrollWidth>innerWidth);}
+ async function noOpenAiControls(page){
+  for(const locator of [page.getByText('Приоритеты с OpenAI',{exact:true}),page.locator('#ai-notice'),page.getByRole('checkbox',{name:/Я прочитал уведомление/}),page.getByRole('button',{name:'Уточнить приоритеты с OpenAI'})])if(await locator.count())throw Error('disabled OpenAI controls present in DOM');
+ }
  async function capture(page,file){await page.addStyleTag({content:'nextjs-portal {display:none !important}'});await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));await page.waitForTimeout(150);await page.screenshot({path:file,fullPage:true});console.log('captured',path.basename(file));}
  for(const width of (process.env.SKIP_VIEWPORTS?[]:[320,375,768,1024,1440])){
   const p=await pageFor(width);
   for(const [name,path] of [['labor','/tools/labor-cost'],['automation','/tools/automation-cost']]){
    await visit(p,path);
    if(await p.getByLabel('Точное число',{exact:true}).inputValue()!=='4')throw Error('default employees');
-   if(await overflow(p))throw Error('overflow '+width+' '+name);
+   if(await overflow(p))throw Error('overflow '+width+' '+name);await noOpenAiControls(p);
    await capture(p,`${out}/${name}-${width}.png`);
    report.viewports.push({width,page:name,overflow:false});
   }
@@ -45,7 +48,7 @@ fs.mkdirSync(out,{recursive:true});
  await p.keyboard.press('Tab');
  if(!await p.evaluate(()=>document.activeElement?.tagName==='SUMMARY'&&parseFloat(getComputedStyle(document.activeElement).outlineWidth)>=2))throw Error('keyboard focus missing on disclosure control');
  await title.focus();
- await capture(p,`${out}/result-beginner-375.png`);
+ await noOpenAiControls(p);await capture(p,`${out}/result-beginner-375.png`);
  const axe1=await new AxeBuilder({page:p}).analyze();if(axe1.violations.length)throw Error("Accessibility violations on beginner result");report.accessibility.push({state:'beginner-result',violations:axe1.violations.map(v=>({id:v.id,impact:v.impact,nodes:v.nodes.length}))});
  if(await overflow(p))throw Error('result overflow');report.scenarios.push('Beginner: practical first step visible at 375x812, heading without red focus box, keyboard focus preserved on summaries');
  await p.close();
@@ -72,7 +75,7 @@ fs.mkdirSync(out,{recursive:true});
  await others.click();
  await capture(q,`${out}/result-multiple-1440.png`);
  for(const width of [320,375,768,1024,1440]){await q.setViewportSize({width,height:1000});if(await overflow(q))throw Error('multiple result overflow '+width);const h=q.getByRole('heading',{name:'С чего начать',exact:true});if(!await h.evaluate(e=>e.getBoundingClientRect().height/parseFloat(getComputedStyle(e).lineHeight)<=2))throw Error('heading wraps excessively '+width);await capture(q,`${out}/result-multiple-${width}.png`);report.viewports.push({width,page:'multiple-result',overflow:false});}
- await q.setViewportSize({width:1440,height:1000});
+ await q.setViewportSize({width:1440,height:1000});await noOpenAiControls(q);
  await q.getByRole('link',{name:/Продолжить разбор автоматизации/}).click();await q.waitForURL('**/tools/automation-cost');await q.waitForLoadState('networkidle');await q.getByRole('heading',{name:'С чего начать'}).waitFor();await q.getByText('Время и стоимость — отдельно',{exact:true}).click();await q.getByText(/Итого по 2 измеренным независимым процессам: 6 ч/).waitFor();
  let lead;
  await q.route('**/api/lead',async route=>{lead=route.request().postDataJSON();await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,delivered:true})});});
@@ -83,23 +86,18 @@ fs.mkdirSync(out,{recursive:true});
  await q.locator('#lead-consent').check();await q.getByRole('button',{name:/Отправить/i}).click();await q.waitForTimeout(500);
  if(!lead||lead.toolContext.version!=='tools-2.0.0'||lead.toolContext.input.tasks.length!==2)throw Error('v2 lead context missing');
  report.scenarios.push('Manager: presets, invalid count, independent totals, session transfer, consented lead payload (delivery mocked)');await q.close();
- // Scenario 3: AI without money and safe disabled fallback.
- const a=await pageFor(375);await visit(a,'/tools/automation-cost');
+ // Scenario 3: disabled integration never advertises unavailable controls or sends a request.
+ const a=await pageFor(375);await visit(a,'/tools/automation-cost');await noOpenAiControls(a);
  await a.getByRole('checkbox',{name:/Ответы клиентам/}).check();await a.getByLabel('Опишите задачу своими словами').fill('Нужны ответы по базе знаний');
- await a.getByText('Приоритеты с OpenAI',{exact:true}).click();
- if(!await a.getByRole('button',{name:'Уточнить приоритеты с OpenAI'}).isDisabled())throw Error('AI consent gate');
- await a.getByRole('checkbox',{name:/Я прочитал уведомление/}).check();
- let aiRequest;a.on('request',r=>{if(r.url().endsWith('/api/tools/recommendation'))aiRequest=r.postDataJSON();});
- await a.getByRole('button',{name:'Уточнить приоритеты с OpenAI'}).click();
- await a.getByRole('heading',{name:'С чего начать'}).waitFor();
- // Result view owns a freshly mounted details element; reopen for status.
- await a.getByText('Приоритеты с OpenAI',{exact:true}).click();
- await a.getByText(/ИИ-разбор пока выключен/).waitFor();await a.getByText(/это не индивидуальная ИИ-диагностика/).waitFor();
- if(!aiRequest||JSON.stringify(aiRequest).includes('Нужны ответы')||'measurements' in aiRequest.input)throw Error('unnecessary data sent');
+ await a.getByRole('button',{name:'Узнать, что можно автоматизировать'}).click();
+ await a.getByRole('heading',{name:'С чего начать',exact:true}).waitFor();await noOpenAiControls(a);
+ await a.getByText('Ваше описание',{exact:true}).click();
+ await a.getByText('Нужны ответы по базе знаний',{exact:true}).waitFor();
  await capture(a,`${out}/result-ai-fallback-375.png`);
- const axe2=await new AxeBuilder({page:a}).analyze();if(axe2.violations.length)throw Error("Accessibility violations on AI result");report.accessibility.push({state:'ai-result',violations:axe2.violations.map(v=>({id:v.id,impact:v.impact,nodes:v.nodes.length}))});
- report.scenarios.push('AI-first: notice/action, no free text or financial data sent, server disabled fallback preserves base result');
+ const axe2=await new AxeBuilder({page:a}).analyze();if(axe2.violations.length)throw Error("Accessibility violations on local-only result");report.accessibility.push({state:'local-only-result',violations:axe2.violations.map(v=>({id:v.id,impact:v.impact,nodes:v.nodes.length}))});
+ report.scenarios.push('Local-only: description and base result work, OpenAI controls absent from initial/result DOM on both calculators, zero AI requests');
  await a.close();
+ if(report.aiRequests!==0)throw Error('disabled integration triggered a request');
  if(report.errors.length)throw Error('page errors '+report.errors.join('; '));
  fs.writeFileSync(process.env.TOOLS_BROWSER_REPORT||path.resolve(out,'../browser-report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));await browser.close();
 })().catch(e=>{console.error(e);process.exit(1)});
