@@ -7,6 +7,7 @@
 - [Дополнение для юридической проверки, не опубликовано](openai-privacy-review.md)
 - [Отчёт проверки и скриншоты](testing-v2.md)
 - [Версия без OpenAI и серверная доступность](availability-release.md)
+- [Индивидуальный ИИ-разбор: реализация, проверки и условия включения](process-analysis-release.md)
 - [Предложение индивидуального ИИ-разбора следующего этапа — не включено](individual-ai-next-stage.md)
 
 Формулы и валидация v2 — `lib/tools/guided.ts`; проверяемые рекомендации — `catalog.ts`; серверный Responses API — `recommendation-api.ts` и `/api/tools/recommendation`; code gate — `config/ai-recommendations.ts`. Сценарии UI объединены в GuidedCalculator, маршруты используют прежние LaborCalculator/AutomationCalculator. Старые числовые модели и Wizard сохранены для совместимости, но в новом публичном сценарии не вызываются.
