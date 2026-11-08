@@ -12,16 +12,19 @@
     "typecheck": "tsc --noEmit",
     "audit": "npm audit --omit=dev",
     "test": "node --test --experimental-strip-types \"tests/*.test.mjs\"",
+    "test:analysis-budget": "node --test --experimental-strip-types tests/integration/process-analysis-budget.test.mjs",
     "release:check": "node scripts/release-check.mjs"
   },
   "dependencies": {
     "next": "15.5.28",
+    "pg": "^8.16.3",
     "react": "19.1.1",
     "react-dom": "19.1.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.7",
     "@types/node": "^22.10.5",
+    "@types/pg": "^8.15.6",
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.3",
     "autoprefixer": "^10.4.20",

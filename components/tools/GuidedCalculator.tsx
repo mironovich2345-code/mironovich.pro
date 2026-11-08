@@ -8,12 +8,13 @@ import { parseDecimal } from "@/lib/tools/input";
 import { buttonClass, controlClass, numberText, rubles } from "./Fields";
 import ToolLead from "./ToolLead";
 import { GuidedResultCards } from "./AutomationResult";
+import ProcessAnalysis from "./ProcessAnalysis";
 
 type MeasureDraft={employees:string;frequency:Measurement["frequency"];repetitions:string;minutes:string;periodsPerMonth:string;hourlyCost:string;independent:boolean};
 const emptyMeasure=(employees:string):MeasureDraft=>({employees,frequency:"month",repetitions:"",minutes:"",periodsPerMonth:"1",hourlyCost:"",independent:false});
 const fromInput=(i:GuidedInput)=>Object.fromEntries(Object.entries(i.measurements).map(([k,m])=>[k,{...m,employees:String(m.employees),repetitions:String(m.repetitions),minutes:String(m.minutes),periodsPerMonth:String(m.periodsPerMonth),hourlyCost:m.hourlyCost===null?"":String(m.hourlyCost)}])) as Partial<Record<Task,MeasureDraft>>;
 
-export default function GuidedCalculator({mode,openAiAvailable=false}:{mode:"labor-cost"|"automation-cost";openAiAvailable?:boolean}) {
+export default function GuidedCalculator({mode,openAiAvailable=false,processAnalysisMode="off"}:{mode:"labor-cost"|"automation-cost";openAiAvailable?:boolean;processAnalysisMode?:"off"|"mock"|"live"}) {
  const [tasks,setTasks]=useState<Task[]>([]),[employees,setEmployees]=useState(String(DEFAULT_EMPLOYEES));
  const [selectedSystems,setSystems]=useState<GuidedInput["systems"]>([]),[impact,setImpact]=useState<GuidedInput["impact"]>("unknown");
  const [description,setDescription]=useState("");
@@ -79,7 +80,8 @@ export default function GuidedCalculator({mode,openAiAvailable=false}:{mode:"lab
    {aiBlock}
    <div className="mt-6 flex flex-wrap gap-4"><button type="button" disabled={busy} className="min-h-[48px] underline" onClick={()=>{setResult(null);setNotice(false);setAiStatus("");}}>Изменить выбор и уточнить описание</button><button type="button" disabled={busy} className="min-h-[48px] underline" onClick={()=>{setCards(recommendationCards(result));setAiStatus("Базовая рекомендация обновлена.");}}>Обновить базовые рекомендации</button></div>
    {mode==="labor-cost"&&<><Link href="/tools/automation-cost" className="mt-4 inline-flex min-h-[48px] items-center underline" onClick={e=>{try{sessionStorage.setItem(GUIDED_STORAGE_KEY,encodeGuidedTransfer(result));}catch{e.preventDefault();setTransferError("Хранилище вкладки недоступно. Разбор показан здесь; откройте второй инструмент и выберите задачи заново.");}}}>Продолжить разбор автоматизации →</Link>{transferError&&<p role="alert" className="text-sm text-signal">{transferError}</p>}</>}
-   <ToolLead context={{tool:mode,version:GUIDED_VERSION,input:result,guided:true}} description={description} actionPlan />
+   {mode==="automation-cost"&&processAnalysisMode!=="off"&&<ProcessAnalysis tasks={result.tasks} mode={processAnalysisMode} />}
+   <ToolLead context={{tool:mode,version:GUIDED_VERSION,input:result,guided:true}} description={description} actionPlan buttonLabel={mode==="automation-cost"&&processAnalysisMode!=="off"?"Обсудить внедрение":undefined} />
   </div>
  </section>;
  return <div className="mx-auto max-w-[980px] border border-cream/20 p-5 text-cream min-[560px]:p-8">

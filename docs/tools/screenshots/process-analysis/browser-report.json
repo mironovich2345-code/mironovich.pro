@@ -1,0 +1,124 @@
+{
+  "widths": [
+    {
+      "width": 320,
+      "baselineWithoutAI": true,
+      "labor66h39600": true,
+      "transfer": true,
+      "oneTask": true,
+      "previewAndConsentReset": true,
+      "piiBlocked": true,
+      "noPrematurePost": true,
+      "keyboard": true,
+      "noOverflow": true,
+      "demoResult": true
+    },
+    {
+      "width": 375,
+      "baselineWithoutAI": true,
+      "labor66h39600": true,
+      "transfer": true,
+      "oneTask": true,
+      "previewAndConsentReset": true,
+      "piiBlocked": true,
+      "noPrematurePost": true,
+      "keyboard": true,
+      "noOverflow": true,
+      "demoResult": true
+    },
+    {
+      "width": 768,
+      "baselineWithoutAI": true,
+      "labor66h39600": true,
+      "transfer": true,
+      "oneTask": true,
+      "previewAndConsentReset": true,
+      "piiBlocked": true,
+      "noPrematurePost": true,
+      "keyboard": true,
+      "noOverflow": true,
+      "demoResult": true
+    },
+    {
+      "width": 1024,
+      "baselineWithoutAI": true,
+      "labor66h39600": true,
+      "transfer": true,
+      "oneTask": true,
+      "previewAndConsentReset": true,
+      "piiBlocked": true,
+      "noPrematurePost": true,
+      "keyboard": true,
+      "noOverflow": true,
+      "demoResult": true
+    },
+    {
+      "width": 1440,
+      "baselineWithoutAI": true,
+      "labor66h39600": true,
+      "transfer": true,
+      "oneTask": true,
+      "previewAndConsentReset": true,
+      "piiBlocked": true,
+      "noPrematurePost": true,
+      "keyboard": true,
+      "noOverflow": true,
+      "demoResult": true
+    }
+  ],
+  "errors": [],
+  "expectedMockHttpErrors": 3,
+  "realExternalCalls": 0,
+  "accessibility": [
+    {
+      "phase": "preview",
+      "width": 320,
+      "violations": []
+    },
+    {
+      "phase": "result",
+      "width": 320,
+      "violations": []
+    },
+    {
+      "phase": "preview",
+      "width": 375,
+      "violations": []
+    },
+    {
+      "phase": "result",
+      "width": 375,
+      "violations": []
+    },
+    {
+      "phase": "preview",
+      "width": 768,
+      "violations": []
+    },
+    {
+      "phase": "result",
+      "width": 768,
+      "violations": []
+    },
+    {
+      "phase": "preview",
+      "width": 1024,
+      "violations": []
+    },
+    {
+      "phase": "result",
+      "width": 1024,
+      "violations": []
+    },
+    {
+      "phase": "preview",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "phase": "result",
+      "width": 1440,
+      "violations": []
+    }
+  ]
+}
