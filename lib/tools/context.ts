@@ -6,8 +6,10 @@ import { automationModel } from "../../config/automation-model.ts";
 import { parseLaborInput, calculateLabor, LABOR_VERSION, type LaborInput } from "./labor.ts";
 import { parseAutomationInput, calculateAutomation, processTypes, type AutomationInput } from "./automation.ts";
 import { record } from "./input.ts";
+import { COST_VERSION, calculateCostWhy, parseCostInput, whyReview, type CostInput } from "./cost-why.ts";
 
 export type ToolContext =
+  | { tool: "labor-cost" | "automation-cost"; version: typeof COST_VERSION; input: CostInput; costReview: true }
   | { tool: "labor-cost" | "automation-cost"; version: typeof GUIDED_VERSION; input: GuidedInput; guided: true }
   | { tool: "labor-cost"; version: string; input: LaborInput }
   | { tool: "automation-cost"; version: string; input: AutomationInput; labor?: LaborInput; diagnosis?: DiagnosisInput };
@@ -16,6 +18,10 @@ export type ToolContext =
 export function parseToolContext(raw: unknown): ToolContext | null {
   const src = record(raw);
   if (!src) return null;
+  if ((src.tool === "labor-cost" || src.tool === "automation-cost") && src.version === COST_VERSION) {
+    const input = parseCostInput(src.input);
+    return input ? { tool: src.tool, version: COST_VERSION, input, costReview: true } : null;
+  }
   if ((src.tool === "labor-cost" || src.tool === "automation-cost") && src.version === GUIDED_VERSION) {
     const p=parseGuided(src.input);
     return p ? { tool:src.tool,version:GUIDED_VERSION,input:p,guided:true } : null;
@@ -38,6 +44,23 @@ export function parseToolContext(raw: unknown): ToolContext | null {
 
 /** Called by the API; all results are recalculated using the current server model. */
 export function describeToolContext(context: ToolContext): string {
+  if ("costReview" in context) {
+    const r = calculateCostWhy(context.input);
+    return `Стоимость повторяющейся работы · ${COST_VERSION} · пересчитано сервером
+Команда: ${context.input.employees}.
+Общий итог: ${r.totalHours === null ? "не сводится" : r.totalHours + " ч/мес"}; ${r.totalCost === null ? "стоимость неизвестна или суммирование запрещено" : r.totalCost + " ₽/мес; " + r.totalAnnualCost + " ₽/год"}.
+Это стоимость времени, не устранимые потери и не денежная экономия.
+${r.rows.map(row => {
+  const p = context.input.processes[row.task]!;
+  const basis = p.cost.kind === "monthly" ? `${p.cost.monthly} ₽/сотрудника в месяц / ${p.cost.hours} ч${p.cost.hoursAssumption ? " (допущение часов)" : ""}` : p.cost.kind === "hourly" ? `${p.cost.hourly} ₽/ч` : "ставка неизвестна";
+  const t = p.timing;
+  const units = { day: "день", week: "нед", month: "мес" };
+  const formula = t ? `${t.employees} чел × ${t.repetitions}/${units[t.frequency]} × ${t.minutes} мин × ${t.periodsPerMonth} период/мес /60 = ` : "";
+  return `${taskLabels[row.task]}: ${formula}${row.hours === null ? "время неизвестно" : row.hours + " ч/мес"}; ${row.cost === null ? "стоимость неизвестна" : row.cost + " ₽/мес; " + row.annualCost + " ₽/год"}; ${basis}.${t?.periodAssumption ? " График — допущение." : ""}`;
+}).join("\n")}
+Год: 12 месяцев при той же нагрузке. На консультации — реальные узкие места, целесообразность, выбор решения и пилот.
+Вопрос: ${whyReview(context.input.tasks[0], context.input).questions[0]}`;
+  }
   if ("guided" in context) {
     const r=calculateGuided(context.input);
     return `Разбор процессов · ${GUIDED_VERSION} · пересчитано сервером

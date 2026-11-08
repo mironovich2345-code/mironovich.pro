@@ -1,0 +1,175 @@
+{
+  "viewports": [
+    {
+      "width": 320,
+      "bothURLs": true,
+      "noOverflow": true,
+      "canonical": true,
+      "presetsAndManual": true,
+      "livePreview": true,
+      "knownRate": true,
+      "monthlyBasis": true,
+      "unknownRate": true,
+      "conditionalNotActual": true,
+      "partialNotSummed": true,
+      "overlapNotSummed": true,
+      "independentSum": true,
+      "keyboardFocus": true
+    },
+    {
+      "width": 375,
+      "bothURLs": true,
+      "noOverflow": true,
+      "canonical": true,
+      "presetsAndManual": true,
+      "livePreview": true,
+      "knownRate": true,
+      "monthlyBasis": true,
+      "unknownRate": true,
+      "conditionalNotActual": true,
+      "partialNotSummed": true,
+      "overlapNotSummed": true,
+      "independentSum": true,
+      "keyboardFocus": true
+    },
+    {
+      "width": 768,
+      "bothURLs": true,
+      "noOverflow": true,
+      "canonical": true,
+      "presetsAndManual": true,
+      "livePreview": true,
+      "knownRate": true,
+      "monthlyBasis": true,
+      "unknownRate": true,
+      "conditionalNotActual": true,
+      "partialNotSummed": true,
+      "overlapNotSummed": true,
+      "independentSum": true,
+      "keyboardFocus": true
+    },
+    {
+      "width": 1024,
+      "bothURLs": true,
+      "noOverflow": true,
+      "canonical": true,
+      "presetsAndManual": true,
+      "livePreview": true,
+      "knownRate": true,
+      "monthlyBasis": true,
+      "unknownRate": true,
+      "conditionalNotActual": true,
+      "partialNotSummed": true,
+      "overlapNotSummed": true,
+      "independentSum": true,
+      "keyboardFocus": true
+    },
+    {
+      "width": 1440,
+      "bothURLs": true,
+      "noOverflow": true,
+      "canonical": true,
+      "presetsAndManual": true,
+      "livePreview": true,
+      "knownRate": true,
+      "monthlyBasis": true,
+      "unknownRate": true,
+      "conditionalNotActual": true,
+      "partialNotSummed": true,
+      "overlapNotSummed": true,
+      "independentSum": true,
+      "keyboardFocus": true
+    }
+  ],
+  "flows": [
+    "Владелец без данных и условная ставка",
+    "Владелец со ставкой часа / полной месячной стоимостью",
+    "Несколько процессов: частично измеренные, пересекающиеся и независимые"
+  ],
+  "accessibility": [
+    {
+      "width": 320,
+      "phase": "input",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "known-result",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "input",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "known-result",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "consultation",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "unknown-result",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "overlap-result",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "input",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "known-result",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "input",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "known-result",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "input",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "known-result",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "consultation",
+      "violations": []
+    }
+  ],
+  "javascriptErrors": [],
+  "expectedHttpErrors": 2,
+  "externalBrowserCalls": 0,
+  "aiRequests": 0,
+  "serverStubChecks": [
+    {
+      "scenario": "monthly-rate-recalculated",
+      "passed": true
+    },
+    {
+      "scenario": "unknown-scenario-excluded",
+      "passed": true
+    }
+  ]
+}
