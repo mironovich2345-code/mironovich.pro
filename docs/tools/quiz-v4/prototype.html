@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MIRONOVICH — адаптивные калькуляторы v4, UX-прототип</title><style>
+@font-face{font-family:Inter;font-weight:100 900;src:url('../../../assets/blog-covers/fonts/Inter-cyrillic.woff2')}
+@font-face{font-family:Display;font-weight:100 900;src:url('../../../assets/blog-covers/fonts/RobotoCondensed-cyrillic.woff2')}
+
+@font-face{font-family:Inter;font-weight:100 900;src:url('../../../assets/blog-covers/fonts/Inter-latin.woff2');unicode-range:U+0000-00FF,U+2000-206F}
+@font-face{font-family:Display;font-weight:100 900;src:url('../../../assets/blog-covers/fonts/RobotoCondensed-latin.woff2');unicode-range:U+0000-00FF,U+2000-206F}
+:root{--bg:#101012;--fg:#f3efe7;--muted:#b4aea6;--line:#454044;--red:#d92d2d}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 Inter,Arial,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer;color:inherit;background:none;border:1px solid var(--line);min-height:44px;padding:9px 13px}
+button:disabled{opacity:.45;cursor:default}
+button[aria-pressed=true]{border-color:var(--red);background:#d92d2d17}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid #ef6969;outline-offset:3px}
+input,select{width:100%;min-width:0;background:var(--bg);border:1px solid #635c60;color:var(--fg);min-height:46px;padding:9px 12px}
+input[type=range]{padding:0;accent-color:var(--red);border:0;min-height:44px}
+input[type=checkbox]{width:20px;min-height:20px;flex-shrink:0;accent-color:var(--red)}
+header{border-bottom:1px solid var(--line)}
+.header{max-width:1328px;margin:auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{font-family:Display,Arial,sans-serif;letter-spacing:1px;font-weight:800;font-size:22px}
+.brand span{color:var(--red)}
+nav{display:flex;gap:8px}
+.nav-button{border:0;font-size:14px}
+.nav-button[aria-pressed=true]{background:none;border-bottom:2px solid var(--red)}
+main{max-width:1328px;margin:auto;padding:24px}
+.intro{margin-bottom:20px}
+.intro h1{margin:8px 0;font:800 40px/1.05 Display,Arial,sans-serif;text-transform:uppercase}
+.intro p{margin:8px 0;color:var(--muted);max-width:85ch}
+.tag{font-size:14px;color:#f17d7d;letter-spacing:.4px}
+.columns{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:24px;align-items:start}
+.form-card,.result-card{border:1px solid var(--line);min-width:0}
+.form-card{padding:20px}
+.form-card section+section{border-top:1px solid var(--line);margin-top:18px;padding-top:18px}
+.group-title{margin:0 0 14px;font-size:18px;line-height:1.3;font-weight:600}
+.phase-caption{display:none}
+label,.label{font-size:14px;display:block;margin:0 0 7px}
+.hint,.note{font-size:14px;color:var(--muted);line-height:1.45;margin:8px 0}
+.row{display:flex;align-items:center;gap:10px;min-width:0}
+.row>*{min-width:0}
+.row .grow{flex:1}
+.row input.exact{width:85px;text-align:center;flex-shrink:0}
+.row input.amount{flex:1}
+.counter{display:grid;grid-template-columns:46px minmax(60px,1fr) 46px;gap:8px;max-width:270px}
+.counter input{text-align:center;font-size:22px}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.chips,.segments{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.chips button{min-width:44px;padding:8px 10px;font-size:14px}
+.segments button{font-size:14px;flex:1}
+.small-segments{margin:0}
+.small-segments button{padding:8px 10px;flex:none}
+.pay-segments button{flex:1 1 45%}
+.pay-segments button:last-child{flex:0 1 auto}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.cards button{font-size:14px;padding:8px 10px;overflow-wrap:anywhere}
+.check{display:flex;align-items:center;gap:9px;font-size:14px;min-height:44px;margin:8px 0}
+.link{border:0;text-decoration:underline;padding:8px 0;font-size:14px}
+.process-picker{position:relative;min-width:0}
+.process-picker summary{cursor:pointer;border:1px solid #635c60;min-height:46px;padding:10px 12px;font-size:15px}
+.process-picker .options{margin:8px 0;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.options button{text-align:left;font-size:14px}
+.process-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.process-tabs button{font-size:14px}
+.result-card{position:sticky;top:18px;padding:20px}
+.result-card h2{font:800 28px/1.1 Display,Arial,sans-serif;text-transform:uppercase;margin:6px 0 16px}
+.overline{font-size:14px;color:var(--muted);margin:0 0 8px}
+.metrics{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line)}
+.metric{padding:14px;min-width:0}
+.metric:first-child{grid-column:1/-1;background:var(--red);color:white}
+.metric:nth-child(3){border-left:1px solid var(--line)}
+.metric .label{font-size:14px;margin:0}
+.number{display:block;font:800 31px/1.1 Display,Arial,sans-serif;margin-top:8px;overflow-wrap:anywhere}
+.metric:first-child .number{font-size:52px}
+.result-card .caution{border-left:2px solid var(--red);padding-left:12px;font-size:14px;line-height:1.5;margin:16px 0}
+.review{border-top:1px solid var(--line);padding-top:15px;margin-top:15px}
+.review h3{font-size:16px;margin:0 0 6px}
+.review strong{font-size:16px}
+.review p{font-size:14px;line-height:1.5;margin:6px 0;color:var(--muted)}
+.why{font-size:15px;line-height:1.5}
+.cta{color:#fff;background:var(--red);border-color:var(--red);display:block;width:100%;min-height:52px;margin-top:18px;padding:13px;font-size:15px}
+.result-card .link{display:block;text-align:center;width:100%;margin-top:5px}
+.result-card .footnote{font-size:14px;color:var(--muted);line-height:1.45;margin:12px 0 0}
+.result-card .mobile-edit{display:none}
+.mobile-progress,.mobile-navigation,.intermediate,.mobile-edit{display:none}
+.source{font-size:14px;line-height:1.45;color:var(--muted);margin-top:14px}
+.transfer-badge{border-left:2px solid var(--red);padding:10px 12px;background:#ffffff06;font-size:14px;margin-bottom:16px}
+.message{border:1px solid var(--line);padding:12px;font-size:14px;line-height:1.5;margin-top:12px}
+.error{border-left:2px solid var(--red);padding:6px 12px;color:#ffe0db;font-size:14px}
+.prototype-footer{font-size:14px;color:var(--muted);border-top:1px solid var(--line);margin-top:24px;padding-top:15px}
+.pulse{animation:soft-number .14s ease-out}
+@keyframes soft-number{from{opacity:.55;transform:translateY(1px)}
+to{opacity:1;transform:translateY(0)}
+}
+[hidden]{display:none!important}
+
+@media(min-width:901px){.work-fields{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.duration-heading{margin:8px 0;justify-content:flex-end}
+.duration-heading .label{display:none}
+.duration-heading .segments{min-height:44px}
+
+.pay-segments button{flex:1 1 0}
+.pay-segments button:last-child{flex:.4 1 0}
+}
+
+@media(max-width:900px){.header{padding:10px 18px;flex-wrap:wrap;gap:6px}
+.brand{font-size:19px}
+nav{gap:4px}
+.nav-button{padding:8px;font-size:14px}
+main{padding:16px 18px}
+.intro{margin-bottom:14px}
+.intro h1{font-size:28px}
+.intro p{display:none}
+.columns{display:block}
+.form-card{padding:16px}
+.result-card{display:none;position:static;padding:16px}
+.form-card section+section{border:0;margin-top:0;padding-top:0}
+.phase:not(.active){display:none}
+.phase-caption{display:block;font-size:14px;color:var(--muted);margin:0 0 12px}
+.group-title{font:800 27px/1.1 Display,Arial,sans-serif;text-transform:uppercase;margin:0 0 16px}
+.mobile-progress{display:block;margin-bottom:18px}
+.progress-caption{display:flex;justify-content:space-between;font-size:14px}
+.progress-track{height:4px;background:#3d3639;margin-top:9px}
+.progress-fill{height:100%;background:var(--red);transition:width .12s}
+.mobile-navigation{display:flex;gap:9px;margin-top:18px}
+.mobile-navigation button:last-child{color:#fff;flex:1;background:var(--red);border-color:var(--red)}
+.intermediate{display:block;margin-top:16px;border-left:2px solid var(--red);background:#ffffff06;padding:11px 13px;min-height:74px;font-size:15px;line-height:1.45}
+.intermediate strong{display:block;font-size:18px;margin-bottom:3px}
+.intermediate .hint{margin:5px 0 0}
+.pair{gap:12px}
+body[data-mode=auto] .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+.cards button{min-height:44px}
+.chips button{padding:8px 10px}
+.segments button{padding:9px 8px}
+.mobile-done .form-card{display:none}
+.mobile-done .result-card{display:block}
+.result-card .mobile-edit{display:block}
+.metric:first-child .number{font-size:44px}
+.metric .number{font-size:28px}
+.process-tabs{margin:4px 0 10px}
+.prototype-footer{margin-top:18px}
+.desktop-note{display:none}
+.duration-heading{margin-top:12px}
+.month-row{margin-top:10px}
+.pay-segments button{min-height:49px}
+.pay-segments button:last-child{flex:0 1 auto}
+.result-card .source{font-size:14px}
+}
+
+@media(prefers-reduced-motion:reduce){.pulse{animation:none}
+.progress-fill{transition:none}
+}
+
+</style></head><body><header><div class="header"><div class="brand">MIRONOVICH<span>.</span></div><nav aria-label="Инструменты прототипа"><button class="nav-button" data-action="mode" data-value="labor">Ручной труд</button><button class="nav-button" data-action="mode" data-value="auto">Возможности улучшения</button></nav></div></header><main><div class="intro"><span class="tag">UX-прототип · без внешних отправок</span><h1 id="page-title"></h1><p id="page-description"></p></div><div class="columns" id="columns"><div class="form-card"><div id="progress" class="mobile-progress"></div><div id="form-content"></div><div id="intermediate" class="intermediate" aria-live="polite"></div><p id="error" class="error" role="alert" hidden></p><div id="mobile-nav" class="mobile-navigation"></div></div><aside id="result" class="result-card" aria-label="Живой результат" aria-live="polite"></aside></div><p class="prototype-footer">Визуальный прототип для утверждения UX. Рабочие калькуляторы, обработка заявок и настройки сайта не изменены. На компьютере результат обновляется без кнопки «Рассчитать».</p></main><script>
+const labels={reporting:'Отчёты и таблицы',transfer:'Перенос данных',crm:'Заявки клиентов',documents:'Документы',answers:'Ответы клиентам',training:'Обучение',control:'Контроль задач',calls:'Разбор звонков',other:'Другая задача'};
+const issues={time:'Много времени уходит на рутину',reentry:'Повторный ввод данных',errors:'Ошибки и исправления',waiting:'Ожидание и задержки',unclear:'Пока трудно определить'};
+const frequencies={often:'Почти каждый день',sometimes:'Несколько раз в месяц',rare:'Редко',unknown:'Пока не знаю'};
+const effects={time:'Отвлекает от основной работы',client:'Клиенты ждут ответа',financial:'Финансовые или юридические риски',unknown:'Пока не измеряли'};
+const emptyMeasure=()=>({repeat:'',period:'shift',duration:'',unit:'minutes'});
+const L={tasks:[],active:'reporting',employees:'4',month:'2026-11',schedule:'',actual:false,shifts:'',shiftHours:'',payKind:'salary',amount:'',measures:{}};
+const A={tasks:[],issue:'',frequency:'',effect:'',known:null};
+let mode=new URLSearchParams(location.search).get('mode')==='auto'?'auto':'labor',phase=0,done=false,error='',pickerOpen=false;
+const fmt=n=>new Intl.NumberFormat('ru-RU',{maximumFractionDigits:2}).format(n),rub=n=>fmt(n)+' ₽',round=n=>Math.round((n+Number.EPSILON)*100)/100;
+const num=v=>v!==''&&/^\d+(?:[.,]\d+)?$/.test(String(v))&&Number.isFinite(Number(String(v).replace(',','.')))?Number(String(v).replace(',','.')):null;
+function escapeText(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function monthDays(month){if(!/^20\d{2}-(0[1-9]|1[0-2])$/.test(month))return null;const[y,m]=month.split('-').map(Number);return new Date(Date.UTC(y,m,0)).getUTCDate();}
+function graph(data){const days=monthDays(data.month);if(!days||!data.schedule)return null;if(data.actual||data.schedule==='other'){const n=num(data.shifts);return Number.isInteger(n)&&n>=1&&n<=days?{shifts:n,note:'Фактически указано вами: '+n+' смен',actual:true}:null;}
+if(data.schedule==='5/2'||data.schedule==='6/1'){const[y,m]=data.month.split('-').map(Number);let n=0;for(let d=1;d<=days;d++){const w=new Date(Date.UTC(y,m-1,d)).getUTCDay();if(w!==0&&(data.schedule==='6/1'||w!==6))n++;}return{shifts:n,note:'Оценка: '+n+' смен, '+(data.schedule==='5/2'?'Пн–Пт':'Пн–Сб')+', без праздников и отпусков',actual:false};}
+const[on,off]=data.schedule.split('/').map(Number),cycle=on+off,variants=[];for(let k=0;k<cycle;k++){let n=0;for(let d=0;d<days;d++)if((d+k)%cycle<on)n++;variants.push(n);}return{shifts:days*on/cycle,note:'Средняя оценка '+fmt(days*on/cycle)+' смен; фактически '+Math.min(...variants)+'–'+Math.max(...variants)+' в зависимости от начала цикла',actual:false};}
+function measure(data=L,task=data.active){return data.measures[task]||emptyMeasure();}
+function calc(data=L,task=data.active){const m=measure(data,task),people=num(data.employees),rep=num(m.repeat),duration=num(m.duration),minutes=duration===null?null:duration*(m.unit==='hours'?60:1),g=graph(data),days=monthDays(data.month),per=people!==null&&Number.isInteger(people)&&people>=1&&people<=10000&&rep!==null&&Number.isInteger(rep)&&rep<=100000?people*rep:null,periodHours=per!==null&&minutes!==null&&minutes<=10080?per*minutes/60:null,factor=m.period==='month'?1:m.period==='week'&&days?days/7:g?g.shifts:null,hours=periodHours!==null&&factor!==null?periodHours*factor:null,shiftHours=num(data.shiftHours),paid=g&&shiftHours!==null&&shiftHours>=.25&&shiftHours<=24?g.shifts*shiftHours:null,amount=num(data.amount),rate=data.payKind!=='unknown'&&amount!==null&&amount<=10000000&&paid>0&&amount/paid<=1000000?amount/paid:null,cost=hours!==null&&rate!==null&&people>0&&hours/people<=744?round(hours*rate):null;return{m,people,per,periodHours,g,hours,paid,rate,cost,annual:cost===null?null:round(cost*12),over:hours!==null&&paid!==null&&people>0&&hours/people>paid};}
+const cards=(options,value,action)=>'<div class="cards">'+Object.entries(options).map(([k,v])=>`<button type="button" data-action="${action}" data-value="${k}" aria-pressed="${value===k}">${v}</button>`).join('')+'</div>';
+const segments=(options,value,action,cls='')=>`<div class="segments ${cls}">`+Object.entries(options).map(([k,v])=>`<button type="button" data-action="${action}" data-value="${k}" aria-pressed="${value===k}">${v}</button>`).join('')+'</div>';
+function rangeField(model,value,label,presets,max,step=1){return `<label for="exact-${model}">${label}</label><div class="row"><input class="grow" id="range-${model}" aria-label="${label}: быстрый диапазон" data-model="${model}" type="range" min="0" max="${max}" step="${step}" value="${Math.min(max,num(value)||0)}"><input class="exact" id="exact-${model}" aria-label="${label}: точно" data-model="${model}" inputmode="decimal" autocomplete="off" value="${escapeText(value)}" maxlength="10"></div><div class="chips">${presets.map(n=>`<button type="button" data-action="preset" data-model="${model}" data-value="${n}" aria-pressed="${String(n)===value}">${n}</button>`).join('')}</div>`;}
+function picker(tasks){return `<details id="process-picker" class="process-picker" ${pickerOpen?'open':''}><summary>${tasks.length?tasks.map(t=>labels[t]).join(' · '):'Выберите процесс'} ▾</summary><div class="options">${Object.entries(labels).map(([k,v])=>`<button type="button" data-action="task" data-value="${k}" aria-pressed="${tasks.includes(k)}">${v}</button>`).join('')}</div><p class="hint">Можно выбрать несколько. Не переходим автоматически.</p></details>`;}
+function phases(){if(mode==='labor')return['people','work','graph','pay'];return['issue',...(!A.known?['process']:[]),...(A.issue==='unclear'?[]:[...(A.issue==='time'&&A.known&&A.known.tasks.every(t=>calc(A.known,t).hours!==null)?[]:['frequency']),'effect'])];}
+function form(){if(mode==='auto')return `${A.known?'<div class="transfer-badge">Перенесён расчёт: '+A.known.tasks.map(t=>labels[t]).join(', ')+'. Числа повторно не спрашиваем. <button class="link" data-action="reset-transfer">Сбросить перенос</button></div>':''}<section class="phase" data-phase="issue"><h2 class="group-title">Что больше всего мешает работе?</h2>${cards(issues,A.issue,'issue')}</section><section class="phase" data-phase="process"><h2 class="group-title">В каком процессе возникает проблема?</h2>${picker(A.tasks)}</section><section class="phase" data-phase="frequency"><h2 class="group-title">Как часто возникает проблема?</h2><p class="hint">Это частота проблемы, не повторный вопрос о количестве операций.</p>${cards(frequencies,A.frequency,'issue-frequency')}</section><section class="phase" data-phase="effect"><h2 class="group-title">Какие последствия для бизнеса?</h2>${cards(effects,A.effect,'effect')}</section>`;
+const m=measure();return `<section class="phase" data-phase="people"><h2 class="group-title">Работа и сотрудники</h2><label>Повторяющаяся работа</label>${picker(L.tasks)}<div class="pair" style="margin-top:14px"><div><label for="employees">Выполняют эту работу</label><div class="counter"><button aria-label="На одного меньше" data-action="minus">−</button><input id="employees" data-model="employees" inputmode="numeric" value="${escapeText(L.employees)}" maxlength="5"><button aria-label="На одного больше" data-action="plus">+</button></div></div><div><label>Быстрый выбор</label><div class="chips">${[4,10,25,50].map(n=>`<button data-action="preset" data-model="employees" data-value="${n}" aria-pressed="${L.employees===String(n)}">${n}</button>`).join('')}</div></div></div></section>
+<section class="phase" data-phase="work"><h2 class="group-title">Повторения и время</h2>${L.tasks.length>1?'<div class="process-tabs">'+L.tasks.map(t=>`<button data-action="active-task" data-value="${t}" aria-pressed="${L.active===t}">${labels[t]}</button>`).join('')+'</div>':''}<p class="phase-caption">${labels[L.active]||'Сначала выберите процесс'}</p><div class="work-fields"><div>${segments({shift:'За смену',week:'За неделю',month:'За месяц'},m.period,'period')}${rangeField('repeat',m.repeat,'Повторений на сотрудника',[1,5,10,20],100)}</div><div><div class="row duration-heading"><span class="label grow">Время на одно выполнение</span>${segments({minutes:'Мин',hours:'Часы'},m.unit,'unit','small-segments')}</div>${rangeField('duration',m.duration,m.unit==='hours'?'Часов на операцию':'Минут на операцию',m.unit==='hours'?[1,2,4,8]:[1,3,5,10,15,30],m.unit==='hours'?8:60,m.unit==='hours'?.25:.5)}</div></div></section>
+<section class="phase" data-phase="graph"><h2 class="group-title">График и рабочие часы</h2>${cards({'5/2':'5/2','2/2':'2/2','3/3':'3/3','6/1':'6/1','3/2':'3/2',other:'Другой'},L.schedule,'schedule')}<div class="pair month-row" style="margin-top:12px"><div><label for="month">Месяц расчёта</label><input type="month" id="month" data-model="month" min="2000-01" max="2099-12" value="${L.month}"></div><div><label class="check"><input type="checkbox" id="actual" ${L.actual||L.schedule==='other'?'checked':''} ${L.schedule==='other'?'disabled':''}> Фактические смены</label><div id="actual-field" ${(L.actual||L.schedule==='other')?'':'hidden'}><label class="label" for="actual-shifts">Количество смен</label><input id="actual-shifts" data-model="shifts" inputmode="numeric" value="${escapeText(L.shifts)}" maxlength="2"></div></div></div><p id="graph-note" class="hint"></p><div style="margin-top:12px">${rangeField('shiftHours',L.shiftHours,'Часов в смену',[4,6,8,10,12],24,.25)}</div></section>
+<section class="phase" data-phase="pay"><h2 class="group-title">Зарплата или полная стоимость</h2>${segments({salary:'Зарплата сотрудника',employer:'Полные расходы компании',unknown:'Не знаю'},L.payKind,'pay-kind','pay-segments')}<div id="amount-field" ${L.payKind==='unknown'?'hidden':''}><label for="amount">Месячная сумма на одного сотрудника, ₽</label><input id="amount" class="amount" data-model="amount" inputmode="decimal" autocomplete="off" placeholder="Укажите свою сумму" value="${escapeText(L.amount)}" maxlength="12"></div><p id="pay-note" class="hint"></p></section>`;}
+function potential(task,hours){if(hours===null)return{title:'Сначала нужен замер',note:'Пока недостаточно данных, чтобы оценивать объём повторяемой части.'};if(hours===0)return{title:'Оснований для вывода пока нет',note:'При нулевом объёме нельзя обещать пользу автоматизации.'};return{title:'Есть повод проверить повторяемую часть',note:'Это предварительная гипотеза. Доля автоматизации и реальная экономия не определены.'};}
+function ready(task){if(['reporting','transfer','crm','control'].includes(task))return{title:'Имеет смысл проверить стандартные функции',note:'Наличие нужной функции, права и совместимость ваших программ ещё не проверены.'};if(task==='calls')return{title:'Сначала проверить законность и качество',note:'Готовый продукт не отменяет проверку прав на записи и выводов человеком.'};if(task==='other')return{title:'Недостаточно сведений о процессе',note:'Сначала нужны границы задачи, правила и исключения.'};return{title:'Зависит от правил и качества материалов',note:'Применимость готовых решений нужно проверить на вашем примере. Разработка не считается обязательной.'};}
+function metrics(c,data){return `<div class="metrics"><div class="metric"><span class="label">${data.payKind==='salary'?'По указанной зарплате / месяц':'Стоимость времени / месяц'}</span><strong class="number pulse" data-metric="monthly">${c.cost===null?'Неизвестна':rub(c.cost)}</strong></div><div class="metric"><span class="label">Ручная работа / месяц</span><strong class="number pulse" data-metric="hours">${c.hours===null?'Не замерена':fmt(c.hours)+' ч'}</strong></div><div class="metric"><span class="label">При той же нагрузке / год</span><strong class="number pulse" data-metric="annual">${c.annual===null?'Неизвестна':rub(c.annual)}</strong></div></div><p class="caution">${data.payKind==='salary'?'Это оценка по зарплате, а не полные расходы работодателя. ':''}Стоимость времени не равна экономии. Год — 12 месяцев при той же нагрузке.</p>${c.over?'<p class="error">Указанная работа превышает рабочие часы группы. Проверьте частоту, единицы и повторный учёт.</p>':''}`;}
+function renderResult(){let body='',task=mode==='labor'?(L.tasks.length?L.active:'other'):(A.tasks[0]||'other'),data=mode==='labor'?L:A.known,c=data?calc(data,task):null;
+if(mode==='labor'){body=`<p class="overline">${labels[task]||'Выберите процесс'}</p><h2>Ваше рабочее время</h2>${metrics(c,L)}<p class="source">${c.g?c.g.note+'. ':''}${c.paid!==null?fmt(c.paid)+' рабочих часов/месяц на сотрудника. ':''}${c.rate!==null?'Ставка '+rub(c.rate)+'/ч из вашей месячной суммы.':''}</p>`;if(L.tasks.length>1)body+='<p class="message">Процессы показаны раздельно. Общий итог без подтверждения отсутствия пересечений не выводится.</p>'+L.tasks.filter(t=>t!==task).map(t=>{const r=calc(L,t);return'<p class="source">'+labels[t]+': '+(r.hours===null?'время неизвестно':fmt(r.hours)+' ч/мес')+' · '+(r.cost===null?'стоимость неизвестна':rub(r.cost)+'/мес')+'</p>';}).join('');}
+else{body='<p class="overline">'+(A.known?'С учётом перенесённого расчёта':'Без выдуманных финансовых оценок')+'</p><h2>Почему стоит проверить процесс</h2>';if(A.known){body+=metrics(c,A.known);}else body+='<p class="message">Трудозатраты пока не измерены. Мы не придумываем рубли, эффективность или стоимость разработки.</p>';body+='<p class="why">'+(A.issue?'Вы отметили: «'+issues[A.issue]+'». Это ваша оценка, а не подтверждённый диагноз.':'Выберите, что мешает работе: вывод уточнится сразу, без кнопки расчёта.')+'</p>';if(A.frequency&&A.issue!=='unclear')body+='<p class="source">Частота проблемы со слов пользователя: '+frequencies[A.frequency]+'.</p>';if(A.effect&&A.issue!=='unclear')body+='<p class="source">Указанные последствия: '+effects[A.effect]+'. Масштаб ещё нужно подтвердить.</p>';body+='<div class="review"><h3>Что проверить в первую очередь</h3><p>'+(A.issue==='errors'?'Где появляются исправления, как проверяются исходные данные и кто подтверждает результат.':A.issue==='waiting'?'На каком переходе возникает ожидание и какие согласования действительно необходимы.':A.issue==='reentry'?'Есть ли единый источник данных и почему одну информацию вводят повторно.':A.issue==='unclear'?'Один недавний пример работы: вход, действия, результат и реальные затраты времени.':'Частоту повторов, обязательные ручные действия и исключения, требующие решения человека.')+'</p></div>';}
+const p=potential(task,c?c.hours:null),r=ready(task);body+=`<div class="review"><h3>Потенциал автоматизации · предварительно</h3><strong>${p.title}</strong><p>${p.note}</p></div><div class="review"><h3>Применимость готовых решений · гипотеза</h3><strong>${r.title}</strong><p>${r.note}</p></div><div class="review"><h3>Почему обратить внимание</h3><p class="why">${task==='other'?'Нужны факты о повторяемости и границах задачи. Само описание не доказывает необходимость автоматизации.':'Повторяемая работа занимает время команды. Стоит выяснить, где действия обязательны, а где могут возникать лишние переносы или исправления.'}</p></div><button class="cta" data-action="consult">${mode==='labor'?'Разобрать эти затраты с экспертом':'Обсудить процесс с экспертом'}</button><p class="footnote">На консультации проверим узкие места и целесообразность изменений, выберем решение и условия пилота.</p>${mode==='labor'?'<button class="link" data-action="improve">Проверить возможности улучшения →</button>':'<button class="link" data-action="mode" data-value="labor">Уточнить стоимость ручного труда →</button>'}<button class="link mobile-edit" data-action="edit">Изменить ответы</button>`;
+document.getElementById('result').innerHTML=body;}
+function interim(){if(mode==='auto'){const k=phases()[phase];return k==='issue'?{value:A.issue?issues[A.issue]:'Определим предмет проверки',note:'Это описание ситуации, а не подтверждение потерь.'}:k==='process'?{value:A.tasks.length?'Выбрано процессов: '+A.tasks.length:'Выберите процесс',note:'Не задаём технический способ заранее.'}:k==='frequency'?{value:A.frequency?frequencies[A.frequency]:'Уточните частоту проблемы',note:'Не смешиваем число ошибок и объём операций.'}:{value:A.effect?effects[A.effect]:'Уточним последствия',note:'Это поможет выбрать предмет консультации, а не обещать эффективность.'};}
+const c=calc(),k=phases()[phase],unit={shift:'за смену',week:'за неделю',month:'за месяц'}[c.m.period];if(k==='people')return{value:'Участников: '+(c.people===null?'не указано':fmt(c.people)),note:L.tasks.length?'Одна группа для выбранной работы.':'Сначала выберите процесс.'};if(k==='work')return{value:c.periodHours===null?(c.per===null?'Укажите частоту и длительность':fmt(c.per)+' операций '+unit):fmt(c.periodHours)+' ч ручной работы '+unit,note:c.per===null?'Зарплата для этого не нужна.':fmt(c.per)+' операций '+unit+' у всей группы.'};if(k==='graph')return{value:c.hours!==null?fmt(c.hours)+' ч ручной работы / месяц':c.paid!==null?fmt(c.paid)+' рабочих часов / месяц':'Выберите график и часы смены',note:c.g?c.g.note:'Не выдаём календарную оценку за точный график.'};return{value:c.cost===null?(c.hours===null?'Рубли пока неизвестны':fmt(c.hours)+' ч/мес без вымышленной суммы'):rub(c.cost)+' / месяц',note:c.rate===null?'Укажите свою сумму или выберите «Не знаю».':rub(c.rate)+'/ч · '+rub(c.annual)+' / год. '+(L.payKind==='salary'?'По зарплате, не полным расходам.':'По указанным полным расходам.')};}
+function refresh(){const list=phases();phase=Math.min(phase,list.length-1);document.querySelectorAll('.phase').forEach(e=>e.classList.toggle('active',e.dataset.phase===list[phase]));if(mode==='auto')document.querySelectorAll('.phase').forEach(e=>{e.hidden=!list.includes(e.dataset.phase);});document.getElementById('columns').classList.toggle('mobile-done',done);document.getElementById('progress').innerHTML='<div class="progress-caption"><span>Шаг '+(phase+1)+' из '+list.length+'</span><span>'+Math.round((phase+1)/list.length*100)+'%</span></div><div class="progress-track"><div class="progress-fill" style="width:'+((phase+1)/list.length*100)+'%"></div></div>';const v=interim();document.getElementById('intermediate').innerHTML='<strong class="pulse">'+v.value+'</strong><p class="hint">'+v.note+'</p>';document.getElementById('mobile-nav').innerHTML=(phase?'<button data-action="back">Назад</button>':'')+'<button data-action="next">'+(phase===list.length-1?'Посмотреть результат':'Продолжить')+'</button>';document.getElementById('error').hidden=!error;document.getElementById('error').textContent=error;document.querySelectorAll('[data-action="mode"]').forEach(e=>e.setAttribute('aria-pressed',String(e.dataset.value===mode)));if(mode==='labor'){const g=graph(L);document.getElementById('graph-note').textContent=g?g.note:'Выберите график. Фактическое число смен можно указать отдельно.';document.getElementById('pay-note').textContent=L.payKind==='salary'?'Зарплата не равна полным расходам работодателя. Налоги или взносы от себя не добавляем.':L.payKind==='employer'?'Используем ваши полные расходы. Процент экономии не подставляем.':'Покажем часы без вымышленной суммы.';}renderResult();}
+function render(){document.body.dataset.mode=mode;document.getElementById('page-title').textContent=mode==='labor'?'Стоимость ручного труда':'Возможности улучшения';document.getElementById('page-description').textContent=mode==='labor'?'Параметры слева — живой результат справа. На телефоне — короткие группы вопросов.':'Сначала проблема и причины, затем возможные направления проверки. Без готового диагноза.';document.getElementById('form-content').innerHTML=form();refresh();}
+function setMode(value,carry=false){if(value==='auto'&&carry){A.known=JSON.parse(JSON.stringify(L));A.tasks=[...L.tasks];}mode=value;phase=0;done=false;error='';pickerOpen=false;render();window.scrollTo({top:0,behavior:'instant'});}
+function focusPhase(){const el=error?document.getElementById('error'):done?document.querySelector('#result h2'):document.querySelector('.phase.active h2');if(el){el.tabIndex=-1;el.focus({preventScroll:true});(done?document.getElementById('result'):document.querySelector('.form-card')).scrollIntoView({block:'start',behavior:'instant'});}}
+function validatePhase(){const k=phases()[phase],c=calc();if(mode==='auto')return k==='issue'&&!A.issue?'Выберите проблему или «Пока трудно определить».':k==='process'&&!A.tasks.length?'Выберите хотя бы один процесс.':k==='frequency'&&!A.frequency?'Укажите частоту или «Пока не знаю».':k==='effect'&&!A.effect?'Укажите последствия или «Пока не измеряли».':'';if(k==='people'&&(!L.tasks.length||c.people===null||!Number.isInteger(c.people)||c.people<1||c.people>10000))return'Выберите процесс и от 1 до 10 000 участников.';if(k==='work'&&(c.periodHours===null||num(c.m.repeat)>100000))return'Укажите повторы и длительность для текущего процесса.';if(k==='graph'&&(!c.g||c.paid===null))return'Выберите график, фактические смены при необходимости и часы в смену.';if(k==='pay'&&L.payKind!=='unknown'&&c.rate===null)return'Укажите свою сумму или «Не знаю».';return'';}
+document.addEventListener('click',e=>{const b=e.target.closest('button[data-action]');if(!b)return;const action=b.dataset.action,v=b.dataset.value,oldFocus=b.dataset.action,oldValue=v;pickerOpen=Boolean(document.getElementById('process-picker')?.open);error='';
+if(action==='mode'){setMode(v,false);return;}if(action==='improve'){setMode('auto',true);return;}if(action==='reset-transfer'){A.known=null;A.tasks=[];phase=0;render();return;}
+if(action==='consult'){const p=document.createElement('p');p.className='message';p.setAttribute('role','status');p.textContent='Это прототип: реальные заявки не отправляются. Основной расчёт остаётся доступен.';b.after(p);return;}
+if(action==='edit'){done=false;phase=0;refresh();return;}if(action==='back'){phase=Math.max(0,phase-1);refresh();focusPhase();return;}if(action==='next'){error=validatePhase();if(!error){if(phase===phases().length-1)done=true;else phase++;}refresh();focusPhase();return;}
+if(action==='task'){const d=mode==='labor'?L:A;d.tasks=d.tasks.includes(v)?d.tasks.filter(t=>t!==v):[...d.tasks,v];if(mode==='labor'){if(!L.tasks.includes(L.active))L.active=L.tasks[0]||'reporting';if(!L.measures[L.active])L.measures[L.active]=emptyMeasure();}render();return;}
+if(action==='active-task'){L.active=v;render();return;}if(action==='minus'||action==='plus'){L.employees=String(action==='plus'?Math.min(10000,(num(L.employees)||0)+1):Math.max(1,(num(L.employees)||2)-1));document.getElementById('employees').value=L.employees;refresh();return;}
+if(action==='preset'){if(['repeat','duration'].includes(b.dataset.model)){if(!L.measures[L.active])L.measures[L.active]=emptyMeasure();L.measures[L.active][b.dataset.model]=v;}else L[b.dataset.model]=v;render();return;}
+if(action==='period'){if(!L.measures[L.active])L.measures[L.active]=emptyMeasure();L.measures[L.active].period=v;render();return;}
+if(action==='unit'){if(!L.measures[L.active])L.measures[L.active]=emptyMeasure();const m=L.measures[L.active],n=num(m.duration);if(n!==null&&m.unit!==v)m.duration=String(v==='hours'?n/60:n*60);m.unit=v;render();return;}
+if(action==='schedule'){L.schedule=v;render();}if(action==='pay-kind'){L.payKind=v;if(v==='unknown')L.amount='';render();}if(action==='issue'){A.issue=v;if(v==='unclear'){A.frequency='unknown';A.effect='unknown';}render();}if(action==='issue-frequency'){A.frequency=v;render();}if(action==='effect'){A.effect=v;render();}
+const refocus=[...document.querySelectorAll('button[data-action]')].find(n=>n.dataset.action===oldFocus&&n.dataset.value===oldValue);if(refocus)refocus.focus({preventScroll:true});});
+document.addEventListener('input',e=>{const el=e.target,key=el.dataset.model;if(!key)return;error='';if(['repeat','duration'].includes(key)){if(!L.measures[L.active])L.measures[L.active]=emptyMeasure();L.measures[L.active][key]=el.value;}else L[key]=el.value;if(key==='employees'&&!L.tasks.length){}const pair=document.getElementById((el.type==='range'?'exact-':'range-')+key);if(pair)pair.value=el.value;refresh();});
+document.addEventListener('change',e=>{if(e.target.id==='actual'){L.actual=e.target.checked;render();}});
+render();
+</script></body></html>

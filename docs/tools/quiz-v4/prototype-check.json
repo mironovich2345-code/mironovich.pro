@@ -1,0 +1,74 @@
+{
+  "cases": [
+    {
+      "width": 1440,
+      "manualControlExample": true,
+      "noSalaryDefault": true,
+      "liveCalculation": true,
+      "separateUnits": true,
+      "knownTransferNoRepeat": true,
+      "automationDirectEntry": true,
+      "noHorizontalOverflow": true
+    },
+    {
+      "width": 375,
+      "manualControlExample": true,
+      "noSalaryDefault": true,
+      "liveCalculation": true,
+      "separateUnits": true,
+      "knownTransferNoRepeat": true,
+      "automationDirectEntry": true,
+      "noHorizontalOverflow": true
+    }
+  ],
+  "javascriptErrors": [],
+  "outboundPosts": [],
+  "axe": [
+    {
+      "screen": "labor-desktop",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "screen": "automation-desktop",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "screen": "labor-mobile-work",
+      "width": 375,
+      "violations": []
+    },
+    {
+      "screen": "labor-mobile-result",
+      "width": 375,
+      "violations": []
+    },
+    {
+      "screen": "automation-mobile-first",
+      "width": 375,
+      "violations": []
+    },
+    {
+      "screen": "automation-mobile-result",
+      "width": 375,
+      "violations": []
+    }
+  ],
+  "additionalChecks": [
+    "all six schedules",
+    "approximate cycle range vs actual shifts",
+    "hourly rate without early rounding",
+    "week/month/shift units",
+    "slider ArrowRight/ArrowLeft and exact input",
+    "minutes/hours conversion",
+    "unknown salary clears amount",
+    "salary vs employer cost distinction",
+    "employee +/- and presets",
+    "fractional employees rejected",
+    "multiple processes remain separate",
+    "mobile back preserves answers",
+    "overflow at 320/375/768/1024/1440"
+  ],
+  "browser": "156.0.8078.79"
+}
