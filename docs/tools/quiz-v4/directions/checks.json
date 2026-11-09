@@ -1,0 +1,174 @@
+{
+  "browserCases": [
+    {
+      "variant": "a",
+      "viewport": "desktop",
+      "width": 1440,
+      "laborCompleted": true,
+      "automationCompleted": true,
+      "transferWithoutRepeatedInputs": true,
+      "ctaInFirstResultViewport": true
+    },
+    {
+      "variant": "a",
+      "viewport": "mobile",
+      "width": 375,
+      "laborCompleted": true,
+      "automationCompleted": true,
+      "transferWithoutRepeatedInputs": true,
+      "ctaInFirstResultViewport": true
+    },
+    {
+      "variant": "b",
+      "viewport": "desktop",
+      "width": 1440,
+      "laborCompleted": true,
+      "automationCompleted": true,
+      "transferWithoutRepeatedInputs": true,
+      "ctaInFirstResultViewport": true
+    },
+    {
+      "variant": "b",
+      "viewport": "mobile",
+      "width": 375,
+      "laborCompleted": true,
+      "automationCompleted": true,
+      "transferWithoutRepeatedInputs": true,
+      "ctaInFirstResultViewport": true
+    }
+  ],
+  "axe": [
+    {
+      "screenshot": "a-labor-desktop-first-1440.png",
+      "violations": []
+    },
+    {
+      "screenshot": "a-labor-desktop-middle-1440.png",
+      "violations": []
+    },
+    {
+      "screenshot": "a-labor-desktop-result-1440.png",
+      "violations": []
+    },
+    {
+      "screenshot": "a-automation-desktop-first-1440.png",
+      "violations": []
+    },
+    {
+      "screenshot": "a-automation-desktop-middle-1440.png",
+      "violations": []
+    },
+    {
+      "screenshot": "a-automation-desktop-result-1440.png",
+      "violations": []
+    },
+    {
+      "screenshot": "a-labor-mobile-first-375.png",
+      "violations": []
+    },
+    {
+      "screenshot": "a-labor-mobile-middle-375.png",
+      "violations": []
+    },
+    {
+      "screenshot": "a-labor-mobile-result-375.png",
+      "violations": []
+    },
+    {
+      "screenshot": "a-automation-mobile-first-375.png",
+      "violations": []
+    },
+    {
+      "screenshot": "a-automation-mobile-middle-375.png",
+      "violations": []
+    },
+    {
+      "screenshot": "a-automation-mobile-result-375.png",
+      "violations": []
+    },
+    {
+      "screenshot": "b-labor-desktop-first-1440.png",
+      "violations": []
+    },
+    {
+      "screenshot": "b-labor-desktop-middle-1440.png",
+      "violations": []
+    },
+    {
+      "screenshot": "b-labor-desktop-result-1440.png",
+      "violations": []
+    },
+    {
+      "screenshot": "b-automation-desktop-first-1440.png",
+      "violations": []
+    },
+    {
+      "screenshot": "b-automation-desktop-middle-1440.png",
+      "violations": []
+    },
+    {
+      "screenshot": "b-automation-desktop-result-1440.png",
+      "violations": []
+    },
+    {
+      "screenshot": "b-labor-mobile-first-375.png",
+      "violations": []
+    },
+    {
+      "screenshot": "b-labor-mobile-middle-375.png",
+      "violations": []
+    },
+    {
+      "screenshot": "b-labor-mobile-result-375.png",
+      "violations": []
+    },
+    {
+      "screenshot": "b-automation-mobile-first-375.png",
+      "violations": []
+    },
+    {
+      "screenshot": "b-automation-mobile-middle-375.png",
+      "violations": []
+    },
+    {
+      "screenshot": "b-automation-mobile-result-375.png",
+      "violations": []
+    }
+  ],
+  "javascriptErrors": [],
+  "postRequests": [],
+  "externalRequests": [],
+  "calculationSourceUnchanged": true,
+  "browser": "156.0.8078.79",
+  "originalModelParityCases": 54,
+  "additionalChecks": [
+    "all six schedules",
+    "actual vs cycle range",
+    "week/month/shift units",
+    "salary vs employer cost",
+    "unknown salary clears amount",
+    "minutes/hours conversion",
+    "multiple processes without totals",
+    "fractional employees rejected",
+    "invalid actual shift count and month visible",
+    "removing all processes clears displayed totals",
+    "slider keyboard and exact input",
+    "counter +/-",
+    "back preserves answers",
+    "conditional progress 7/9 and 4/2/1",
+    "both themes and tools: 320/375/768/1024/1440 overflow",
+    "no requests before or after consultation CTA"
+  ],
+  "standaloneExports": [
+    {
+      "file": "MIRONOVICH-v4-A-Minimal-Dark.html",
+      "laborAndTransferFlowPassed": true,
+      "offline": true
+    },
+    {
+      "file": "MIRONOVICH-v4-B-Light-Workspace.html",
+      "laborAndTransferFlowPassed": true,
+      "offline": true
+    }
+  ]
+}
