@@ -70,7 +70,7 @@ export default async function CasePage({ params }: Props) {
               {p.caseStudy.sections.map((s) => (
                 <section key={s.heading}>
                   <h2 className="m-0 mb-3 font-display text-[clamp(22px,3vw,30px)] font-extrabold uppercase leading-[1.1] text-graphite">{s.heading}</h2>
-                  <p className="m-0 whitespace-pre-line text-pretty text-[16.5px] leading-[1.75] text-graphite/80">{s.text}</p>
+                  <p className="m-0 whitespace-pre-line [overflow-wrap:anywhere] text-pretty text-[16.5px] leading-[1.75] text-graphite/80">{s.text}</p>
                 </section>
               ))}
             </div>

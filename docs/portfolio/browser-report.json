@@ -1,0 +1,137 @@
+{
+  "cases": [
+    {
+      "width": 320,
+      "path": "/",
+      "overflow": false
+    },
+    {
+      "width": 320,
+      "path": "/projects",
+      "overflow": false
+    },
+    {
+      "width": 320,
+      "path": "/projects/eatlyy",
+      "overflow": false
+    },
+    {
+      "width": 320,
+      "path": "/projects/club-ops",
+      "overflow": false
+    },
+    {
+      "width": 375,
+      "path": "/",
+      "overflow": false
+    },
+    {
+      "width": 375,
+      "path": "/projects",
+      "overflow": false
+    },
+    {
+      "width": 375,
+      "path": "/projects/eatlyy",
+      "overflow": false
+    },
+    {
+      "width": 375,
+      "path": "/projects/club-ops",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "path": "/",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "path": "/projects",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "path": "/projects/eatlyy",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "path": "/projects/club-ops",
+      "overflow": false
+    },
+    {
+      "width": 1024,
+      "path": "/",
+      "overflow": false
+    },
+    {
+      "width": 1024,
+      "path": "/projects",
+      "overflow": false
+    },
+    {
+      "width": 1024,
+      "path": "/projects/eatlyy",
+      "overflow": false
+    },
+    {
+      "width": 1024,
+      "path": "/projects/club-ops",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "/",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "/projects",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "/projects/eatlyy",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "path": "/projects/club-ops",
+      "overflow": false
+    }
+  ],
+  "axe": [
+    {
+      "width": 375,
+      "path": "/projects",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "path": "/projects/eatlyy",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "path": "/projects/club-ops",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "path": "/projects",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "path": "/projects/eatlyy",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "path": "/projects/club-ops",
+      "violations": []
+    }
+  ],
+  "errors": []
+}

@@ -22,7 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...(projectsPublished ? [{ url: siteUrl + "/projects", changeFrequency: "monthly" as const, priority: 0.7 }] : []),
     ...projectsWithCase().map((p) => ({
       url: siteUrl + "/projects/" + p.slug,
-      lastModified: new Date(p.caseStudy!.publishDate),
+      ...(p.caseStudy!.publishDate ? { lastModified: new Date(p.caseStudy!.publishDate) } : {}),
       changeFrequency: "yearly" as const,
       priority: 0.6,
     })),
