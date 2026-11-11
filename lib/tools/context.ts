@@ -7,8 +7,11 @@ import { parseLaborInput, calculateLabor, LABOR_VERSION, type LaborInput } from 
 import { parseAutomationInput, calculateAutomation, processTypes, type AutomationInput } from "./automation.ts";
 import { record } from "./input.ts";
 import { COST_VERSION, calculateCostWhy, parseCostInput, whyReview, type CostInput } from "./cost-why.ts";
+import { QUIZ_VERSION, parseQuizInput, type QuizInput } from "./quiz-model.ts";
+import { describeQuizInput } from "./quiz-context.ts";
 
 export type ToolContext =
+  | { tool: "labor-cost" | "automation-cost"; version: typeof QUIZ_VERSION; input: QuizInput; quiz: true }
   | { tool: "labor-cost" | "automation-cost"; version: typeof COST_VERSION; input: CostInput; costReview: true }
   | { tool: "labor-cost" | "automation-cost"; version: typeof GUIDED_VERSION; input: GuidedInput; guided: true }
   | { tool: "labor-cost"; version: string; input: LaborInput }
@@ -18,6 +21,11 @@ export type ToolContext =
 export function parseToolContext(raw: unknown): ToolContext | null {
   const src = record(raw);
   if (!src) return null;
+  if ((src.tool === "labor-cost" || src.tool === "automation-cost") && src.version === QUIZ_VERSION) {
+    const input = parseQuizInput(src.input);
+    if (!input || (src.tool === "labor-cost" && input.kind !== "labor")) return null;
+    return { tool: src.tool, version: QUIZ_VERSION, input, quiz: true };
+  }
   if ((src.tool === "labor-cost" || src.tool === "automation-cost") && src.version === COST_VERSION) {
     const input = parseCostInput(src.input);
     return input ? { tool: src.tool, version: COST_VERSION, input, costReview: true } : null;
@@ -44,6 +52,7 @@ export function parseToolContext(raw: unknown): ToolContext | null {
 
 /** Called by the API; all results are recalculated using the current server model. */
 export function describeToolContext(context: ToolContext): string {
+  if ("quiz" in context) return describeQuizInput(context.input);
   if ("costReview" in context) {
     const r = calculateCostWhy(context.input);
     return `Стоимость повторяющейся работы · ${COST_VERSION} · пересчитано сервером

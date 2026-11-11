@@ -28,10 +28,10 @@ export default function Page() {
         <Scenarios />
         <Diagnostics />
         {projectsPublished && <HomeProjects />}
-        <About />
-        <Process />
-        <Faq />
-        <ContactSection />
+        <About index={projectsPublished ? "06" : "05"} />
+        <Process index={projectsPublished ? "07" : "06"} />
+        <Faq index={projectsPublished ? "08" : "07"} />
+        <ContactSection index={projectsPublished ? "09" : "08"} />
       </main>
       <StickyCta />
       <StructuredData />

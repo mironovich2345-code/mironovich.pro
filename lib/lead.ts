@@ -39,7 +39,7 @@ export const HONEYPOT_FIELD = "website";
 /** Static routes a lead can be sent from. Articles, blog categories and case pages are matched by pattern below. */
 const KNOWN_PAGES = new Set([
   "/", "/services", "/services/automation", "/services/apps", "/services/training",
-  "/about", "/blog", "/contact", "/projects",
+  "/about", "/blog", "/contact", "/projects", "/products", "/products/ai-career", "/products/automation-priorities",
   "/services/cto", "/services/development", "/services/support", "/services/expertise",
   "/tools", "/tools/labor-cost", "/tools/automation-cost",
 ]);

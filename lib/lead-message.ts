@@ -14,7 +14,7 @@ export function escapedField(text: string, limit: number): string {
 export function formatLeadMessage(i: MessageInput): string {
   const field = (title: string, value: string, max: number) => value ? `<b>${title}:</b>\n${escapedField(value, max)}\n\n` : "";
   const diagnosis = i.context.includes("План:\n");
-  const costReview = i.context.startsWith("Стоимость повторяющейся работы · tools-cost-3.0.0");
+  const costReview = i.context.startsWith("Стоимость повторяющейся работы · tools-cost-3.0.0") || i.context.startsWith("Интерактивный разбор · tools-quiz-4.0.0");
   const detailed = diagnosis || costReview;
   const prefix = "<b>НОВАЯ ЗАЯВКА С САЙТА</b>\n\n" +
     field("Имя", i.name, 160) + field("Компания", i.company, 160) + field("Контакт", i.phone, 100) +

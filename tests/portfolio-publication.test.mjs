@@ -1,0 +1,5 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {projectEntries,projects,projectBySlug,projectsWithCase,canPublishProject} from '../content/projects.ts';
+test('two approved cases publish; corporate case stays private',()=>{assert.equal(projectEntries.length,3);assert.deepEqual(projectEntries.map(p=>p.slug),['eatlyy','club-ops','corporate-learning']);assert.equal(projects.length,2);assert.equal(projectsWithCase().length,2);assert.equal(projectBySlug('corporate-learning'),undefined);for(const p of projectEntries)assert.ok(p.caseStudy.sections.some(s=>s.heading==='Демонстрация'));});
+test('publication requires explicit owner evidence, date and approved image provenance',()=>{const p=structuredClone(projectEntries[2]);p.publication='published';assert.equal(canPublishProject(p),false);p.publicationApproval='Owner confirmed usage rights';p.caseStudy.publishDate='2026-11-11';assert.equal(canPublishProject(p),false);p.image={src:'/projects/example.png',alt:'demo',approved:true,sourceFile:'demo.png',sourceCommit:'a'.repeat(40)};assert.equal(canPublishProject(p),true);p.image.approved=false;assert.equal(canPublishProject(p),false);});

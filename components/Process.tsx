@@ -27,11 +27,11 @@ const steps = [
   }
 ];
 
-export default function Process() {
+export default function Process({ index = "06" }: { index?: string }) {
   return (
     <section id="process" className="bg-cream px-[22px] py-16 min-[560px]:py-24">
       <div className="mx-auto max-w-[1080px]">
-        <SectionLabel index="06" label="Как я работаю" note="Шесть шагов" tone="light" />
+        <SectionLabel index={index} label="Как я работаю" note="Шесть шагов" tone="light" />
 
         <h2 className="m-0 mb-12 max-w-[20ch] text-balance font-display text-[clamp(30px,5.8vw,54px)] font-extrabold uppercase leading-[1.03] tracking-[-0.02em] text-graphite min-[560px]:mb-16">
           От задачи бизнеса до развития продукта

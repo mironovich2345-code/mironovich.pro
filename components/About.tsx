@@ -2,11 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import SectionLabel from "./SectionLabel";
 
-export default function About() {
+export default function About({ index = "05" }: { index?: string }) {
   return (
     <section id="about" className="bg-graphite px-[22px] py-16 min-[560px]:py-24">
       <div className="mx-auto max-w-[1080px]">
-        <SectionLabel index="05" label="Обо мне" note="Данил Миронович" />
+        <SectionLabel index={index} label="Обо мне" note="Данил Миронович" />
 
         <div className="grid gap-12 min-[900px]:grid-cols-[1.15fr_0.85fr] min-[900px]:gap-16">
           <div className="flex flex-col gap-7">

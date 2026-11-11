@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { products } from "@/content/products";
 import { tools } from "@/config/tools";
 import { allServices } from "@/config/services";
 import { projectsPublished, siteUrl } from "@/config/site";
@@ -14,6 +15,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     { url: siteUrl + "/", changeFrequency: "monthly", priority: 1 },
+    { url: siteUrl + "/products", changeFrequency: "monthly", priority: 0.7 },
+    ...products.map(p => ({ url: siteUrl + "/products/" + p.slug, changeFrequency: "monthly" as const, priority: 0.6 })),
     { url: siteUrl + "/tools", changeFrequency: "monthly", priority: 0.8 },
     ...tools.filter((t) => t.status === "available").map((t) => ({ url: siteUrl + t.href, changeFrequency: "monthly" as const, priority: 0.8 })),
     { url: siteUrl + "/services", changeFrequency: "monthly", priority: 0.8 },
@@ -22,7 +25,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...(projectsPublished ? [{ url: siteUrl + "/projects", changeFrequency: "monthly" as const, priority: 0.7 }] : []),
     ...projectsWithCase().map((p) => ({
       url: siteUrl + "/projects/" + p.slug,
-      lastModified: new Date(p.caseStudy!.publishDate),
+      ...(p.caseStudy!.publishDate ? { lastModified: new Date(p.caseStudy!.publishDate) } : {}),
       changeFrequency: "yearly" as const,
       priority: 0.6,
     })),

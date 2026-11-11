@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { serviceBySlug } from "@/config/services";
 import { PROJECT_STATUSES, type Project } from "@/content/projects";
 
@@ -9,7 +10,7 @@ const statusClass: Record<Project["status"], string> = {
 };
 
 /** One portfolio entry. Rows without confirmed data (tech, result, stage) are simply not rendered. */
-export default function ProjectCard({ project }: { project: Project }) {
+export default function ProjectCard({ project, compact = false }: { project: Project; compact?: boolean }) {
   const status = PROJECT_STATUSES.find((s) => s.value === project.status)!;
   const service = serviceBySlug(project.direction);
   const rows: [string, string | undefined][] = [
@@ -22,6 +23,8 @@ export default function ProjectCard({ project }: { project: Project }) {
 
   return (
     <article className="flex flex-col gap-5 border-t-2 border-graphite py-8">
+      {project.image?.approved && project.image.src && <Image src={project.image.src} alt={project.image.alt} width={960} height={600} className={compact ? "h-[240px] w-full bg-white object-contain" : "max-h-[680px] w-full object-contain"}/>}
+      {!compact && project.image?.approved && project.image.caption && <p className="m-0 text-sm leading-relaxed text-graphite/70">{project.image.caption}</p>}
       <div className="flex flex-wrap items-center gap-3">
         <span className={"inline-flex px-3 py-1.5 text-[12px] font-medium uppercase tracking-[0.12em] " + statusClass[project.status]}>
           {status.label}
@@ -38,7 +41,7 @@ export default function ProjectCard({ project }: { project: Project }) {
       </div>
       <dl className="m-0 grid gap-4">
         {rows
-          .filter((r): r is [string, string] => Boolean(r[1]))
+          .filter((r): r is [string, string] => Boolean(r[1]) && (!compact || r[0] === "Задача"))
           .map(([k, v]) => (
             <div key={k}>
               <dt className="mb-1 text-[11px] uppercase tracking-[0.16em] text-maroon">{k}</dt>
