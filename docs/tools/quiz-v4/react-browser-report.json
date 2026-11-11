@@ -1,0 +1,53 @@
+{
+  "cases": [
+    {
+      "width": 320,
+      "labor": true,
+      "transfer": true
+    },
+    {
+      "width": 375,
+      "labor": true,
+      "transfer": true
+    },
+    {
+      "width": 768,
+      "labor": true,
+      "transfer": true
+    },
+    {
+      "width": 1024,
+      "labor": true,
+      "transfer": true
+    },
+    {
+      "width": 1440,
+      "labor": true,
+      "transfer": true
+    }
+  ],
+  "errors": [],
+  "posts": 1,
+  "axe": [
+    {
+      "width": 320,
+      "violations": []
+    },
+    {
+      "width": 375,
+      "violations": []
+    },
+    {
+      "width": 768,
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "violations": []
+    }
+  ]
+}

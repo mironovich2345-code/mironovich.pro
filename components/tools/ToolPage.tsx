@@ -14,7 +14,7 @@ export default function ToolPage({ path, title, description, faq, children }: { 
     { "@type": "FAQPage", mainEntity: faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) },
   ] };
   return <main id="main">
-    <section id="hero" className="bg-graphite px-[22px] pb-12 pt-7 min-[560px]:pb-16 min-[560px]:pt-10">
+    <section id="hero" className={(path !== "/tools" ? "max-[900px]:sr-only " : "") + "bg-graphite px-[22px] pb-12 pt-7 min-[560px]:pb-16 min-[560px]:pt-10"}>
       <div className="mx-auto max-w-[1080px]">
         <Breadcrumbs items={crumbs} />
         <p className="mb-5 mt-8 text-[11px] uppercase tracking-[0.18em] text-signal">MIRONOVICH / Бесплатные инструменты</p>
@@ -22,7 +22,7 @@ export default function ToolPage({ path, title, description, faq, children }: { 
         <p className="mb-0 mt-6 max-w-[65ch] text-pretty text-[17px] leading-[1.65] text-cream/80">{description}</p>
       </div>
     </section>
-    <section className="bg-graphite px-[22px] pb-16 min-[560px]:pb-24"><div className="mx-auto max-w-[1080px]">{children}</div></section>
+    <section className="bg-graphite px-[22px] max-[900px]:px-0 pb-16 min-[560px]:pb-24"><div className="mx-auto max-w-[1080px]">{children}</div></section>
     <Faq items={faq} title="Как устроен расчёт" index="03" continued={false} />
     <section className="bg-graphite px-[22px] py-10"><div className="mx-auto flex max-w-[1080px] flex-wrap gap-x-8 gap-y-2 text-sm text-stone"><Link href="/tools" className="inline-flex min-h-[44px] items-center underline underline-offset-4">Все инструменты</Link><Link href="/services/development" className="inline-flex min-h-[44px] items-center underline underline-offset-4">Разработка и автоматизация</Link><Link href="/services/support" className="inline-flex min-h-[44px] items-center underline underline-offset-4">Сопровождение</Link></div></section>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structured) }} />
