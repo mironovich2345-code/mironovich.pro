@@ -1,0 +1,112 @@
+{
+  "cases": [
+    {
+      "path": "/products",
+      "width": 320,
+      "overflow": false
+    },
+    {
+      "path": "/products/ai-career",
+      "width": 320,
+      "overflow": false
+    },
+    {
+      "path": "/products/automation-priorities",
+      "width": 320,
+      "overflow": false
+    },
+    {
+      "path": "/products",
+      "width": 375,
+      "overflow": false
+    },
+    {
+      "path": "/products/ai-career",
+      "width": 375,
+      "overflow": false
+    },
+    {
+      "path": "/products/automation-priorities",
+      "width": 375,
+      "overflow": false
+    },
+    {
+      "path": "/products",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "path": "/products/ai-career",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "path": "/products/automation-priorities",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "path": "/products",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "path": "/products/ai-career",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "path": "/products/automation-priorities",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "path": "/products",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "path": "/products/ai-career",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "path": "/products/automation-priorities",
+      "width": 1440,
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "axe": [
+    {
+      "path": "/products",
+      "width": 375,
+      "violations": []
+    },
+    {
+      "path": "/products/ai-career",
+      "width": 375,
+      "violations": []
+    },
+    {
+      "path": "/products/automation-priorities",
+      "width": 375,
+      "violations": []
+    },
+    {
+      "path": "/products",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "path": "/products/ai-career",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "path": "/products/automation-priorities",
+      "width": 1440,
+      "violations": []
+    }
+  ]
+}

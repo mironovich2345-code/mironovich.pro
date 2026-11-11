@@ -20,7 +20,7 @@ export default function SiteHeader() {
           {site.name}
         </Link>
 
-        <nav aria-label="Основная навигация" className="hidden items-center gap-7 min-[860px]:flex">
+        <nav aria-label="Основная навигация" className="hidden items-center gap-4 min-[1024px]:flex">
           <ServicesMenu links={serviceLinks} />
           {navLinks.map((l) => (
             <Link

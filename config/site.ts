@@ -32,6 +32,7 @@ export const serviceLinks: NavLink[] = services.map((s) => ({ href: s.href, labe
 
 /** Top-level links after the «Услуги» group. */
 export const navLinks: NavLink[] = [
+  { href: "/products", label: "Продукты" },
   ...(projectsPublished ? [{ href: "/projects", label: "Проекты" }] : []),
   ...(toolsNavigation.enabled ? [{ href: toolsNavigation.href, label: toolsNavigation.label }] : []),
   { href: "/blog", label: "Блог" },
