@@ -58,7 +58,7 @@ export default function MobileMenu({ services, links }: { services: NavLink[]; l
     "flex min-h-[52px] items-center justify-between border-b border-cream/10 text-[16px] uppercase tracking-[0.04em] text-cream hover:text-signal";
 
   return (
-    <div className="min-[1024px]:hidden">
+    <div className="min-[1150px]:hidden">
       <button
         ref={toggleRef}
         type="button"
