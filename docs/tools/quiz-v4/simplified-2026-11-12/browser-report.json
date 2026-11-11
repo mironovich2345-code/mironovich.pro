@@ -1,0 +1,251 @@
+{
+  "widths": [
+    {
+      "width": 320,
+      "labor": "pass",
+      "automation": "pass",
+      "transfer": "pass",
+      "geometry": "pass",
+      "sameTabReload": "pass"
+    },
+    {
+      "width": 375,
+      "labor": "pass",
+      "automation": "pass",
+      "transfer": "pass",
+      "geometry": "pass",
+      "sameTabReload": "pass"
+    },
+    {
+      "width": 768,
+      "labor": "pass",
+      "automation": "pass",
+      "transfer": "pass",
+      "geometry": "pass",
+      "sameTabReload": "pass"
+    },
+    {
+      "width": 1024,
+      "labor": "pass",
+      "automation": "pass",
+      "transfer": "pass",
+      "geometry": "pass",
+      "sameTabReload": "pass"
+    },
+    {
+      "width": 1440,
+      "labor": "pass",
+      "automation": "pass",
+      "transfer": "pass",
+      "geometry": "pass",
+      "sameTabReload": "pass"
+    }
+  ],
+  "jsErrors": [],
+  "assetErrors": [],
+  "axe": [
+    {
+      "width": 320,
+      "tool": "labor",
+      "state": "first",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "tool": "labor",
+      "state": "result",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "tool": "automation",
+      "state": "first",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "tool": "automation",
+      "state": "result",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "tool": "labor",
+      "state": "first",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "tool": "labor",
+      "state": "result",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "tool": "automation",
+      "state": "first",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "tool": "automation",
+      "state": "result",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "tool": "labor",
+      "state": "first",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "tool": "labor",
+      "state": "result",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "tool": "automation",
+      "state": "first",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "tool": "automation",
+      "state": "result",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "tool": "labor",
+      "state": "first",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "tool": "labor",
+      "state": "result",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "tool": "automation",
+      "state": "first",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "tool": "automation",
+      "state": "result",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "tool": "labor",
+      "state": "first",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "tool": "labor",
+      "state": "result",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "tool": "automation",
+      "state": "first",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "tool": "automation",
+      "state": "result",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "tool": "labor",
+      "state": "first",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "tool": "labor",
+      "state": "result",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "tool": "labor",
+      "state": "first",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "tool": "labor",
+      "state": "result",
+      "violations": []
+    }
+  ],
+  "scenarios": [
+    "live salary / employees / schedule / periods",
+    "unknown salary",
+    "duration hour conversion",
+    "unfinished second task retains selected money",
+    "separate multiple tasks without total",
+    "actual shifts / employer cost",
+    "validation and missing-field focus",
+    "mobile next / back / browser back",
+    "reload restores values and selected task",
+    "imported parameters skip repeated questions",
+    "no lead or OpenAI request before consent and submission"
+  ],
+  "earlyLeadPosts": 0,
+  "unexpectedAiRequests": [],
+  "fullPageAxe": [
+    {
+      "width": 375,
+      "tool": "labor",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "tool": "automation",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "tool": "labor",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "tool": "automation",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "tool": "labor",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "tool": "labor",
+      "violations": []
+    }
+  ],
+  "analytics": [
+    {
+      "consent": "denied",
+      "toolEventCount": 0,
+      "noAnswersOrFinancialValues": true
+    },
+    {
+      "consent": "granted",
+      "toolEventCount": 10,
+      "noAnswersOrFinancialValues": true
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 import { record } from "./input.ts";
 import { taskLabels, type Task } from "./guided.ts";
 import { QUIZ_VERSION, knownHasTime, parseKnownCost, parseQuizDiagnosis, type KnownCost, type QuizDiagnosis } from "./quiz-model.ts";
-import { buildQuizLabor, cleanLaborDraft, initialLaborDraft, laborSteps, type LaborDraft, type QuizStep } from "./quiz-draft.ts";
+import { taskWorkspaceState, cleanLaborDraft, initialLaborDraft, laborSteps, type LaborDraft, type QuizStep } from "./quiz-draft.ts";
 export type QuizMode = "labor-cost" | "automation-cost";
 export type DiagnosisDraft = { tasks: Task[]; obstacle: QuizDiagnosis["obstacle"] | ""; frequency: Exclude<QuizDiagnosis["frequency"], "measured"> | ""; consequence: QuizDiagnosis["consequence"] | ""; known: KnownCost | null };
 export const initialDiagnosis = (known: KnownCost | null = null): DiagnosisDraft => ({ tasks: known?.input.tasks ?? [], obstacle: "", frequency: "", consequence: "", known });
@@ -28,12 +28,12 @@ function cleanDiagnosis(raw: unknown): DiagnosisDraft | null {
   if (s.known !== null && !known) return null;
   return { tasks: [...s.tasks] as Task[], obstacle: s.obstacle as DiagnosisDraft["obstacle"], frequency: s.obstacle === "unclear" ? "unknown" : s.frequency as DiagnosisDraft["frequency"], consequence: s.obstacle === "unclear" ? "unknown" : s.consequence as DiagnosisDraft["consequence"], known };
 }
-export function encodeCheckpoint(mode: QuizMode, draft: LaborDraft | DiagnosisDraft, step: string, now = Date.now()): string {
+export function encodeCheckpoint(mode: QuizMode, draft: LaborDraft | DiagnosisDraft, step: string, now = Date.now(), activeTask?: Task): string {
   const clean = mode === "labor-cost" ? cleanLaborDraft(draft) : cleanDiagnosis(draft);
   if (!clean) throw new RangeError("Invalid wizard checkpoint");
-  return JSON.stringify({ version: QUIZ_VERSION, mode, savedAt: now, step, draft: clean });
+  return JSON.stringify({ version: QUIZ_VERSION, mode, savedAt: now, step, draft: clean, ...(activeTask && clean.tasks.includes(activeTask) ? { activeTask } : {}) });
 }
-export function decodeCheckpoint(mode: QuizMode, raw: string | null, now = Date.now()): { draft: LaborDraft | DiagnosisDraft; step: string } | null {
+export function decodeCheckpoint(mode: QuizMode, raw: string | null, now = Date.now()): { draft: LaborDraft | DiagnosisDraft; step: string; activeTask?: Task } | null {
   if (!raw || raw.length > 20000) return null;
   try {
     const s = record(JSON.parse(raw));
@@ -41,8 +41,9 @@ export function decodeCheckpoint(mode: QuizMode, raw: string | null, now = Date.
     const draft = mode === "labor-cost" ? cleanLaborDraft(s.draft) : cleanDiagnosis(s.draft);
     if (!draft) return null;
     const steps = mode === "labor-cost" ? laborSteps(draft as LaborDraft) : diagnosisSteps(draft as DiagnosisDraft);
-    const complete = mode === "labor-cost" ? buildQuizLabor(draft as LaborDraft) : buildDiagnosis(draft as DiagnosisDraft);
-    return { draft, step: s.step === "result" && complete ? "result" : steps.some(step => step.id === s.step) ? s.step as string : steps[0].id };
+    const activeTask = typeof s.activeTask === "string" && draft.tasks.includes(s.activeTask as Task) ? s.activeTask as Task : draft.tasks[0];
+    const complete = mode === "labor-cost" ? activeTask && taskWorkspaceState(draft as LaborDraft, activeTask).input : buildDiagnosis(draft as DiagnosisDraft);
+    return { draft, step: s.step === "result" && complete ? "result" : steps.some(step => step.id === s.step) ? s.step as string : steps[0].id, ...(activeTask ? { activeTask } : {}) };
   } catch { return null; }
 }
 export function encodeQuizTransfer(known: KnownCost, now = Date.now()): string {

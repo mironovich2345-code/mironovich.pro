@@ -1,0 +1,68 @@
+[
+  {
+    "tool": "labor-cost",
+    "status": 200,
+    "noEarlyPost": true,
+    "consentRequired": true,
+    "oneConsentedPost": true,
+    "contextKind": "labor",
+    "clientFeedback": "pass",
+    "openFormAxeViolations": [],
+    "realApiWithSyntheticDelivery": true
+  },
+  {
+    "tool": "labor-cost",
+    "status": 429,
+    "noEarlyPost": true,
+    "consentRequired": true,
+    "oneConsentedPost": true,
+    "contextKind": "labor",
+    "clientFeedback": "pass",
+    "openFormAxeViolations": null,
+    "realApiWithSyntheticDelivery": false
+  },
+  {
+    "tool": "labor-cost",
+    "status": 503,
+    "noEarlyPost": true,
+    "consentRequired": true,
+    "oneConsentedPost": true,
+    "contextKind": "labor",
+    "clientFeedback": "pass",
+    "openFormAxeViolations": null,
+    "realApiWithSyntheticDelivery": false
+  },
+  {
+    "tool": "automation-cost",
+    "status": 200,
+    "noEarlyPost": true,
+    "consentRequired": true,
+    "oneConsentedPost": true,
+    "contextKind": "diagnosis",
+    "clientFeedback": "pass",
+    "openFormAxeViolations": [],
+    "realApiWithSyntheticDelivery": true
+  },
+  {
+    "tool": "automation-cost",
+    "status": 429,
+    "noEarlyPost": true,
+    "consentRequired": true,
+    "oneConsentedPost": true,
+    "contextKind": "diagnosis",
+    "clientFeedback": "pass",
+    "openFormAxeViolations": null,
+    "realApiWithSyntheticDelivery": false
+  },
+  {
+    "tool": "automation-cost",
+    "status": 503,
+    "noEarlyPost": true,
+    "consentRequired": true,
+    "oneConsentedPost": true,
+    "contextKind": "diagnosis",
+    "clientFeedback": "pass",
+    "openFormAxeViolations": null,
+    "realApiWithSyntheticDelivery": false
+  }
+]

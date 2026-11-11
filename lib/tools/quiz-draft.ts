@@ -1,6 +1,6 @@
-import { parseDecimal, record } from "./input.ts";
+import { parseDecimal, record, round2 } from "./input.ts";
 import { taskLabels, type Task } from "./guided.ts";
-import { daysInMonth, shiftCount, parseQuizLabor, type QuizLabor, type QuizGroup, type Schedule } from "./quiz-model.ts";
+import { daysInMonth, shiftCount, periodFactor, calculateQuizLabor, parseQuizLabor, type QuizLabor, type QuizGroup, type Schedule } from "./quiz-model.ts";
 
 export type MeasureDraft = { frequency: "shift" | "week" | "month"; repetitions: string; frequencyUnknown: boolean; duration: string; durationUnit: "minutes" | "hours"; durationUnknown: boolean };
 export type GroupDraft = { id: QuizGroup["id"]; employees: string; schedule: Schedule | ""; useActual: boolean; actualShifts: string; shiftHours: string; payKind: "salary" | "employer" | "unknown"; amount: string; measures: Partial<Record<Task, MeasureDraft>> };
@@ -14,6 +14,8 @@ export function currentMonth(now = new Date()): string {
   return `${parts.find(p => p.type === "year")!.value}-${parts.find(p => p.type === "month")!.value}`;
 }
 export const initialLaborDraft = (): LaborDraft => ({ tasks: [], month: currentMonth(), groups: [emptyGroup()], groupsDistinct: true, independent: [] });
+/** Presentation default only: no pay, timing or schedule assumptions. Legacy drafts stay valid. */
+export const initialWorkspaceDraft = (): LaborDraft => ({ ...initialLaborDraft(), tasks: ["reporting"] });
 export function laborSteps(d: LaborDraft): QuizStep[] {
   const out: QuizStep[] = [{ id: "processes", kind: "processes" }];
   for (const group of d.groups) {
@@ -54,6 +56,32 @@ export function stepError(d: LaborDraft, step: QuizStep): string | null {
 export function buildQuizLabor(d: LaborDraft): QuizLabor | null {
   if (laborSteps(d).some(step => stepError(d, step))) return null;
   return parseQuizLabor({ tasks: d.tasks, month: d.month, groupsDistinct: d.groupsDistinct, independent: d.independent.filter(t => d.tasks.includes(t)), groups: d.groups.map(g => ({ id: g.id, employees: parseDecimal(g.employees), schedule: g.schedule, actualShifts: g.useActual || g.schedule === "other" ? parseDecimal(g.actualShifts) : null, shiftHours: parseDecimal(g.shiftHours), pay: g.payKind === "unknown" ? { kind: "unknown" } : { kind: g.payKind, amount: parseDecimal(g.amount) }, measures: Object.fromEntries(d.tasks.map(task => { const m = g.measures[task] ?? emptyMeasure(); return [task, { frequency: m.frequency, repetitions: m.frequencyUnknown ? null : parseDecimal(m.repetitions), minutes: m.frequencyUnknown || m.durationUnknown || (m.duration === "" && parseDecimal(m.repetitions) === 0) ? null : parseDecimal(m.duration) * (m.durationUnit === "hours" ? 60 : 1) }]; })) })) });
+}
+
+/** Validate the selected process independently: an unfinished second process must not hide it. */
+export function taskWorkspaceState(draft: LaborDraft, task: Task) {
+  const selected = { ...draft, tasks: draft.tasks.includes(task) ? [task] : [], independent: [] };
+  const steps = laborSteps(selected);
+  const missing = steps.find(step => stepError(selected, step)) ?? null;
+  const input = buildQuizLabor(selected);
+  const result = input ? calculateQuizLabor(input) : null;
+  let hours: number | null = result?.rows[0]?.hours ?? null;
+  if (!input && selected.tasks.length) {
+    let rawHours = 0, valid = true;
+    for (const group of selected.groups) {
+      const m = group.measures[task] ?? emptyMeasure();
+      const needed: QuizStep[] = [{ id: "", kind: "employees", group: group.id }, { id: "", kind: "frequency", group: group.id, task }];
+      if (parseDecimal(m.repetitions) !== 0) needed.push({ id: "", kind: "duration", group: group.id, task });
+      const shifts = group.schedule ? shiftCount(draft.month, group.schedule, group.useActual || group.schedule === "other" ? parseDecimal(group.actualShifts) : null) : null;
+      if (needed.some(s => stepError(selected, s)) || m.frequencyUnknown || (m.durationUnknown && parseDecimal(m.repetitions) !== 0) || (m.frequency !== "month" && !daysInMonth(draft.month)) || (m.frequency === "shift" && shifts === null)) { valid = false; break; }
+      const repetitions = parseDecimal(m.repetitions), minutes = repetitions === 0 ? 0 : parseDecimal(m.duration) * (m.durationUnit === "hours" ? 60 : 1);
+      const perPerson = repetitions * minutes / 60 * periodFactor(draft.month, m.frequency, shifts ?? 0);
+      if (!Number.isFinite(perPerson) || perPerson > 744 || perPerson < 0) { valid = false; break; }
+      rawHours += parseDecimal(group.employees) * perPerson;
+    }
+    if (valid) hours = round2(rawHours);
+  }
+  return { input, result, row: result?.rows[0] ?? null, hours, missing, error: missing ? stepError(selected, missing) : !input && selected.tasks.length ? "Проверьте сочетание частоты, времени и стоимости: превышены допустимые пределы." : null };
 }
 
 /** Only bounded numeric drafts/enums persist. Never free text, contacts or event payloads. */
