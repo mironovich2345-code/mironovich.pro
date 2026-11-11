@@ -1,0 +1,26 @@
+[
+  {
+    "status": 200,
+    "contextKind": "diagnosis",
+    "noEarlyPost": true,
+    "oneConsentedPost": true,
+    "clientStateCorrect": true,
+    "realServerRecalculation": true
+  },
+  {
+    "status": 429,
+    "contextKind": "diagnosis",
+    "noEarlyPost": true,
+    "oneConsentedPost": true,
+    "clientStateCorrect": true,
+    "realServerRecalculation": false
+  },
+  {
+    "status": 503,
+    "contextKind": "diagnosis",
+    "noEarlyPost": true,
+    "oneConsentedPost": true,
+    "clientStateCorrect": true,
+    "realServerRecalculation": false
+  }
+]

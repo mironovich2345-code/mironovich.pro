@@ -1,8 +1,10 @@
 from playwright.sync_api import sync_playwright
 from pathlib import Path
 import os
+from urllib.parse import urlsplit
 import json
 BASE=os.environ.get('TEST_BASE_URL','http://127.0.0.1:3031')
+assert urlsplit(BASE).hostname in ['localhost','127.0.0.1'] and urlsplit(BASE).scheme=='http', 'Local synthetic preview only'
 OUT=Path(__file__).resolve().parent/'react-screenshots';report={'cases':[],'errors':[],'posts':0,'axe':[]}
 with sync_playwright() as pw:
  b=pw.chromium.launch(executable_path='/usr/bin/chromium',args=['--no-sandbox'])
