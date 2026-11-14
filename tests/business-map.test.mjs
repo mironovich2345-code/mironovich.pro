@@ -92,7 +92,7 @@ test("T18 missing salary keeps hours and FTE; direct hourly rate is already full
   assert.equal(r.scenarios[1].freedHours.value,16.8); assert.equal(row({hourlyRate:700},{salary:null}).timeCost.value,29400);
 });
 test("T19 config version and bit-identical JSON; numeric configuration is injectable",()=>{
-  assert.equal(JSON.stringify(run()),JSON.stringify(run())); assert.equal(run().modelVersion,"business-map-v1");
+  assert.equal(JSON.stringify(run()),JSON.stringify(run())); assert.equal(run().modelVersion,"business-map-v1.1");
   const r=calculateBusinessMap({company,processes:[process]},{...businessMapModel,version:"test-hours",monthlyHours:160});
   assert.equal(r.modelVersion,"test-hours"); assert.equal(r.processes[0].hourlyRate.value,487.5);
   assert.throws(()=>validateModel({...businessMapModel,monthlyHours:0}),RangeError);
@@ -207,4 +207,17 @@ test("all m/e buckets conserve time, stay bounded and maintain scenario order",(
 test("unrepresentable aggregate payback is rejected rather than serialized as Infinity/null",()=>{
   const zeroCosts={implementation:[1e9,1e9],training:[0,0],licenses:[0,0],maintenance:[0,0],external:[0,0]};
   assert.throws(()=>row({cash:{...cash,replacementRate:1e-310},costs:zeroCosts}),/слишком велик/);
+});
+
+// A capacity warning alone used to leave the matrix first-priority recommendation intact.
+test("W-CAPACITY never recommends first; exact fund boundary remains eligible",()=>{
+  const over=run({employees:1,operations:831,period:"month",minutes:12});
+  const r=over.processes[0];
+  assert.equal(r.matrixGroup,"first"); assert.equal(r.confidence,"low");
+  assert.equal(r.group,"preliminary"); assert.equal(over.recommendedId,null);
+  assert.ok(r.reasons.includes("R-CAPACITY")); assert.ok(r.missing.includes("workloadCapacity"));
+  assert.equal(r.hours.value,166.2); assert.equal(r.scenarios[1].freedHours.value,66.48);
+  const boundary=run({employees:1,operations:825,period:"month",minutes:12});
+  assert.equal(boundary.processes[0].hours.value,165);
+  assert.equal(boundary.processes[0].confidence,"high"); assert.equal(boundary.recommendedId,"p1");
 });

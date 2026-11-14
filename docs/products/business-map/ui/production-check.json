@@ -1,0 +1,38 @@
+{
+  "environment": "production",
+  "prototypeFlag": "1",
+  "checks": [
+    {
+      "path": "/prototype/business-map",
+      "method": "GET",
+      "status": 404,
+      "prototypeFormVisible": false
+    },
+    {
+      "path": "/prototype/business-map",
+      "method": "HEAD",
+      "status": 404,
+      "prototypeFormVisible": false
+    },
+    {
+      "path": "/prototype/business-map?demo=portfolio",
+      "method": "GET",
+      "status": 404,
+      "prototypeFormVisible": false
+    },
+    {
+      "path": "/tools/labor-cost",
+      "method": "GET",
+      "status": 200,
+      "prototypeFormVisible": false
+    },
+    {
+      "path": "/tools/automation-cost",
+      "method": "GET",
+      "status": 200,
+      "prototypeFormVisible": false
+    }
+  ],
+  "httpClientNode": "v24.22.1",
+  "buildAndServerNode": "v22.23.5"
+}

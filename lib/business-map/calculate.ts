@@ -33,14 +33,21 @@ function calculateProcess(p: Process, c: Company, m: BusinessMapModel): ProcessR
   const unknown = (["employees", "operations", "minutes", "mechanical", "systems", "regulation", "exceptions", "error", "judgment", "access", "personalData"] as const).filter(k => p[k] === "unknown" || p[k] === null);
   missing.push(...unknown);
   if (p.source === "unknown") missing.push("source");
-  const confidence: Band = p.personalData === "unknown" ? "low" : p.source === "measured" && unknown.length <= m.confidence.measuredUnknownMax ? "high" : p.source === "estimate" && unknown.length <= m.confidence.estimatedUnknownMax ? "medium" : "low";
+  let confidence: Band = p.personalData === "unknown" ? "low" : p.source === "measured" && unknown.length <= m.confidence.measuredUnknownMax ? "high" : p.source === "estimate" && unknown.length <= m.confidence.estimatedUnknownMax ? "medium" : "low";
   const hMonthly = dec(p.monthlyHours ?? c.monthlyHours ?? m.monthlyHours);
   const factor = p.periodsPerMonth === undefined ? dec(m.periods[p.period][0]).div(m.periods[p.period][1]) : dec(p.periodsPerMonth);
   const n = p.operations === null ? null : dec(p.operations).mul(factor);
   const h = n === null || p.minutes === null ? null : hours(n, dec(p.minutes), dec(1));
   const rate = p.hourlyRate !== undefined && p.hourlyRate !== null ? dec(p.hourlyRate) : c.salary === undefined || c.salary === null ? null : dec(c.salary).mul(c.salaryLoad ?? m.salaryLoad).div(hMonthly);
   const capacity = h !== null && p.employees !== null && h.cmp(hMonthly.mul(p.employees)) > 0;
-  if (capacity) flags.push("W-CAPACITY");
+  if (capacity) {
+    flags.push("W-CAPACITY");
+    reasons.push("R-CAPACITY");
+    missing.push("workloadCapacity");
+    // Measured inputs that contradict the available work fund require reconciliation.
+    // Keep all quantities and financial assumptions; suppress a confident first priority.
+    confidence = "low";
+  }
   if (n !== null && n.cmp(m.lowRepeatMonthly) < 0) flags.push("W-LOW-REPEAT");
   if (p.personalData !== "no") flags.push("W-LEGAL-REVIEW");
   if (p.overlapsWith.length || !p.independent) flags.push("W-OVERLAP");

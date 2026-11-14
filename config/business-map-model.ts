@@ -1,6 +1,6 @@
 /** Initial assumptions [Г]. Change version whenever any rule changes. */
 export const businessMapModel = {
-  version: "business-map-v1", salaryLoad: 1.3, monthlyHours: 165,
+  version: "business-map-v1.1", salaryLoad: 1.3, monthlyHours: 165,
   periods: { day: [21, 1], week: [52, 12], month: [1, 1] },
   mechanical: { under25: [0, 0.125, 0.25], from25to50: [0.25, 0.375, 0.5], from50to75: [0.5, 0.625, 0.75], over75: [0.75, 0.875, 1] },
   exceptions: { under10: [0, 0.05, 0.1], from10to30: [0.1, 0.2, 0.3], from30to50: [0.3, 0.4, 0.5] },

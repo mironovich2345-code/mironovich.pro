@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import Script from "next/script";
 import Analytics from "@/components/Analytics";
+import PublicSiteOnly from "@/components/PublicSiteOnly";
 import Footer from "@/components/Footer";
 import SiteHeader from "@/components/SiteHeader";
 import { ICON_VERSION, site, siteUrl } from "@/config/site";
@@ -83,10 +84,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Перейти к содержанию
         </a>
         {/* early in the DOM: the consent panel (fixed) is reached right after the skip link */}
-        <Analytics />
-        <SiteHeader />
+        <PublicSiteOnly><Analytics /><SiteHeader /></PublicSiteOnly>
         {children}
-        <Footer />
+        <PublicSiteOnly><Footer /></PublicSiteOnly>
       </body>
     </html>
   );
