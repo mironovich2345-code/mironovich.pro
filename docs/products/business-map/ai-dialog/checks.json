@@ -1,0 +1,26 @@
+{
+  "node": "v22.23.5",
+  "scope": "local checks; no deployment",
+  "checks": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "durationMs": 20173
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "durationMs": 8948
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "durationMs": 35860
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "durationMs": 3360
+    }
+  ]
+}

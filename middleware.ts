@@ -13,7 +13,11 @@ export async function middleware(request: NextRequest) {
   };
   const pathname = request.nextUrl.pathname;
   const previewService = env.RAILWAY_ENVIRONMENT_NAME === "preview";
-  if (!previewService && !isPrototypePath(pathname)) return NextResponse.next();
+  const businessMapApi = pathname === "/api/business-map" || pathname.startsWith("/api/business-map/");
+  if (!previewService && !isPrototypePath(pathname) && !businessMapApi) return NextResponse.next();
+  if (businessMapApi && prototypeMode(env.NODE_ENV, env.BUSINESS_MAP_PROTOTYPE, env.RAILWAY_ENVIRONMENT_NAME, env.SITE_NOINDEX) !== "preview") {
+    return new NextResponse("Not found", { status: 404, headers: previewResponseHeaders });
+  }
 
   // This exception has no application content. Railway probes cannot send Basic credentials.
   if (previewService && pathname === "/healthz" && ["GET", "HEAD"].includes(request.method)) {
@@ -28,8 +32,10 @@ export async function middleware(request: NextRequest) {
   if (access === "challenge") return new NextResponse("Authentication required", {
     status: 401, headers: { ...previewResponseHeaders, "WWW-Authenticate": PREVIEW_REALM },
   });
-  // Prototype has no server writes or public-site integrations. Never deliver a live lead from preview.
-  if (previewService && (pathname.startsWith("/api/") || !["GET", "HEAD"].includes(request.method))) {
+  // The sole POST exception is private, independently authenticated again by its handler.
+  // Public forms and every other API/mutation remain blocked in Preview.
+  const privateChat = pathname === "/api/business-map/chat" && request.method === "POST";
+  if (previewService && !privateChat && (pathname.startsWith("/api/") || !["GET", "HEAD"].includes(request.method))) {
     return new NextResponse("Not found", { status: 404, headers: previewResponseHeaders });
   }
   const response = NextResponse.next();

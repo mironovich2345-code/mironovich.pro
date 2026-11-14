@@ -15,9 +15,9 @@ const root=process.cwd();
 const report={build:'existing production build',node:process.version,cases:[]};
 const credentials=()=>({BUSINESS_MAP_PREVIEW_USERNAME:randomBytes(12).toString('hex'),BUSINESS_MAP_PREVIEW_PASSWORD:randomBytes(32).toString('base64url')});
 const header=env=>'Basic '+Buffer.from(`${env.BUSINESS_MAP_PREVIEW_USERNAME}:${env.BUSINESS_MAP_PREVIEW_PASSWORD}`,'utf8').toString('base64');
-const good=credentials(),other=credentials();
+const good=credentials(),other=credentials(),syntheticAiKey=randomBytes(32).toString('hex');
 const preview={NODE_ENV:'production',RAILWAY_ENVIRONMENT_NAME:'preview',BUSINESS_MAP_PROTOTYPE:'1',SITE_NOINDEX:'1',...good};
-const trackedEnv=['BUSINESS_MAP_PROTOTYPE','SITE_NOINDEX','RAILWAY_ENVIRONMENT_NAME','RAILWAY_ENVIRONMENT','BUSINESS_MAP_PREVIEW_USERNAME','BUSINESS_MAP_PREVIEW_PASSWORD'];
+const trackedEnv=['OPENAI_API_KEY','BUSINESS_MAP_AI_MODEL','BUSINESS_MAP_AI_ENABLED','BUSINESS_MAP_PROTOTYPE','SITE_NOINDEX','RAILWAY_ENVIRONMENT_NAME','RAILWAY_ENVIRONMENT','BUSINESS_MAP_PREVIEW_USERNAME','BUSINESS_MAP_PREVIEW_PASSWORD'];
 let active=null;
 
 async function unusedPort(){const s=createServer();s.listen(0,'127.0.0.1');await once(s,'listening');const port=s.address().port;await new Promise((resolve,reject)=>s.close(e=>e?reject(e):resolve()));return port;}
@@ -40,15 +40,15 @@ function privateHeaders(response,label){
   assert.match(response.headers.get('x-robots-tag')??'',/noindex/,label+' noindex');
   assert.equal(response.headers.get('cdn-cache-control'),'no-store',label+' CDN cache');
 }
-async function check(base,label,url,expected,{auth,headers={},method='GET',isPrivate=true,flight=false}={}){
-  const response=await fetch(base+url,{method,headers:{...headers,...(auth?{authorization:auth}:{})},redirect:'manual'});
+async function check(base,label,url,expected,{auth,headers={},method='GET',isPrivate=true,flight=false,body}={}){
+  const response=await fetch(base+url,{method,headers:{...headers,...(auth?{authorization:auth}:{})},redirect:'manual',...(body===undefined?{}:{body})});
   assert.equal(response.status,expected,label+' status');
   if(isPrivate)privateHeaders(response,label);
   if(expected===401)assert.match(response.headers.get('www-authenticate')??'',/^Basic /,label+' challenge');
   if(flight)assert.match(response.headers.get('content-type')??'',/text\/x-component/,label+' RSC type');
   const text=method==='HEAD'?'':await response.text();
-  for(const secret of [good.BUSINESS_MAP_PREVIEW_USERNAME,good.BUSINESS_MAP_PREVIEW_PASSWORD,other.BUSINESS_MAP_PREVIEW_USERNAME,other.BUSINESS_MAP_PREVIEW_PASSWORD])assert.equal(text.includes(secret),false,label+' secret disclosure');
-  if(expected!==200)assert.equal(text.includes('Какой процесс разберём?'),false,label+' private HTML disclosure');
+  for(const secret of [good.BUSINESS_MAP_PREVIEW_USERNAME,good.BUSINESS_MAP_PREVIEW_PASSWORD,other.BUSINESS_MAP_PREVIEW_USERNAME,other.BUSINESS_MAP_PREVIEW_PASSWORD,syntheticAiKey])assert.equal(text.includes(secret),false,label+' secret disclosure');
+  if(expected!==200)assert.equal(text.includes('Где ваш бизнес теряет'),false,label+' private HTML disclosure');
   report.cases.push({label,path:url,method,status:response.status,privateCache:isPrivate,authorizationVary:response.headers.get('vary')?.toLowerCase().includes('authorization')??false});
   return {text,response};
 }
@@ -59,7 +59,7 @@ try{
   await check(base,'HTML without authentication','/prototype/business-map',401);
   await check(base,'HTML wrong authentication','/prototype/business-map',401,{auth:header(other)});
   const {text}=await check(base,'HTML correct authentication','/prototype/business-map',200,{auth:header(good)});
-  assert.ok(text.includes('Какой процесс разберём?'),'authenticated prototype markup missing');
+  assert.ok(text.includes('Где ваш бизнес теряет'),'authenticated prototype markup missing');
   const assets=[...new Set([...text.matchAll(/(?:src|href)="([^"#]+)"/g)].map(m=>m[1].replaceAll('&amp;','&')).filter(url=>url.startsWith('/_next/')))];
   assert.ok(assets.some(url=>url.endsWith('.js')),'JS assets missing');assert.ok(assets.some(url=>url.endsWith('.css')),'CSS assets missing');
   for(const asset of assets){
@@ -80,7 +80,22 @@ try{
   await check(base,'root in private preview','/',401);
   await check(base,'public calculator in preview after login','/tools/labor-cost',200,{auth:header(good)});
   for(const endpoint of ['/api/lead','/api/tools/recommendation'])await check(base,'public integration disabled in preview',endpoint,404,{method:'POST',auth:header(good)});
+  await check(base,'chat without authentication','/api/business-map/chat',401,{method:'POST'});
+  await check(base,'chat with wrong authentication','/api/business-map/chat',401,{method:'POST',auth:header(other)});
+  await check(base,'chat without configured AI is unavailable','/api/business-map/chat',503,{method:'POST',auth:header(good),headers:{'content-type':'application/json'}});
+  await check(base,'chat GET is not exposed','/api/business-map/chat',404,{auth:header(good)});
+  await check(base,'chat descendants are not exposed','/api/business-map/chat/other',404,{method:'POST',auth:header(good)});
   await check(base,'HTML remains protected after authorized responses','/prototype/business-map',401);
+  await stop();
+
+  // Test-only configured route; malformed inputs are rejected BEFORE any provider call.
+  base=await start({...preview,BUSINESS_MAP_AI_ENABLED:'1',BUSINESS_MAP_AI_MODEL:'validation-fixture',OPENAI_API_KEY:syntheticAiKey});
+  await check(base,'configured chat rejects cross-origin','/api/business-map/chat',403,{method:'POST',auth:header(good),headers:{'content-type':'application/json',origin:'https://attacker.invalid'},body:'{}'});
+  await check(base,'configured chat requires JSON','/api/business-map/chat',415,{method:'POST',auth:header(good),headers:{'content-type':'text/plain'},body:'{}'});
+  await check(base,'configured chat rejects malformed JSON','/api/business-map/chat',400,{method:'POST',auth:header(good),headers:{'content-type':'application/json'},body:'{broken'});
+  await check(base,'configured chat validates full schema','/api/business-map/chat',422,{method:'POST',auth:header(good),headers:{'content-type':'application/json'},body:JSON.stringify({message:'synthetic fixture'})});
+  await check(base,'configured chat rejects array instead of scalar risk','/api/business-map/chat',422,{method:'POST',auth:header(good),headers:{'content-type':'application/json'},body:JSON.stringify({requestId:'validation-fixture-0001',intent:'interpret',message:'synthetic fixture',industry:'fitness',scenarioId:'reporting',facts:[],question:null,risk:['critical']})});
+  await check(base,'configured chat bounds body before JSON','/api/business-map/chat',413,{method:'POST',auth:header(good),headers:{'content-type':'application/json'},body:'x'.repeat(12001)});
   await stop();
 
   const withoutCredentials={...preview};delete withoutCredentials.BUSINESS_MAP_PREVIEW_USERNAME;delete withoutCredentials.BUSINESS_MAP_PREVIEW_PASSWORD;
@@ -100,13 +115,15 @@ try{
   await check(base,'closed preview protects bundles',assets[0],404,{auth:header(good)});
   await stop();
 
-  base=await start({...preview,RAILWAY_ENVIRONMENT_NAME:'production'});
+  base=await start({...preview,RAILWAY_ENVIRONMENT_NAME:'production',BUSINESS_MAP_AI_ENABLED:'1',BUSINESS_MAP_AI_MODEL:'validation-fixture',OPENAI_API_KEY:syntheticAiKey});
   await check(base,'Railway production with all opt-ins is hidden','/prototype/business-map',404,{auth:header(good)});
   await check(base,'Railway production RSC is hidden','/prototype/business-map?_rsc=check',404,{auth:header(good),headers:{RSC:'1'}});
+  await check(base,'production AI POST always hidden','/api/business-map/chat',404,{method:'POST',auth:header(good)});
+  await check(base,'production AI GET always hidden','/api/business-map/chat',404,{auth:header(good)});
   await check(base,'production public labor calculator','/tools/labor-cost',200,{isPrivate:false});
   await check(base,'production public automation calculator','/tools/automation-cost',200,{isPrivate:false});
   await check(base,'production homepage stays public','/',200,{isPrivate:false});
   await stop();
-  await writeFile(path.join(root,'docs/products/business-map/preview/http-check.json'),JSON.stringify(report,null,2)+'\n');
+  await writeFile(path.join(root,'docs/products/business-map/ai-dialog/http-check.json'),JSON.stringify(report,null,2)+'\n');
   console.log(`Business Map preview HTTP checks passed: ${report.cases.length}. No credentials included in report.`);
 }finally{await stop();}
