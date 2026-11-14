@@ -1,3 +1,4 @@
+import { monthlyWorkHours, workTimeCost } from "./work-economics.ts";
 import { numberField, record, round2, type Parsed } from "./input.ts";
 
 export const LABOR_VERSION = "labor-1.0.0";
@@ -27,7 +28,7 @@ export function parseLaborInput(raw: unknown): Parsed<LaborInput> {
   }
   if (Object.keys(errors).length) return { ok: false, errors };
   const input = Object.fromEntries(Object.keys(laborFields).map((k) => [k, src[k]])) as LaborInput;
-  const hours = input.employees * input.operationsPerDay * input.minutesPerOperation / 60 * input.workingDays;
+  const hours = monthlyWorkHours(input.employees * input.operationsPerDay, input.minutesPerOperation, input.workingDays);
   if (hours > 100000000 || hours * (input.hourlyCost ?? 0) * 12 > 1000000000000) {
     return { ok: false, errors: { form: "Совокупный объём слишком велик. Разделите расчёт на отдельные процессы." } };
   }
@@ -39,8 +40,8 @@ export function calculateLabor(raw: LaborInput): LaborResult {
   const parsed = parseLaborInput(raw);
   if (!parsed.ok) throw new RangeError("Invalid labor input");
   const i = parsed.value;
-  const hours = i.employees * i.operationsPerDay * i.minutesPerOperation / 60 * i.workingDays;
-  const monthlyCost = i.hourlyCost === null ? null : round2(hours * i.hourlyCost);
+  const hours = monthlyWorkHours(i.employees * i.operationsPerDay, i.minutesPerOperation, i.workingDays);
+  const monthlyCost = i.hourlyCost === null ? null : round2(workTimeCost(hours, i.hourlyCost));
   return {
     monthlyHours: round2(hours), monthlyCost, annualCost: monthlyCost === null ? null : round2(monthlyCost * 12),
     freedHours: round2(hours * i.automationPercent / 100),

@@ -1,3 +1,4 @@
+import { monthlyWorkHours, workTimeCost } from "./work-economics.ts";
 import { record, numberField, round2 } from "./input.ts";
 import { calculateCostWhy, parseCostInput, type CostInput } from "./cost-why.ts";
 import { taskLabels, type Task } from "./guided.ts";
@@ -110,8 +111,8 @@ export function calculateQuizLabor(raw: QuizLabor) {
   const groups = input.groups.map(g => {
     const v3 = calculateCostWhy(groupCostV3(input, g)), shifts = shiftCount(input.month, g.schedule, g.actualShifts)!, paidHours = shifts * g.shiftHours, rate = g.pay.kind === "unknown" ? null : g.pay.amount / paidHours;
     const rows = v3.rows.map(row => {
-      const m = g.measures[row.task]!, rawHours = m.repetitions === null || (m.minutes === null && m.repetitions !== 0) ? null : g.employees * m.repetitions * (m.minutes ?? 0) / 60 * periodFactor(input.month, m.frequency, shifts);
-      return { ...row, rawHours, rawCost: rawHours === null || rate === null ? null : rawHours * rate, overSchedule: rawHours !== null && rawHours / g.employees > paidHours + 0.000001 };
+      const m = g.measures[row.task]!, rawHours = m.repetitions === null || (m.minutes === null && m.repetitions !== 0) ? null : monthlyWorkHours(g.employees * m.repetitions, m.minutes ?? 0, periodFactor(input.month, m.frequency, shifts));
+      return { ...row, rawHours, rawCost: rawHours === null || rate === null ? null : workTimeCost(rawHours, rate), overSchedule: rawHours !== null && rawHours / g.employees > paidHours + 0.000001 };
     });
     const measured = rows.every(r => r.rawHours !== null), overSchedule = measured && rows.reduce((sum, r) => sum + r.rawHours!, 0) / g.employees > paidHours + 0.000001;
     return { ...g, shifts, paidHours, rate, rows, overSchedule };

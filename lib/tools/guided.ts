@@ -1,3 +1,4 @@
+import { monthlyWorkHours, workTimeCost } from "./work-economics.ts";
 import { numberField, record, round2 } from "./input.ts";
 
 export const GUIDED_VERSION = "tools-2.0.0";
@@ -39,8 +40,8 @@ export function calculateGuided(input: GuidedInput) {
   const rows=clean.tasks.map(task=>{
     const m=clean.measurements[task];
     if (!m) return { task, hours:null, cost:null, warning:false, independent:false };
-    const rawHours=m.employees*m.repetitions*m.minutes*m.periodsPerMonth/60;
-    return { task, hours:round2(rawHours), cost:m.hourlyCost===null?null:round2(rawHours*m.hourlyCost), warning:rawHours/m.employees>200, independent:m.independent };
+    const rawHours=monthlyWorkHours(m.employees*m.repetitions, m.minutes, m.periodsPerMonth, true);
+    return { task, hours:round2(rawHours), cost:m.hourlyCost===null?null:round2(workTimeCost(rawHours, m.hourlyCost)), warning:rawHours/m.employees>200, independent:m.independent };
   });
   const measured=rows.filter(r=>r.hours!==null);
   // An attestation is necessary but not sufficient: conservative shared-team capacity check.
