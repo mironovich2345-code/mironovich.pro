@@ -50,3 +50,7 @@ staging), `TELEGRAM_BOT_TOKEN` и `TELEGRAM_CHAT_ID` **тестового** бо
 `NEXT_PUBLIC_INSTAGRAM_URL` подтверждёнными адресами: новая версия их примет,
 а если когда-то придётся пересобрать прежнюю — она тоже покажет правильные
 контакты. Новых обязательных переменных нет, удалять ничего при откате не нужно.
+
+## Business Map Preview
+
+Защищённый прототип использует отдельную ветку и отдельную среду `preview`. Его server-only credentials и флаги не являются новыми требованиями production. Точные настройки и healthcheck: [Business Map Preview](../products/business-map/preview/README.md). Значения секретов в репозиторий не добавляются.

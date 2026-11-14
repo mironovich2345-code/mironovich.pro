@@ -4,7 +4,7 @@ import { prototypeAvailable } from '../lib/business-map/prototype-policy.ts';
 import { demoNames, loadDemo } from '../lib/business-map/demo.ts';
 import { calculateBusinessMap } from '../lib/business-map/calculate.ts';
 
-test('prototype requires explicit dev opt-in and cannot be enabled in production',()=>{
+test('local prototype requires explicit dev opt-in; plain production remains closed',()=>{
   for(const env of ['production','test',undefined])for(const flag of ['1','0',undefined])assert.equal(prototypeAvailable(env,flag),false);
   assert.equal(prototypeAvailable('development','1'),true);
   assert.equal(prototypeAvailable('development',undefined),false);

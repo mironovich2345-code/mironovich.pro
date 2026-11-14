@@ -14,7 +14,7 @@ BUSINESS_MAP_PROTOTYPE=1 npm run dev -- --hostname 127.0.0.1 --port 3045
 
 Открыть `http://127.0.0.1:3045/prototype/business-map`.
 
-Оба условия обязательны: `NODE_ENV=development` и `BUSINESS_MAP_PROTOTYPE=1`. В production страница всегда отвечает 404, даже при установленном флаге. В обычной dev-среде без флага также 404. В навигацию публичного сайта и sitemap прототип не добавлен. Это ограничение среды, а не замена будущей авторизации кабинета; не выставляйте dev-сервер в Интернет.
+Локально обязательны `NODE_ENV=development` и `BUSINESS_MAP_PROTOTYPE=1`, без Railway environment. В обычной dev-среде без флага — 404. Для отдельного защищённого Railway Preview добавлен режим production build с Basic Auth: см. [параметры Preview](../preview/README.md). При Railway environment `production` страница всегда отвечает 404, даже при флагах и правильном пароле. В навигацию публичного сайта и sitemap прототип не добавлен. Это ограничение среды, а не замена будущей авторизации кабинета; не выставляйте dev-сервер в Интернет.
 
 ## Как посмотреть
 
