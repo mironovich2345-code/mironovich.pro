@@ -1,0 +1,644 @@
+{
+  "phase": "before",
+  "measurements": [
+    {
+      "width": 375,
+      "height": 812,
+      "documentHeight": 10903,
+      "scrollWidth": 375,
+      "header": {
+        "top": 0,
+        "bottom": 65,
+        "width": 375,
+        "height": 65,
+        "within": true
+      },
+      "hero": {
+        "top": 65,
+        "bottom": 1122,
+        "width": 375,
+        "height": 1057,
+        "within": false
+      },
+      "h1": {
+        "top": 134,
+        "bottom": 244,
+        "width": 288,
+        "height": 110,
+        "within": true
+      },
+      "consultation": {
+        "top": 622,
+        "bottom": 670,
+        "width": 288,
+        "height": 48,
+        "within": true
+      },
+      "employeeLink": {
+        "top": 1013,
+        "bottom": 1061,
+        "width": 288,
+        "height": 48,
+        "within": false
+      },
+      "employeePrice": {
+        "top": 975,
+        "bottom": 997,
+        "width": 288,
+        "height": 23,
+        "within": false
+      },
+      "cards": [
+        {
+          "top": 398,
+          "bottom": 743,
+          "width": 331,
+          "height": 345,
+          "within": true
+        },
+        {
+          "top": 755,
+          "bottom": 1082,
+          "width": 331,
+          "height": 327,
+          "within": false
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "documentHeight": 10792,
+      "scrollWidth": 390,
+      "header": {
+        "top": 0,
+        "bottom": 65,
+        "width": 390,
+        "height": 65,
+        "within": true
+      },
+      "hero": {
+        "top": 65,
+        "bottom": 1073,
+        "width": 390,
+        "height": 1008,
+        "within": false
+      },
+      "h1": {
+        "top": 134,
+        "bottom": 244,
+        "width": 288,
+        "height": 110,
+        "within": true
+      },
+      "consultation": {
+        "top": 597,
+        "bottom": 645,
+        "width": 303,
+        "height": 48,
+        "within": true
+      },
+      "employeeLink": {
+        "top": 964,
+        "bottom": 1012,
+        "width": 303,
+        "height": 48,
+        "within": false
+      },
+      "employeePrice": {
+        "top": 926,
+        "bottom": 948,
+        "width": 303,
+        "height": 23,
+        "within": false
+      },
+      "cards": [
+        {
+          "top": 398,
+          "bottom": 718,
+          "width": 346,
+          "height": 320,
+          "within": true
+        },
+        {
+          "top": 730,
+          "bottom": 1033,
+          "width": 346,
+          "height": 303,
+          "within": false
+        }
+      ]
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "documentHeight": 8524,
+      "scrollWidth": 768,
+      "header": {
+        "top": 0,
+        "bottom": 65,
+        "width": 768,
+        "height": 65,
+        "within": true
+      },
+      "hero": {
+        "top": 65,
+        "bottom": 772,
+        "width": 768,
+        "height": 707,
+        "within": true
+      },
+      "h1": {
+        "top": 150,
+        "bottom": 267,
+        "width": 307,
+        "height": 118,
+        "within": true
+      },
+      "consultation": {
+        "top": 599,
+        "bottom": 647,
+        "width": 305,
+        "height": 48,
+        "within": true
+      },
+      "employeeLink": {
+        "top": 651,
+        "bottom": 699,
+        "width": 305,
+        "height": 48,
+        "within": true
+      },
+      "employeePrice": {
+        "top": 612,
+        "bottom": 635,
+        "width": 305,
+        "height": 23,
+        "within": true
+      },
+      "cards": [
+        {
+          "top": 396,
+          "bottom": 724,
+          "width": 356,
+          "height": 328,
+          "within": true
+        },
+        {
+          "top": 396,
+          "bottom": 724,
+          "width": 356,
+          "height": 328,
+          "within": true
+        }
+      ]
+    },
+    {
+      "width": 1024,
+      "height": 900,
+      "documentHeight": 7904,
+      "scrollWidth": 1024,
+      "header": {
+        "top": 0,
+        "bottom": 69,
+        "width": 1024,
+        "height": 69,
+        "within": true
+      },
+      "hero": {
+        "top": 69,
+        "bottom": 769,
+        "width": 1024,
+        "height": 700,
+        "within": true
+      },
+      "h1": {
+        "top": 310,
+        "bottom": 467,
+        "width": 410,
+        "height": 157,
+        "within": true
+      },
+      "consultation": {
+        "top": 273,
+        "bottom": 321,
+        "width": 345,
+        "height": 48,
+        "within": true
+      },
+      "employeeLink": {
+        "top": 648,
+        "bottom": 696,
+        "width": 345,
+        "height": 48,
+        "within": true
+      },
+      "employeePrice": {
+        "top": 609,
+        "bottom": 632,
+        "width": 345,
+        "height": 23,
+        "within": true
+      },
+      "cards": [
+        {
+          "top": 117,
+          "bottom": 398,
+          "width": 396,
+          "height": 281,
+          "within": true
+        },
+        {
+          "top": 410,
+          "bottom": 721,
+          "width": 396,
+          "height": 311,
+          "within": true
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "documentHeight": 7915,
+      "scrollWidth": 1440,
+      "header": {
+        "top": 0,
+        "bottom": 69,
+        "width": 1440,
+        "height": 69,
+        "within": true
+      },
+      "hero": {
+        "top": 69,
+        "bottom": 765,
+        "width": 1440,
+        "height": 696,
+        "within": true
+      },
+      "h1": {
+        "top": 292,
+        "bottom": 482,
+        "width": 496,
+        "height": 190,
+        "within": true
+      },
+      "consultation": {
+        "top": 279,
+        "bottom": 327,
+        "width": 388,
+        "height": 48,
+        "within": true
+      },
+      "employeeLink": {
+        "top": 644,
+        "bottom": 692,
+        "width": 388,
+        "height": 48,
+        "within": true
+      },
+      "employeePrice": {
+        "top": 606,
+        "bottom": 628,
+        "width": 388,
+        "height": 23,
+        "within": true
+      },
+      "cards": [
+        {
+          "top": 117,
+          "bottom": 404,
+          "width": 439,
+          "height": 287,
+          "within": true
+        },
+        {
+          "top": 416,
+          "bottom": 717,
+          "width": 439,
+          "height": 301,
+          "within": true
+        }
+      ]
+    }
+  ],
+  "navigation": [],
+  "mode": "local production build; synthetic forms; no external delivery",
+  "http": [],
+  "flows": [],
+  "screenshots": [
+    "screenshots/375-home.png",
+    "screenshots/375-audiences.png",
+    "screenshots/375-employee-product.png",
+    "screenshots/375-products.png",
+    "screenshots/375-menu.png",
+    "screenshots/390-home.png",
+    "screenshots/390-audiences.png",
+    "screenshots/390-employee-product.png",
+    "screenshots/390-products.png",
+    "screenshots/390-menu.png",
+    "screenshots/768-home.png",
+    "screenshots/768-audiences.png",
+    "screenshots/768-employee-product.png",
+    "screenshots/768-products.png",
+    "screenshots/768-menu.png",
+    "screenshots/1024-home.png",
+    "screenshots/1024-audiences.png",
+    "screenshots/1024-employee-product.png",
+    "screenshots/1024-products.png",
+    "screenshots/1024-menu.png",
+    "screenshots/1440-home.png",
+    "screenshots/1440-audiences.png",
+    "screenshots/1440-employee-product.png",
+    "screenshots/1440-products.png",
+    "screenshots/1440-menu.png"
+  ],
+  "layout": [
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "employee-product",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/products",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "menu-open",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "phase": "employee-product",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "phase": "/products",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "phase": "menu-open",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "employee-product",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/products",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "menu-open",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "employee-product",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/products",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "menu-open",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "employee-product",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/products",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "menu-open",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    }
+  ],
+  "axe": [
+    {
+      "width": 375,
+      "phase": "home",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "employee-product",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "products",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "menu-open",
+      "violations": []
+    },
+    {
+      "width": 390,
+      "phase": "home",
+      "violations": []
+    },
+    {
+      "width": 390,
+      "phase": "employee-product",
+      "violations": []
+    },
+    {
+      "width": 390,
+      "phase": "products",
+      "violations": []
+    },
+    {
+      "width": 390,
+      "phase": "menu-open",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "home",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "employee-product",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "products",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "menu-open",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "home",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "employee-product",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "products",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "menu-open",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "home",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "employee-product",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "products",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "menu-open",
+      "violations": []
+    }
+  ],
+  "javascriptErrors": [],
+  "externalRequests": 0,
+  "formSuccesses": 0,
+  "journeys": [],
+  "topicLinks": [],
+  "homeSections": [],
+  "compatibility": [],
+  "viewports": [
+    {
+      "width": 375,
+      "height": 812
+    },
+    {
+      "width": 390,
+      "height": 844
+    },
+    {
+      "width": 768,
+      "height": 1024
+    },
+    {
+      "width": 1024,
+      "height": 900
+    },
+    {
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "physicalPhone": "not available",
+  "axeStatus": "enabled",
+  "browserVersion": "156.0.8078.79",
+  "axeVersion": "4.14.0",
+  "captureCompleted": true
+}

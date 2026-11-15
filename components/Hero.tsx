@@ -11,33 +11,41 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="bg-graphite px-[22px] pb-10 pt-8 min-[560px]:pb-12 min-[560px]:pt-12"
+      className="bg-graphite px-[22px] pb-10 pt-7 min-[560px]:pb-12 min-[560px]:pt-12"
     >
-      <div className="mx-auto grid max-w-[1080px] gap-8 min-[960px]:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] min-[960px]:items-center min-[960px]:gap-12">
+      <div className="mx-auto grid max-w-[1080px] gap-6 min-[960px]:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] min-[960px]:items-center min-[960px]:gap-12">
         <div>
-          <p className="m-0 mb-5 text-[11px] uppercase tracking-[0.18em] text-stone">
-            MIRONOVICH.PRO <span className="text-signal">/</span> Технологии и ИИ
+          <p className="m-0 mb-4 text-[11px] uppercase tracking-[0.18em] text-stone">
+            MIRONOVICH.PRO <span className="text-signal">/</span> Технологии и
+            ИИ
           </p>
           <h1 className="m-0 max-w-[16ch] text-balance font-display text-[clamp(36px,5vw,62px)] font-extrabold uppercase leading-[1.02] tracking-[-0.02em] text-cream">
             Технологии для бизнеса.{" "}
             <span className="text-signal">ИИ для сотрудников.</span>
           </h1>
           <p className="mb-0 mt-5 max-w-[46ch] text-pretty text-[16px] leading-[1.6] text-cream/80">
-            Компаниям помогаю выбирать и внедрять цифровые решения. Специалистам — применять ИИ в работе и развивать навыки.
+            Автоматизация, ИИ и внешний CTO для компаний. Практика работы с ИИ
+            для сотрудников.
           </p>
         </div>
 
-        <div className="grid gap-3 min-[600px]:grid-cols-2 min-[960px]:grid-cols-1" aria-label="Выберите, для кого вы ищете решение">
-          <article className={cardClass + " border-l-2 border-l-signal"}>
+        <div
+          className="grid gap-3 min-[600px]:grid-cols-2 min-[960px]:grid-cols-1"
+          aria-label="Выберите, для кого вы ищете решение"
+        >
+          <article
+            data-audience="company"
+            className={cardClass + " border-l-2 border-l-signal"}
+          >
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2 text-[11px] uppercase tracking-[0.1em] text-stone">
               <span>Для компаний</span>
-              <span className="text-cream">Первое обсуждение бесплатно</span>
+              <span className="text-cream">Бесплатно</span>
             </div>
             <h2 className="m-0 font-display text-[clamp(23px,2.2vw,29px)] font-extrabold uppercase leading-[1.08] text-cream">
-              Нужно улучшить процесс?
+              ИИ и автоматизация
             </h2>
-            <p className="mb-5 mt-3 text-[14px] leading-relaxed text-stone">
-              Разберём задачу, оценим варианты и определим первый шаг. Готовое ТЗ не нужно.
+            <p className="mb-4 mt-3 text-[14px] leading-relaxed text-stone">
+              Первое обсуждение: разберём задачу и выберем первый шаг.
             </p>
             <CtaLink
               href="#contact"
@@ -56,26 +64,37 @@ export default function Hero() {
             </CtaLink>
           </article>
 
-          <article className={cardClass + " border-l-2 border-l-cream/50"}>
-            <div className="mb-3 flex flex-wrap items-center justify-between gap-2 text-[11px] uppercase tracking-[0.1em] text-stone">
-              <span>Для сотрудников</span>
-              <span className="text-cream">Готовится к запуску</span>
+          <article
+            data-audience="employee"
+            className={cardClass + " border-l-2 border-l-cream/50"}
+          >
+            <div className="mb-3 flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="m-0 text-[11px] uppercase tracking-[0.1em] text-stone">
+                  Для сотрудников
+                </p>
+                <p className="mb-0 mt-1 text-[12px] text-stone">
+                  Готовится к запуску
+                </p>
+              </div>
+              <p className="m-0 shrink-0 text-right font-display text-[28px] font-bold leading-none text-cream">
+                {rub(career.plannedPrice)}
+                <span className="mt-1 block font-sans text-[11px] font-normal leading-normal text-stone">
+                  после запуска
+                </span>
+              </p>
             </div>
             <h2 className="m-0 font-display text-[clamp(23px,2.2vw,29px)] font-extrabold uppercase leading-[1.08] text-cream">
               {career.title}
             </h2>
             <p className="mb-4 mt-3 text-[14px] leading-relaxed text-stone">
-              Разберитесь, где ИИ поможет в работе, какие навыки развивать и что делать в ближайшие 30 дней.
-            </p>
-            <p className="mb-4 mt-auto text-[15px] text-cream">
-              {rub(career.plannedPrice)}{" "}
-              <span className="text-[12px] text-stone">цена после запуска</span>
+              Задачи, навыки и план на 30 дней.
             </p>
             <CtaLink
               href="/products/ai-career"
               location="hero_product"
               product="ai-career"
-              className="inline-flex min-h-[48px] items-center justify-center gap-3 border border-cream/35 px-4 text-center text-[13px] font-medium uppercase tracking-[0.04em] text-cream transition-colors hover:border-signal hover:text-signal"
+              className="mt-auto inline-flex min-h-[48px] items-center justify-center gap-3 border border-cream/35 px-4 text-center text-[13px] font-medium uppercase tracking-[0.04em] text-cream transition-colors hover:border-signal hover:text-signal"
             >
               Посмотреть программу <span aria-hidden>→</span>
             </CtaLink>

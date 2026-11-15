@@ -1,0 +1,1438 @@
+{
+  "phase": "after",
+  "measurements": [
+    {
+      "width": 375,
+      "height": 812,
+      "documentHeight": 10709,
+      "scrollWidth": 375,
+      "header": {
+        "top": 0,
+        "bottom": 65,
+        "width": 375,
+        "height": 65,
+        "within": true
+      },
+      "hero": {
+        "top": 65,
+        "bottom": 928,
+        "width": 375,
+        "height": 863,
+        "within": false
+      },
+      "h1": {
+        "top": 126,
+        "bottom": 236,
+        "width": 288,
+        "height": 110,
+        "within": true
+      },
+      "consultation": {
+        "top": 504,
+        "bottom": 552,
+        "width": 288,
+        "height": 48,
+        "within": true
+      },
+      "employeeLink": {
+        "top": 819,
+        "bottom": 867,
+        "width": 288,
+        "height": 48,
+        "within": false
+      },
+      "employeePrice": {
+        "top": 658,
+        "bottom": 707,
+        "width": 86,
+        "height": 49,
+        "within": true
+      },
+      "cards": [
+        {
+          "top": 356,
+          "bottom": 625,
+          "width": 331,
+          "height": 269,
+          "within": true
+        },
+        {
+          "top": 637,
+          "bottom": 888,
+          "width": 331,
+          "height": 251,
+          "within": false
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "documentHeight": 10647,
+      "scrollWidth": 390,
+      "header": {
+        "top": 0,
+        "bottom": 65,
+        "width": 390,
+        "height": 65,
+        "within": true
+      },
+      "hero": {
+        "top": 65,
+        "bottom": 928,
+        "width": 390,
+        "height": 863,
+        "within": false
+      },
+      "h1": {
+        "top": 126,
+        "bottom": 236,
+        "width": 288,
+        "height": 110,
+        "within": true
+      },
+      "consultation": {
+        "top": 504,
+        "bottom": 552,
+        "width": 303,
+        "height": 48,
+        "within": true
+      },
+      "employeeLink": {
+        "top": 819,
+        "bottom": 867,
+        "width": 303,
+        "height": 48,
+        "within": false
+      },
+      "employeePrice": {
+        "top": 658,
+        "bottom": 707,
+        "width": 86,
+        "height": 49,
+        "within": true
+      },
+      "cards": [
+        {
+          "top": 356,
+          "bottom": 625,
+          "width": 346,
+          "height": 269,
+          "within": true
+        },
+        {
+          "top": 637,
+          "bottom": 888,
+          "width": 346,
+          "height": 251,
+          "within": false
+        }
+      ]
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "documentHeight": 8461,
+      "scrollWidth": 768,
+      "header": {
+        "top": 0,
+        "bottom": 65,
+        "width": 768,
+        "height": 65,
+        "within": true
+      },
+      "hero": {
+        "top": 65,
+        "bottom": 709,
+        "width": 768,
+        "height": 644,
+        "within": true
+      },
+      "h1": {
+        "top": 146,
+        "bottom": 263,
+        "width": 307,
+        "height": 118,
+        "within": true
+      },
+      "consultation": {
+        "top": 536,
+        "bottom": 584,
+        "width": 305,
+        "height": 48,
+        "within": true
+      },
+      "employeeLink": {
+        "top": 588,
+        "bottom": 636,
+        "width": 305,
+        "height": 48,
+        "within": true
+      },
+      "employeePrice": {
+        "top": 409,
+        "bottom": 457,
+        "width": 86,
+        "height": 49,
+        "within": true
+      },
+      "cards": [
+        {
+          "top": 384,
+          "bottom": 661,
+          "width": 356,
+          "height": 277,
+          "within": true
+        },
+        {
+          "top": 384,
+          "bottom": 661,
+          "width": 356,
+          "height": 277,
+          "within": true
+        }
+      ]
+    },
+    {
+      "width": 1024,
+      "height": 900,
+      "documentHeight": 7848,
+      "scrollWidth": 1024,
+      "header": {
+        "top": 0,
+        "bottom": 69,
+        "width": 1024,
+        "height": 69,
+        "within": true
+      },
+      "hero": {
+        "top": 69,
+        "bottom": 713,
+        "width": 1024,
+        "height": 644,
+        "within": true
+      },
+      "h1": {
+        "top": 280,
+        "bottom": 437,
+        "width": 410,
+        "height": 157,
+        "within": true
+      },
+      "consultation": {
+        "top": 269,
+        "bottom": 317,
+        "width": 345,
+        "height": 48,
+        "within": true
+      },
+      "employeeLink": {
+        "top": 592,
+        "bottom": 640,
+        "width": 345,
+        "height": 48,
+        "within": true
+      },
+      "employeePrice": {
+        "top": 431,
+        "bottom": 479,
+        "width": 86,
+        "height": 49,
+        "within": true
+      },
+      "cards": [
+        {
+          "top": 117,
+          "bottom": 394,
+          "width": 396,
+          "height": 277,
+          "within": true
+        },
+        {
+          "top": 406,
+          "bottom": 665,
+          "width": 396,
+          "height": 259,
+          "within": true
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "documentHeight": 7881,
+      "scrollWidth": 1440,
+      "header": {
+        "top": 0,
+        "bottom": 69,
+        "width": 1440,
+        "height": 69,
+        "within": true
+      },
+      "hero": {
+        "top": 69,
+        "bottom": 732,
+        "width": 1440,
+        "height": 663,
+        "within": true
+      },
+      "h1": {
+        "top": 274,
+        "bottom": 463,
+        "width": 496,
+        "height": 190,
+        "within": true
+      },
+      "consultation": {
+        "top": 275,
+        "bottom": 323,
+        "width": 388,
+        "height": 48,
+        "within": true
+      },
+      "employeeLink": {
+        "top": 611,
+        "bottom": 659,
+        "width": 388,
+        "height": 48,
+        "within": true
+      },
+      "employeePrice": {
+        "top": 437,
+        "bottom": 486,
+        "width": 86,
+        "height": 49,
+        "within": true
+      },
+      "cards": [
+        {
+          "top": 117,
+          "bottom": 400,
+          "width": 439,
+          "height": 283,
+          "within": true
+        },
+        {
+          "top": 412,
+          "bottom": 684,
+          "width": 439,
+          "height": 272,
+          "within": true
+        }
+      ]
+    }
+  ],
+  "navigation": [],
+  "mode": "local production build; synthetic forms; no external delivery",
+  "http": [
+    {
+      "path": "/",
+      "status": 200,
+      "canonical": "https://mironovich.pro",
+      "jsonLd": true
+    },
+    {
+      "path": "/solutions",
+      "status": 200,
+      "canonical": "https://mironovich.pro/solutions",
+      "jsonLd": true
+    },
+    {
+      "path": "/solutions/corporate-academy",
+      "status": 200,
+      "canonical": "https://mironovich.pro/solutions/corporate-academy",
+      "jsonLd": true
+    },
+    {
+      "path": "/solutions/employee-kpi",
+      "status": 200,
+      "canonical": "https://mironovich.pro/solutions/employee-kpi",
+      "jsonLd": true
+    },
+    {
+      "path": "/solutions/management-analytics",
+      "status": 200,
+      "canonical": "https://mironovich.pro/solutions/management-analytics",
+      "jsonLd": true
+    },
+    {
+      "path": "/solutions/branch-standards",
+      "status": 200,
+      "canonical": "https://mironovich.pro/solutions/branch-standards",
+      "jsonLd": true
+    },
+    {
+      "path": "/solutions/lead-engine",
+      "status": 200,
+      "canonical": "https://mironovich.pro/solutions/lead-engine",
+      "jsonLd": true
+    },
+    {
+      "path": "/products",
+      "status": 200,
+      "canonical": "https://mironovich.pro/products",
+      "jsonLd": true
+    },
+    {
+      "path": "/products/ai-career",
+      "status": 200,
+      "canonical": "https://mironovich.pro/products/ai-career",
+      "jsonLd": true
+    },
+    {
+      "path": "/products/automation-priorities",
+      "status": 200,
+      "canonical": "https://mironovich.pro/products/automation-priorities",
+      "jsonLd": true
+    },
+    {
+      "path": "/tools",
+      "status": 200,
+      "canonical": "https://mironovich.pro/tools",
+      "jsonLd": true
+    },
+    {
+      "path": "/tools/labor-cost",
+      "status": 200,
+      "canonical": "https://mironovich.pro/tools/labor-cost",
+      "jsonLd": true
+    },
+    {
+      "path": "/tools/automation-cost",
+      "status": 200,
+      "canonical": "https://mironovich.pro/tools/automation-cost",
+      "jsonLd": true
+    },
+    {
+      "path": "/services",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services",
+      "jsonLd": true
+    },
+    {
+      "path": "/services/cto",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services/cto",
+      "jsonLd": true
+    },
+    {
+      "path": "/services/development",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services/development",
+      "jsonLd": true
+    },
+    {
+      "path": "/services/support",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services/support",
+      "jsonLd": true
+    },
+    {
+      "path": "/services/expertise",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services/expertise",
+      "jsonLd": true
+    },
+    {
+      "path": "/services/automation",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services/automation",
+      "jsonLd": true
+    },
+    {
+      "path": "/services/apps",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services/apps",
+      "jsonLd": true
+    },
+    {
+      "path": "/services/training",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services/training",
+      "jsonLd": true
+    },
+    {
+      "path": "/projects",
+      "status": 200,
+      "canonical": "https://mironovich.pro/projects",
+      "jsonLd": true
+    },
+    {
+      "path": "/projects/eatlyy",
+      "status": 200,
+      "canonical": "https://mironovich.pro/projects/eatlyy",
+      "jsonLd": true
+    },
+    {
+      "path": "/projects/club-ops",
+      "status": 200,
+      "canonical": "https://mironovich.pro/projects/club-ops",
+      "jsonLd": true
+    },
+    {
+      "path": "/about",
+      "status": 200,
+      "canonical": "https://mironovich.pro/about",
+      "jsonLd": true
+    },
+    {
+      "path": "/contact",
+      "status": 200,
+      "canonical": "https://mironovich.pro/contact",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/category/avtomatizaciya",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/category/avtomatizaciya",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/category/razrabotka-prilozheniy",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/category/razrabotka-prilozheniy",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/category/ii-dlya-biznesa",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/category/ii-dlya-biznesa",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/category/obuchenie-sotrudnikov",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/category/obuchenie-sotrudnikov",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/skolko-stoit-ruchnaya-otchetnost",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/skolko-stoit-ruchnaya-otchetnost",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kogda-ii-biznesu-ne-nuzhen",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kogda-ii-biznesu-ne-nuzhen",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kogda-ne-nuzhno-svoe-prilozhenie",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kogda-ne-nuzhno-svoe-prilozhenie",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/integraciya-crm-tablicy-telefoniya",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/integraciya-crm-tablicy-telefoniya",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kak-proverit-smetu-razrabotchika",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kak-proverit-smetu-razrabotchika",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kak-vybrat-razrabotchika-i-prinyat-rabotu",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kak-vybrat-razrabotchika-i-prinyat-rabotu",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/razrabotchik-ushel-kak-prinyat-proekt",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/razrabotchik-ushel-kak-prinyat-proekt",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/skolko-stoit-soprovozhdenie-prilozheniya",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/skolko-stoit-soprovozhdenie-prilozheniya",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kogda-nuzhen-vneshniy-cto",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kogda-nuzhen-vneshniy-cto",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kak-izmerit-effekt-ot-vnedreniya-ii",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kak-izmerit-effekt-ot-vnedreniya-ii",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/avtomatizaciya-otdela-prodazh",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/avtomatizaciya-otdela-prodazh",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/avtomatizaciya-biznesa-bez-programmista",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/avtomatizaciya-biznesa-bez-programmista",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/razrabotka-crm-dlya-biznesa",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/razrabotka-crm-dlya-biznesa",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/lichnyy-kabinet-klienta",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/lichnyy-kabinet-klienta",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/adaptaciya-novyh-sotrudnikov-pervye-30-dney",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/adaptaciya-novyh-sotrudnikov-pervye-30-dney",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/avtomatizaciya-obucheniya-sotrudnikov",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/avtomatizaciya-obucheniya-sotrudnikov",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/crm-pod-zadachi-ili-gotovaya-sistema",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/crm-pod-zadachi-ili-gotovaya-sistema",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/ii-assistent-dlya-biznesa",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/ii-assistent-dlya-biznesa",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kakie-processy-avtomatizirovat",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kakie-processy-avtomatizirovat",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/stoimost-razrabotki-prilozheniya-dlya-biznesa",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/stoimost-razrabotki-prilozheniya-dlya-biznesa",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/stoimost-vnedreniya-ii-v-biznes",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/stoimost-vnedreniya-ii-v-biznes",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/telegram-mini-app-dlya-biznesa",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/telegram-mini-app-dlya-biznesa",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kak-postroit-sistemu-obucheniya-s-nulya",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kak-postroit-sistemu-obucheniya-s-nulya",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kak-ponyat-chto-net-sistemy-obucheniya",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kak-ponyat-chto-net-sistemy-obucheniya",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/stoimost-plohoy-adaptacii-sotrudnika",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/stoimost-plohoy-adaptacii-sotrudnika",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/pochemu-sotrudniki-posle-obucheniya-delayut-po-svoemu",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/pochemu-sotrudniki-posle-obucheniya-delayut-po-svoemu",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kompaniya-zavisit-ot-odnogo-cheloveka",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kompaniya-zavisit-ot-odnogo-cheloveka",
+      "jsonLd": true
+    },
+    {
+      "path": "/privacy",
+      "status": 200,
+      "noindex": true
+    },
+    {
+      "path": "/consent",
+      "status": 200,
+      "noindex": true
+    },
+    {
+      "path": "/projects/corporate-learning",
+      "status": 404,
+      "privateOrUnknown": true
+    },
+    {
+      "path": "/projects/employee-kpi",
+      "status": 404,
+      "privateOrUnknown": true
+    },
+    {
+      "path": "/projects/branch-standards",
+      "status": 404,
+      "privateOrUnknown": true
+    },
+    {
+      "path": "/projects/lead-engine",
+      "status": 404,
+      "privateOrUnknown": true
+    },
+    {
+      "path": "/prototype/business-map",
+      "status": 404,
+      "privateOrUnknown": true
+    },
+    {
+      "path": "/api/business-map/chat",
+      "status": 404,
+      "privateOrUnknown": true
+    }
+  ],
+  "flows": [
+    {
+      "name": "Hero two audiences; single employee product at 1990 RUB, preparing, no checkout; safe CTA event",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "name": "Employee link in desktop/mobile navigation; Enter/Escape, focus and route close",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "name": "Header/mobile company consultation from employee route; Space activation, existing contact page/form and safe event",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "name": "Company consultation form; consent, form_start, honest local delivery failure, no false success/PII",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "name": "Hero calculator, tools catalogue and mobile sticky consultation",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "name": "Hero two audiences; single employee product at 1990 RUB, preparing, no checkout; safe CTA event",
+      "width": 390,
+      "passed": true
+    },
+    {
+      "name": "Employee link in desktop/mobile navigation; Enter/Escape, focus and route close",
+      "width": 390,
+      "passed": true
+    },
+    {
+      "name": "Header/mobile company consultation from employee route; Space activation, existing contact page/form and safe event",
+      "width": 390,
+      "passed": true
+    },
+    {
+      "name": "Company consultation form; consent, form_start, honest local delivery failure, no false success/PII",
+      "width": 390,
+      "passed": true
+    },
+    {
+      "name": "Hero calculator, tools catalogue and mobile sticky consultation",
+      "width": 390,
+      "passed": true
+    },
+    {
+      "name": "Hero two audiences; single employee product at 1990 RUB, preparing, no checkout; safe CTA event",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "name": "Employee link in desktop/mobile navigation; Enter/Escape, focus and route close",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "name": "Header/mobile company consultation from employee route; Space activation, existing contact page/form and safe event",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "name": "Company consultation form; consent, form_start, honest local delivery failure, no false success/PII",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "name": "Hero calculator, tools catalogue and mobile sticky consultation",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "name": "Hero two audiences; single employee product at 1990 RUB, preparing, no checkout; safe CTA event",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "name": "Employee link in desktop/mobile navigation; Enter/Escape, focus and route close",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "name": "Header/mobile company consultation from employee route; Space activation, existing contact page/form and safe event",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "name": "Company consultation form; consent, form_start, honest local delivery failure, no false success/PII",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "name": "Hero calculator, tools catalogue and mobile sticky consultation",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "name": "Hero two audiences; single employee product at 1990 RUB, preparing, no checkout; safe CTA event",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "name": "Employee link in desktop/mobile navigation; Enter/Escape, focus and route close",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "name": "Header/mobile company consultation from employee route; Space activation, existing contact page/form and safe event",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "name": "Company consultation form; consent, form_start, honest local delivery failure, no false success/PII",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "name": "Hero calculator, tools catalogue and mobile sticky consultation",
+      "width": 1440,
+      "passed": true
+    }
+  ],
+  "screenshots": [
+    "screenshots/375-home.png",
+    "screenshots/375-audiences.png",
+    "screenshots/375-employee-product.png",
+    "screenshots/375-employee-programme.png",
+    "screenshots/375-products.png",
+    "screenshots/375-menu.png",
+    "screenshots/375-consultation-form.png",
+    "screenshots/375-form-error.png",
+    "screenshots/375-sticky-consultation.png",
+    "screenshots/390-home.png",
+    "screenshots/390-audiences.png",
+    "screenshots/390-employee-product.png",
+    "screenshots/390-employee-programme.png",
+    "screenshots/390-products.png",
+    "screenshots/390-menu.png",
+    "screenshots/390-consultation-form.png",
+    "screenshots/390-sticky-consultation.png",
+    "screenshots/768-home.png",
+    "screenshots/768-audiences.png",
+    "screenshots/768-employee-product.png",
+    "screenshots/768-employee-programme.png",
+    "screenshots/768-products.png",
+    "screenshots/768-menu.png",
+    "screenshots/768-consultation-form.png",
+    "screenshots/1024-home.png",
+    "screenshots/1024-audiences.png",
+    "screenshots/1024-employee-product.png",
+    "screenshots/1024-employee-programme.png",
+    "screenshots/1024-products.png",
+    "screenshots/1024-menu.png",
+    "screenshots/1024-consultation-form.png",
+    "screenshots/1440-home.png",
+    "screenshots/1440-audiences.png",
+    "screenshots/1440-employee-product.png",
+    "screenshots/1440-employee-programme.png",
+    "screenshots/1440-products.png",
+    "screenshots/1440-menu.png",
+    "screenshots/1440-consultation-form.png"
+  ],
+  "layout": [
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "employee-product",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/products",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "menu-open",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "header-consultation",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "consultation-form",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "labor-calculator",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/tools",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "tools",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "phase": "employee-product",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "phase": "/products",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "phase": "menu-open",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "phase": "header-consultation",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "phase": "consultation-form",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "phase": "labor-calculator",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "phase": "/tools",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "phase": "tools",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 390,
+      "scroll": 390,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "employee-product",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/products",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "menu-open",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "header-consultation",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "consultation-form",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "labor-calculator",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/tools",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "tools",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "employee-product",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/products",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "menu-open",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "header-consultation",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "consultation-form",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "labor-calculator",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/tools",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "tools",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "employee-product",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/products",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "menu-open",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "header-consultation",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "consultation-form",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "labor-calculator",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/tools",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "tools",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    }
+  ],
+  "axe": [
+    {
+      "width": 375,
+      "phase": "home",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "employee-product",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "products",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "menu-open",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "consultation-form",
+      "violations": []
+    },
+    {
+      "width": 390,
+      "phase": "home",
+      "violations": []
+    },
+    {
+      "width": 390,
+      "phase": "employee-product",
+      "violations": []
+    },
+    {
+      "width": 390,
+      "phase": "products",
+      "violations": []
+    },
+    {
+      "width": 390,
+      "phase": "menu-open",
+      "violations": []
+    },
+    {
+      "width": 390,
+      "phase": "consultation-form",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "home",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "employee-product",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "products",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "menu-open",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "consultation-form",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "home",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "employee-product",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "products",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "menu-open",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "consultation-form",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "home",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "employee-product",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "products",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "menu-open",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "consultation-form",
+      "violations": []
+    }
+  ],
+  "javascriptErrors": [],
+  "externalRequests": 0,
+  "formSuccesses": 0,
+  "journeys": [],
+  "topicLinks": [],
+  "homeSections": [],
+  "compatibility": [],
+  "viewports": [
+    {
+      "width": 375,
+      "height": 812
+    },
+    {
+      "width": 390,
+      "height": 844
+    },
+    {
+      "width": 768,
+      "height": 1024
+    },
+    {
+      "width": 1024,
+      "height": 900
+    },
+    {
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "physicalPhone": "not available",
+  "axeStatus": "enabled",
+  "clientBundleDraftLeaks": 0,
+  "browserVersion": "156.0.8078.79",
+  "axeVersion": "4.14.0",
+  "passed": true
+}

@@ -1,10 +1,10 @@
-import { contactList, contacts, sameAs } from "./contacts";
-import { services } from "./services";
-import { directions } from "./directions";
-import { toolsNavigation } from "./tools";
-import { projects } from "@/content/projects";
-import type { NavLink } from "./routes";
-export { contactHref } from "./routes";
+import { contactList, contacts, sameAs } from "./contacts.ts";
+import { services } from "./services.ts";
+import { directions } from "./directions.ts";
+import { toolsNavigation } from "./tools.ts";
+import { projects } from "../content/projects.ts";
+import type { NavLink } from "./routes.ts";
+export { contactHref } from "./routes.ts";
 
 export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://mironovich.pro").replace(/\/$/, "");
 
@@ -28,7 +28,7 @@ export const site = {
  */
 export const projectsPublished = projects.length > 0;
 
-export type { NavLink } from "./routes";
+export type { NavLink } from "./routes.ts";
 
 /** Service submenu — from the shared service list. */
 export const serviceLinks: NavLink[] = services.map((s) => ({ href: s.href, label: s.label }));
