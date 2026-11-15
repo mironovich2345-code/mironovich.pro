@@ -49,7 +49,7 @@ export default function StickyCta() {
         onClick={() => track("cta_click", { location: "sticky" })}
         className="flex min-h-[48px] items-center justify-center gap-2 bg-signal text-[14px] font-medium uppercase tracking-[0.04em] text-white"
       >
-        Обсудить задачу бесплатно <span aria-hidden>→</span>
+        Запросить консультацию <span aria-hidden>→</span>
       </a>
     </div>
   );

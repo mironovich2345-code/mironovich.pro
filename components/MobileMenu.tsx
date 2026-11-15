@@ -114,7 +114,7 @@ export default function MobileMenu({ services, links }: { services: NavLink[]; l
             onClick={close}
             className="mt-8 flex min-h-[56px] items-center justify-center bg-signal text-[15px] font-medium uppercase tracking-[0.06em] text-white"
           >
-            Обсудить проект
+            Запросить консультацию
           </CtaLink>
         </div>,
         document.body,

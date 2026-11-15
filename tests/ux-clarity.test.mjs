@@ -1,12 +1,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { directions } from '../config/directions.ts';
 import { solutions, solutionHref, entryPrice } from '../config/solutions.ts';
 import { additionalServices } from '../config/commercial.ts';
 import { allServices } from '../config/services.ts';
 import { serviceTopics } from '../content/service-topics.ts';
 import { products, productBySlug } from '../content/products.ts';
+import { navLinks } from '../config/site.ts';
 import { track, trackFormStartOnce } from '../lib/analytics.ts';
 
 test('six directions preserve offer URLs and derive pilot prices from the existing registry', () => {
@@ -40,15 +41,27 @@ test('each additional topic has one real legacy URL, a unique matching anchor an
   assert.match(serviceTopics['voice-ai'].scope, /холодный рекламный обзвон не входит/);
 });
 
-test('ai-career remains the single preparing product at the same URL, with planned price 1000 and a real cover', () => {
+test('ai-career remains the single preparing product at the same URL, with launch price 1990 and a real cover', () => {
   const p = productBySlug('ai-career');
   assert.equal(products.filter(p => p.slug === 'ai-career').length, 1);
   assert.equal(p.title, 'Как стать ценнее для компании с помощью ИИ');
-  assert.equal(p.plannedPrice, 1000);
+  assert.equal(p.plannedPrice, 1990);
   assert.equal(p.status, 'preparing');
   assert.ok(existsSync(new URL('../public' + p.cover, import.meta.url)));
   assert.match(p.chapters.at(-1), /30 дней/);
   assert.equal(productBySlug('automation-priorities').plannedPrice, 4934);
+});
+
+
+test('homepage separates company and employee journeys and exposes the employee product in navigation', () => {
+  const hero = readFileSync(new URL('../components/Hero.tsx', import.meta.url), 'utf8');
+  assert.match(hero, /Технологии для бизнеса/);
+  assert.match(hero, /ИИ для сотрудников/);
+  assert.match(hero, /href="#contact"/);
+  assert.match(hero, /href="\/tools\/labor-cost"/);
+  assert.match(hero, /href="\/products\/ai-career"/);
+  assert.match(hero, /Запросить консультацию/);
+  assert.ok(navLinks.some(link => link.href === '/products/ai-career' && link.label === 'Сотрудникам'));
 });
 
 test('new entry events carry only allowed identifiers; unknown topics and PII are dropped or redacted', () => {

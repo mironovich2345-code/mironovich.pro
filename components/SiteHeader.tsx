@@ -36,7 +36,7 @@ export default function SiteHeader() {
             location="header"
             className="inline-flex min-h-[44px] items-center bg-signal px-5 text-[13px] font-medium uppercase tracking-[0.06em] text-white transition-colors hover:bg-[#b82323]"
           >
-            Обсудить проект
+            Консультация
           </CtaLink>
         </nav>
 

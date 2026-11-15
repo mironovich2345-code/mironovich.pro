@@ -1,0 +1,36 @@
+{
+  "branch": "feature/dual-audience-hero",
+  "inputCommit": "a9ee632e2508a8e113f5f8767eaf5044ea6d985e",
+  "base": "e364c48d61bd7b028a028049599b888e7aa1aa09",
+  "pullRequest": 14,
+  "node": "22.23.5",
+  "initial": {
+    "test": {
+      "exitCode": 1,
+      "passed": 236,
+      "failedFiles": 1,
+      "cause": "ERR_MODULE_NOT_FOUND in config/site.ts imported by UX regression tests"
+    },
+    "lint": 0,
+    "typecheck": 0,
+    "build": 0
+  },
+  "final": {
+    "test": {
+      "exitCode": 0,
+      "passed": 242,
+      "failed": 0,
+      "skipped": 0
+    },
+    "lint": 0,
+    "typecheck": 0,
+    "build": 0
+  },
+  "price": 1990,
+  "productState": "preparing",
+  "checkout": false,
+  "dependencyChanges": false,
+  "productionDeployment": false,
+  "merge": false,
+  "testTarget": "localhost production build; synthetic input only"
+}
