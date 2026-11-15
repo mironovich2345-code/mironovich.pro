@@ -62,11 +62,15 @@ export default function ProjectCard({ project, compact = false, showCaseLink = t
             Подробный разбор →
           </Link>
         )}
-        {demo && (
+        {demo && (demo.startsWith("/") ? (
+          <Link href={demo} className="inline-flex min-h-[44px] items-center text-[13px] uppercase tracking-[0.1em] text-maroon underline underline-offset-4 hover:text-signal">
+            Открыть демо →
+          </Link>
+        ) : (
           <a href={demo} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center text-[13px] uppercase tracking-[0.1em] text-maroon underline underline-offset-4 hover:text-signal">
             Открыть демо →
           </a>
-        )}
+        ))}
       </div>
     </article>
   );
