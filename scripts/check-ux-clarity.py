@@ -179,8 +179,8 @@ try:
                         route.continue_()
                 p.route('**/*',guard)
                 visit(p,base,'/'); capture(p,'home'); axe(p,'home')
-                expect(p.locator('main h1')).to_have_text('Разрабатываю системы для управления сотрудниками, продажами и филиалами')
-                expect(p.locator('#hero a[href="#contact"]')).to_contain_text('Обсудить проект')
+                expect(p.locator('main h1')).to_have_text('Технологии для бизнеса. ИИ для сотрудников.')
+                expect(p.locator('#hero a[href="#contact"]')).to_contain_text('Запросить консультацию')
                 assert p.locator('[data-direction]').count()==6
                 ids=p.locator('main > section').evaluate_all('(xs)=>xs.map(e=>({id:e.id,height:Math.round(e.getBoundingClientRect().height)}))')
                 assert [s['id'] for s in ids] == ['hero','solutions','projects','cto','other-services','process','faq','contact']
@@ -218,7 +218,7 @@ try:
                 visit(p,base,'/'); p.locator('#hero a[href="/products/ai-career"]').click(); p.wait_for_url('**/products/ai-career')
                 expect(p.locator('main h1')).to_have_text('Как стать ценнее для компании с помощью ИИ')
                 expect(p.locator('main [role="status"]')).to_contain_text('пока не продаётся')
-                assert '1000₽' in re.sub(r'\s','',p.locator('main').inner_text())
+                assert '1990₽' in re.sub(r'\s','',p.locator('main').inner_text())
                 assert not p.get_by_role('button',name=re.compile('Купить|Оплатить')).count()
                 assert p.locator('main section ol li').count()==6
                 assert wait_event(p,'cta_click',location='hero_product',product='ai-career')

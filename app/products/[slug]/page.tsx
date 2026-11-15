@@ -56,7 +56,7 @@ export default async function Product({ params }: Props) {
             <p className="mt-8 text-3xl">
               {rub(p.plannedPrice)}{" "}
               <span className="block text-sm text-stone">
-                планируемая стоимость
+                цена после запуска
               </span>
             </p>
             <p
