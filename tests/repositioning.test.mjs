@@ -56,6 +56,6 @@ test('CTO monthly package totals thirty hours; additional services keep real old
   assert.equal(ctoOffer.monthlyPrice,150000);assert.equal(ctoOffer.hours,30);
   assert.equal(ctoOffer.allocation.reduce((n,r)=>n+r.hours,0),30);
   assert.equal(additionalServices.length,8);
-  for(const s of additionalServices)assert.ok(allServices.some(old=>old.href===s.href));
+  for(const s of additionalServices)assert.ok(allServices.some(old=>old.href===s.href.split('#')[0]));
   assert.equal(leadDirectionForPage('/services/cto'),'cto');
 });

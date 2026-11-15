@@ -63,7 +63,7 @@ export default function Page() {
               href="/solutions"
               className="mt-6 inline-flex min-h-[52px] items-center bg-signal px-6 text-white"
             >
-              Пять решений и цены пилотов →
+              Выбрать задачу и посмотреть цены →
             </Link>
           </div>
         </section>

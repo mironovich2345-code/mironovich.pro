@@ -1,0 +1,876 @@
+{
+  "mode": "local production build; synthetic forms; no external delivery",
+  "http": [],
+  "flows": [],
+  "screenshots": [
+    "screenshots/320-home.png",
+    "screenshots/320-services.png",
+    "screenshots/320-cases.png",
+    "screenshots/320-cto.png",
+    "screenshots/320-other-services.png",
+    "screenshots/320-owner-offer.png",
+    "screenshots/320-hr-offer.png",
+    "screenshots/320-ai-career.png",
+    "screenshots/320-cto-offer.png",
+    "screenshots/375-home.png",
+    "screenshots/375-services.png",
+    "screenshots/375-cases.png",
+    "screenshots/375-cto.png",
+    "screenshots/375-other-services.png",
+    "screenshots/375-owner-offer.png",
+    "screenshots/375-hr-offer.png",
+    "screenshots/375-ai-career.png",
+    "screenshots/375-cto-offer.png",
+    "screenshots/768-home.png",
+    "screenshots/768-services.png",
+    "screenshots/768-cases.png",
+    "screenshots/768-cto.png",
+    "screenshots/768-other-services.png",
+    "screenshots/768-owner-offer.png",
+    "screenshots/768-hr-offer.png",
+    "screenshots/768-ai-career.png",
+    "screenshots/768-cto-offer.png",
+    "screenshots/1024-home.png",
+    "screenshots/1024-services.png",
+    "screenshots/1024-cases.png",
+    "screenshots/1024-cto.png",
+    "screenshots/1024-other-services.png",
+    "screenshots/1024-owner-offer.png",
+    "screenshots/1024-hr-offer.png",
+    "screenshots/1024-ai-career.png",
+    "screenshots/1024-cto-offer.png",
+    "screenshots/1440-home.png",
+    "screenshots/1440-services.png",
+    "screenshots/1440-cases.png",
+    "screenshots/1440-cto.png",
+    "screenshots/1440-other-services.png",
+    "screenshots/1440-owner-offer.png",
+    "screenshots/1440-hr-offer.png",
+    "screenshots/1440-ai-career.png",
+    "screenshots/1440-cto-offer.png"
+  ],
+  "layout": [
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    }
+  ],
+  "axe": [
+    {
+      "width": 320,
+      "phase": "home",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "services",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "cases",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "cto",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "other-services",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "ai-career",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "cto-offer",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "home",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "services",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "cases",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "cto",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "other-services",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "ai-career",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "cto-offer",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "home",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "services",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "cases",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "cto",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "other-services",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "ai-career",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "cto-offer",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "home",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "services",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "cases",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "cto",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "other-services",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "ai-career",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "cto-offer",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "home",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "services",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "cases",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "cto",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "other-services",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "ai-career",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "cto-offer",
+      "violations": []
+    }
+  ],
+  "javascriptErrors": [],
+  "externalRequests": 0,
+  "formSuccesses": 0,
+  "viewports": [],
+  "physicalPhone": "not available",
+  "axeStatus": "enabled",
+  "assessment": "Expert walkthrough; no study participants or conversion measurement",
+  "homeSections": [
+    {
+      "width": 320,
+      "height": 20004,
+      "sections": [
+        {
+          "id": "hero",
+          "height": 698
+        },
+        {
+          "id": "solutions",
+          "height": 4261
+        },
+        {
+          "id": "projects",
+          "height": 1690
+        },
+        {
+          "id": "problems",
+          "height": 1636
+        },
+        {
+          "id": "scenarios",
+          "height": 1540
+        },
+        {
+          "id": "cto",
+          "height": 697
+        },
+        {
+          "id": "other-services",
+          "height": 178
+        },
+        {
+          "id": "free-tools",
+          "height": 931
+        },
+        {
+          "id": "diagnostics",
+          "height": 1767
+        },
+        {
+          "id": "about",
+          "height": 1483
+        },
+        {
+          "id": "process",
+          "height": 1744
+        },
+        {
+          "id": "faq",
+          "height": 1154
+        },
+        {
+          "id": "contact",
+          "height": 1088
+        }
+      ]
+    },
+    {
+      "width": 375,
+      "height": 18930,
+      "sections": [
+        {
+          "id": "hero",
+          "height": 672
+        },
+        {
+          "id": "solutions",
+          "height": 3968
+        },
+        {
+          "id": "projects",
+          "height": 1599
+        },
+        {
+          "id": "problems",
+          "height": 1448
+        },
+        {
+          "id": "scenarios",
+          "height": 1442
+        },
+        {
+          "id": "cto",
+          "height": 671
+        },
+        {
+          "id": "other-services",
+          "height": 178
+        },
+        {
+          "id": "free-tools",
+          "height": 905
+        },
+        {
+          "id": "diagnostics",
+          "height": 1650
+        },
+        {
+          "id": "about",
+          "height": 1484
+        },
+        {
+          "id": "process",
+          "height": 1699
+        },
+        {
+          "id": "faq",
+          "height": 1016
+        },
+        {
+          "id": "contact",
+          "height": 1062
+        }
+      ]
+    },
+    {
+      "width": 768,
+      "height": 16720,
+      "sections": [
+        {
+          "id": "hero",
+          "height": 611
+        },
+        {
+          "id": "solutions",
+          "height": 3145
+        },
+        {
+          "id": "projects",
+          "height": 1018
+        },
+        {
+          "id": "problems",
+          "height": 1351
+        },
+        {
+          "id": "scenarios",
+          "height": 1444
+        },
+        {
+          "id": "cto",
+          "height": 593
+        },
+        {
+          "id": "other-services",
+          "height": 210
+        },
+        {
+          "id": "free-tools",
+          "height": 625
+        },
+        {
+          "id": "diagnostics",
+          "height": 1468
+        },
+        {
+          "id": "about",
+          "height": 2060
+        },
+        {
+          "id": "process",
+          "height": 1253
+        },
+        {
+          "id": "faq",
+          "height": 958
+        },
+        {
+          "id": "contact",
+          "height": 1129
+        }
+      ]
+    },
+    {
+      "width": 1024,
+      "height": 13642,
+      "sections": [
+        {
+          "id": "hero",
+          "height": 611
+        },
+        {
+          "id": "solutions",
+          "height": 2437
+        },
+        {
+          "id": "projects",
+          "height": 1003
+        },
+        {
+          "id": "problems",
+          "height": 1202
+        },
+        {
+          "id": "scenarios",
+          "height": 1040
+        },
+        {
+          "id": "cto",
+          "height": 479
+        },
+        {
+          "id": "other-services",
+          "height": 221
+        },
+        {
+          "id": "free-tools",
+          "height": 640
+        },
+        {
+          "id": "diagnostics",
+          "height": 1188
+        },
+        {
+          "id": "about",
+          "height": 1014
+        },
+        {
+          "id": "process",
+          "height": 1100
+        },
+        {
+          "id": "faq",
+          "height": 979
+        },
+        {
+          "id": "contact",
+          "height": 832
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 13691,
+      "sections": [
+        {
+          "id": "hero",
+          "height": 683
+        },
+        {
+          "id": "solutions",
+          "height": 2416
+        },
+        {
+          "id": "projects",
+          "height": 1003
+        },
+        {
+          "id": "problems",
+          "height": 1202
+        },
+        {
+          "id": "scenarios",
+          "height": 1040
+        },
+        {
+          "id": "cto",
+          "height": 487
+        },
+        {
+          "id": "other-services",
+          "height": 223
+        },
+        {
+          "id": "free-tools",
+          "height": 654
+        },
+        {
+          "id": "diagnostics",
+          "height": 1134
+        },
+        {
+          "id": "about",
+          "height": 1037
+        },
+        {
+          "id": "process",
+          "height": 1106
+        },
+        {
+          "id": "faq",
+          "height": 979
+        },
+        {
+          "id": "contact",
+          "height": 813
+        }
+      ]
+    }
+  ],
+  "journeys": [
+    {
+      "width": 320,
+      "role": "owner",
+      "clicksToForm": 2,
+      "route": [
+        "/",
+        "/solutions/management-analytics",
+        "#contact"
+      ]
+    },
+    {
+      "width": 320,
+      "role": "hr",
+      "clicksToForm": 2,
+      "route": [
+        "/",
+        "/solutions/corporate-academy",
+        "#contact"
+      ]
+    },
+    {
+      "width": 320,
+      "role": "employee",
+      "clicksToProduct": 2,
+      "route": [
+        "footer /products",
+        "/products/ai-career"
+      ],
+      "ambiguity": "No employee entry in Hero; old risk-oriented title and 947 RUB"
+    },
+    {
+      "width": 320,
+      "role": "cto",
+      "clicksToOffer": 1,
+      "comparisonOnHome": false
+    },
+    {
+      "width": 375,
+      "role": "owner",
+      "clicksToForm": 2,
+      "route": [
+        "/",
+        "/solutions/management-analytics",
+        "#contact"
+      ]
+    },
+    {
+      "width": 375,
+      "role": "hr",
+      "clicksToForm": 2,
+      "route": [
+        "/",
+        "/solutions/corporate-academy",
+        "#contact"
+      ]
+    },
+    {
+      "width": 375,
+      "role": "employee",
+      "clicksToProduct": 2,
+      "route": [
+        "footer /products",
+        "/products/ai-career"
+      ],
+      "ambiguity": "No employee entry in Hero; old risk-oriented title and 947 RUB"
+    },
+    {
+      "width": 375,
+      "role": "cto",
+      "clicksToOffer": 1,
+      "comparisonOnHome": false
+    },
+    {
+      "width": 768,
+      "role": "owner",
+      "clicksToForm": 2,
+      "route": [
+        "/",
+        "/solutions/management-analytics",
+        "#contact"
+      ]
+    },
+    {
+      "width": 768,
+      "role": "hr",
+      "clicksToForm": 2,
+      "route": [
+        "/",
+        "/solutions/corporate-academy",
+        "#contact"
+      ]
+    },
+    {
+      "width": 768,
+      "role": "employee",
+      "clicksToProduct": 2,
+      "route": [
+        "footer /products",
+        "/products/ai-career"
+      ],
+      "ambiguity": "No employee entry in Hero; old risk-oriented title and 947 RUB"
+    },
+    {
+      "width": 768,
+      "role": "cto",
+      "clicksToOffer": 1,
+      "comparisonOnHome": false
+    },
+    {
+      "width": 1024,
+      "role": "owner",
+      "clicksToForm": 2,
+      "route": [
+        "/",
+        "/solutions/management-analytics",
+        "#contact"
+      ]
+    },
+    {
+      "width": 1024,
+      "role": "hr",
+      "clicksToForm": 2,
+      "route": [
+        "/",
+        "/solutions/corporate-academy",
+        "#contact"
+      ]
+    },
+    {
+      "width": 1024,
+      "role": "employee",
+      "clicksToProduct": 2,
+      "route": [
+        "footer /products",
+        "/products/ai-career"
+      ],
+      "ambiguity": "No employee entry in Hero; old risk-oriented title and 947 RUB"
+    },
+    {
+      "width": 1024,
+      "role": "cto",
+      "clicksToOffer": 1,
+      "comparisonOnHome": false
+    },
+    {
+      "width": 1440,
+      "role": "owner",
+      "clicksToForm": 2,
+      "route": [
+        "/",
+        "/solutions/management-analytics",
+        "#contact"
+      ]
+    },
+    {
+      "width": 1440,
+      "role": "hr",
+      "clicksToForm": 2,
+      "route": [
+        "/",
+        "/solutions/corporate-academy",
+        "#contact"
+      ]
+    },
+    {
+      "width": 1440,
+      "role": "employee",
+      "clicksToProduct": 2,
+      "route": [
+        "footer /products",
+        "/products/ai-career"
+      ],
+      "ambiguity": "No employee entry in Hero; old risk-oriented title and 947 RUB"
+    },
+    {
+      "width": 1440,
+      "role": "cto",
+      "clicksToOffer": 1,
+      "comparisonOnHome": false
+    }
+  ],
+  "browserVersion": "156.0.8078.79",
+  "axeVersion": "4.14.0"
+}

@@ -7,6 +7,7 @@ import Scenarios from "./Scenarios";
 import SectionLabel from "./SectionLabel";
 import StickyCta from "./StickyCta";
 import TrackServiceView from "./TrackServiceView";
+import ServiceTopics from "./ServiceTopics";
 import { serviceBySlug, services } from "@/config/services";
 import type { ServicePageContent } from "@/content/services";
 import type { Item, SectionKey, UniqueBlock } from "@/content/services/types";
@@ -59,7 +60,7 @@ function Hero({ page, crumbs }: { page: ServicePageContent; crumbs: Crumb[] }) {
         <div className="flex flex-col gap-6 min-[860px]:flex-row min-[860px]:items-end min-[860px]:justify-between min-[860px]:gap-12 min-[860px]:border-t min-[860px]:border-cream/15 min-[860px]:pt-8">
           <p className="m-0 max-w-[52ch] text-pretty text-[16px] leading-[1.55] text-cream/80 min-[560px]:text-[18px]">{page.offer}</p>
           <div className="flex flex-col gap-2.5">
-            <CtaLink href="#contact" location="service_page" className={ctaClass}>
+            <CtaLink href="#contact" location="service_page" service={page.slug} className={ctaClass}>
               Обсудить задачу бесплатно
             </CtaLink>
             <p className="m-0 text-[13px] text-stone min-[860px]:text-center">Первичное обсуждение — бесплатно</p>
@@ -470,6 +471,7 @@ export default function ServicePage({
     <>
       <main id="main">
         <Hero page={page} crumbs={crumbs} />
+        <ServiceTopics service={page.slug} />
         {body}
         <ContactSection index={pad(n + 1)} title={page.form.title} lead={page.form.lead} />
       </main>

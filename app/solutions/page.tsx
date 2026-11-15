@@ -4,13 +4,13 @@ import Services from "@/components/Services";
 import CtoOffer from "@/components/CtoOffer";
 import OtherServices from "@/components/OtherServices";
 import ContactSection from "@/components/ContactSection";
-import { solutions, solutionHref } from "@/config/solutions";
+import { directions } from "@/config/directions";
 import { siteUrl } from "@/config/site";
 import { pageMetadata, breadcrumbList } from "@/lib/seo";
 import { jsonLd } from "@/lib/jsonld";
 const title = "Решения для сотрудников, продаж и филиалов — MIRONOVICH.PRO";
 const description =
-  "Пять направлений: корпоративная академия, KPI, управленческая аналитика, стандарты филиалов и ИИ для работы с клиентами. Состав и стартовая цена пилота.";
+  "Шесть направлений: обучение, мотивация команды, финансы, стандарты филиалов, работа с клиентами и внешний CTO. Состав первого этапа и стартовые цены.";
 export const metadata: Metadata = pageMetadata({
   title,
   description,
@@ -29,11 +29,11 @@ export default function Page() {
       description,
       mainEntity: {
         "@type": "ItemList",
-        itemListElement: solutions.map((s, i) => ({
+        itemListElement: directions.map((s, i) => ({
           "@type": "ListItem",
           position: i + 1,
           name: s.title,
-          url: siteUrl + solutionHref(s),
+          url: siteUrl + s.href,
         })),
       },
     },
