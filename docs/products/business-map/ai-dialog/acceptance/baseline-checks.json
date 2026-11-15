@@ -1,0 +1,37 @@
+{
+  "phase": "baseline",
+  "source": "4ec35126b52dde7994d002f4b3ef1ca23353e45d",
+  "node": "v22.23.5",
+  "startedAt": "2026-11-15T13:12:16.959Z",
+  "checks": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "durationMs": 20682
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "durationMs": 9012
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "durationMs": 39426
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "durationMs": 3142
+    }
+  ],
+  "subject": "baseline source commit",
+  "tests": {
+    "tests": 314,
+    "pass": 314,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  }
+}

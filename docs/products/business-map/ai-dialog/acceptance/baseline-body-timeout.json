@@ -1,0 +1,6 @@
+{
+  "code": "invalid_output",
+  "elapsedMs": 15026,
+  "expectedCode": "timeout",
+  "mode": "synthetic abort-aware transport, no network request"
+}

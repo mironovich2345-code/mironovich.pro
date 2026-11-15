@@ -24,6 +24,8 @@ import {
   normalizeNumbers,
   parseWorkloadText,
   unknownAnswer,
+  namedSystemMentions,
+  manualReportingEvidence,
 } from "./language.ts";
 export const emptyWorkload = (): Workload => ({
   employees: null,
@@ -37,10 +39,12 @@ export const initialConversation = (): ConversationState => ({
   industry: null,
   locations: null,
   systems: [],
+  systemMentions: [],
   company: null,
   processes: [],
   overflow: [],
   messages: [],
+  messageSequence: 0,
   activeId: null,
   question: null,
   proposal: null,
@@ -57,10 +61,11 @@ export function say(
 ): ConversationState {
   return {
     ...state,
+    messageSequence: state.messageSequence + 1,
     messages: [
       ...state.messages,
       {
-        id: `m-${state.revision}-${state.messages.length}`,
+        id: `m-${state.messageSequence + 1}`,
         role,
         text,
         source,
@@ -189,7 +194,10 @@ export function chooseIndustry(
   industry: Industry,
 ): ConversationState {
   return say(
-    { ...state, industry, revision: state.revision + 1 },
+    {
+      ...state, industry, proposal: null, proposalSource: null,
+      advice: {}, revision: state.revision + 1,
+    },
     `${industryNames[industry]}. ${industryNotice(industry)}\nСначала стоит проверить повторный ввод данных, обращения без ответа и ручную отчётность. Выберите знакомую ситуацию или опишите её своими словами.`,
   );
 }
@@ -202,12 +210,18 @@ export function addScenarios(
   );
   if (fresh.length > policy.maxProcesses - state.processes.length)
     return say(
-      { ...state, overflow: fresh, revision: state.revision + 1 },
+      {
+        ...state, overflow: fresh, proposal: null, proposalSource: null,
+        advice: {}, revision: state.revision + 1,
+      },
       "В описании больше процессов, чем помещается в карту. Выберите основные: всего может быть до пяти. Остальные не будут добавлены автоматически.",
     );
   return {
     ...state,
     processes: [...state.processes, ...fresh.map(newProcess)],
+    proposal: null,
+    proposalSource: null,
+    advice: {},
     revision: state.revision + 1,
   };
 }
@@ -291,12 +305,13 @@ export function updateProcess(
       error: p.error,
     };
   }
-  const advice = { ...state.advice };
-  delete advice[id];
   return recalculate({
     ...state,
     processes: state.processes.map((x) => (x.id === id ? p : x)),
-    advice,
+    // A workload edit can change overlaps and portfolio priority, not just this process.
+    advice: {},
+    proposal: null,
+    proposalSource: null,
     revision: state.revision + 1,
   });
 }
@@ -304,8 +319,6 @@ export function removeProcess(
   state: ConversationState,
   id: string,
 ): ConversationState {
-  const advice = { ...state.advice };
-  delete advice[id];
   return say(
     recalculate({
       ...state,
@@ -324,7 +337,9 @@ export function removeProcess(
         ),
       activeId: state.activeId === id ? null : state.activeId,
       question: state.activeId === id ? null : state.question,
-      advice,
+      advice: {},
+      proposal: null,
+      proposalSource: null,
       revision: state.revision + 1,
     }),
     "Процесс удалён из карты. Результаты пересчитаны.",
@@ -384,8 +399,6 @@ export function saveCoreProcess(
 ): ConversationState {
   const p = state.processes.find((p) => p.id === core.id);
   if (!p) return state;
-  const advice = { ...state.advice };
-  delete advice[p.id];
   return say(
     recalculate({
       ...state,
@@ -408,7 +421,9 @@ export function saveCoreProcess(
               },
             },
       ),
-      advice,
+      advice: {},
+      proposal: null,
+      proposalSource: null,
       revision: state.revision + 1,
     }),
     "Условия процесса обновлены. Три сценария, риски и приоритет пересчитаны существующим ядром.",
@@ -430,12 +445,48 @@ export function submitText(
       needsAi: false,
     };
   let next = say(
-    { ...state, revision: state.revision + 1 },
+    {
+      ...state, proposal: null, proposalSource: null,
+      advice: {}, revision: state.revision + 1,
+    },
     clean,
     "user",
     "user",
   );
   const p = next.processes.find((p) => p.id === next.activeId);
+  // Explicit corrections are updates of known facts, not answers to an unrelated risk question.
+  const correction = parseWorkloadText(clean);
+  if (
+    p &&
+    /^(?:исправление|исправляю|исправь|уточнение|уточняю|поправка)(?:\s|[,:])/iu.test(clean) &&
+    [correction.employees, correction.operations, correction.minutes].some((v) => v !== undefined)
+  ) {
+    try {
+      next = updateProcess(next, p.id, {
+        workload: { ...p.workload, ...correction },
+        facts: [...p.facts, `Уточнение: ${clean}`.slice(0, 300)].slice(-8),
+      });
+      next = {
+        ...next,
+        processes: next.processes.map((x) => x.id !== p.id ? x : {
+          ...x,
+          asked: x.asked.filter((q) => q !== next.question && q !== "scope" && q !== "staff"),
+        }),
+      };
+      next = say(
+        next,
+        "Уточнение применено к текущему процессу. Время пересчитано ядром; старые предложения ИИ сброшены.",
+        "core",
+      );
+      next = focusProcess(next, p.id);
+    } catch (error) {
+      next = say(
+        next,
+        error instanceof RangeError ? error.message : "Проверьте исправление. Прежние значения сохранены.",
+      );
+    }
+    return { state: next, needsAi: false };
+  }
   if (!p || !next.question) {
     if (!next.industry && /фитнес|клуб[а-я-]*/iu.test(clean))
       next = chooseIndustry(next, "fitness");
@@ -461,7 +512,10 @@ export function submitText(
       systems.push("crm");
     if (/таблиц/iu.test(clean) && !systems.includes("tables"))
       systems.push("tables");
-    next = { ...next, systems };
+    next = {
+      ...next, systems,
+      systemMentions: [...new Set([...next.systemMentions, ...namedSystemMentions(clean)])].slice(-8),
+    };
     const found = fitnessScenarios
       .filter((s) => s.keywords.test(clean))
       .map((s) => s.id);
@@ -480,6 +534,25 @@ export function submitText(
         );
       }
     }
+    const reporting = next.processes.find(
+      (x) => x.scenarioId === "reporting" && found.includes("reporting"),
+    ),
+      manualEvidence = manualReportingEvidence(clean);
+    if (reporting && manualEvidence) {
+      next = updateProcess(next, reporting.id, {
+        confirmed: true,
+        facts: [...reporting.facts, manualEvidence].slice(-8),
+      });
+      next = say(
+        next,
+        `Вы явно указали ручную отчётность; повторно подтверждать её не нужно. Первый полезный шаг: ${scenarioById("reporting").firstAction}`,
+      );
+    }
+    if (found.includes("missed-leads"))
+      next = say(
+        next,
+        `Гипотеза: часть обращений может оставаться без обработки. Потерянные продажи пока не подтверждены. Проверка: ${scenarioById("missed-leads").firstAction}`,
+      );
     if (found.length > 0 && !next.overflow.length) {
       const first = next.processes.find((x) => found.includes(x.scenarioId));
       if (first) next = focusProcess(next, first.id);
@@ -554,7 +627,7 @@ export function submitText(
           ? "serious"
           : /заметн|повторн.*работ/iu.test(clean)
             ? "noticeable"
-            : /мелк|незнач|легко|исправ/iu.test(clean)
+            : /мелк|незнач|легко\s+исправ|исправим/iu.test(clean)
               ? "minor"
               : null;
       if (error) {
@@ -563,6 +636,8 @@ export function submitText(
       }
     }
   }
+  // An explicit unknown may skip a question; an unrecognized answer must not silently consume it.
+  if (!recognized) patch.asked = p.asked;
   try {
     next = updateProcess(next, p.id, patch); // numeric errors leave previous values intact
     next = {
@@ -641,6 +716,7 @@ export function acceptInterpretation(
     industry: state.industry ?? v.industry,
     locations: v.locations ?? state.locations,
     systems: [...new Set([...state.systems, ...v.systems.map((s) => s.code)])],
+    systemMentions: [...new Set([...state.systemMentions, ...v.systems.map((s) => s.evidence)])].slice(-8),
     revision: state.revision + 1,
   };
   next = addScenarios(

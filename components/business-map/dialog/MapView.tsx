@@ -64,6 +64,11 @@ export default function MapView({
             : ""}
         </p>
       )}
+      {state.systemMentions.length > 0 && (
+        <p className="bm-muted">
+          Упомянутое ПО: {state.systemMentions.join("; ")}. Возможности и категория программы не проверены.
+        </p>
+      )}
       {!state.processes.length ? (
         <div className="bd-map-empty">
           <span>01—05</span>

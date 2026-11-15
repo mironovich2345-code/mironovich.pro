@@ -1,0 +1,1494 @@
+{
+  "mode": "local production build; offline + intercepted browser transport; NO live OpenAI",
+  "viewports": [
+    {
+      "width": 320,
+      "height": 812
+    },
+    {
+      "width": 375,
+      "height": 812
+    },
+    {
+      "width": 768,
+      "height": 1000
+    },
+    {
+      "width": 1024,
+      "height": 1000
+    },
+    {
+      "width": 1440,
+      "height": 1000
+    }
+  ],
+  "flows": [
+    {
+      "scenario": "A: explicit facts vs hypothesis; named software; early action",
+      "width": 320,
+      "passed": true,
+      "localActionRenderMs": 74,
+      "mode": "offline; NOT provider latency"
+    },
+    {
+      "scenario": "B/F: No stops interview and recommends no automation",
+      "width": 320,
+      "passed": true
+    },
+    {
+      "scenario": "C/B: 168h, no money; editor 84h; correction 42h; deletion",
+      "width": 320,
+      "passed": true
+    },
+    {
+      "scenario": "D: unknown values stay unknown; missing measurements explained",
+      "width": 320,
+      "passed": true
+    },
+    {
+      "scenario": "E: at most five processes",
+      "width": 320,
+      "passed": true
+    },
+    {
+      "scenario": "E: portfolio, risk, W-CAPACITY, critical stop and no payback",
+      "width": 320,
+      "passed": true
+    },
+    {
+      "scenario": "E: pending demo interpretation disappears after edit/deletion",
+      "width": 320,
+      "passed": true
+    },
+    {
+      "scenario": "long messages wrap; oversized draft retained; keyboard Enter",
+      "width": 320,
+      "passed": true
+    },
+    {
+      "scenario": "reload clears tab-memory data; no browser storage",
+      "width": 320,
+      "passed": true
+    },
+    {
+      "scenario": "A: explicit facts vs hypothesis; named software; early action",
+      "width": 375,
+      "passed": true,
+      "localActionRenderMs": 84,
+      "mode": "offline; NOT provider latency"
+    },
+    {
+      "scenario": "B/F: No stops interview and recommends no automation",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "scenario": "C/B: 168h, no money; editor 84h; correction 42h; deletion",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "scenario": "D: unknown values stay unknown; missing measurements explained",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "scenario": "E: at most five processes",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "scenario": "E: portfolio, risk, W-CAPACITY, critical stop and no payback",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "scenario": "E: pending demo interpretation disappears after edit/deletion",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "scenario": "long messages wrap; oversized draft retained; keyboard Enter",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "scenario": "reload clears tab-memory data; no browser storage",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "scenario": "A: explicit facts vs hypothesis; named software; early action",
+      "width": 768,
+      "passed": true,
+      "localActionRenderMs": 67,
+      "mode": "offline; NOT provider latency"
+    },
+    {
+      "scenario": "B/F: No stops interview and recommends no automation",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "scenario": "C/B: 168h, no money; editor 84h; correction 42h; deletion",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "scenario": "D: unknown values stay unknown; missing measurements explained",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "scenario": "E: at most five processes",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "scenario": "E: portfolio, risk, W-CAPACITY, critical stop and no payback",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "scenario": "E: pending demo interpretation disappears after edit/deletion",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "scenario": "long messages wrap; oversized draft retained; keyboard Enter",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "scenario": "reload clears tab-memory data; no browser storage",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "scenario": "A: explicit facts vs hypothesis; named software; early action",
+      "width": 1024,
+      "passed": true,
+      "localActionRenderMs": 97,
+      "mode": "offline; NOT provider latency"
+    },
+    {
+      "scenario": "B/F: No stops interview and recommends no automation",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "scenario": "C/B: 168h, no money; editor 84h; correction 42h; deletion",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "scenario": "D: unknown values stay unknown; missing measurements explained",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "scenario": "E: at most five processes",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "scenario": "E: portfolio, risk, W-CAPACITY, critical stop and no payback",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "scenario": "E: pending demo interpretation disappears after edit/deletion",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "scenario": "long messages wrap; oversized draft retained; keyboard Enter",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "scenario": "reload clears tab-memory data; no browser storage",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "scenario": "A: explicit facts vs hypothesis; named software; early action",
+      "width": 1440,
+      "passed": true,
+      "localActionRenderMs": 69,
+      "mode": "offline; NOT provider latency"
+    },
+    {
+      "scenario": "B/F: No stops interview and recommends no automation",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "scenario": "C/B: 168h, no money; editor 84h; correction 42h; deletion",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "scenario": "D: unknown values stay unknown; missing measurements explained",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "scenario": "E: at most five processes",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "scenario": "E: portfolio, risk, W-CAPACITY, critical stop and no payback",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "scenario": "E: pending demo interpretation disappears after edit/deletion",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "scenario": "long messages wrap; oversized draft retained; keyboard Enter",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "scenario": "reload clears tab-memory data; no browser storage",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "scenario": "keyboard Tab/Enter focus; short viewport reflow (NOT phone IME)",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "scenario": "late Interpreter response after manual edit ignored",
+      "width": 375,
+      "passed": true,
+      "mode": "intercepted transport; NO OpenAI"
+    },
+    {
+      "scenario": "late Advisor response after edit ignored",
+      "width": 375,
+      "passed": true,
+      "mode": "intercepted transport; NO OpenAI"
+    },
+    {
+      "scenario": "AI error preserves map; no automatic retry",
+      "width": 375,
+      "passed": true,
+      "status": 429,
+      "mode": "browser transport stub; NO provider"
+    },
+    {
+      "scenario": "AI error preserves map; no automatic retry",
+      "width": 375,
+      "passed": true,
+      "status": 502,
+      "mode": "browser transport stub; NO provider"
+    },
+    {
+      "scenario": "AI error preserves map; no automatic retry",
+      "width": 375,
+      "passed": true,
+      "status": 504,
+      "mode": "browser transport stub; NO provider"
+    },
+    {
+      "scenario": "browser eight-call cap blocks ninth; unique request IDs",
+      "width": 375,
+      "passed": true,
+      "calls": 8,
+      "mode": "intercepted transport; server budget tested separately"
+    }
+  ],
+  "accessibility": [
+    {
+      "width": 320,
+      "phase": "welcome",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "library",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "A-map",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "C-formula",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "E-portfolio",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "E-capacity",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "E-critical",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "welcome",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "library",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "A-map",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "C-formula",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "E-portfolio",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "E-matrix-visible",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "E-capacity",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "E-critical",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "welcome",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "library",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "A-map",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "C-formula",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "E-portfolio",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "E-capacity",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "E-critical",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "welcome",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "library",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "A-map",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "C-formula",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "E-portfolio",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "E-capacity",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "E-critical",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "welcome",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "library",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "A-map",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "C-formula",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "E-portfolio",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "E-matrix-visible",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "E-capacity",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "E-critical",
+      "violations": []
+    }
+  ],
+  "layout": [
+    {
+      "phase": "welcome",
+      "width": 320,
+      "document": 320,
+      "containers": []
+    },
+    {
+      "phase": "library",
+      "width": 320,
+      "document": 320,
+      "containers": [
+        {
+          "name": "bd-layout ",
+          "client": 320,
+          "scroll": 320
+        },
+        {
+          "name": "bd-thread",
+          "client": 320,
+          "scroll": 320
+        },
+        {
+          "name": "bd-composer",
+          "client": 320,
+          "scroll": 320
+        }
+      ]
+    },
+    {
+      "phase": "A-dialog",
+      "width": 320,
+      "document": 320,
+      "containers": [
+        {
+          "name": "bd-layout ",
+          "client": 320,
+          "scroll": 320
+        },
+        {
+          "name": "bd-thread",
+          "client": 320,
+          "scroll": 320
+        },
+        {
+          "name": "bd-composer",
+          "client": 320,
+          "scroll": 320
+        }
+      ]
+    },
+    {
+      "phase": "A-map",
+      "width": 320,
+      "document": 320,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 320,
+          "scroll": 320
+        }
+      ]
+    },
+    {
+      "phase": "C-formula",
+      "width": 320,
+      "document": 320,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 320,
+          "scroll": 320
+        }
+      ]
+    },
+    {
+      "phase": "C-edit",
+      "width": 320,
+      "document": 320,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 320,
+          "scroll": 320
+        }
+      ]
+    },
+    {
+      "phase": "D-unknown",
+      "width": 320,
+      "document": 320,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 320,
+          "scroll": 320
+        }
+      ]
+    },
+    {
+      "phase": "E-limit",
+      "width": 320,
+      "document": 320,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 320,
+          "scroll": 320
+        }
+      ]
+    },
+    {
+      "phase": "E-portfolio",
+      "width": 320,
+      "document": 320,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 320,
+          "scroll": 320
+        }
+      ]
+    },
+    {
+      "phase": "E-capacity",
+      "width": 320,
+      "document": 320,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 320,
+          "scroll": 320
+        }
+      ]
+    },
+    {
+      "phase": "E-critical",
+      "width": 320,
+      "document": 320,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 320,
+          "scroll": 320
+        }
+      ]
+    },
+    {
+      "phase": "long-message",
+      "width": 320,
+      "document": 320,
+      "containers": [
+        {
+          "name": "bd-layout ",
+          "client": 320,
+          "scroll": 320
+        },
+        {
+          "name": "bd-thread",
+          "client": 320,
+          "scroll": 320
+        },
+        {
+          "name": "bd-composer",
+          "client": 320,
+          "scroll": 320
+        }
+      ]
+    },
+    {
+      "phase": "welcome",
+      "width": 375,
+      "document": 375,
+      "containers": []
+    },
+    {
+      "phase": "library",
+      "width": 375,
+      "document": 375,
+      "containers": [
+        {
+          "name": "bd-layout ",
+          "client": 375,
+          "scroll": 375
+        },
+        {
+          "name": "bd-thread",
+          "client": 375,
+          "scroll": 375
+        },
+        {
+          "name": "bd-composer",
+          "client": 375,
+          "scroll": 375
+        }
+      ]
+    },
+    {
+      "phase": "A-dialog",
+      "width": 375,
+      "document": 375,
+      "containers": [
+        {
+          "name": "bd-layout ",
+          "client": 375,
+          "scroll": 375
+        },
+        {
+          "name": "bd-thread",
+          "client": 375,
+          "scroll": 375
+        },
+        {
+          "name": "bd-composer",
+          "client": 375,
+          "scroll": 375
+        }
+      ]
+    },
+    {
+      "phase": "A-map",
+      "width": 375,
+      "document": 375,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 375,
+          "scroll": 375
+        }
+      ]
+    },
+    {
+      "phase": "C-formula",
+      "width": 375,
+      "document": 375,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 375,
+          "scroll": 375
+        }
+      ]
+    },
+    {
+      "phase": "C-edit",
+      "width": 375,
+      "document": 375,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 375,
+          "scroll": 375
+        }
+      ]
+    },
+    {
+      "phase": "D-unknown",
+      "width": 375,
+      "document": 375,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 375,
+          "scroll": 375
+        }
+      ]
+    },
+    {
+      "phase": "E-limit",
+      "width": 375,
+      "document": 375,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 375,
+          "scroll": 375
+        }
+      ]
+    },
+    {
+      "phase": "E-portfolio",
+      "width": 375,
+      "document": 375,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 375,
+          "scroll": 375
+        }
+      ]
+    },
+    {
+      "phase": "E-matrix-visible",
+      "width": 375,
+      "document": 375,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 375,
+          "scroll": 375
+        }
+      ]
+    },
+    {
+      "phase": "E-capacity",
+      "width": 375,
+      "document": 375,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 375,
+          "scroll": 375
+        }
+      ]
+    },
+    {
+      "phase": "E-critical",
+      "width": 375,
+      "document": 375,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 375,
+          "scroll": 375
+        }
+      ]
+    },
+    {
+      "phase": "long-message",
+      "width": 375,
+      "document": 375,
+      "containers": [
+        {
+          "name": "bd-layout ",
+          "client": 375,
+          "scroll": 375
+        },
+        {
+          "name": "bd-thread",
+          "client": 375,
+          "scroll": 375
+        },
+        {
+          "name": "bd-composer",
+          "client": 375,
+          "scroll": 375
+        }
+      ]
+    },
+    {
+      "phase": "welcome",
+      "width": 768,
+      "document": 768,
+      "containers": []
+    },
+    {
+      "phase": "library",
+      "width": 768,
+      "document": 768,
+      "containers": [
+        {
+          "name": "bd-layout ",
+          "client": 768,
+          "scroll": 768
+        },
+        {
+          "name": "bd-thread",
+          "client": 753,
+          "scroll": 753
+        },
+        {
+          "name": "bd-composer",
+          "client": 768,
+          "scroll": 768
+        }
+      ]
+    },
+    {
+      "phase": "A-dialog",
+      "width": 768,
+      "document": 768,
+      "containers": [
+        {
+          "name": "bd-layout ",
+          "client": 768,
+          "scroll": 768
+        },
+        {
+          "name": "bd-thread",
+          "client": 753,
+          "scroll": 753
+        },
+        {
+          "name": "bd-composer",
+          "client": 768,
+          "scroll": 768
+        }
+      ]
+    },
+    {
+      "phase": "A-map",
+      "width": 768,
+      "document": 768,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 768,
+          "scroll": 768
+        }
+      ]
+    },
+    {
+      "phase": "C-formula",
+      "width": 768,
+      "document": 768,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 768,
+          "scroll": 768
+        }
+      ]
+    },
+    {
+      "phase": "C-edit",
+      "width": 768,
+      "document": 768,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 768,
+          "scroll": 768
+        }
+      ]
+    },
+    {
+      "phase": "D-unknown",
+      "width": 768,
+      "document": 768,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 768,
+          "scroll": 768
+        }
+      ]
+    },
+    {
+      "phase": "E-limit",
+      "width": 768,
+      "document": 768,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 768,
+          "scroll": 768
+        }
+      ]
+    },
+    {
+      "phase": "E-portfolio",
+      "width": 768,
+      "document": 768,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 768,
+          "scroll": 768
+        }
+      ]
+    },
+    {
+      "phase": "E-capacity",
+      "width": 768,
+      "document": 768,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 768,
+          "scroll": 768
+        }
+      ]
+    },
+    {
+      "phase": "E-critical",
+      "width": 768,
+      "document": 768,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 768,
+          "scroll": 768
+        }
+      ]
+    },
+    {
+      "phase": "long-message",
+      "width": 768,
+      "document": 768,
+      "containers": [
+        {
+          "name": "bd-layout ",
+          "client": 768,
+          "scroll": 768
+        },
+        {
+          "name": "bd-thread",
+          "client": 753,
+          "scroll": 753
+        },
+        {
+          "name": "bd-composer",
+          "client": 768,
+          "scroll": 768
+        }
+      ]
+    },
+    {
+      "phase": "welcome",
+      "width": 1024,
+      "document": 1024,
+      "containers": []
+    },
+    {
+      "phase": "library",
+      "width": 1024,
+      "document": 1024,
+      "containers": [
+        {
+          "name": "bd-layout ",
+          "client": 1024,
+          "scroll": 1024
+        },
+        {
+          "name": "bd-thread",
+          "client": 702,
+          "scroll": 702
+        },
+        {
+          "name": "bd-composer",
+          "client": 717,
+          "scroll": 717
+        },
+        {
+          "name": "bd-sidebar",
+          "client": 306,
+          "scroll": 306
+        }
+      ]
+    },
+    {
+      "phase": "A-dialog",
+      "width": 1024,
+      "document": 1024,
+      "containers": [
+        {
+          "name": "bd-layout ",
+          "client": 1024,
+          "scroll": 1024
+        },
+        {
+          "name": "bd-thread",
+          "client": 702,
+          "scroll": 702
+        },
+        {
+          "name": "bd-composer",
+          "client": 717,
+          "scroll": 717
+        },
+        {
+          "name": "bd-sidebar",
+          "client": 306,
+          "scroll": 306
+        }
+      ]
+    },
+    {
+      "phase": "A-map",
+      "width": 1024,
+      "document": 1024,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 1024,
+          "scroll": 1024
+        }
+      ]
+    },
+    {
+      "phase": "C-formula",
+      "width": 1024,
+      "document": 1024,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 1024,
+          "scroll": 1024
+        }
+      ]
+    },
+    {
+      "phase": "C-edit",
+      "width": 1024,
+      "document": 1024,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 1024,
+          "scroll": 1024
+        }
+      ]
+    },
+    {
+      "phase": "D-unknown",
+      "width": 1024,
+      "document": 1024,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 1024,
+          "scroll": 1024
+        }
+      ]
+    },
+    {
+      "phase": "E-limit",
+      "width": 1024,
+      "document": 1024,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 1024,
+          "scroll": 1024
+        }
+      ]
+    },
+    {
+      "phase": "E-portfolio",
+      "width": 1024,
+      "document": 1024,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 1024,
+          "scroll": 1024
+        }
+      ]
+    },
+    {
+      "phase": "E-capacity",
+      "width": 1024,
+      "document": 1024,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 1024,
+          "scroll": 1024
+        }
+      ]
+    },
+    {
+      "phase": "E-critical",
+      "width": 1024,
+      "document": 1024,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 1024,
+          "scroll": 1024
+        }
+      ]
+    },
+    {
+      "phase": "long-message",
+      "width": 1024,
+      "document": 1024,
+      "containers": [
+        {
+          "name": "bd-layout ",
+          "client": 1024,
+          "scroll": 1024
+        },
+        {
+          "name": "bd-thread",
+          "client": 702,
+          "scroll": 702
+        },
+        {
+          "name": "bd-composer",
+          "client": 717,
+          "scroll": 717
+        },
+        {
+          "name": "bd-sidebar",
+          "client": 306,
+          "scroll": 306
+        }
+      ]
+    },
+    {
+      "phase": "welcome",
+      "width": 1440,
+      "document": 1440,
+      "containers": []
+    },
+    {
+      "phase": "library",
+      "width": 1440,
+      "document": 1440,
+      "containers": [
+        {
+          "name": "bd-layout ",
+          "client": 1440,
+          "scroll": 1440
+        },
+        {
+          "name": "bd-thread",
+          "client": 993,
+          "scroll": 993
+        },
+        {
+          "name": "bd-composer",
+          "client": 1008,
+          "scroll": 1008
+        },
+        {
+          "name": "bd-sidebar",
+          "client": 431,
+          "scroll": 431
+        }
+      ]
+    },
+    {
+      "phase": "A-dialog",
+      "width": 1440,
+      "document": 1440,
+      "containers": [
+        {
+          "name": "bd-layout ",
+          "client": 1440,
+          "scroll": 1440
+        },
+        {
+          "name": "bd-thread",
+          "client": 993,
+          "scroll": 993
+        },
+        {
+          "name": "bd-composer",
+          "client": 1008,
+          "scroll": 1008
+        },
+        {
+          "name": "bd-sidebar",
+          "client": 431,
+          "scroll": 431
+        }
+      ]
+    },
+    {
+      "phase": "A-map",
+      "width": 1440,
+      "document": 1440,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 1100,
+          "scroll": 1100
+        }
+      ]
+    },
+    {
+      "phase": "C-formula",
+      "width": 1440,
+      "document": 1440,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 1100,
+          "scroll": 1100
+        }
+      ]
+    },
+    {
+      "phase": "C-edit",
+      "width": 1440,
+      "document": 1440,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 1100,
+          "scroll": 1100
+        }
+      ]
+    },
+    {
+      "phase": "D-unknown",
+      "width": 1440,
+      "document": 1440,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 1100,
+          "scroll": 1100
+        }
+      ]
+    },
+    {
+      "phase": "E-limit",
+      "width": 1440,
+      "document": 1440,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 1100,
+          "scroll": 1100
+        }
+      ]
+    },
+    {
+      "phase": "E-portfolio",
+      "width": 1440,
+      "document": 1440,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 1100,
+          "scroll": 1100
+        }
+      ]
+    },
+    {
+      "phase": "E-matrix-visible",
+      "width": 1440,
+      "document": 1440,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 1100,
+          "scroll": 1100
+        }
+      ]
+    },
+    {
+      "phase": "E-capacity",
+      "width": 1440,
+      "document": 1440,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 1100,
+          "scroll": 1100
+        }
+      ]
+    },
+    {
+      "phase": "E-critical",
+      "width": 1440,
+      "document": 1440,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 1100,
+          "scroll": 1100
+        }
+      ]
+    },
+    {
+      "phase": "long-message",
+      "width": 1440,
+      "document": 1440,
+      "containers": [
+        {
+          "name": "bd-layout ",
+          "client": 1440,
+          "scroll": 1440
+        },
+        {
+          "name": "bd-thread",
+          "client": 993,
+          "scroll": 993
+        },
+        {
+          "name": "bd-composer",
+          "client": 1008,
+          "scroll": 1008
+        },
+        {
+          "name": "bd-sidebar",
+          "client": 431,
+          "scroll": 431
+        }
+      ]
+    },
+    {
+      "phase": "short-viewport-not-physical-keyboard",
+      "width": 375,
+      "document": 375,
+      "containers": [
+        {
+          "name": "bd-layout ",
+          "client": 375,
+          "scroll": 375
+        },
+        {
+          "name": "bd-thread",
+          "client": 375,
+          "scroll": 375
+        },
+        {
+          "name": "bd-composer",
+          "client": 375,
+          "scroll": 375
+        }
+      ]
+    },
+    {
+      "phase": "stub-error",
+      "width": 375,
+      "document": 375,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 375,
+          "scroll": 375
+        }
+      ]
+    },
+    {
+      "phase": "stub-error",
+      "width": 375,
+      "document": 375,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 375,
+          "scroll": 375
+        }
+      ]
+    },
+    {
+      "phase": "stub-error",
+      "width": 375,
+      "document": 375,
+      "containers": [
+        {
+          "name": "bd-layout bd-layout-wide",
+          "client": 375,
+          "scroll": 375
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    "screenshots/320-welcome.png",
+    "screenshots/320-scenario-a.png",
+    "screenshots/320-map.png",
+    "screenshots/320-formula-168.png",
+    "screenshots/320-edited-42.png",
+    "screenshots/320-portfolio.png",
+    "screenshots/375-welcome.png",
+    "screenshots/375-scenario-a.png",
+    "screenshots/375-map.png",
+    "screenshots/375-formula-168.png",
+    "screenshots/375-edited-42.png",
+    "screenshots/375-portfolio.png",
+    "screenshots/375-matrix.png",
+    "screenshots/375-capacity-plan.png",
+    "screenshots/375-critical-plan.png",
+    "screenshots/768-welcome.png",
+    "screenshots/768-scenario-a.png",
+    "screenshots/768-map.png",
+    "screenshots/768-formula-168.png",
+    "screenshots/768-edited-42.png",
+    "screenshots/768-portfolio.png",
+    "screenshots/1024-welcome.png",
+    "screenshots/1024-scenario-a.png",
+    "screenshots/1024-map.png",
+    "screenshots/1024-formula-168.png",
+    "screenshots/1024-edited-42.png",
+    "screenshots/1024-portfolio.png",
+    "screenshots/1440-welcome.png",
+    "screenshots/1440-scenario-a.png",
+    "screenshots/1440-map.png",
+    "screenshots/1440-formula-168.png",
+    "screenshots/1440-edited-42.png",
+    "screenshots/1440-portfolio.png",
+    "screenshots/1440-matrix.png",
+    "screenshots/1440-capacity-plan.png",
+    "screenshots/1440-critical-plan.png"
+  ],
+  "javascriptErrors": [],
+  "externalRequests": 0,
+  "unstubbedAiRequests": 0,
+  "physicalPhone": "not available; manual checklist required",
+  "axe": "enabled",
+  "browserVersion": "156.0.8078.79",
+  "axeVersion": "4.14.0",
+  "passed": true
+}

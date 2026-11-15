@@ -32,7 +32,12 @@ export const unknownAnswer = (text: string) =>
 export function parseWorkloadText(text: string): Partial<Workload> {
   const s = normalizeNumbers(text),
     out: Partial<Workload> = {};
-  const employees = s.match(
+  // A per-person denominator is not headcount: «на 1 сотрудника» can precede «10 сотрудников».
+  const headcountText = s.replace(
+    /на\s+(?:одного|одну|1)\s+(?:сотрудник[а-я]*|человек[а-я]*|менеджер[а-я]*)/gu,
+    " ",
+  );
+  const employees = headcountText.match(
     /(-?\d+(?:\.\d+)?)\s*(?:сотрудник|менеджер|человек|управляющ)/u,
   );
   if (employees) out.employees = Number(employees[1]);
@@ -47,7 +52,7 @@ export function parseWorkloadText(text: string): Partial<Workload> {
     /(-?\d+(?:\.\d+)?)\s*(?:в|за)\s*(?:день|сутки|недел|месяц)/u,
   );
   if (ops ?? frequency) out.operations = Number((ops ?? frequency)![1]);
-  if (/(?:кажд(?:ый|ого)|на (?:сотрудника|человека)|по\s+\d)/u.test(s))
+  if (/(?:кажд(?:ый|ого)|на\s+(?:(?:одного|одну|1)\s+)?(?:сотрудника|человека|менеджера)|по\s+\d)/u.test(s))
     out.scope = "per-person";
   else if (/вс(?:его|ей командой)|вместе|общ(?:ий|ее)|суммарно/u.test(s))
     out.scope = "team";
@@ -58,4 +63,25 @@ export function parseWorkloadText(text: string): Partial<Workload> {
   const minutes = s.match(/(-?\d+(?:\.\d+)?)\s*мин/u);
   if (minutes) out.minutes = Number(minutes[1]);
   return out;
+}
+
+/** Only literal names in an explicit software phrase; never infer CRM functions. */
+export function namedSystemMentions(text: string): string[] {
+  return [...text.matchAll(/работа(?:ют|ем|ет)\s+(?:в|с)\s+([A-Za-z][A-Za-z0-9.+-]{1,39})/giu)]
+    .map((m) => m[1])
+    .filter((name) => !/^(?:crm|erp)$/iu.test(name));
+}
+
+/** A narrow explicit fact, not a confirmation inferred from the general problem score. */
+export function manualReportingEvidence(text: string): string | null {
+  if (text.includes("?")) return null;
+  // Keep a preceding «Возможно,» attached to its sentence; it is not an asserted fact.
+  const clauses = text.split(/[.;!]/u)
+    .filter((sentence) => !/возможн|может|могут|предполож|планир|буд[еут]/iu.test(sentence))
+    .flatMap((sentence) => sentence.split(","));
+  return clauses.find((clause) =>
+    /отч[её]т/iu.test(clause) && /вручную/iu.test(clause) &&
+    /собира|готов|дела/iu.test(clause) &&
+    !/(?:^|\s)(?:не|нет|без|если)\s/iu.test(clause),
+  )?.trim().slice(0, 300) ?? null;
 }

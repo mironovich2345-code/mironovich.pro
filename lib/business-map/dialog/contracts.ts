@@ -95,10 +95,13 @@ export type ConversationState = {
   industry: Industry | null;
   locations: number | null;
   systems: string[];
+  /** Literal user mentions, without any claim about vendor capabilities or category. */
+  systemMentions: string[];
   company: Company | null;
   processes: LiveProcess[];
   overflow: ScenarioId[];
   messages: Message[];
+  messageSequence: number;
   activeId: string | null;
   question: QuestionKey | null;
   proposal: Interpretation | null;

@@ -1,0 +1,2020 @@
+
+> mironovich-site@1.0.0 test
+> node --test --experimental-strip-types "tests/*.test.mjs"
+
+TAP version 13
+# (node:4934) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/mironovich.pro/lib/tools/automation.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /workspace/mironovich.pro/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: personal plan: reporting, Интеграция существующих систем
+ok 1 - personal plan: reporting, Интеграция существующих систем
+  ---
+  duration_ms: 4.720131
+  type: 'test'
+  ...
+# Subtest: personal plan: transfer, Скрипт или небольшой внутренний инструмент
+ok 2 - personal plan: transfer, Скрипт или небольшой внутренний инструмент
+  ---
+  duration_ms: 0.458075
+  type: 'test'
+  ...
+# Subtest: personal plan: documents, ИИ-автоматизация
+ok 3 - personal plan: documents, ИИ-автоматизация
+  ---
+  duration_ms: 0.549377
+  type: 'test'
+  ...
+# Subtest: personal plan: requests, Готовый SaaS-сервис
+ok 4 - personal plan: requests, Готовый SaaS-сервис
+  ---
+  duration_ms: 0.743074
+  type: 'test'
+  ...
+# Subtest: personal plan: knowledge, ИИ-автоматизация
+ok 5 - personal plan: knowledge, ИИ-автоматизация
+  ---
+  duration_ms: 0.491316
+  type: 'test'
+  ...
+# Subtest: personal plan: custom, Разработка приложения
+ok 6 - personal plan: custom, Разработка приложения
+  ---
+  duration_ms: 0.567076
+  type: 'test'
+  ...
+# Subtest: personal plan: reporting, Обычная автоматизация
+ok 7 - personal plan: reporting, Обычная автоматизация
+  ---
+  duration_ms: 0.57288
+  type: 'test'
+  ...
+# Subtest: structured analysis and template documents do not imply AI; semantic questions do
+ok 8 - structured analysis and template documents do not imply AI; semantic questions do
+  ---
+  duration_ms: 0.934927
+  type: 'test'
+  ...
+# Subtest: business goal changes the route and measurable success criterion
+ok 9 - business goal changes the route and measurable success criterion
+  ---
+  duration_ms: 1.075488
+  type: 'test'
+  ...
+# Subtest: risk client overrides unchecked human review
+ok 10 - risk client overrides unchecked human review
+  ---
+  duration_ms: 0.938142
+  type: 'test'
+  ...
+# Subtest: risk financial overrides unchecked human review
+ok 11 - risk financial overrides unchecked human review
+  ---
+  duration_ms: 0.385064
+  type: 'test'
+  ...
+# Subtest: risk serious overrides unchecked human review
+ok 12 - risk serious overrides unchecked human review
+  ---
+  duration_ms: 0.276159
+  type: 'test'
+  ...
+# Subtest: risk unknown overrides unchecked human review
+ok 13 - risk unknown overrides unchecked human review
+  ---
+  duration_ms: 0.289461
+  type: 'test'
+  ...
+# Subtest: low risk respects choice, but still prescribes testing and rollback
+ok 14 - low risk respects choice, but still prescribes testing and rollback
+  ---
+  duration_ms: 0.300078
+  type: 'test'
+  ...
+# Subtest: unknown answers and unsupported connectivity require verification, not made-up capabilities
+ok 15 - unknown answers and unsupported connectivity require verification, not made-up capabilities
+  ---
+  duration_ms: 0.483708
+  type: 'test'
+  ...
+# Subtest: interface requirement is retained even for an AI solution
+ok 16 - interface requirement is retained even for an AI solution
+  ---
+  duration_ms: 0.275016
+  type: 'test'
+  ...
+# Subtest: custom process does not imply that a bespoke app is already necessary
+ok 17 - custom process does not imply that a bespoke app is already necessary
+  ---
+  duration_ms: 0.289033
+  type: 'test'
+  ...
+# Subtest: diagnosis rejects invalid payload null
+ok 18 - diagnosis rejects invalid payload null
+  ---
+  duration_ms: 0.282774
+  type: 'test'
+  ...
+# Subtest: diagnosis rejects invalid payload []
+ok 19 - diagnosis rejects invalid payload []
+  ---
+  duration_ms: 0.166066
+  type: 'test'
+  ...
+# Subtest: diagnosis rejects invalid payload {"systems":["crm"],"programNames":"Битрикс24","goal":"toString","errorImpact":"fixable","actions":["transfer"]}
+ok 20 - diagnosis rejects invalid payload {"systems":["crm"],"programNames":"Битрикс24","goal":"toString","errorImpact":"fixable","actions":["transfer"]}
+  ---
+  duration_ms: 0.273233
+  type: 'test'
+  ...
+# Subtest: diagnosis rejects invalid payload {"systems":["crm"],"programNames":"Битрикс24","goal":"time","errorImpact":"invalid","actions":["transfer"]}
+ok 21 - diagnosis rejects invalid payload {"systems":["crm"],"programNames":"Битрикс24","goal":"time","errorImpact":"invalid","actions":["transfer"]}
+  ---
+  duration_ms: 0.165348
+  type: 'test'
+  ...
+# Subtest: diagnosis rejects invalid payload {"systems":["crm","manual"],"programNames":"Битрикс24","goal":"time","errorImpact":"fixable","actions":["transfer"]}
+ok 22 - diagnosis rejects invalid payload {"systems":["crm","manual"],"programNames":"Битрикс24","goal":"time","errorImpact":"fixable","actions":["transfer"]}
+  ---
+  duration_ms: 0.142727
+  type: 'test'
+  ...
+# Subtest: diagnosis rejects invalid payload {"systems":["crm","crm"],"programNames":"Битрикс24","goal":"time","errorImpact":"fixable","actions":["transfer"]}
+ok 23 - diagnosis rejects invalid payload {"systems":["crm","crm"],"programNames":"Битрикс24","goal":"time","errorImpact":"fixable","actions":["transfer"]}
+  ---
+  duration_ms: 0.146638
+  type: 'test'
+  ...
+# Subtest: diagnosis rejects invalid payload {"systems":["crm"],"programNames":"Битрикс24","goal":"time","errorImpact":"fixable","actions":[]}
+ok 24 - diagnosis rejects invalid payload {"systems":["crm"],"programNames":"Битрикс24","goal":"time","errorImpact":"fixable","actions":[]}
+  ---
+  duration_ms: 0.146947
+  type: 'test'
+  ...
+# Subtest: diagnosis rejects invalid payload {"systems":["crm"],"programNames":"Битрикс24","goal":"time","errorImpact":"fixable","actions":["__proto__"]}
+ok 25 - diagnosis rejects invalid payload {"systems":["crm"],"programNames":"Битрикс24","goal":"time","errorImpact":"fixable","actions":["__proto__"]}
+  ---
+  duration_ms: 0.157571
+  type: 'test'
+  ...
+# Subtest: diagnosis rejects invalid payload {"systems":["crm"],"programNames":[],"goal":"time","errorImpact":"fixable","actions":["transfer"]}
+ok 26 - diagnosis rejects invalid payload {"systems":["crm"],"programNames":[],"goal":"time","errorImpact":"fixable","actions":["transfer"]}
+  ---
+  duration_ms: 0.156767
+  type: 'test'
+  ...
+# Subtest: diagnosis rejects invalid payload {"systems":["crm"],"programNames":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","goal":"time","errorImpact":"fixable","actions":["transfer"]}
+ok 27 - diagnosis rejects invalid payload {"systems":["crm"],"programNames":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","goal":"time","errorImpact":"fixable","actions":["transfer"]}
+  ---
+  duration_ms: 0.116651
+  type: 'test'
+  ...
+# Subtest: diagnosis rejects invalid payload {"systems":["crm"],"programNames":"CRM\\nsecret","goal":"time","errorImpact":"fixable","actions":["transfer"]}
+ok 28 - diagnosis rejects invalid payload {"systems":["crm"],"programNames":"CRM\\nsecret","goal":"time","errorImpact":"fixable","actions":["transfer"]}
+  ---
+  duration_ms: 0.321934
+  type: 'test'
+  ...
+# Subtest: manual choice drops stale program/API/integration data; whitelisting removes invented results
+ok 29 - manual choice drops stale program/API/integration data; whitelisting removes invented results
+  ---
+  duration_ms: 0.329698
+  type: 'test'
+  ...
+# Subtest: wizard saves answers in memory and produces the same typed answers for UI and server
+ok 30 - wizard saves answers in memory and produces the same typed answers for UI and server
+  ---
+  duration_ms: 3.916565
+  type: 'test'
+  ...
+# Subtest: server re-derives AI and documents instead of trusting contradictory browser booleans
+ok 31 - server re-derives AI and documents instead of trusting contradictory browser booleans
+  ---
+  duration_ms: 0.46101
+  type: 'test'
+  ...
+# Subtest: server context includes plan, goal, programs, impact, constraints and labor numbers
+ok 32 - server context includes plan, goal, programs, impact, constraints and labor numbers
+  ---
+  duration_ms: 1.186257
+  type: 'test'
+  ...
+# Subtest: diagnostic Telegram payload is escaped and remains under the Telegram limit with hostile maximum fields
+ok 33 - diagnostic Telegram payload is escaped and remains under the Telegram limit with hostile maximum fields
+  ---
+  duration_ms: 10.662561
+  type: 'test'
+  ...
+# Subtest: original hand-checked formulas and publication gates remain unchanged
+ok 34 - original hand-checked formulas and publication gates remain unchanged
+  ---
+  duration_ms: 0.614762
+  type: 'test'
+  ...
+# Subtest: full plan, labor and program names survive escaped Telegram context budget
+ok 35 - full plan, labor and program names survive escaped Telegram context budget
+  ---
+  duration_ms: 1.284334
+  type: 'test'
+  ...
+# Subtest: zero employees prompts clarification instead of assuming a process owner
+ok 36 - zero employees prompts clarification instead of assuming a process owner
+  ---
+  duration_ms: 0.333935
+  type: 'test'
+  ...
+# Subtest: normal diagnostic leads retain an 800-character task when the message has room
+ok 37 - normal diagnostic leads retain an 800-character task when the message has room
+  ---
+  duration_ms: 1.219837
+  type: 'test'
+  ...
+# (node:4941) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/mironovich.pro/lib/business-map/dialog/chat-handler.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /workspace/mironovich.pro/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: private chat uses official Responses API with strict structured output, configured model, minimal context and store:false
+ok 38 - private chat uses official Responses API with strict structured output, configured model, minimal context and store:false
+  ---
+  duration_ms: 60.114468
+  type: 'test'
+  ...
+# Subtest: unauthenticated/wrong credentials fail before the provider or body processing
+ok 39 - unauthenticated/wrong credentials fail before the provider or body processing
+  ---
+  duration_ms: 6.538473
+  type: 'test'
+  ...
+# Subtest: missing credentials, missing flags, local dev and Railway production all close the API independently of middleware
+ok 40 - missing credentials, missing flags, local dev and Railway production all close the API independently of middleware
+  ---
+  duration_ms: 10.070527
+  type: 'test'
+  ...
+# Subtest: missing key/model or disabled AI gives honest 503 and makes no external request
+ok 41 - missing key/model or disabled AI gives honest 503 and makes no external request
+  ---
+  duration_ms: 12.846647
+  type: 'test'
+  ...
+# Subtest: only exact POST, JSON, same origin and bounded validated body enter orchestration
+ok 42 - only exact POST, JSON, same origin and bounded validated body enter orchestration
+  ---
+  duration_ms: 9.415742
+  type: 'test'
+  ...
+# Subtest: malformed JSON, UTF-8, non-object and stream without length fail safely
+ok 43 - malformed JSON, UTF-8, non-object and stream without length fail safely
+  ---
+  duration_ms: 5.297379
+  type: 'test'
+  ...
+# Subtest: output schema rejects invented numbers, extra finance fields, missing evidence and unsupported scenarios
+ok 44 - output schema rejects invented numbers, extra finance fields, missing evidence and unsupported scenarios
+  ---
+  duration_ms: 0.721733
+  type: 'test'
+  ...
+# Subtest: advisor remains qualitative; AI not offered for rule-based transfer or critical automation
+ok 45 - advisor remains qualitative; AI not offered for rule-based transfer or critical automation
+  ---
+  duration_ms: 3.27051
+  type: 'test'
+  ...
+# Subtest: prompt injection stays user data, has no tools and cannot return secret/financial fields
+ok 46 - prompt injection stays user data, has no tools and cannot return secret/financial fields
+  ---
+  duration_ms: 4.477034
+  type: 'test'
+  ...
+# Subtest: provider failures never echo raw errors and never retry
+ok 47 - provider failures never echo raw errors and never retry
+  ---
+  duration_ms: 8.626141
+  type: 'test'
+  ...
+# Subtest: request ID replay returns 409, no duplicate provider calls
+ok 48 - request ID replay returns 409, no duplicate provider calls
+  ---
+  duration_ms: 3.510912
+  type: 'test'
+  ...
+# Subtest: per-instance concurrent, minute and daily caps are independent and reset by UTC day
+ok 49 - per-instance concurrent, minute and daily caps are independent and reset by UTC day
+  ---
+  duration_ms: 0.304608
+  type: 'test'
+  ...
+# Subtest: timeout aborts one official request, releases budget and has no retry
+ok 50 - timeout aborts one official request, releases budget and has no retry
+  ---
+  duration_ms: 15016.02559
+  type: 'test'
+  ...
+# Subtest: schema scalar enums reject arrays and objects instead of coercing them to strings
+ok 51 - schema scalar enums reject arrays and objects instead of coercing them to strings
+  ---
+  duration_ms: 2.018149
+  type: 'test'
+  ...
+# Subtest: both Responses schemas meet strict object/required/enum structure recursively
+ok 52 - both Responses schemas meet strict object/required/enum structure recursively
+  ---
+  duration_ms: 3.621926
+  type: 'test'
+  ...
+# Subtest: provider HTTP 5xx, invalid JSON and oversized streamed output fail closed without retry or disclosure
+ok 53 - provider HTTP 5xx, invalid JSON and oversized streamed output fail closed without retry or disclosure
+  ---
+  duration_ms: 16.044105
+  type: 'test'
+  ...
+# Subtest: concurrent/replayed requests and changed request IDs cannot bypass the per-instance paid-call budget
+ok 54 - concurrent/replayed requests and changed request IDs cannot bypass the per-instance paid-call budget
+  ---
+  duration_ms: 49.081594
+  type: 'test'
+  ...
+# Subtest: deadline while reading the provider body returns timeout, not invalid_output
+ok 55 - deadline while reading the provider body returns timeout, not invalid_output
+  ---
+  duration_ms: 15018.185927
+  type: 'test'
+  ...
+# (node:4953) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/mironovich.pro/lib/business-map/quick-insight.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /workspace/mironovich.pro/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: industry-only start needs no company metadata, invented numbers or AI
+ok 56 - industry-only start needs no company metadata, invented numbers or AI
+  ---
+  duration_ms: 1.864784
+  type: 'test'
+  ...
+# Subtest: free description detects scale, systems and three hypotheses without guessing staff
+ok 57 - free description detects scale, systems and three hypotheses without guessing staff
+  ---
+  duration_ms: 6.237593
+  type: 'test'
+  ...
+# Subtest: acceptance A preserves Craft as a literal mention and separates manual reporting from a leads hypothesis
+ok 58 - acceptance A preserves Craft as a literal mention and separates manual reporting from a leads hypothesis
+  ---
+  duration_ms: 3.436472
+  type: 'test'
+  ...
+# Subtest: acceptance C parses the per-person denominator without turning it into headcount
+ok 59 - acceptance C parses the per-person denominator without turning it into headcount
+  ---
+  duration_ms: 16.821255
+  type: 'test'
+  ...
+# Subtest: explicit corrections update current facts, recalculate and retain the unanswered risk question
+ok 60 - explicit corrections update current facts, recalculate and retain the unanswered risk question
+  ---
+  duration_ms: 11.755569
+  type: 'test'
+  ...
+# Subtest: a pending interpretation cannot overwrite edits or resurrect a deleted process
+ok 61 - a pending interpretation cannot overwrite edits or resurrect a deleted process
+  ---
+  duration_ms: 9.080644
+  type: 'test'
+  ...
+# Subtest: message IDs stay unique when more than two full histories are truncated
+ok 62 - message IDs stay unique when more than two full histories are truncated
+  ---
+  duration_ms: 1.126457
+  type: 'test'
+  ...
+# Subtest: short replies complete four main questions and produce 42 h; salary remains absent
+ok 63 - short replies complete four main questions and produce 42 h; salary remains absent
+  ---
+  duration_ms: 1.008904
+  type: 'test'
+  ...
+# Subtest: unknown answers never loop and return a practical action with no fictional hours
+ok 64 - unknown answers never loop and return a practical action with no fictional hours
+  ---
+  duration_ms: 1.496243
+  type: 'test'
+  ...
+# Subtest: per-person 4 × 10 becomes team 40 exactly once, not 160; core adapter retains 40
+ok 65 - per-person 4 × 10 becomes team 40 exactly once, not 160; core adapter retains 40
+  ---
+  duration_ms: 2.2196
+  type: 'test'
+  ...
+# Subtest: ambiguous text asks scope, then staff once if needed
+ok 66 - ambiguous text asks scope, then staff once if needed
+  ---
+  duration_ms: 0.776473
+  type: 'test'
+  ...
+# Subtest: known facts skip questions; weekly context and decimal comma work
+ok 67 - known facts skip questions; weekly context and decimal comma work
+  ---
+  duration_ms: 0.280173
+  type: 'test'
+  ...
+# Subtest: team frequency is not multiplied by staff; direct rate is time value only
+ok 68 - team frequency is not multiplied by staff; direct rate is time value only
+  ---
+  duration_ms: 0.154581
+  type: 'test'
+  ...
+# Subtest: zero volume is valid and rounds without negative/NaN; boundaries reject overflow
+ok 69 - zero volume is valid and rounds without negative/NaN; boundaries reject overflow
+  ---
+  duration_ms: 0.556658
+  type: 'test'
+  ...
+# Subtest: capacity warning blocks a confident pilot and uses configured working fund
+ok 70 - capacity warning blocks a confident pilot and uses configured working fund
+  ---
+  duration_ms: 0.626797
+  type: 'test'
+  ...
+# Subtest: critical and unnecessary processes stop without an automation promise
+ok 71 - critical and unnecessary processes stop without an automation promise
+  ---
+  duration_ms: 0.284902
+  type: 'test'
+  ...
+# Subtest: more than five candidates require user selection; no sixth active process
+ok 72 - more than five candidates require user selection; no sixth active process
+  ---
+  duration_ms: 0.255911
+  type: 'test'
+  ...
+# Subtest: editing prior data recalculates, invalidates AI plan and supports rename/delete
+ok 73 - editing prior data recalculates, invalidates AI plan and supports rename/delete
+  ---
+  duration_ms: 1.993669
+  type: 'test'
+  ...
+# Subtest: an AI hypothesis cannot change facts until confirmation and can be rejected/corrected
+ok 74 - an AI hypothesis cannot change facts until confirmation and can be rejected/corrected
+  ---
+  duration_ms: 0.427953
+  type: 'test'
+  ...
+# Subtest: very long text does not mutate the map or ask the provider
+ok 75 - very long text does not mutate the map or ask the provider
+  ---
+  duration_ms: 0.123862
+  type: 'test'
+  ...
+# Subtest: all synthetic demos remain isolated; no provider answer is fabricated
+ok 76 - all synthetic demos remain isolated; no provider answer is fabricated
+  ---
+  duration_ms: 5.721253
+  type: 'test'
+  ...
+# Subtest: rejecting a previously calculated problem removes its actionable priority
+ok 77 - rejecting a previously calculated problem removes its actionable priority
+  ---
+  duration_ms: 1.164967
+  type: 'test'
+  ...
+# Subtest: full high-risk and missing assessments retain their honest live-map statuses
+ok 78 - full high-risk and missing assessments retain their honest live-map statuses
+  ---
+  duration_ms: 0.441616
+  type: 'test'
+  ...
+# Subtest: capacity blocks a pilot plan and respects an explicitly edited company working fund
+ok 79 - capacity blocks a pilot plan and respects an explicitly edited company working fund
+  ---
+  duration_ms: 1.981413
+  type: 'test'
+  ...
+# Subtest: proposal provenance stays explicit when a real response follows a demo
+ok 80 - proposal provenance stays explicit when a real response follows a demo
+  ---
+  duration_ms: 0.210386
+  type: 'test'
+  ...
+# Subtest: negative free-text values retain their sign and cannot become positive workload or scale
+ok 81 - negative free-text values retain their sign and cannot become positive workload or scale
+  ---
+  duration_ms: 0.407065
+  type: 'test'
+  ...
+# Subtest: editing company context updates the live industry/systems and discards a stale proposal
+ok 82 - editing company context updates the live industry/systems and discards a stale proposal
+  ---
+  duration_ms: 0.124682
+  type: 'test'
+  ...
+# (node:4960) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/mironovich.pro/lib/business-map/prototype-policy.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /workspace/mironovich.pro/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: local development keeps its opt-in without credentials or noindex
+ok 83 - local development keeps its opt-in without credentials or noindex
+  ---
+  duration_ms: 1.552622
+  type: 'test'
+  ...
+# Subtest: Railway Preview requires all four exact environment values
+ok 84 - Railway Preview requires all four exact environment values
+  ---
+  duration_ms: 1.253469
+  type: 'test'
+  ...
+# Subtest: configured preview challenges missing/wrong credentials and accepts only matching Basic auth
+ok 85 - configured preview challenges missing/wrong credentials and accepts only matching Basic auth
+  ---
+  duration_ms: 12.997286
+  type: 'test'
+  ...
+# Subtest: absent, empty, weak or malformed environment credentials fail closed even for supplied Basic
+ok 86 - absent, empty, weak or malformed environment credentials fail closed even for supplied Basic
+  ---
+  duration_ms: 0.569481
+  type: 'test'
+  ...
+# Subtest: malformed schemes, base64, invalid UTF-8 and oversized headers never authenticate or throw
+ok 87 - malformed schemes, base64, invalid UTF-8 and oversized headers never authenticate or throw
+  ---
+  duration_ms: 0.701204
+  type: 'test'
+  ...
+# Subtest: UTF-8 and colons in the password are matched byte-for-byte
+ok 88 - UTF-8 and colons in the password are matched byte-for-byte
+  ---
+  duration_ms: 4.303676
+  type: 'test'
+  ...
+# Subtest: Railway production denies every node mode and flag combination, including valid credentials
+ok 89 - Railway production denies every node mode and flag combination, including valid credentials
+  ---
+  duration_ms: 2.369522
+  type: 'test'
+  ...
+# Subtest: a preview environment running a development server cannot take the unauthenticated local shortcut
+ok 90 - a preview environment running a development server cannot take the unauthenticated local shortcut
+  ---
+  duration_ms: 0.268591
+  type: 'test'
+  ...
+# Subtest: document, descendants, data and RSC aliases are private independently of Referer or custom grant headers
+ok 91 - document, descendants, data and RSC aliases are private independently of Referer or custom grant headers
+  ---
+  duration_ms: 0.490248
+  type: 'test'
+  ...
+# Subtest: private response policy explicitly prevents browser and intermediary caching
+ok 92 - private response policy explicitly prevents browser and intermediary caching
+  ---
+  duration_ms: 0.550045
+  type: 'test'
+  ...
+# (node:4971) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/mironovich.pro/lib/business-map/prototype-policy.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /workspace/mironovich.pro/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: local prototype requires explicit dev opt-in; plain production remains closed
+ok 93 - local prototype requires explicit dev opt-in; plain production remains closed
+  ---
+  duration_ms: 1.113231
+  type: 'test'
+  ...
+# Subtest: synthetic examples cover honest incomplete, risk, cash, capacity and priority states
+ok 94 - synthetic examples cover honest incomplete, risk, cash, capacity and priority states
+  ---
+  duration_ms: 19.339858
+  type: 'test'
+  ...
+# (node:4978) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/mironovich.pro/lib/business-map/calculate.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /workspace/mironovich.pro/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: T1/E1 exact hours, rates, time capacity and separate zero cash
+ok 95 - T1/E1 exact hours, rates, time capacity and separate zero cash
+  ---
+  duration_ms: 31.536466
+  type: 'test'
+  ...
+# Subtest: T2/E2 confirmed cancellable external hours, no second residual-labor deduction
+ok 96 - T2/E2 confirmed cancellable external hours, no second residual-labor deduction
+  ---
+  duration_ms: 1.286151
+  type: 'test'
+  ...
+# Subtest: T3/E3 cash savings are capped by freed hours before rounding
+ok 97 - T3/E3 cash savings are capped by freed hours before rounding
+  ---
+  duration_ms: 1.536533
+  type: 'test'
+  ...
+# Subtest: T4/E4 missing and partial costs do not invent payback
+ok 98 - T4/E4 missing and partial costs do not invent payback
+  ---
+  duration_ms: 2.002827
+  type: 'test'
+  ...
+# Subtest: T5/E5 nonpositive net cash does not recover; known O is sufficient
+ok 99 - T5/E5 nonpositive net cash does not recover; known O is sufficient
+  ---
+  duration_ms: 2.988236
+  type: 'test'
+  ...
+# Subtest: T6 category uses unrounded exact FTE even if displayed hours coincide
+ok 100 - T6 category uses unrounded exact FTE even if displayed hours coincide
+  ---
+  duration_ms: 1.71077
+  type: 'test'
+  ...
+# Subtest: T7/T8 calendar factors are exact and independent of number of employees
+ok 101 - T7/T8 calendar factors are exact and independent of number of employees
+  ---
+  duration_ms: 1.668335
+  type: 'test'
+  ...
+# Subtest: T9: G1 overrides matrix with an explicit reason
+ok 102 - T9: G1 overrides matrix with an explicit reason
+  ---
+  duration_ms: 0.306087
+  type: 'test'
+  ...
+# Subtest: T10: G2 overrides matrix with an explicit reason
+ok 103 - T10: G2 overrides matrix with an explicit reason
+  ---
+  duration_ms: 0.491672
+  type: 'test'
+  ...
+# Subtest: T11: G3 overrides matrix with an explicit reason
+ok 104 - T11: G3 overrides matrix with an explicit reason
+  ---
+  duration_ms: 0.586933
+  type: 'test'
+  ...
+# Subtest: T12: G4 overrides matrix with an explicit reason
+ok 105 - T12: G4 overrides matrix with an explicit reason
+  ---
+  duration_ms: 0.446678
+  type: 'test'
+  ...
+# Subtest: T13: G5 overrides matrix with an explicit reason
+ok 106 - T13: G5 overrides matrix with an explicit reason
+  ---
+  duration_ms: 0.302962
+  type: 'test'
+  ...
+# Subtest: T14: G6 overrides matrix with an explicit reason
+ok 107 - T14: G6 overrides matrix with an explicit reason
+  ---
+  duration_ms: 0.524477
+  type: 'test'
+  ...
+# Subtest: T15 high risk demotes high value/low complexity
+ok 108 - T15 high risk demotes high value/low complexity
+  ---
+  duration_ms: 0.456884
+  type: 'test'
+  ...
+# Subtest: T16 low confidence does not alter numbers; unknown personal data forces low confidence
+ok 109 - T16 low confidence does not alter numbers; unknown personal data forces low confidence
+  ---
+  duration_ms: 2.774026
+  type: 'test'
+  ...
+# Subtest: T17 deterministic sorting: F then confidence, complexity, risk, name and stable ID
+ok 110 - T17 deterministic sorting: F then confidence, complexity, risk, name and stable ID
+  ---
+  duration_ms: 4.410444
+  type: 'test'
+  ...
+# Subtest: T18 missing salary keeps hours and FTE; direct hourly rate is already fully loaded
+ok 111 - T18 missing salary keeps hours and FTE; direct hourly rate is already fully loaded
+  ---
+  duration_ms: 0.774763
+  type: 'test'
+  ...
+# Subtest: T19 config version and bit-identical JSON; numeric configuration is injectable
+ok 112 - T19 config version and bit-identical JSON; numeric configuration is injectable
+  ---
+  duration_ms: 1.892242
+  type: 'test'
+  ...
+# Subtest: T20 transfer validates originals, ignores forged results and converts per-person volume ONCE
+ok 113 - T20 transfer validates originals, ignores forged results and converts per-person volume ONCE
+  ---
+  duration_ms: 1.677459
+  type: 'test'
+  ...
+# Subtest: v4 transfer retains actual calendar, team volumes, user hourly cost and discards automation claims
+ok 114 - v4 transfer retains actual calendar, team volumes, user hourly cost and discards automation claims
+  ---
+  duration_ms: 4.874018
+  type: 'test'
+  ...
+# Subtest: T21 rejects invalid ranges, strings, NaN and non-finite values without mutating input
+ok 115 - T21 rejects invalid ranges, strings, NaN and non-finite values without mutating input
+  ---
+  duration_ms: 34.728328
+  type: 'test'
+  ...
+# Subtest: unknown properties including client results are discarded at every object boundary
+ok 116 - unknown properties including client results are discarded at every object boundary
+  ---
+  duration_ms: 0.266502
+  type: 'test'
+  ...
+# Subtest: overlapping or unconfirmed processes have no combined totals; asymmetry still blocks summation
+ok 117 - overlapping or unconfirmed processes have no combined totals; asymmetry still blocks summation
+  ---
+  duration_ms: 0.964444
+  type: 'test'
+  ...
+# Subtest: scenario range, zero quantities, zero costs and override working hours
+ok 118 - scenario range, zero quantities, zero costs and override working hours
+  ---
+  duration_ms: 1.763604
+  type: 'test'
+  ...
+# Subtest: limits, all gates preserved, exclusions cannot become recommended or fallback
+ok 119 - limits, all gates preserved, exclusions cannot become recommended or fallback
+  ---
+  duration_ms: 0.470318
+  type: 'test'
+  ...
+# Subtest: decimal half-up rounds at display only, repeating fractions retain exact value
+ok 120 - decimal half-up rounds at display only, repeating fractions retain exact value
+  ---
+  duration_ms: 0.14249
+  type: 'test'
+  ...
+# Subtest: all nine value/complexity matrix cells match specification
+ok 121 - all nine value/complexity matrix cells match specification
+  ---
+  duration_ms: 1.316522
+  type: 'test'
+  ...
+# Subtest: confidence follows source and unknown counts; suitability never creates an automation percentage
+ok 122 - confidence follows source and unknown counts; suitability never creates an automation percentage
+  ---
+  duration_ms: 1.391149
+  type: 'test'
+  ...
+# Subtest: Russian alphabetical tie-break puts Ё between Е and Ж; IDs break identical names
+ok 123 - Russian alphabetical tie-break puts Ё between Е and Ж; IDs break identical names
+  ---
+  duration_ms: 0.657001
+  type: 'test'
+  ...
+# Subtest: small finite decimals never create NaN; exact rational survives serialization
+ok 124 - small finite decimals never create NaN; exact rational survives serialization
+  ---
+  duration_ms: 1.054076
+  type: 'test'
+  ...
+# Subtest: imported actual working hours control capacity; mixed salary/employer bases never sum money
+ok 125 - imported actual working hours control capacity; mixed salary/employer bases never sum money
+  ---
+  duration_ms: 1.161437
+  type: 'test'
+  ...
+# Subtest: all m/e buckets conserve time, stay bounded and maintain scenario order
+ok 126 - all m/e buckets conserve time, stay bounded and maintain scenario order
+  ---
+  duration_ms: 4.032254
+  type: 'test'
+  ...
+# Subtest: unrepresentable aggregate payback is rejected rather than serialized as Infinity/null
+ok 127 - unrepresentable aggregate payback is rejected rather than serialized as Infinity/null
+  ---
+  duration_ms: 0.414108
+  type: 'test'
+  ...
+# Subtest: W-CAPACITY never recommends first; exact fund boundary remains eligible
+ok 128 - W-CAPACITY never recommends first; exact fund boundary remains eligible
+  ---
+  duration_ms: 1.120475
+  type: 'test'
+  ...
+# (node:4985) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/mironovich.pro/lib/tools/labor.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /workspace/mironovich.pro/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: manual work: documented example and all five results
+ok 129 - manual work: documented example and all five results
+  ---
+  duration_ms: 2.59179
+  type: 'test'
+  ...
+# Subtest: zero values are meaningful and never produce NaN or a divide by zero
+ok 130 - zero values are meaningful and never produce NaN or a divide by zero
+  ---
+  duration_ms: 0.394468
+  type: 'test'
+  ...
+# Subtest: money is rounded to kopecks and annual cost agrees with monthly cost
+ok 131 - money is rounded to kopecks and annual cost agrees with monthly cost
+  ---
+  duration_ms: 0.213375
+  type: 'test'
+  ...
+# Subtest: labor rejects employees: -1
+ok 132 - labor rejects employees: -1
+  ---
+  duration_ms: 0.428203
+  type: 'test'
+  ...
+# Subtest: labor rejects employees: 1.5
+ok 133 - labor rejects employees: 1.5
+  ---
+  duration_ms: 0.323881
+  type: 'test'
+  ...
+# Subtest: labor rejects operationsPerDay: 0.5
+ok 134 - labor rejects operationsPerDay: 0.5
+  ---
+  duration_ms: 0.157422
+  type: 'test'
+  ...
+# Subtest: labor rejects workingDays: 32
+ok 135 - labor rejects workingDays: 32
+  ---
+  duration_ms: 0.149717
+  type: 'test'
+  ...
+# Subtest: labor rejects automationPercent: 101
+ok 136 - labor rejects automationPercent: 101
+  ---
+  duration_ms: 0.0778
+  type: 'test'
+  ...
+# Subtest: labor rejects hourlyCost: Infinity
+ok 137 - labor rejects hourlyCost: Infinity
+  ---
+  duration_ms: 0.254779
+  type: 'test'
+  ...
+# Subtest: labor rejects minutesPerOperation: NaN
+ok 138 - labor rejects minutesPerOperation: NaN
+  ---
+  duration_ms: 0.575941
+  type: 'test'
+  ...
+# Subtest: labor rejects hourlyCost: 600
+ok 139 - labor rejects hourlyCost: 600
+  ---
+  duration_ms: 0.167501
+  type: 'test'
+  ...
+# Subtest: labor rejects employees: 1e+100
+ok 140 - labor rejects employees: 1e+100
+  ---
+  duration_ms: 0.083035
+  type: 'test'
+  ...
+# Subtest: large individually valid values cannot exceed aggregate precision bounds
+ok 141 - large individually valid values cannot exceed aggregate precision bounds
+  ---
+  duration_ms: 0.100188
+  type: 'test'
+  ...
+# Subtest: decimal UI input accepts comma and refuses partial numbers, exponent and blanks
+ok 142 - decimal UI input accepts comma and refuses partial numbers, exponent and blanks
+  ---
+  duration_ms: 0.333605
+  type: 'test'
+  ...
+# Subtest: recommendation: Скрипт или небольшой внутренний инструмент
+ok 143 - recommendation: Скрипт или небольшой внутренний инструмент
+  ---
+  duration_ms: 0.245728
+  type: 'test'
+  ...
+# Subtest: recommendation: Интеграция существующих систем
+ok 144 - recommendation: Интеграция существующих систем
+  ---
+  duration_ms: 0.052291
+  type: 'test'
+  ...
+# Subtest: recommendation: Готовый SaaS-сервис
+ok 145 - recommendation: Готовый SaaS-сервис
+  ---
+  duration_ms: 0.052585
+  type: 'test'
+  ...
+# Subtest: recommendation: Разработка приложения
+ok 146 - recommendation: Разработка приложения
+  ---
+  duration_ms: 0.152545
+  type: 'test'
+  ...
+# Subtest: recommendation: ИИ-автоматизация
+ok 147 - recommendation: ИИ-автоматизация
+  ---
+  duration_ms: 0.04854
+  type: 'test'
+  ...
+# Subtest: recommendation: Обычная автоматизация
+ok 148 - recommendation: Обычная автоматизация
+  ---
+  duration_ms: 0.042586
+  type: 'test'
+  ...
+# Subtest: AI is not the default and is not recommended for ordinary data exchange
+ok 149 - AI is not the default and is not recommended for ordinary data exchange
+  ---
+  duration_ms: 0.662771
+  type: 'test'
+  ...
+# Subtest: draft pricing stays hidden even if only one publication gate is enabled
+ok 150 - draft pricing stays hidden even if only one publication gate is enabled
+  ---
+  duration_ms: 0.606962
+  type: 'test'
+  ...
+# Subtest: stages, approved budget and recurring costs match a hand-checked scenario
+ok 151 - stages, approved budget and recurring costs match a hand-checked scenario
+  ---
+  duration_ms: 0.232615
+  type: 'test'
+  ...
+# Subtest: greater load and worse data increase hours; unavailable API is an explicit risk
+ok 152 - greater load and worse data increase hours; unavailable API is an explicit risk
+  ---
+  duration_ms: 0.177995
+  type: 'test'
+  ...
+# Subtest: payback requires confirmed cash benefits, residual labour and approved pricing
+ok 153 - payback requires confirmed cash benefits, residual labour and approved pricing
+  ---
+  duration_ms: 0.59084
+  type: 'test'
+  ...
+# Subtest: automation validation: null
+ok 154 - automation validation: null
+  ---
+  duration_ms: 0.083875
+  type: 'test'
+  ...
+# Subtest: automation validation: []
+ok 155 - automation validation: []
+  ---
+  duration_ms: 0.052336
+  type: 'test'
+  ...
+# Subtest: automation validation: {"processType":"reporting","employees":-1,"integrations":0,"api":"yes","data":"clean","load":"low","interface":false,"documents":false,"ai":false,"humanReview":true,"support":false}
+ok 156 - automation validation: {"processType":"reporting","employees":-1,"integrations":0,"api":"yes","data":"clean","load":"low","interface":false,"documents":false,"ai":false,"humanReview":true,"support":false}
+  ---
+  duration_ms: 0.059586
+  type: 'test'
+  ...
+# Subtest: automation validation: {"processType":"reporting","employees":3,"integrations":21,"api":"yes","data":"clean","load":"low","interface":false,"documents":false,"ai":false,"humanReview":true,"support":false}
+ok 157 - automation validation: {"processType":"reporting","employees":3,"integrations":21,"api":"yes","data":"clean","load":"low","interface":false,"documents":false,"ai":false,"humanReview":true,"support":false}
+  ---
+  duration_ms: 0.062036
+  type: 'test'
+  ...
+# Subtest: automation validation: {"processType":"reporting","employees":3,"integrations":0,"api":"yes","data":"clean","load":"low","interface":false,"documents":false,"ai":"true","humanReview":true,"support":false}
+ok 158 - automation validation: {"processType":"reporting","employees":3,"integrations":0,"api":"yes","data":"clean","load":"low","interface":false,"documents":false,"ai":"true","humanReview":true,"support":false}
+  ---
+  duration_ms: 0.048293
+  type: 'test'
+  ...
+# Subtest: automation validation: {"processType":"toString","employees":3,"integrations":0,"api":"yes","data":"clean","load":"low","interface":false,"documents":false,"ai":false,"humanReview":true,"support":false}
+ok 159 - automation validation: {"processType":"toString","employees":3,"integrations":0,"api":"yes","data":"clean","load":"low","interface":false,"documents":false,"ai":false,"humanReview":true,"support":false}
+  ---
+  duration_ms: 0.045016
+  type: 'test'
+  ...
+# Subtest: automation validation: {"processType":"reporting","employees":3,"integrations":0,"api":"yes","data":"invented","load":"low","interface":false,"documents":false,"ai":false,"humanReview":true,"support":false}
+ok 160 - automation validation: {"processType":"reporting","employees":3,"integrations":0,"api":"yes","data":"invented","load":"low","interface":false,"documents":false,"ai":false,"humanReview":true,"support":false}
+  ---
+  duration_ms: 0.043147
+  type: 'test'
+  ...
+# Subtest: automation validation: {"processType":"reporting","employees":3,"integrations":0,"api":"yes","data":"clean","load":"low","interface":false,"documents":false,"ai":false,"humanReview":true,"support":false,"confirmedCashBenefit":100}
+ok 161 - automation validation: {"processType":"reporting","employees":3,"integrations":0,"api":"yes","data":"clean","load":"low","interface":false,"documents":false,"ai":false,"humanReview":true,"support":false,"confirmedCashBenefit":100}
+  ---
+  duration_ms: 0.047597
+  type: 'test'
+  ...
+# Subtest: server context ignores all client results and recalculates from validated inputs
+ok 162 - server context ignores all client results and recalculates from validated inputs
+  ---
+  duration_ms: 0.563464
+  type: 'test'
+  ...
+# Subtest: automation lead context validates nested labor and never enables pricing from client flags
+ok 163 - automation lead context validates nested labor and never enables pricing from client flags
+  ---
+  duration_ms: 0.380315
+  type: 'test'
+  ...
+# Subtest: local transfer contains only valid numeric inputs, rejects stale/corrupt data
+ok 164 - local transfer contains only valid numeric inputs, rejects stale/corrupt data
+  ---
+  duration_ms: 0.356123
+  type: 'test'
+  ...
+# Subtest: Telegram message escapes hostile text, caps length and keeps HTML entities intact
+ok 165 - Telegram message escapes hostile text, caps length and keeps HTML entities intact
+  ---
+  duration_ms: 0.581489
+  type: 'test'
+  ...
+# (node:4992) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/mironovich.pro/lib/tools/cost-why.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /workspace/mironovich.pro/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: v3 defaults preserve team presets, empty pay and explicit editable assumptions
+ok 166 - v3 defaults preserve team presets, empty pay and explicit editable assumptions
+  ---
+  duration_ms: 1.777705
+  type: 'test'
+  ...
+# Subtest: documented example yields 66 hours, 39600/month, 475200/year, 30/operation
+ok 167 - documented example yields 66 hours, 39600/month, 475200/year, 30/operation
+  ---
+  duration_ms: 1.04937
+  type: 'test'
+  ...
+# Subtest: monthly loaded employee cost derives rate without rounding it before calculation
+ok 168 - monthly loaded employee cost derives rate without rounding it before calculation
+  ---
+  duration_ms: 0.591746
+  type: 'test'
+  ...
+# Subtest: unknown rate, unknown time, explicit zero and conditional scenarios stay distinct
+ok 169 - unknown rate, unknown time, explicit zero and conditional scenarios stay distinct
+  ---
+  duration_ms: 0.674942
+  type: 'test'
+  ...
+# Subtest: day/week/month have explicit conversion periods, no hidden schedule
+ok 170 - day/week/month have explicit conversion periods, no hidden schedule
+  ---
+  duration_ms: 0.371367
+  type: 'test'
+  ...
+# Subtest: partial process data never produce a false overall total
+ok 171 - partial process data never produce a false overall total
+  ---
+  duration_ms: 0.221169
+  type: 'test'
+  ...
+# Subtest: overlap or unchecked independence blocks totals while preserving rows
+ok 172 - overlap or unchecked independence blocks totals while preserving rows
+  ---
+  duration_ms: 0.39959
+  type: 'test'
+  ...
+# Subtest: complete independent hours can sum but an unknown rate cannot become zero cost
+ok 173 - complete independent hours can sum but an unknown rate cannot become zero cost
+  ---
+  duration_ms: 0.197588
+  type: 'test'
+  ...
+# Subtest: implausible employee/team workload blocks aggregation; impossible schedules rejected
+ok 174 - implausible employee/team workload blocks aggregation; impossible schedules rejected
+  ---
+  duration_ms: 0.416745
+  type: 'test'
+  ...
+# Subtest: strict v3 input rejects malformed structures, inactive fields and forged assumptions
+ok 175 - strict v3 input rejects malformed structures, inactive fields and forged assumptions
+  ---
+  duration_ms: 0.496129
+  type: 'test'
+  ...
+# Subtest: timing boundaries: employees
+ok 176 - timing boundaries: employees
+  ---
+  duration_ms: 0.214085
+  type: 'test'
+  ...
+# Subtest: timing boundaries: repetitions
+ok 177 - timing boundaries: repetitions
+  ---
+  duration_ms: 0.118208
+  type: 'test'
+  ...
+# Subtest: timing boundaries: minutes
+ok 178 - timing boundaries: minutes
+  ---
+  duration_ms: 0.088994
+  type: 'test'
+  ...
+# Subtest: timing boundaries: periodsPerMonth
+ok 179 - timing boundaries: periodsPerMonth
+  ---
+  duration_ms: 0.064037
+  type: 'test'
+  ...
+# Subtest: cost boundaries reject zero paid hours, non-finite/negative and excessive values
+ok 180 - cost boundaries reject zero paid hours, non-finite/negative and excessive values
+  ---
+  duration_ms: 0.230268
+  type: 'test'
+  ...
+# Subtest: draft accepts decimal comma, preserves selected period and flags unfinished input
+ok 181 - draft accepts decimal comma, preserves selected period and flags unfinished input
+  ---
+  duration_ms: 0.814846
+  type: 'test'
+  ...
+# Subtest: draft monthly/unknown modes discard inactive hourly data and validate their own inputs
+ok 182 - draft monthly/unknown modes discard inactive hourly data and validate their own inputs
+  ---
+  duration_ms: 0.304502
+  type: 'test'
+  ...
+# Subtest: editing round trip preserves source values, monthly assumptions and independent status
+ok 183 - editing round trip preserves source values, monthly assumptions and independent status
+  ---
+  duration_ms: 0.323112
+  type: 'test'
+  ...
+# Subtest: why explanations are conditional and do not prescribe a technology or invent losses
+ok 184 - why explanations are conditional and do not prescribe a technology or invent losses
+  ---
+  duration_ms: 2.010249
+  type: 'test'
+  ...
+# Subtest: v3 transfer excludes free text/scenarios, expires, rejects future/old format and survives editing
+ok 185 - v3 transfer excludes free text/scenarios, expires, rejects future/old format and survives editing
+  ---
+  duration_ms: 0.653171
+  type: 'test'
+  ...
+# Subtest: PR9 stable boundary preserves v2 tasks, measurements and storage without importing AI code
+ok 186 - PR9 stable boundary preserves v2 tasks, measurements and storage without importing AI code
+  ---
+  duration_ms: 0.367668
+  type: 'test'
+  ...
+# Subtest: lead contract whitelists v3 inputs, recalculates money/year and discards forged results
+ok 187 - lead contract whitelists v3 inputs, recalculates money/year and discards forged results
+  ---
+  duration_ms: 0.65475
+  type: 'test'
+  ...
+# Subtest: max selected processes fit Telegram safely with hostile lead text and all process labels
+ok 188 - max selected processes fit Telegram safely with hostile lead text and all process labels
+  ---
+  duration_ms: 2.194132
+  type: 'test'
+  ...
+# (node:4999) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/mironovich.pro/lib/tools/guided.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /workspace/mironovich.pro/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: v2 starts with 4, permits small teams and exact presets
+ok 189 - v2 starts with 4, permits small teams and exact presets
+  ---
+  duration_ms: 3.425263
+  type: 'test'
+  ...
+# Subtest: multiple tasks, duplicates, impossible schedules and participant bounds
+ok 190 - multiple tasks, duplicates, impossible schedules and participant bounds
+  ---
+  duration_ms: 0.59602
+  type: 'test'
+  ...
+# Subtest: independent per-process hours, known costs and no invented savings
+ok 191 - independent per-process hours, known costs and no invented savings
+  ---
+  duration_ms: 0.626789
+  type: 'test'
+  ...
+# Subtest: unconfirmed overlap and excessive employee workload suppress total
+ok 192 - unconfirmed overlap and excessive employee workload suppress total
+  ---
+  duration_ms: 0.425012
+  type: 'test'
+  ...
+# Subtest: day/week conversions use supplied working periods, not a hidden schedule
+ok 193 - day/week conversions use supplied working periods, not a hidden schedule
+  ---
+  duration_ms: 0.47152
+  type: 'test'
+  ...
+# Subtest: v2 transfer preserves selections/count/measurements; rejects expired and old formats
+ok 194 - v2 transfer preserves selections/count/measurements; rejects expired and old formats
+  ---
+  duration_ms: 1.10995
+  type: 'test'
+  ...
+# Subtest: v2 lead context whitelists and recalculates, legacy parsers remain
+ok 195 - v2 lead context whitelists and recalculates, legacy parsers remain
+  ---
+  duration_ms: 1.121451
+  type: 'test'
+  ...
+# Subtest: catalog never invents budgets or API availability; no AI for simple data/report tasks
+ok 196 - catalog never invents budgets or API availability; no AI for simple data/report tasks
+  ---
+  duration_ms: 0.368547
+  type: 'test'
+  ...
+# Subtest: no notice, free text, prompt injection and contacts never reach upstream
+ok 197 - no notice, free text, prompt injection and contacts never reach upstream
+  ---
+  duration_ms: 53.549023
+  type: 'test'
+  ...
+# Subtest: disabled/legal gates and missing key fail closed
+ok 198 - disabled/legal gates and missing key fail closed
+  ---
+  duration_ms: 2.284307
+  type: 'test'
+  ...
+# Subtest: Responses API uses strict structured output, server auth and store false
+ok 199 - Responses API uses strict structured output, server auth and store false
+  ---
+  duration_ms: 2.913859
+  type: 'test'
+  ...
+# Subtest: malformed model JSON, duplicates, incomplete answer and refusal are controlled
+ok 200 - malformed model JSON, duplicates, incomplete answer and refusal are controlled
+  ---
+  duration_ms: 2.963432
+  type: 'test'
+  ...
+# Subtest: timeout, upstream rate limit and local rate limit keep base recommendation available
+ok 201 - timeout, upstream rate limit and local rate limit keep base recommendation available
+  ---
+  duration_ms: 15.856349
+  type: 'test'
+  ...
+# Subtest: origin and bounded request reader reject hostile bodies before API calls
+ok 202 - origin and bounded request reader reject hostile bodies before API calls
+  ---
+  duration_ms: 0.770663
+  type: 'test'
+  ...
+# Subtest: daily reservation caps external attempts across windows and resets on next UTC day
+ok 203 - daily reservation caps external attempts across windows and resets on next UTC day
+  ---
+  duration_ms: 15.758374
+  type: 'test'
+  ...
+# Subtest: only two external operations may be in flight
+ok 204 - only two external operations may be in flight
+  ---
+  duration_ms: 53.460193
+  type: 'test'
+  ...
+# Subtest: same-host origin survives Next internal URL/proxy protocol without trusting forwarded host
+ok 205 - same-host origin survives Next internal URL/proxy protocol without trusting forwarded host
+  ---
+  duration_ms: 0.746453
+  type: 'test'
+  ...
+# Subtest: every selected process has a distinct practical first step without invented economics
+ok 206 - every selected process has a distinct practical first step without invented economics
+  ---
+  duration_ms: 1.642589
+  type: 'test'
+  ...
+# (node:5007) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/mironovich.pro/lib/lead-request.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /workspace/mironovich.pro/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: rejects invalid JSON/shape: null
+ok 207 - rejects invalid JSON/shape: null
+  ---
+  duration_ms: 27.417144
+  type: 'test'
+  ...
+# Subtest: rejects invalid JSON/shape: []
+ok 208 - rejects invalid JSON/shape: []
+  ---
+  duration_ms: 0.453436
+  type: 'test'
+  ...
+# Subtest: rejects invalid JSON/shape: [{"name":"Test"}]
+ok 209 - rejects invalid JSON/shape: [{"name":"Test"}]
+  ---
+  duration_ms: 0.401299
+  type: 'test'
+  ...
+# Subtest: rejects invalid JSON/shape: "text"
+ok 210 - rejects invalid JSON/shape: "text"
+  ---
+  duration_ms: 0.302313
+  type: 'test'
+  ...
+# Subtest: rejects invalid JSON/shape: 123
+ok 211 - rejects invalid JSON/shape: 123
+  ---
+  duration_ms: 0.727318
+  type: 'test'
+  ...
+# Subtest: rejects invalid JSON/shape: true
+ok 212 - rejects invalid JSON/shape: true
+  ---
+  duration_ms: 0.359302
+  type: 'test'
+  ...
+# Subtest: rejects invalid JSON/shape: false
+ok 213 - rejects invalid JSON/shape: false
+  ---
+  duration_ms: 0.409723
+  type: 'test'
+  ...
+# Subtest: rejects invalid JSON/shape: empty
+ok 214 - rejects invalid JSON/shape: empty
+  ---
+  duration_ms: 0.394385
+  type: 'test'
+  ...
+# Subtest: rejects invalid JSON/shape: {
+ok 215 - rejects invalid JSON/shape: {
+  ---
+  duration_ms: 1.801034
+  type: 'test'
+  ...
+# Subtest: rejects invalid JSON/shape: {"name":}
+ok 216 - rejects invalid JSON/shape: {"name":}
+  ---
+  duration_ms: 1.107302
+  type: 'test'
+  ...
+# Subtest: rejects incorrect type of name
+ok 217 - rejects incorrect type of name
+  ---
+  duration_ms: 0.932214
+  type: 'test'
+  ...
+# Subtest: rejects incorrect type of phone
+ok 218 - rejects incorrect type of phone
+  ---
+  duration_ms: 0.318412
+  type: 'test'
+  ...
+# Subtest: rejects incorrect type of task
+ok 219 - rejects incorrect type of task
+  ---
+  duration_ms: 0.511166
+  type: 'test'
+  ...
+# Subtest: rejects incorrect type of company
+ok 220 - rejects incorrect type of company
+  ---
+  duration_ms: 0.353559
+  type: 'test'
+  ...
+# Subtest: rejects incorrect type of direction
+ok 221 - rejects incorrect type of direction
+  ---
+  duration_ms: 0.325847
+  type: 'test'
+  ...
+# Subtest: rejects incorrect type of page
+ok 222 - rejects incorrect type of page
+  ---
+  duration_ms: 0.379656
+  type: 'test'
+  ...
+# Subtest: rejects incorrect type of website
+ok 223 - rejects incorrect type of website
+  ---
+  duration_ms: 0.199256
+  type: 'test'
+  ...
+# Subtest: rejects incorrect type of consent
+ok 224 - rejects incorrect type of consent
+  ---
+  duration_ms: 0.447339
+  type: 'test'
+  ...
+# Subtest: preserves valid input and optional attribution for subsequent validation
+ok 225 - preserves valid input and optional attribution for subsequent validation
+  ---
+  duration_ms: 0.65947
+  type: 'test'
+  ...
+# Subtest: rejects advertised oversized bodies before reading the stream
+ok 226 - rejects advertised oversized bodies before reading the stream
+  ---
+  duration_ms: 0.22937
+  type: 'test'
+  ...
+# Subtest: enforces character limit without Content-Length
+ok 227 - enforces character limit without Content-Length
+  ---
+  duration_ms: 0.451552
+  type: 'test'
+  ...
+# Subtest: does not trust an understated Content-Length
+ok 228 - does not trust an understated Content-Length
+  ---
+  duration_ms: 0.307291
+  type: 'test'
+  ...
+# Subtest: rejects missing bodies and malformed Content-Length
+ok 229 - rejects missing bodies and malformed Content-Length
+  ---
+  duration_ms: 0.444775
+  type: 'test'
+  ...
+# Subtest: allows a JSON body exactly at the character limit
+ok 230 - allows a JSON body exactly at the character limit
+  ---
+  duration_ms: 0.576793
+  type: 'test'
+  ...
+# Subtest: cancels an oversized chunked body instead of buffering the remainder
+ok 231 - cancels an oversized chunked body instead of buffering the remainder
+  ---
+  duration_ms: 1.469308
+  type: 'test'
+  ...
+# Subtest: handles UTF-8 sequences split across chunks
+ok 232 - handles UTF-8 sequences split across chunks
+  ---
+  duration_ms: 0.750994
+  type: 'test'
+  ...
+# Subtest: rejects invalid UTF-8 and broken streams with a controlled response
+ok 233 - rejects invalid UTF-8 and broken streams with a controlled response
+  ---
+  duration_ms: 1.718677
+  type: 'test'
+  ...
+# (node:5015) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/mironovich.pro/content/projects.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /workspace/mironovich.pro/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: two approved cases publish; corporate case stays private
+ok 234 - two approved cases publish; corporate case stays private
+  ---
+  duration_ms: 2.773335
+  type: 'test'
+  ...
+# Subtest: publication requires explicit owner evidence, date and approved image provenance
+ok 235 - publication requires explicit owner evidence, date and approved image provenance
+  ---
+  duration_ms: 0.374276
+  type: 'test'
+  ...
+# (node:5022) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/mironovich.pro/config/services.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /workspace/mironovich.pro/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: every published service is recognised by lead attribution
+ok 236 - every published service is recognised by lead attribution
+  ---
+  duration_ms: 1.15566
+  type: 'test'
+  ...
+# Subtest: primary directions coexist with original published specialisations
+ok 237 - primary directions coexist with original published specialisations
+  ---
+  duration_ms: 0.900589
+  type: 'test'
+  ...
+# Subtest: implemented tools and their catalogue are enabled
+ok 238 - implemented tools and their catalogue are enabled
+  ---
+  duration_ms: 0.1999
+  type: 'test'
+  ...
+# (node:5029) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/mironovich.pro/lib/tools/quiz-model.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /workspace/mironovich.pro/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: v4 actual control sample and unrounded hourly rate
+ok 239 - v4 actual control sample and unrounded hourly rate
+  ---
+  duration_ms: 10.398251
+  type: 'test'
+  ...
+# Subtest: calendar 5/2
+ok 240 - calendar 5/2
+  ---
+  duration_ms: 0.406068
+  type: 'test'
+  ...
+# Subtest: calendar 2/2
+ok 241 - calendar 2/2
+  ---
+  duration_ms: 0.296395
+  type: 'test'
+  ...
+# Subtest: calendar 3/3
+ok 242 - calendar 3/3
+  ---
+  duration_ms: 0.176495
+  type: 'test'
+  ...
+# Subtest: calendar 6/1
+ok 243 - calendar 6/1
+  ---
+  duration_ms: 0.157844
+  type: 'test'
+  ...
+# Subtest: calendar 3/2
+ok 244 - calendar 3/2
+  ---
+  duration_ms: 0.142153
+  type: 'test'
+  ...
+# Subtest: cycle phase range and leap month
+ok 245 - cycle phase range and leap month
+  ---
+  duration_ms: 1.675413
+  type: 'test'
+  ...
+# Subtest: period shift
+ok 246 - period shift
+  ---
+  duration_ms: 0.672709
+  type: 'test'
+  ...
+# Subtest: period week
+ok 247 - period week
+  ---
+  duration_ms: 0.886535
+  type: 'test'
+  ...
+# Subtest: period month
+ok 248 - period month
+  ---
+  duration_ms: 1.090864
+  type: 'test'
+  ...
+# Subtest: unknown salary keeps hours and salary is distinct from employer cost
+ok 249 - unknown salary keeps hours and salary is distinct from employer cost
+  ---
+  duration_ms: 0.908824
+  type: 'test'
+  ...
+# Subtest: reject malformed null
+ok 250 - reject malformed null
+  ---
+  duration_ms: 0.153104
+  type: 'test'
+  ...
+# Subtest: reject malformed []
+ok 251 - reject malformed []
+  ---
+  duration_ms: 0.075765
+  type: 'test'
+  ...
+# Subtest: reject malformed 1
+ok 252 - reject malformed 1
+  ---
+  duration_ms: 0.065111
+  type: 'test'
+  ...
+# Subtest: reject malformed "x"
+ok 253 - reject malformed "x"
+  ---
+  duration_ms: 0.115757
+  type: 'test'
+  ...
+# Subtest: reject malformed {"tasks":["reporting"],"month"
+ok 254 - reject malformed {"tasks":["reporting"],"month"
+  ---
+  duration_ms: 0.072505
+  type: 'test'
+  ...
+# Subtest: boundaries and over-capacity data are not silently accepted
+ok 255 - boundaries and over-capacity data are not silently accepted
+  ---
+  duration_ms: 0.409809
+  type: 'test'
+  ...
+# Subtest: multiple processes require independent confirmation
+ok 256 - multiple processes require independent confirmation
+  ---
+  duration_ms: 1.347646
+  type: 'test'
+  ...
+# Subtest: client forged money ignored; server recalculates v4 and retains v3 parser
+ok 257 - client forged money ignored; server recalculates v4 and retains v3 parser
+  ---
+  duration_ms: 1.753804
+  type: 'test'
+  ...
+# Subtest: progress, validation and private text stripping on restoration
+ok 258 - progress, validation and private text stripping on restoration
+  ---
+  duration_ms: 19.464321
+  type: 'test'
+  ...
+# Subtest: diagnosis conditional steps and known evidence
+ok 259 - diagnosis conditional steps and known evidence
+  ---
+  duration_ms: 0.395293
+  type: 'test'
+  ...
+# Subtest: analytics only after opt-in and allowlists contain no answers
+ok 260 - analytics only after opt-in and allowlists contain no answers
+  ---
+  duration_ms: 0.139866
+  type: 'test'
+  ...
+# (node:5036) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/mironovich.pro/lib/rate-limit.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /workspace/mironovich.pro/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: 6th request within a minute is blocked, allowed again after the window
+ok 261 - 6th request within a minute is blocked, allowed again after the window
+  ---
+  duration_ms: 1.730208
+  type: 'test'
+  ...
+# Subtest: TTL: an idle IP is forgotten within the window (timer sweep)
+ok 262 - TTL: an idle IP is forgotten within the window (timer sweep)
+  ---
+  duration_ms: 0.349759
+  type: 'test'
+  ...
+# Subtest: TTL: lazy sweep on any request also drops idle IPs
+ok 263 - TTL: lazy sweep on any request also drops idle IPs
+  ---
+  duration_ms: 0.217894
+  type: 'test'
+  ...
+# Subtest: timer sweep runs on its own and does not keep the process alive
+ok 264 - timer sweep runs on its own and does not keep the process alive
+  ---
+  duration_ms: 70.230352
+  type: 'test'
+  ...
+# Subtest: memory: key cap evicts the least recently seen, others keep their counters
+ok 265 - memory: key cap evicts the least recently seen, others keep their counters
+  ---
+  duration_ms: 0.342575
+  type: 'test'
+  ...
+# Subtest: memory: a flooding IP keeps at most max + 1 timestamps and stays blocked
+ok 266 - memory: a flooding IP keeps at most max + 1 timestamps and stays blocked
+  ---
+  duration_ms: 6.906211
+  type: 'test'
+  ...
+# Subtest: memory: 100 000 distinct IPs never exceed maxKeys
+ok 267 - memory: 100 000 distinct IPs never exceed maxKeys
+  ---
+  duration_ms: 563.463648
+  type: 'test'
+  ...
+# Subtest: source: no header is trusted unless RATE_LIMIT_CLIENT_IP says so
+ok 268 - source: no header is trusted unless RATE_LIMIT_CLIENT_IP says so
+  ---
+  duration_ms: 30.207091
+  type: 'test'
+  ...
+# Subtest: x-real-ip source: the header as set by the edge; X-Forwarded-For is ignored
+ok 269 - x-real-ip source: the header as set by the edge; X-Forwarded-For is ignored
+  ---
+  duration_ms: 15.637349
+  type: 'test'
+  ...
+# Subtest: x-forwarded-for source: only the rightmost entry; client-sent prefixes are ignored
+ok 270 - x-forwarded-for source: only the rightmost entry; client-sent prefixes are ignored
+  ---
+  duration_ms: 0.609038
+  type: 'test'
+  ...
+# Subtest: garbage or missing values share one key instead of minting new counters
+ok 271 - garbage or missing values share one key instead of minting new counters
+  ---
+  duration_ms: 1.59451
+  type: 'test'
+  ...
+# Subtest: fallback (no trusted source): rotating spoofed headers hit the global ceiling of 10
+ok 272 - fallback (no trusted source): rotating spoofed headers hit the global ceiling of 10
+  ---
+  duration_ms: 4.207882
+  type: 'test'
+  ...
+# Subtest: trusted x-real-ip but a spoofable edge: spoofing is still capped by the global limit
+ok 273 - trusted x-real-ip but a spoofable edge: spoofing is still capped by the global limit
+  ---
+  duration_ms: 1.753865
+  type: 'test'
+  ...
+# Subtest: trusted source: one client gets 5, and its excess does not exhaust the shared allowance
+ok 274 - trusted source: one client gets 5, and its excess does not exhaust the shared allowance
+  ---
+  duration_ms: 1.418071
+  type: 'test'
+  ...
+# Subtest: x-forwarded-for source: spoofed prefixes behind a proxy do not bypass the per-client limit
+ok 275 - x-forwarded-for source: spoofed prefixes behind a proxy do not bypass the per-client limit
+  ---
+  duration_ms: 0.279015
+  type: 'test'
+  ...
+# (node:5044) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/mironovich.pro/lib/tools/recommendation-availability.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /workspace/mironovich.pro/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: availability requires all gates; missing or invalid configuration fails closed
+ok 276 - availability requires all gates; missing or invalid configuration fails closed
+  ---
+  duration_ms: 1.19436
+  type: 'test'
+  ...
+# Subtest: legal gate blocks otherwise configured integration and remains disabled in this release
+ok 277 - legal gate blocks otherwise configured integration and remains disabled in this release
+  ---
+  duration_ms: 0.184816
+  type: 'test'
+  ...
+# Subtest: approved fixtures return a boolean only, without disclosing key or configuration
+ok 278 - approved fixtures return a boolean only, without disclosing key or configuration
+  ---
+  duration_ms: 0.225432
+  type: 'test'
+  ...
+# Subtest: target: non-production only when the site URL is explicitly non-public
+ok 279 - target: non-production only when the site URL is explicitly non-public
+  ---
+  duration_ms: 1.178595
+  type: 'test'
+  ...
+# Subtest: target: fail-closed — no variables at all means production (the build bakes in the public URL)
+ok 280 - target: fail-closed — no variables at all means production (the build bakes in the public URL)
+  ---
+  duration_ms: 0.341026
+  type: 'test'
+  ...
+# Subtest: target: production by the public URL or by Railway — either is enough
+ok 281 - target: production by the public URL or by Railway — either is enough
+  ---
+  duration_ms: 0.147721
+  type: 'test'
+  ...
+# Subtest: no switch-off: unrelated or made-up variables do not change the target
+ok 282 - no switch-off: unrelated or made-up variables do not change the target
+  ---
+  duration_ms: 7.126136
+  type: 'test'
+  ...
+# Subtest: current repository: owner-approved release with the CURRENT legal texts passes, drafts reported
+ok 283 - current repository: owner-approved release with the CURRENT legal texts passes, drafts reported
+  ---
+  duration_ms: 2.426811
+  type: 'test'
+  ...
+# Subtest: legacy texts WITHOUT a recorded owner decision → refused (unfilled drafts are errors again)
+ok 284 - legacy texts WITHOUT a recorded owner decision → refused (unfilled drafts are errors again)
+  ---
+  duration_ms: 8.756294
+  type: 'test'
+  ...
+# Subtest: legacy release never allows draft pages or other preview switches in production
+ok 285 - legacy release never allows draft pages or other preview switches in production
+  ---
+  duration_ms: 1.064439
+  type: 'test'
+  ...
+# Subtest: published=true ignores the legacy decision: drafts must be complete
+ok 286 - published=true ignores the legacy decision: drafts must be complete
+  ---
+  duration_ms: 1.506883
+  type: 'test'
+  ...
+# Subtest: current repository: staging and local builds are never blocked, only reported
+ok 287 - current repository: staging and local builds are never blocked, only reported
+  ---
+  duration_ms: 0.898415
+  type: 'test'
+  ...
+# Subtest: forced production check (npm run release:check -- --production) uses the same rules
+ok 288 - forced production check (npm run release:check -- --production) uses the same rules
+  ---
+  duration_ms: 2.339183
+  type: 'test'
+  ...
+# Subtest: the target is always printed, so Railway build logs show what the guard saw
+ok 289 - the target is always printed, so Railway build logs show what the guard saw
+  ---
+  duration_ms: 0.524315
+  type: 'test'
+  ...
+# Subtest: rate limit source: invalid value refused in production, unset is the safe fallback (warning)
+ok 290 - rate limit source: invalid value refused in production, unset is the safe fallback (warning)
+  ---
+  duration_ms: 1.918276
+  type: 'test'
+  ...
+# Subtest: published but placeholders left → refused
+ok 291 - published but placeholders left → refused
+  ---
+  duration_ms: 1.299374
+  type: 'test'
+  ...
+# Subtest: filled, published, consent required → passes, and says it is not legal approval
+ok 292 - filled, published, consent required → passes, and says it is not legal approval
+  ---
+  duration_ms: 1.185391
+  type: 'test'
+  ...
+# Subtest: filled but still published=false and no owner decision → refused (old texts)
+ok 293 - filled but still published=false and no owner decision → refused (old texts)
+  ---
+  duration_ms: 1.775867
+  type: 'test'
+  ...
+# Subtest: GA4 is gone: no GA variable is needed, and a leftover one does not block (warning only)
+ok 294 - GA4 is gone: no GA variable is needed, and a leftover one does not block (warning only)
+  ---
+  duration_ms: 1.876876
+  type: 'test'
+  ...
+# Subtest: no Metrica at all → allowed; policy naming Metrica without a counter is a warning
+ok 295 - no Metrica at all → allowed; policy naming Metrica without a counter is a warning
+  ---
+  duration_ms: 1.296997
+  type: 'test'
+  ...
+# Subtest: malformed Metrica ID → refused (it would silently not load)
+ok 296 - malformed Metrica ID → refused (it would silently not load)
+  ---
+  duration_ms: 1.219743
+  type: 'test'
+  ...
+# Subtest: legal texts that still mention Google Analytics / GA4 → refused
+ok 297 - legal texts that still mention Google Analytics / GA4 → refused
+  ---
+  duration_ms: 3.162509
+  type: 'test'
+  ...
+# Subtest: Metrica enabled but the policy does not name it → refused
+ok 298 - Metrica enabled but the policy does not name it → refused
+  ---
+  duration_ms: 1.165589
+  type: 'test'
+  ...
+# Subtest: LEGAL_PREVIEW / SITE_NOINDEX in production and edition mismatch → refused
+ok 299 - LEGAL_PREVIEW / SITE_NOINDEX in production and edition mismatch → refused
+  ---
+  duration_ms: 1.182669
+  type: 'test'
+  ...
+# Subtest: the placeholder pattern catches every form used in the drafts
+ok 300 - the placeholder pattern catches every form used in the drafts
+  ---
+  duration_ms: 0.417831
+  type: 'test'
+  ...
+# (node:5058) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/mironovich.pro/lib/tools/wizard.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /workspace/mironovich.pro/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: wizard preserves documented example
+ok 301 - wizard preserves documented example
+  ---
+  duration_ms: 2.038444
+  type: 'test'
+  ...
+# Subtest: unknown price is null, not zero or an assumed salary
+ok 302 - unknown price is null, not zero or an assumed salary
+  ---
+  duration_ms: 0.251739
+  type: 'test'
+  ...
+# Subtest: monthly costs and hours convert to hourly cost; hidden hourly value ignored
+ok 303 - monthly costs and hours convert to hourly cost; hidden hourly value ignored
+  ---
+  duration_ms: 0.176569
+  type: 'test'
+  ...
+# Subtest: conditional manual flow drops stale integration and API answers
+ok 304 - conditional manual flow drops stale integration and API answers
+  ---
+  duration_ms: 1.035048
+  type: 'test'
+  ...
+# Subtest: semantic document processing can recommend AI, simple transfer does not
+ok 305 - semantic document processing can recommend AI, simple transfer does not
+  ---
+  duration_ms: 0.585248
+  type: 'test'
+  ...
+# Subtest: unknown wage survives server context validation without a fabricated amount
+ok 306 - unknown wage survives server context validation without a fabricated amount
+  ---
+  duration_ms: 0.528366
+  type: 'test'
+  ...
+# Subtest: unknown automation factors do not become zero hours in server message
+ok 307 - unknown automation factors do not become zero hours in server message
+  ---
+  duration_ms: 0.327951
+  type: 'test'
+  ...
+# (node:5065) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///workspace/mironovich.pro/lib/tools/quiz-draft.ts is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /workspace/mironovich.pro/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: workspace has one default task but no invented workload, salary or schedule
+ok 308 - workspace has one default task but no invented workload, salary or schedule
+  ---
+  duration_ms: 20.972184
+  type: 'test'
+  ...
+# Subtest: independent November control: 4 people, 20 x 5 min, average 15 shifts, salary 120000, 8 h
+ok 309 - independent November control: 4 people, 20 x 5 min, average 15 shifts, salary 120000, 8 h
+  ---
+  duration_ms: 3.354961
+  type: 'test'
+  ...
+# Subtest: actual 14 shifts: no double period multiplication
+ok 310 - actual 14 shifts: no double period multiplication
+  ---
+  duration_ms: 0.925
+  type: 'test'
+  ...
+# Subtest: actual 15 shifts: no double period multiplication
+ok 311 - actual 15 shifts: no double period multiplication
+  ---
+  duration_ms: 0.902081
+  type: 'test'
+  ...
+# Subtest: actual 16 shifts: no double period multiplication
+ok 312 - actual 16 shifts: no double period multiplication
+  ---
+  duration_ms: 0.750946
+  type: 'test'
+  ...
+# Subtest: selected completed task keeps its money while a second task is incomplete
+ok 313 - selected completed task keeps its money while a second task is incomplete
+  ---
+  duration_ms: 0.993081
+  type: 'test'
+  ...
+# Subtest: a completed selected task restores on result without trusting an unfinished task
+ok 314 - a completed selected task restores on result without trusting an unfinished task
+  ---
+  duration_ms: 2.060974
+  type: 'test'
+  ...
+# Subtest: missing shift length is named, hours remain visible and money is not invented
+ok 315 - missing shift length is named, hours remain visible and money is not invented
+  ---
+  duration_ms: 0.504242
+  type: 'test'
+  ...
+# Subtest: unknown salary retains valid hours and context, never creates rubles
+ok 316 - unknown salary retains valid hours and context, never creates rubles
+  ---
+  duration_ms: 0.819572
+  type: 'test'
+  ...
+# Subtest: partial week hours do not require a schedule or fake rate
+ok 317 - partial week hours do not require a schedule or fake rate
+  ---
+  duration_ms: 0.661383
+  type: 'test'
+  ...
+# Subtest: partial month hours do not require a schedule or fake rate
+ok 318 - partial month hours do not require a schedule or fake rate
+  ---
+  duration_ms: 0.397517
+  type: 'test'
+  ...
+# Subtest: invalid actual shifts and excessive/unknown operations never leak partial false hours
+ok 319 - invalid actual shifts and excessive/unknown operations never leak partial false hours
+  ---
+  duration_ms: 0.88812
+  type: 'test'
+  ...
+# Subtest: zero operations stay zero even without a duration
+ok 320 - zero operations stay zero even without a duration
+  ---
+  duration_ms: 0.485363
+  type: 'test'
+  ...
+# Subtest: salary and full employer expenses use the same explicit rate but retain their basis
+ok 321 - salary and full employer expenses use the same explicit rate but retain their basis
+  ---
+  duration_ms: 0.383863
+  type: 'test'
+  ...
+# Subtest: selected complete task context is independently recalculated by existing server parser
+ok 322 - selected complete task context is independently recalculated by existing server parser
+  ---
+  duration_ms: 1.193084
+  type: 'test'
+  ...
+# Subtest: conditional actual-shift and zero-frequency steps keep honest progress
+ok 323 - conditional actual-shift and zero-frequency steps keep honest progress
+  ---
+  duration_ms: 0.368586
+  type: 'test'
+  ...
+1..323
+# tests 323
+# suites 0
+# pass 323
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 34711.669944

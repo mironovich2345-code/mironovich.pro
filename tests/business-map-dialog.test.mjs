@@ -28,6 +28,7 @@ import {
   toCoreProcess,
   saveCompany,
   saveCoreProcess,
+  say,
 } from "../lib/business-map/dialog/engine.ts";
 import { parseWorkloadText } from "../lib/business-map/dialog/language.ts";
 import {
@@ -78,10 +79,101 @@ test("free description detects scale, systems and three hypotheses without guess
   assert.equal(s.processes.length, 3);
   assert.equal(s.company, null);
   for (const p of s.processes) {
-    assert.equal(p.confirmed, null);
+    // Explicit «вручную собирают отчёты» is a user fact; missed leads/control stay hypotheses.
+    assert.equal(p.confirmed, p.scenarioId === "reporting" ? true : null);
     assert.equal(p.workload.employees, null);
     assert.equal(insight(p, s.company).hours, null);
   }
+});
+
+test("acceptance A preserves Craft as a literal mention and separates manual reporting from a leads hypothesis", () => {
+  const s = answer(initialConversation(), "У меня три фитнес-клуба. Менеджеры работают в Craft, руководители ежедневно собирают отчёты вручную, а часть заявок из разных каналов остаётся без внимания");
+  assert.equal(s.industry, "fitness");
+  assert.equal(s.locations, 3);
+  assert.deepEqual(s.systemMentions, ["Craft"]);
+  assert.deepEqual(s.systems, []); // Brand mention is not verified CRM functionality.
+  assert.deepEqual(s.processes.map(p => p.scenarioId), ["reporting", "missed-leads"]);
+  assert.equal(s.processes[0].confirmed, true);
+  assert.equal(s.processes[1].confirmed, null);
+  assert.equal(s.question, "volume");
+  assert.ok(s.messages.some(m => /Первый полезный шаг/.test(m.text)));
+  assert.ok(s.messages.some(m => /Гипотеза:.*Потерянные продажи пока не подтверждены/.test(m.text)));
+  for (const p of s.processes) {
+    assert.equal(p.workload.employees, null);
+    assert.equal(p.workload.hourlyRate, null);
+    assert.equal(insight(p, null).hours, null);
+    assert.equal(insight(p, null).timeCost, null);
+  }
+  for (const text of ["Отчёты не собирают вручную", "Вручную отчёты не готовят", "Возможны ручные отчёты", "Возможно, менеджеры будут собирать отчёты вручную", "Возможно, менеджеры собирают отчёты вручную", "Менеджеры собирают отчёты вручную?", "Если менеджеры собирают отчёты вручную"])
+    assert.equal(answer(initialConversation(),text).processes[0].confirmed, null);
+});
+
+test("acceptance C parses the per-person denominator without turning it into headcount", () => {
+  for (const denominator of ["одного", "1"]){
+    let s = answer(start(), "Да");
+    s = answer(s, `Четыре операции в день на ${denominator} сотрудника. Десять сотрудников. Двенадцать минут на операцию.`);
+    const p = s.processes[0];
+    assert.equal(p.workload.employees, 10);
+    assert.equal(p.workload.operations, 4);
+    assert.equal(p.workload.scope, "per-person");
+    assert.equal(insight(p,null).teamOperations, 40);
+    assert.equal(insight(p,null).hours.exact, "168/1");
+    assert.equal(insight(p,null).timeCost, null);
+    s = saveCompany(s, { industry:"fitness",headcount:"11-50",goal:"speed",systems:["unknown"],salary:null });
+    s = saveCoreProcess(s, toCoreProcess(p,s.company));
+    assert.equal(s.processes[0].core.operations, 40);
+    assert.equal(s.processes[0].result.hours.exact, "168/1");
+    assert.equal(insight(s.processes[0],s.company).hours.exact, "168/1");
+    assert.equal(s.processes[0].result.timeCost, null);
+  }
+  assert.equal(parseWorkloadText("4 операции в день на 1 сотрудника").employees, undefined);
+});
+
+test("explicit corrections update current facts, recalculate and retain the unanswered risk question", () => {
+  let s = answer(answer(start(), "Да"), "4 операции в день на одного сотрудника, 10 сотрудников, 12 минут");
+  assert.equal(s.question,"risk");
+  s = answer(s,"Исправление: 5 сотрудников");
+  assert.equal(s.processes[0].workload.employees,5);
+  assert.equal(insight(s.processes[0],null).hours.exact,"84/1");
+  assert.equal(s.processes[0].error,"unknown");
+  assert.equal(s.question,"risk");
+  s = answer(s,"Исправление: -5 сотрудников");
+  assert.equal(s.processes[0].workload.employees,5);
+  assert.equal(s.processes[0].error,"unknown");
+  s = answer(s,"Исправление формулировки");
+  assert.equal(s.processes[0].error,"unknown");
+  assert.equal(s.question,"risk");
+  s = answer(s,"Мелкая, легко исправить");
+  assert.equal(s.processes[0].error,"minor");
+});
+
+test("a pending interpretation cannot overwrite edits or resurrect a deleted process", () => {
+  const base = loadDialogDemo("portfolio");
+  const p = base.processes[0];
+  const proposal = {industry:"fitness",locations:null,scaleEvidence:null,systems:[],facts:[],hypotheses:[{scenarioId:p.scenarioId,reason:"Возможно, есть ручная работа"}],workloads:[{scenarioId:p.scenarioId,employees:10,operations:4,scope:"per-person",period:"day",minutes:12,evidence:"synthetic fixture"}]};
+  for (const mutate of [
+    s => updateProcess(s,p.id,{workload:{...p.workload,operations:8}}),
+    s => removeProcess(s,p.id),
+    s => saveCoreProcess(s,{...p.core,operations:8}),
+    s => saveCompany(s,{...s.company,monthlyHours:100}),
+    s => chooseIndustry(s,"services"),
+    s => answer(s,"Новое описание для проверки"),
+  ]) {
+    const offered = offerInterpretation({...base,advice:Object.fromEntries(base.processes.map(x=>[x.id,localPlan(x,base.company)]))},proposal);
+    const edited=mutate(offered);
+    assert.equal(edited.proposal,null);
+    assert.equal(edited.proposalSource,null);
+    assert.deepEqual(edited.advice,{});
+    assert.deepEqual(acceptInterpretation(edited),edited);
+  }
+});
+
+test("message IDs stay unique when more than two full histories are truncated", () => {
+  let s = initialConversation();
+  for(let i=0;i<policy.maxMessages*3;i++) s=say(s,"Synthetic history fixture");
+  assert.equal(s.messages.length,policy.maxMessages);
+  assert.equal(new Set(s.messages.map(m=>m.id)).size,policy.maxMessages);
+  assert.equal(s.messageSequence,policy.maxMessages*3);
 });
 test("short replies complete four main questions and produce 42 h; salary remains absent", () => {
   let s = start();

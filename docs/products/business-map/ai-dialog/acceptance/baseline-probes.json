@@ -1,0 +1,70 @@
+{
+  "source": "4ec35126b52dde7994d002f4b3ef1ca23353e45d",
+  "mode": "offline pure code; synthetic fixtures; no OpenAI",
+  "scenarioA": {
+    "industry": "fitness",
+    "locations": 3,
+    "systems": [],
+    "processes": [
+      {
+        "scenario": "reporting",
+        "confirmed": null,
+        "workload": {
+          "employees": null,
+          "operations": null,
+          "scope": "unknown",
+          "period": "day",
+          "minutes": null,
+          "hourlyRate": null
+        }
+      }
+    ],
+    "question": "confirm",
+    "asksForAlreadyStatedManualWork": true
+  },
+  "scenarioC": {
+    "parsed": {
+      "employees": 10,
+      "operations": 4,
+      "scope": "unknown",
+      "period": "day",
+      "minutes": 12
+    },
+    "hours": null,
+    "guidedAnswer": {
+      "workload": {
+        "employees": 10,
+        "operations": 4,
+        "scope": "team",
+        "period": "day",
+        "minutes": 12,
+        "hourlyRate": null
+      },
+      "actualHours": {
+        "value": 16.8,
+        "exact": "84/5",
+        "display": 16.8
+      },
+      "expectedHours": 168
+    }
+  },
+  "staleProposal": {
+    "operationsAfterManualEdit": 8,
+    "operationsAfterAcceptingOldProposal": 4,
+    "deletedProcessReappeared": true
+  },
+  "history": {
+    "length": 80,
+    "uniqueIds": 76
+  },
+  "correctionAtRiskQuestion": {
+    "employees": 10,
+    "error": "minor",
+    "expectedError": "unknown",
+    "reportedHours": {
+      "value": 16.8,
+      "exact": "84/5",
+      "display": 16.8
+    }
+  }
+}

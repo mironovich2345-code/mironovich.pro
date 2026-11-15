@@ -124,6 +124,6 @@ try{
   await check(base,'production public automation calculator','/tools/automation-cost',200,{isPrivate:false});
   await check(base,'production homepage stays public','/',200,{isPrivate:false});
   await stop();
-  await writeFile(path.join(root,'docs/products/business-map/ai-dialog/http-check.json'),JSON.stringify(report,null,2)+'\n');
+  await writeFile(path.resolve(root,process.env.BUSINESS_MAP_HTTP_REPORT ?? 'docs/products/business-map/ai-dialog/http-check.json'),JSON.stringify(report,null,2)+'\n');
   console.log(`Business Map preview HTTP checks passed: ${report.cases.length}. No credentials included in report.`);
 }finally{await stop();}

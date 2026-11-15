@@ -104,6 +104,8 @@ export async function orchestrateAi(
       } as RequestInit),
       policy.maxReplyCharacters,
     );
+    // The bounded reader sanitizes stream errors; preserve the deadline classification.
+    if (abort.signal.aborted) throw new AiFailure("timeout");
     if (
       !parsed.ok ||
       parsed.body.status !== "completed" ||

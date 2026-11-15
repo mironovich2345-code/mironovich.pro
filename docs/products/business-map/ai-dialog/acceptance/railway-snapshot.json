@@ -1,0 +1,83 @@
+{
+  "project": {
+    "id": "18581ac0-8a16-4f7d-bae1-f636c416254e",
+    "name": "mironovich-site-preview-nov12"
+  },
+  "environment": {
+    "id": "5c23d4ea-8726-48d4-8470-9c3a55f1af2c",
+    "name": "preview"
+  },
+  "service": {
+    "id": "055c1aca-3e13-46df-abfa-a37d766bf8fc",
+    "name": "mironovich-preview",
+    "state": "live"
+  },
+  "source": {
+    "repo": "mironovich2345-code/mironovich.pro",
+    "branch": "feature/business-map-preview",
+    "commitSha": "3bbf569b43c49f6d0cede6c235f6d3a45cfdba5b"
+  },
+  "build": {
+    "builder": "RAILPACK",
+    "buildCommand": "npm run build",
+    "buildEnvironment": "V3"
+  },
+  "deploy": {
+    "startCommand": "npm start -- --hostname 0.0.0.0",
+    "healthcheckPath": "/healthz",
+    "useLegacyStacker": false,
+    "ipv6EgressEnabled": false,
+    "runtime": "V2",
+    "multiRegionConfig": {
+      "sfo": {
+        "numReplicas": 1
+      }
+    }
+  },
+  "domains": {
+    "serviceDomains": [
+      {
+        "id": "f775e22b-6a28-4e19-8427-956867799103",
+        "domain": "mironovich-preview-preview.up.railway.app",
+        "targetPort": null
+      }
+    ],
+    "customDomains": []
+  },
+  "latestDeployment": {
+    "id": "38ec60ff-1f60-4ee4-8c34-2ead0be8cfd1",
+    "status": "SUCCESS",
+    "createdAt": "2026-11-14T18:25:15.396Z",
+    "url": null,
+    "commitHash": "3bbf569b43c49f6d0cede6c235f6d3a45cfdba5b"
+  },
+  "staged": null,
+  "variables": {
+    "valuesRedacted": true,
+    "names": [
+      "BUSINESS_MAP_PREVIEW_PASSWORD",
+      "BUSINESS_MAP_PREVIEW_USERNAME",
+      "BUSINESS_MAP_PROTOTYPE",
+      "NEXT_PUBLIC_SITE_URL",
+      "NODE_ENV",
+      "RAILWAY_ENVIRONMENT",
+      "RAILWAY_ENVIRONMENT_ID",
+      "RAILWAY_ENVIRONMENT_NAME",
+      "RAILWAY_PRIVATE_DOMAIN",
+      "RAILWAY_PROJECT_ID",
+      "RAILWAY_PROJECT_NAME",
+      "RAILWAY_PUBLIC_DOMAIN",
+      "RAILWAY_SERVICE_ID",
+      "RAILWAY_SERVICE_MIRONOVICH_PREVIEW_URL",
+      "RAILWAY_SERVICE_NAME",
+      "RAILWAY_STATIC_URL",
+      "SITE_NOINDEX"
+    ],
+    "missing": [
+      "BUSINESS_MAP_AI_ENABLED",
+      "BUSINESS_MAP_AI_MODEL",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "readOnly": true
+}

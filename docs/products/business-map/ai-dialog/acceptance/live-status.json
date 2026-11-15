@@ -1,0 +1,12 @@
+{
+  "status": "NOT RUN",
+  "officialProviderCalls": 0,
+  "model": null,
+  "latencyMs": null,
+  "usage": null,
+  "reason": "No configured real API key/model or dedicated limited project; Railway names absent; stubs are not live tests",
+  "ownerRunnerDenyGate": {
+    "exitCode": 2,
+    "withoutOptInAndSecrets": true
+  }
+}

@@ -10,6 +10,8 @@ import {
   parseAdvice,
   parseChatRequest,
   parseInterpretation,
+  interpretationSchema,
+  adviceSchema,
 } from "../lib/business-map/dialog/ai-schema.ts";
 import { businessMapAiPolicy as policy } from "../config/business-map-ai.ts";
 const env = () => ({
@@ -534,4 +536,75 @@ test("schema scalar enums reject arrays and objects instead of coercing them to 
     ),
     null,
   );
+});
+
+test("both Responses schemas meet strict object/required/enum structure recursively", () => {
+  function visit(schema) {
+    if(schema.type === "object") {
+      assert.equal(schema.additionalProperties,false);
+      assert.deepEqual([...schema.required].sort(),Object.keys(schema.properties).sort());
+      Object.values(schema.properties).forEach(visit);
+    }
+    if(schema.type === "array") visit(schema.items);
+    if(schema.enum) assert.ok(schema.type);
+  }
+  visit(interpretationSchema); visit(adviceSchema);
+});
+
+test("provider HTTP 5xx, invalid JSON and oversized streamed output fail closed without retry or disclosure", async () => {
+  const e=env();
+  for(const mode of ["http-500","json","large"]) {
+    let calls=0,cancelled=false;
+    const h=createChatHandler({env:()=>e,fetcher:async()=>{
+      calls++;
+      if(mode==="http-500")return new Response(e.OPENAI_API_KEY,{status:500});
+      if(mode==="json")return new Response("{broken");
+      return new Response(new ReadableStream({start(c){c.enqueue(new TextEncoder().encode("x".repeat(policy.maxReplyCharacters+1)));},cancel(){cancelled=true;}}));
+    }});
+    const r=await h(request(e));
+    assert.equal(r.status,502);
+    const body=await r.text();
+    assert.equal(body.includes(e.OPENAI_API_KEY),false);
+    assert.equal(calls,1);
+    if(mode==="large")assert.equal(cancelled,true);
+  }
+});
+
+test("concurrent/replayed requests and changed request IDs cannot bypass the per-instance paid-call budget", async () => {
+  const e=env(); let calls=0,resolve;
+  const h=createChatHandler({env:()=>e,fetcher:async()=>{
+    calls++; return new Promise(r=>{resolve=r;});
+  }});
+  const body=input(); const first=h(request(e,body));
+  while(!resolve)await new Promise(r=>setTimeout(r,0));
+  assert.equal((await h(request(e,body))).status,409);
+  assert.equal((await h(request(e,input()))).status,429);
+  resolve(provider(interpretation())); assert.equal((await first).status,200);
+  assert.equal(calls,1);
+  const budget=new ChatBudget(); let now=Date.UTC(2026,10,15,10), paid=0;
+  const limited=createChatHandler({env:()=>e,budget,now:()=>now,fetcher:async()=>{paid++;return new Response("unavailable",{status:503});}});
+  for(let i=0;i<policy.maxDailyCallsPerInstance;i++){
+    now+=60000;
+    assert.equal((await limited(request(e,input()))).status,502);
+  }
+  now+=60000;
+  assert.equal((await limited(request(e,input()))).status,429);
+  assert.equal(paid,policy.maxDailyCallsPerInstance); // Failures also spend the budget.
+});
+
+test("deadline while reading the provider body returns timeout, not invalid_output", {timeout:policy.timeoutMs+4000}, async()=>{
+  const e=env();let calls=0;const budget=new ChatBudget();
+  const h=createChatHandler({env:()=>e,budget,fetcher:async(_,init)=>{
+    calls++;
+    return new Response(new ReadableStream({start(controller){
+      init.signal.addEventListener("abort",()=>controller.error(new Error("synthetic abort")),{once:true});
+      controller.enqueue(new TextEncoder().encode('{"status":'));
+    }}));
+  }});
+  const r=await h(request(e));
+  assert.equal(r.status,504);
+  assert.equal((await r.json()).code,"timeout");
+  assert.equal(calls,1);
+  assert.equal(budget.reserve("after-timeout-fixture",Date.now()),null);
+  budget.release();
 });

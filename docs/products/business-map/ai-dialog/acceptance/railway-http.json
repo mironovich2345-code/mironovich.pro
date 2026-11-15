@@ -1,0 +1,31 @@
+{
+  "base": "https://mironovich-preview-preview.up.railway.app",
+  "mode": "unauthenticated read-only probes; no model call",
+  "cases": [
+    {
+      "path": "/healthz",
+      "errorType": "URLError"
+    },
+    {
+      "path": "/prototype/business-map",
+      "errorType": "URLError"
+    },
+    {
+      "path": "/prototype/business-map?_rsc=acceptance",
+      "errorType": "URLError"
+    },
+    {
+      "path": "/_next/static/acceptance-probe.js",
+      "errorType": "URLError"
+    },
+    {
+      "path": "/api/business-map/chat",
+      "errorType": "URLError"
+    },
+    {
+      "path": "/",
+      "errorType": "URLError"
+    }
+  ],
+  "transportDiagnostic": "Workspace outbound proxy rejects CONNECT with 403; no Railway HTTP response obtained"
+}

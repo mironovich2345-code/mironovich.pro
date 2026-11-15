@@ -1,0 +1,1021 @@
+{
+  "source": "4ec35126b52dde7994d002f4b3ef1ca23353e45d",
+  "mode": "local production; offline synthetic; no provider calls",
+  "viewports": [
+    {
+      "width": 320,
+      "layout": [
+        {
+          "phase": "welcome",
+          "width": 320,
+          "document": 320,
+          "containers": []
+        },
+        {
+          "phase": "library",
+          "width": 320,
+          "document": 320,
+          "containers": [
+            {
+              "name": "bd-layout ",
+              "client": 320,
+              "scroll": 320
+            },
+            {
+              "name": "bd-thread",
+              "client": 320,
+              "scroll": 320
+            },
+            {
+              "name": "bd-composer",
+              "client": 320,
+              "scroll": 320
+            }
+          ]
+        },
+        {
+          "phase": "scenarioA",
+          "width": 320,
+          "document": 320,
+          "containers": [
+            {
+              "name": "bd-layout ",
+              "client": 320,
+              "scroll": 320
+            },
+            {
+              "name": "bd-thread",
+              "client": 320,
+              "scroll": 320
+            },
+            {
+              "name": "bd-composer",
+              "client": 320,
+              "scroll": 320
+            }
+          ]
+        },
+        {
+          "phase": "map",
+          "width": 320,
+          "document": 320,
+          "containers": [
+            {
+              "name": "bd-layout bd-layout-wide",
+              "client": 320,
+              "scroll": 320
+            }
+          ]
+        },
+        {
+          "phase": "portfolio",
+          "width": 320,
+          "document": 320,
+          "containers": [
+            {
+              "name": "bd-layout bd-layout-wide",
+              "client": 320,
+              "scroll": 320
+            }
+          ]
+        },
+        {
+          "phase": "plan",
+          "width": 320,
+          "document": 320,
+          "containers": [
+            {
+              "name": "bd-layout bd-layout-wide",
+              "client": 320,
+              "scroll": 320
+            }
+          ]
+        }
+      ],
+      "accessibility": [
+        {
+          "phase": "welcome",
+          "violations": []
+        },
+        {
+          "phase": "library",
+          "violations": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "nodes": [
+                {
+                  "target": [
+                    "article:nth-child(1) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 6.8pt (9px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(2) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 6.8pt (9px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(3) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 6.8pt (9px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(4) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 6.8pt (9px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(5) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 6.8pt (9px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "phase": "map",
+          "violations": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "nodes": [
+                {
+                  "target": [
+                    ".bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 6.8pt (9px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "phase": "portfolio",
+          "violations": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "nodes": [
+                {
+                  "target": [
+                    ".bd-process-pilot > .bd-process-head > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 6.8pt (9px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "phase": "plan",
+          "violations": []
+        }
+      ],
+      "scenarioA": {
+        "manualQuestionRepeated": true,
+        "firstActionInLog": false,
+        "mapProcesses": 1,
+        "craftInMetadata": false
+      },
+      "storageEmpty": true
+    },
+    {
+      "width": 375,
+      "layout": [
+        {
+          "phase": "welcome",
+          "width": 375,
+          "document": 375,
+          "containers": []
+        },
+        {
+          "phase": "library",
+          "width": 375,
+          "document": 375,
+          "containers": [
+            {
+              "name": "bd-layout ",
+              "client": 375,
+              "scroll": 375
+            },
+            {
+              "name": "bd-thread",
+              "client": 375,
+              "scroll": 375
+            },
+            {
+              "name": "bd-composer",
+              "client": 375,
+              "scroll": 375
+            }
+          ]
+        },
+        {
+          "phase": "scenarioA",
+          "width": 375,
+          "document": 375,
+          "containers": [
+            {
+              "name": "bd-layout ",
+              "client": 375,
+              "scroll": 375
+            },
+            {
+              "name": "bd-thread",
+              "client": 375,
+              "scroll": 375
+            },
+            {
+              "name": "bd-composer",
+              "client": 375,
+              "scroll": 375
+            }
+          ]
+        },
+        {
+          "phase": "map",
+          "width": 375,
+          "document": 375,
+          "containers": [
+            {
+              "name": "bd-layout bd-layout-wide",
+              "client": 375,
+              "scroll": 375
+            }
+          ]
+        },
+        {
+          "phase": "portfolio",
+          "width": 375,
+          "document": 375,
+          "containers": [
+            {
+              "name": "bd-layout bd-layout-wide",
+              "client": 375,
+              "scroll": 375
+            }
+          ]
+        },
+        {
+          "phase": "plan",
+          "width": 375,
+          "document": 375,
+          "containers": [
+            {
+              "name": "bd-layout bd-layout-wide",
+              "client": 375,
+              "scroll": 375
+            }
+          ]
+        }
+      ],
+      "accessibility": [
+        {
+          "phase": "welcome",
+          "violations": []
+        },
+        {
+          "phase": "library",
+          "violations": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "nodes": [
+                {
+                  "target": [
+                    "article:nth-child(1) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 6.8pt (9px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(2) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 6.8pt (9px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(3) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 6.8pt (9px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(4) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 6.8pt (9px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(5) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 6.8pt (9px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "phase": "map",
+          "violations": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "nodes": [
+                {
+                  "target": [
+                    ".bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 6.8pt (9px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "phase": "portfolio",
+          "violations": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "nodes": [
+                {
+                  "target": [
+                    ".bd-process-pilot > .bd-process-head > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 6.8pt (9px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "phase": "plan",
+          "violations": []
+        }
+      ],
+      "scenarioA": {
+        "manualQuestionRepeated": true,
+        "firstActionInLog": false,
+        "mapProcesses": 1,
+        "craftInMetadata": false
+      },
+      "storageEmpty": true
+    },
+    {
+      "width": 768,
+      "layout": [
+        {
+          "phase": "welcome",
+          "width": 768,
+          "document": 768,
+          "containers": []
+        },
+        {
+          "phase": "library",
+          "width": 768,
+          "document": 768,
+          "containers": [
+            {
+              "name": "bd-layout ",
+              "client": 768,
+              "scroll": 768
+            },
+            {
+              "name": "bd-thread",
+              "client": 753,
+              "scroll": 753
+            },
+            {
+              "name": "bd-composer",
+              "client": 768,
+              "scroll": 768
+            }
+          ]
+        },
+        {
+          "phase": "scenarioA",
+          "width": 768,
+          "document": 768,
+          "containers": [
+            {
+              "name": "bd-layout ",
+              "client": 768,
+              "scroll": 768
+            },
+            {
+              "name": "bd-thread",
+              "client": 753,
+              "scroll": 753
+            },
+            {
+              "name": "bd-composer",
+              "client": 768,
+              "scroll": 768
+            }
+          ]
+        },
+        {
+          "phase": "map",
+          "width": 768,
+          "document": 768,
+          "containers": [
+            {
+              "name": "bd-layout bd-layout-wide",
+              "client": 768,
+              "scroll": 768
+            }
+          ]
+        },
+        {
+          "phase": "portfolio",
+          "width": 768,
+          "document": 768,
+          "containers": [
+            {
+              "name": "bd-layout bd-layout-wide",
+              "client": 768,
+              "scroll": 768
+            }
+          ]
+        },
+        {
+          "phase": "plan",
+          "width": 768,
+          "document": 768,
+          "containers": [
+            {
+              "name": "bd-layout bd-layout-wide",
+              "client": 768,
+              "scroll": 768
+            }
+          ]
+        }
+      ],
+      "accessibility": [
+        {
+          "phase": "welcome",
+          "violations": []
+        },
+        {
+          "phase": "library",
+          "violations": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "nodes": [
+                {
+                  "target": [
+                    "article:nth-child(1) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(2) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(3) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(4) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(5) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(6) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(7) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "phase": "map",
+          "violations": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "nodes": [
+                {
+                  "target": [
+                    ".bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "phase": "portfolio",
+          "violations": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "nodes": [
+                {
+                  "target": [
+                    ".bd-process-pilot > .bd-process-head > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    ".bd-process-prepare > .bd-process-head > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "phase": "plan",
+          "violations": []
+        }
+      ],
+      "scenarioA": {
+        "manualQuestionRepeated": true,
+        "firstActionInLog": false,
+        "mapProcesses": 1,
+        "craftInMetadata": false
+      },
+      "storageEmpty": true
+    },
+    {
+      "width": 1024,
+      "layout": [
+        {
+          "phase": "welcome",
+          "width": 1024,
+          "document": 1024,
+          "containers": []
+        },
+        {
+          "phase": "library",
+          "width": 1024,
+          "document": 1024,
+          "containers": [
+            {
+              "name": "bd-layout ",
+              "client": 1024,
+              "scroll": 1024
+            },
+            {
+              "name": "bd-thread",
+              "client": 702,
+              "scroll": 702
+            },
+            {
+              "name": "bd-composer",
+              "client": 717,
+              "scroll": 717
+            },
+            {
+              "name": "bd-sidebar",
+              "client": 306,
+              "scroll": 306
+            }
+          ]
+        },
+        {
+          "phase": "scenarioA",
+          "width": 1024,
+          "document": 1024,
+          "containers": [
+            {
+              "name": "bd-layout ",
+              "client": 1024,
+              "scroll": 1024
+            },
+            {
+              "name": "bd-thread",
+              "client": 702,
+              "scroll": 702
+            },
+            {
+              "name": "bd-composer",
+              "client": 717,
+              "scroll": 717
+            },
+            {
+              "name": "bd-sidebar",
+              "client": 306,
+              "scroll": 306
+            }
+          ]
+        },
+        {
+          "phase": "map",
+          "width": 1024,
+          "document": 1024,
+          "containers": [
+            {
+              "name": "bd-layout bd-layout-wide",
+              "client": 1024,
+              "scroll": 1024
+            }
+          ]
+        },
+        {
+          "phase": "portfolio",
+          "width": 1024,
+          "document": 1024,
+          "containers": [
+            {
+              "name": "bd-layout bd-layout-wide",
+              "client": 1024,
+              "scroll": 1024
+            }
+          ]
+        },
+        {
+          "phase": "plan",
+          "width": 1024,
+          "document": 1024,
+          "containers": [
+            {
+              "name": "bd-layout bd-layout-wide",
+              "client": 1024,
+              "scroll": 1024
+            }
+          ]
+        }
+      ],
+      "accessibility": [
+        {
+          "phase": "welcome",
+          "violations": []
+        },
+        {
+          "phase": "library",
+          "violations": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "nodes": [
+                {
+                  "target": [
+                    "article:nth-child(1) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(2) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(3) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(4) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(5) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(6) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(7) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    ".bd-map-empty > span"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 1.73 (foreground color: #b9b0a2, background color: #ebe7df, font size: 45.0pt (60px), font weight: normal). Expected contrast ratio of 3:1"
+                },
+                {
+                  "target": [
+                    ".bd-map-empty > p"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.18 (foreground color: #756c60, background color: #ebe7df, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "phase": "map",
+          "violations": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "nodes": [
+                {
+                  "target": [
+                    ".bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "phase": "portfolio",
+          "violations": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "nodes": [
+                {
+                  "target": [
+                    ".bd-process-pilot > .bd-process-head > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    ".bd-process-prepare > .bd-process-head > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "phase": "plan",
+          "violations": []
+        }
+      ],
+      "scenarioA": {
+        "manualQuestionRepeated": true,
+        "firstActionInLog": false,
+        "mapProcesses": 1,
+        "craftInMetadata": false
+      },
+      "storageEmpty": true
+    },
+    {
+      "width": 1440,
+      "layout": [
+        {
+          "phase": "welcome",
+          "width": 1440,
+          "document": 1440,
+          "containers": []
+        },
+        {
+          "phase": "library",
+          "width": 1440,
+          "document": 1440,
+          "containers": [
+            {
+              "name": "bd-layout ",
+              "client": 1440,
+              "scroll": 1440
+            },
+            {
+              "name": "bd-thread",
+              "client": 993,
+              "scroll": 993
+            },
+            {
+              "name": "bd-composer",
+              "client": 1008,
+              "scroll": 1008
+            },
+            {
+              "name": "bd-sidebar",
+              "client": 431,
+              "scroll": 431
+            }
+          ]
+        },
+        {
+          "phase": "scenarioA",
+          "width": 1440,
+          "document": 1440,
+          "containers": [
+            {
+              "name": "bd-layout ",
+              "client": 1440,
+              "scroll": 1440
+            },
+            {
+              "name": "bd-thread",
+              "client": 993,
+              "scroll": 993
+            },
+            {
+              "name": "bd-composer",
+              "client": 1008,
+              "scroll": 1008
+            },
+            {
+              "name": "bd-sidebar",
+              "client": 431,
+              "scroll": 431
+            }
+          ]
+        },
+        {
+          "phase": "map",
+          "width": 1440,
+          "document": 1440,
+          "containers": [
+            {
+              "name": "bd-layout bd-layout-wide",
+              "client": 1100,
+              "scroll": 1100
+            }
+          ]
+        },
+        {
+          "phase": "portfolio",
+          "width": 1440,
+          "document": 1440,
+          "containers": [
+            {
+              "name": "bd-layout bd-layout-wide",
+              "client": 1100,
+              "scroll": 1100
+            }
+          ]
+        },
+        {
+          "phase": "plan",
+          "width": 1440,
+          "document": 1440,
+          "containers": [
+            {
+              "name": "bd-layout bd-layout-wide",
+              "client": 1100,
+              "scroll": 1100
+            }
+          ]
+        }
+      ],
+      "accessibility": [
+        {
+          "phase": "welcome",
+          "violations": []
+        },
+        {
+          "phase": "library",
+          "violations": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "nodes": [
+                {
+                  "target": [
+                    "article:nth-child(1) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(2) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(3) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(4) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(5) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(6) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    "article:nth-child(7) > .bd-library-line > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    ".bd-map-empty > span"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 1.73 (foreground color: #b9b0a2, background color: #ebe7df, font size: 45.0pt (60px), font weight: normal). Expected contrast ratio of 3:1"
+                },
+                {
+                  "target": [
+                    ".bd-map-empty > p"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.18 (foreground color: #756c60, background color: #ebe7df, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "phase": "map",
+          "violations": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "nodes": [
+                {
+                  "target": [
+                    ".bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "phase": "portfolio",
+          "violations": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "nodes": [
+                {
+                  "target": [
+                    ".bd-process-pilot > .bd-process-head > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                {
+                  "target": [
+                    ".bd-process-prepare > .bd-process-head > .bd-index"
+                  ],
+                  "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.05 (foreground color: #938778, background color: #f2efe8, font size: 7.5pt (10px), font weight: normal). Expected contrast ratio of 4.5:1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "phase": "plan",
+          "violations": []
+        }
+      ],
+      "scenarioA": {
+        "manualQuestionRepeated": true,
+        "firstActionInLog": false,
+        "mapProcesses": 1,
+        "craftInMetadata": false
+      },
+      "storageEmpty": true
+    }
+  ],
+  "javascriptErrors": [],
+  "externalRequests": 0
+}

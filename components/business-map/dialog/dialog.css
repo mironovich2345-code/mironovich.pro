@@ -402,7 +402,7 @@
 }
 .bd-index {
   font-size: 10px;
-  color: #938778;
+  color: #736557;
   flex: none;
   letter-spacing: 0.06em;
 }
@@ -535,12 +535,12 @@
   font-size: 60px;
   font-family: var(--font-display), sans-serif;
   letter-spacing: -0.06em;
-  color: #b9b0a2;
+  color: #736557;
   line-height: 1.1;
 }
 .bd-map-empty p {
   font-size: 12px;
-  color: #756c60;
+  color: #6b6257;
   margin-top: 17px;
   max-width: 230px;
 }

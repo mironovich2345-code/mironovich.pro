@@ -1,0 +1,726 @@
+{
+  "build": "existing production build",
+  "node": "v22.23.5",
+  "cases": [
+    {
+      "label": "health probe has no application data",
+      "path": "/healthz",
+      "method": "GET",
+      "status": 200,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "HTML without authentication",
+      "path": "/prototype/business-map",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "HTML wrong authentication",
+      "path": "/prototype/business-map",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "HTML correct authentication",
+      "path": "/prototype/business-map",
+      "method": "GET",
+      "status": 200,
+      "privateCache": true,
+      "authorizationVary": false
+    },
+    {
+      "label": "private asset without Referer",
+      "path": "/_next/static/css/dbea7cc013b02f62.css",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset with authentication",
+      "path": "/_next/static/css/dbea7cc013b02f62.css",
+      "method": "GET",
+      "status": 200,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "conditional asset cannot bypass auth",
+      "path": "/_next/static/css/dbea7cc013b02f62.css",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset without Referer",
+      "path": "/_next/static/css/618ae8d0aeb9178c.css",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset with authentication",
+      "path": "/_next/static/css/618ae8d0aeb9178c.css",
+      "method": "GET",
+      "status": 200,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "conditional asset cannot bypass auth",
+      "path": "/_next/static/css/618ae8d0aeb9178c.css",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset without Referer",
+      "path": "/_next/static/chunks/webpack-121e4f90631e7392.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset with authentication",
+      "path": "/_next/static/chunks/webpack-121e4f90631e7392.js",
+      "method": "GET",
+      "status": 200,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "conditional asset cannot bypass auth",
+      "path": "/_next/static/chunks/webpack-121e4f90631e7392.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset without Referer",
+      "path": "/_next/static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset with authentication",
+      "path": "/_next/static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "method": "GET",
+      "status": 200,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "conditional asset cannot bypass auth",
+      "path": "/_next/static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset without Referer",
+      "path": "/_next/static/chunks/255-b1e2483a7e02feee.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset with authentication",
+      "path": "/_next/static/chunks/255-b1e2483a7e02feee.js",
+      "method": "GET",
+      "status": 200,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "conditional asset cannot bypass auth",
+      "path": "/_next/static/chunks/255-b1e2483a7e02feee.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset without Referer",
+      "path": "/_next/static/chunks/main-app-35b53d17b220f603.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset with authentication",
+      "path": "/_next/static/chunks/main-app-35b53d17b220f603.js",
+      "method": "GET",
+      "status": 200,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "conditional asset cannot bypass auth",
+      "path": "/_next/static/chunks/main-app-35b53d17b220f603.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset without Referer",
+      "path": "/_next/static/chunks/619-ba102abea3e3d0e4.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset with authentication",
+      "path": "/_next/static/chunks/619-ba102abea3e3d0e4.js",
+      "method": "GET",
+      "status": 200,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "conditional asset cannot bypass auth",
+      "path": "/_next/static/chunks/619-ba102abea3e3d0e4.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset without Referer",
+      "path": "/_next/static/chunks/app/layout-4c82d84147aeb49e.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset with authentication",
+      "path": "/_next/static/chunks/app/layout-4c82d84147aeb49e.js",
+      "method": "GET",
+      "status": 200,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "conditional asset cannot bypass auth",
+      "path": "/_next/static/chunks/app/layout-4c82d84147aeb49e.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset without Referer",
+      "path": "/_next/static/chunks/356-ad1afcfca620a302.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset with authentication",
+      "path": "/_next/static/chunks/356-ad1afcfca620a302.js",
+      "method": "GET",
+      "status": 200,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "conditional asset cannot bypass auth",
+      "path": "/_next/static/chunks/356-ad1afcfca620a302.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset without Referer",
+      "path": "/_next/static/chunks/540-1888b6c22651d979.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset with authentication",
+      "path": "/_next/static/chunks/540-1888b6c22651d979.js",
+      "method": "GET",
+      "status": 200,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "conditional asset cannot bypass auth",
+      "path": "/_next/static/chunks/540-1888b6c22651d979.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset without Referer",
+      "path": "/_next/static/chunks/app/page-bd87151e4181912c.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset with authentication",
+      "path": "/_next/static/chunks/app/page-bd87151e4181912c.js",
+      "method": "GET",
+      "status": 200,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "conditional asset cannot bypass auth",
+      "path": "/_next/static/chunks/app/page-bd87151e4181912c.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset without Referer",
+      "path": "/_next/static/chunks/app/error-f9e1bcb5131e73cb.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset with authentication",
+      "path": "/_next/static/chunks/app/error-f9e1bcb5131e73cb.js",
+      "method": "GET",
+      "status": 200,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "conditional asset cannot bypass auth",
+      "path": "/_next/static/chunks/app/error-f9e1bcb5131e73cb.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset without Referer",
+      "path": "/_next/static/chunks/382-3ca1be809ad99b03.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset with authentication",
+      "path": "/_next/static/chunks/382-3ca1be809ad99b03.js",
+      "method": "GET",
+      "status": 200,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "conditional asset cannot bypass auth",
+      "path": "/_next/static/chunks/382-3ca1be809ad99b03.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset without Referer",
+      "path": "/_next/static/chunks/app/prototype/business-map/page-2eceacaa9a254616.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset with authentication",
+      "path": "/_next/static/chunks/app/prototype/business-map/page-2eceacaa9a254616.js",
+      "method": "GET",
+      "status": 200,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "conditional asset cannot bypass auth",
+      "path": "/_next/static/chunks/app/prototype/business-map/page-2eceacaa9a254616.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset without Referer",
+      "path": "/_next/static/chunks/polyfills-42372ed130431b0a.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "private asset with authentication",
+      "path": "/_next/static/chunks/polyfills-42372ed130431b0a.js",
+      "method": "GET",
+      "status": 200,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "conditional asset cannot bypass auth",
+      "path": "/_next/static/chunks/polyfills-42372ed130431b0a.js",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "unauthenticated RSC/prefetch",
+      "path": "/prototype/business-map?_rsc=check",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "wrong auth RSC/prefetch",
+      "path": "/prototype/business-map?_rsc=check",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "unauthenticated RSC/prefetch",
+      "path": "/prototype/business-map?_rsc=check",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "wrong auth RSC/prefetch",
+      "path": "/prototype/business-map?_rsc=check",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "unauthenticated RSC/prefetch",
+      "path": "/prototype/business-map?_rsc=check",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "wrong auth RSC/prefetch",
+      "path": "/prototype/business-map?_rsc=check",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "authenticated RSC",
+      "path": "/prototype/business-map?_rsc=check",
+      "method": "GET",
+      "status": 200,
+      "privateCache": true,
+      "authorizationVary": false
+    },
+    {
+      "label": "authenticated prefetch",
+      "path": "/prototype/business-map?_rsc=prefetch",
+      "method": "GET",
+      "status": 200,
+      "privateCache": true,
+      "authorizationVary": false
+    },
+    {
+      "label": "Next data alias",
+      "path": "/_next/data/integration/prototype/business-map.json",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "forged middleware bypass header",
+      "path": "/prototype/business-map",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "HEAD protected",
+      "path": "/prototype/business-map",
+      "method": "HEAD",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "root in private preview",
+      "path": "/",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "public calculator in preview after login",
+      "path": "/tools/labor-cost",
+      "method": "GET",
+      "status": 200,
+      "privateCache": true,
+      "authorizationVary": false
+    },
+    {
+      "label": "public integration disabled in preview",
+      "path": "/api/lead",
+      "method": "POST",
+      "status": 404,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "public integration disabled in preview",
+      "path": "/api/tools/recommendation",
+      "method": "POST",
+      "status": 404,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "chat without authentication",
+      "path": "/api/business-map/chat",
+      "method": "POST",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "chat with wrong authentication",
+      "path": "/api/business-map/chat",
+      "method": "POST",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "chat without configured AI is unavailable",
+      "path": "/api/business-map/chat",
+      "method": "POST",
+      "status": 503,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "chat GET is not exposed",
+      "path": "/api/business-map/chat",
+      "method": "GET",
+      "status": 404,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "chat descendants are not exposed",
+      "path": "/api/business-map/chat/other",
+      "method": "POST",
+      "status": 404,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "HTML remains protected after authorized responses",
+      "path": "/prototype/business-map",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "configured chat rejects cross-origin",
+      "path": "/api/business-map/chat",
+      "method": "POST",
+      "status": 403,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "configured chat requires JSON",
+      "path": "/api/business-map/chat",
+      "method": "POST",
+      "status": 415,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "configured chat rejects malformed JSON",
+      "path": "/api/business-map/chat",
+      "method": "POST",
+      "status": 400,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "configured chat validates full schema",
+      "path": "/api/business-map/chat",
+      "method": "POST",
+      "status": 422,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "configured chat rejects array instead of scalar risk",
+      "path": "/api/business-map/chat",
+      "method": "POST",
+      "status": 422,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "configured chat bounds body before JSON",
+      "path": "/api/business-map/chat",
+      "method": "POST",
+      "status": 413,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "unconfigured health probe",
+      "path": "/healthz",
+      "method": "GET",
+      "status": 503,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "missing environment credentials fail closed",
+      "path": "/prototype/business-map",
+      "method": "GET",
+      "status": 404,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "missing credentials protect static assets too",
+      "path": "/_next/static/css/dbea7cc013b02f62.css",
+      "method": "GET",
+      "status": 404,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "old credentials fail after runtime rotation",
+      "path": "/prototype/business-map",
+      "method": "GET",
+      "status": 401,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "new runtime credentials work without rebuilding",
+      "path": "/prototype/business-map",
+      "method": "GET",
+      "status": 200,
+      "privateCache": true,
+      "authorizationVary": false
+    },
+    {
+      "label": "preview without noindex is closed",
+      "path": "/prototype/business-map",
+      "method": "GET",
+      "status": 404,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "closed preview protects bundles",
+      "path": "/_next/static/css/dbea7cc013b02f62.css",
+      "method": "GET",
+      "status": 404,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "Railway production with all opt-ins is hidden",
+      "path": "/prototype/business-map",
+      "method": "GET",
+      "status": 404,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "Railway production RSC is hidden",
+      "path": "/prototype/business-map?_rsc=check",
+      "method": "GET",
+      "status": 404,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "production AI POST always hidden",
+      "path": "/api/business-map/chat",
+      "method": "POST",
+      "status": 404,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "production AI GET always hidden",
+      "path": "/api/business-map/chat",
+      "method": "GET",
+      "status": 404,
+      "privateCache": true,
+      "authorizationVary": true
+    },
+    {
+      "label": "production public labor calculator",
+      "path": "/tools/labor-cost",
+      "method": "GET",
+      "status": 200,
+      "privateCache": false,
+      "authorizationVary": false
+    },
+    {
+      "label": "production public automation calculator",
+      "path": "/tools/automation-cost",
+      "method": "GET",
+      "status": 200,
+      "privateCache": false,
+      "authorizationVary": false
+    },
+    {
+      "label": "production homepage stays public",
+      "path": "/",
+      "method": "GET",
+      "status": 200,
+      "privateCache": false,
+      "authorizationVary": false
+    }
+  ]
+}
