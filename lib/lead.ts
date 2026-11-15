@@ -3,9 +3,16 @@
  * validate exactly the same way. No server-only code in here.
  */
 
+import { SOLUTION_SLUGS } from "../config/solutions.ts";
 export const LEAD_LIMITS = { name: 100, company: 120, phone: 40, task: 2000, payload: 10000 } as const;
 
 export const LEAD_DIRECTIONS = [
+  { value: "corporate-academy", label: "Корпоративная академия" },
+  { value: "employee-kpi", label: "Рейтинги, KPI и мотивация" },
+  { value: "management-analytics", label: "Управленческая аналитика" },
+  { value: "branch-standards", label: "Контроль стандартов филиалов" },
+  { value: "lead-engine", label: "ИИ для поиска и обработки клиентов" },
+  { value: "cto", label: "Внешний технологический директор" },
   { value: "automation", label: "Автоматизация и ИИ" },
   { value: "apps", label: "Разработка приложения" },
   { value: "training", label: "Обучение сотрудников" },
@@ -42,6 +49,7 @@ const KNOWN_PAGES = new Set([
   "/about", "/blog", "/contact", "/projects", "/products", "/products/ai-career", "/products/automation-priorities",
   "/services/cto", "/services/development", "/services/support", "/services/expertise",
   "/tools", "/tools/labor-cost", "/tools/automation-cost",
+  "/solutions", ...SOLUTION_SLUGS.map(slug => "/solutions/" + slug),
 ]);
 
 /**
@@ -58,6 +66,12 @@ export function normalizePagePath(v: unknown): string {
   if (KNOWN_PAGES.has(path)) return path;
   if (/^\/(?:blog|blog\/category|projects)\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(path) && path.length <= 120) return path;
   return "unknown";
+}
+
+/** Page classification uses an existing normalised path, not an extra personal field. */
+export function leadDirectionForPage(page: string): LeadDirection | null {
+  const slug = SOLUTION_SLUGS.find(slug => page === "/solutions/" + slug);
+  return slug ?? (page === "/services/cto" ? "cto" : null);
 }
 
 /**

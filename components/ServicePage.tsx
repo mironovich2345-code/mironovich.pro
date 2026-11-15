@@ -11,6 +11,7 @@ import { serviceBySlug, services } from "@/config/services";
 import type { ServicePageContent } from "@/content/services";
 import type { Item, SectionKey, UniqueBlock } from "@/content/services/types";
 import type { Post } from "@/lib/blog";
+import { rub } from "@/config/solutions";
 
 type Tone = "dark" | "light";
 
@@ -49,10 +50,11 @@ function Hero({ page, crumbs }: { page: ServicePageContent; crumbs: Crumb[] }) {
       <div className="relative mx-auto flex max-w-[1080px] flex-col gap-5 min-[560px]:gap-8">
         <Breadcrumbs items={crumbs} />
 
-        <h1 className="m-0 max-w-[24ch] text-balance font-display text-[clamp(34px,5.6vw,76px)] font-extrabold uppercase leading-[0.97] tracking-[-0.02em] text-cream">
+        <h1 className="m-0 max-w-[24ch] text-balance font-display text-[clamp(32px,5.6vw,76px)] font-extrabold uppercase leading-[0.97] tracking-[-0.02em] text-cream">
           {page.h1}
           <span className="text-signal">.</span>
         </h1>
+        {page.retainer && <p className="m-0 font-display text-[clamp(26px,4vw,40px)] font-bold text-cream">{rub(page.retainer.monthlyPrice)} в месяц · до {page.retainer.hours} часов</p>}
 
         <div className="flex flex-col gap-6 min-[860px]:flex-row min-[860px]:items-end min-[860px]:justify-between min-[860px]:gap-12 min-[860px]:border-t min-[860px]:border-cream/15 min-[860px]:pt-8">
           <p className="m-0 max-w-[52ch] text-pretty text-[16px] leading-[1.55] text-cream/80 min-[560px]:text-[18px]">{page.offer}</p>
@@ -297,8 +299,13 @@ function Process({ page, tone, index }: { page: ServicePageContent; tone: Tone; 
 function Start({ page, tone, index }: { page: ServicePageContent; tone: Tone; index: string }) {
   return (
     <Section id="start" tone={tone}>
-      <SectionLabel index={index} label="Как начать" note="Цены не публикуются — оценка после обсуждения" tone={tone} />
+      <SectionLabel index={index} label="Как начать" note={page.retainer ? "Фиксированный месячный формат · границы согласуются" : "Оценка после обсуждения"} tone={tone} />
       <h2 className={h2Class + " mb-12 min-[560px]:mb-14 " + heading[tone]}>С чего начать и от чего зависит стоимость</h2>
+      {page.retainer && <div className={"mb-10 border-y py-7 " + rule[tone]}>
+        <h3 className={"m-0 mb-5 text-[20px] font-semibold " + heading[tone]}>Пример распределения {page.retainer.hours} часов в месяц</h3>
+        <dl className="m-0 grid gap-x-10 min-[760px]:grid-cols-2">{page.retainer.allocation.map(item => <div key={item.label} className={"flex justify-between gap-5 border-b py-3 text-[15px] " + rule[tone] + " " + heading[tone]}><dt>{item.label}</dt><dd className="m-0 whitespace-nowrap">{item.hours} ч</dd></div>)}</dl>
+        <p className={"mb-0 mt-5 text-[14px] leading-relaxed " + body[tone]}>Это пример загрузки, а не гарантированный перечень одинаковых задач каждый месяц. Приоритеты и график согласуем; дополнительные часы и работы — отдельно.</p>
+      </div>}
 
       <div className={"grid grid-cols-1 border-t min-[960px]:grid-cols-3 " + rule[tone]}>
         <div className={"flex flex-col gap-4 border-b py-8 min-[960px]:border-b-0 min-[960px]:pr-8 " + rule[tone]}>

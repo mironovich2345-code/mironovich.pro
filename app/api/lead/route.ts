@@ -5,7 +5,7 @@ import { parseToolContext, describeToolContext } from "@/lib/tools/context";
 import { formatLeadMessage } from "@/lib/lead-message";
 import { readLeadRequest } from "@/lib/lead-request";
 import {
-  HONEYPOT_FIELD, LEAD_LIMITS, REDACTED, directionLabel, isLeadDirection, leadFormExtended, looksPersonal, normalizePagePath, validContact,
+  HONEYPOT_FIELD, LEAD_LIMITS, REDACTED, directionLabel, isLeadDirection, leadFormExtended, leadDirectionForPage, looksPersonal, normalizePagePath, validContact,
 } from "@/lib/lead";
 
 export const runtime = "nodejs";
@@ -122,9 +122,10 @@ export async function POST(req: Request) {
     timeZone: process.env.LEAD_TIMEZONE || "Europe/Moscow",
   }).format(new Date());
 
+  const inferredDirection = leadDirectionForPage(page);
   const text = formatLeadMessage({
     name, phone, task, company,
-    direction: isLeadDirection(direction) ? directionLabel(direction) : "",
+    direction: isLeadDirection(direction) ? directionLabel(direction) : (inferredDirection ? directionLabel(inferredDirection) : ""),
     page, date, consentVersion, attribution: attr,
     context: context ? describeToolContext(context) : "",
   });

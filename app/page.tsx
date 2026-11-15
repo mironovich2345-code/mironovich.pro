@@ -11,27 +11,32 @@ import Scenarios from "@/components/Scenarios";
 import Services from "@/components/Services";
 import StickyCta from "@/components/StickyCta";
 import StructuredData from "@/components/StructuredData";
+import CtoOffer from "@/components/CtoOffer";
+import FreeTools from "@/components/FreeTools";
+import OtherServices from "@/components/OtherServices";
 import { projectsPublished, site } from "@/config/site";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({ title: site.title, description: site.description, path: "/" });
 
-// The projects block appears between Diagnostics and About once content/projects.ts
-// has confirmed entries (config/site.ts → projectsPublished).
+// Only approved portfolio records appear after the five commercial offers.
 export default function Page() {
   return (
     <>
       <main id="main">
         <Hero />
-        <Problems />
         <Services />
-        <Scenarios />
-        <Diagnostics />
         {projectsPublished && <HomeProjects />}
-        <About index={projectsPublished ? "06" : "05"} />
-        <Process index={projectsPublished ? "07" : "06"} />
-        <Faq index={projectsPublished ? "08" : "07"} />
-        <ContactSection index={projectsPublished ? "09" : "08"} />
+        <Problems />
+        <Scenarios />
+        <CtoOffer />
+        <OtherServices />
+        <FreeTools />
+        <Diagnostics />
+        <About index="09" />
+        <Process index="10" />
+        <Faq index="11" />
+        <ContactSection index="12" />
       </main>
       <StickyCta />
       <StructuredData />

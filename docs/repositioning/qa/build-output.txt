@@ -1,0 +1,101 @@
+> mironovich-site@1.0.0 prebuild
+> node scripts/print-versions.mjs
+
+[build] Node.js v22.23.5, npm 11.9.0, linux/x64
+
+> mironovich-site@1.0.0 build
+> next build
+
+[release-guard] цель сборки: PRODUCTION (NEXT_PUBLIC_SITE_URL не задан → https://mironovich.pro; RAILWAY_ENVIRONMENT_NAME=не передана в сборку)
+[release-guard] предупреждение: Выпуск с ПРЕЖНИМИ текстами /privacy и /consent по решению владельца от 2026-11-01. Новые проекты не публикуются; прежний текст не описывает Яндекс Метрику, Railway и срок хранения — docs/release/go-no-go.md.
+[release-guard] предупреждение: content/legal/privacy.md: незаполненные поля (5) — проект не публикуется: [УТОЧНИТЬ С ЮРИСТОМ] · [УТОЧНИТЬ ПО ДОГОВОРАМ И С ЮРИСТОМ] · [ОПИСАТЬ ЗАКОННУЮ СХЕМУ ПОСЛЕ ПРОВЕРКИ] · [УТОЧНИТЬ] · [УТОЧНИТЬ]
+[release-guard] предупреждение: content/legal/consent.md: незаполненные поля (1) — проект не публикуется: [УТОЧНИТЬ С ЮРИСТОМ ДО ПУБЛИКАЦИИ]
+[release-guard] предупреждение: RATE_LIMIT_CLIENT_IP не задан — лимит по IP выключен, действует только общий лимит 10 заявок/мин (безопасный режим до проверки на staging)
+[release-guard] технические условия production-релиза выполнены (NEXT_PUBLIC_SITE_URL не задан → https://mironovich.pro; RAILWAY_ENVIRONMENT_NAME=не передана в сборку). Это не юридическое одобрение — см. docs/release/go-no-go.md.
+   ▲ Next.js 15.5.28
+
+   Creating an optimized production build ...
+[release-guard] цель сборки: PRODUCTION (NEXT_PUBLIC_SITE_URL не задан → https://mironovich.pro; RAILWAY_ENVIRONMENT_NAME=не передана в сборку)
+[release-guard] технические условия production-релиза выполнены (NEXT_PUBLIC_SITE_URL не задан → https://mironovich.pro; RAILWAY_ENVIRONMENT_NAME=не передана в сборку). Это не юридическое одобрение — см. docs/release/go-no-go.md.
+[release-guard] предупреждение: Выпуск с ПРЕЖНИМИ текстами /privacy и /consent по решению владельца от 2026-11-01. Новые проекты не публикуются; прежний текст не описывает Яндекс Метрику, Railway и срок хранения — docs/release/go-no-go.md.
+[release-guard] предупреждение: content/legal/privacy.md: незаполненные поля (5) — проект не публикуется: [УТОЧНИТЬ С ЮРИСТОМ] · [УТОЧНИТЬ ПО ДОГОВОРАМ И С ЮРИСТОМ] · [ОПИСАТЬ ЗАКОННУЮ СХЕМУ ПОСЛЕ ПРОВЕРКИ] · [УТОЧНИТЬ] · [УТОЧНИТЬ]
+[release-guard] предупреждение: content/legal/consent.md: незаполненные поля (1) — проект не публикуется: [УТОЧНИТЬ С ЮРИСТОМ ДО ПУБЛИКАЦИИ]
+[release-guard] предупреждение: RATE_LIMIT_CLIENT_IP не задан — лимит по IP выключен, действует только общий лимит 10 заявок/мин (безопасный режим до проверки на staging)
+[release-guard] цель сборки: PRODUCTION (NEXT_PUBLIC_SITE_URL не задан → https://mironovich.pro; RAILWAY_ENVIRONMENT_NAME=не передана в сборку)
+[release-guard] технические условия production-релиза выполнены (NEXT_PUBLIC_SITE_URL не задан → https://mironovich.pro; RAILWAY_ENVIRONMENT_NAME=не передана в сборку). Это не юридическое одобрение — см. docs/release/go-no-go.md.
+[release-guard] предупреждение: Выпуск с ПРЕЖНИМИ текстами /privacy и /consent по решению владельца от 2026-11-01. Новые проекты не публикуются; прежний текст не описывает Яндекс Метрику, Railway и срок хранения — docs/release/go-no-go.md.
+[release-guard] предупреждение: content/legal/privacy.md: незаполненные поля (5) — проект не публикуется: [УТОЧНИТЬ С ЮРИСТОМ] · [УТОЧНИТЬ ПО ДОГОВОРАМ И С ЮРИСТОМ] · [ОПИСАТЬ ЗАКОННУЮ СХЕМУ ПОСЛЕ ПРОВЕРКИ] · [УТОЧНИТЬ] · [УТОЧНИТЬ]
+[release-guard] предупреждение: content/legal/consent.md: незаполненные поля (1) — проект не публикуется: [УТОЧНИТЬ С ЮРИСТОМ ДО ПУБЛИКАЦИИ]
+[release-guard] предупреждение: RATE_LIMIT_CLIENT_IP не задан — лимит по IP выключен, действует только общий лимит 10 заявок/мин (безопасный режим до проверки на staging)
+[release-guard] цель сборки: PRODUCTION (NEXT_PUBLIC_SITE_URL не задан → https://mironovich.pro; RAILWAY_ENVIRONMENT_NAME=не передана в сборку)
+[release-guard] технические условия production-релиза выполнены (NEXT_PUBLIC_SITE_URL не задан → https://mironovich.pro; RAILWAY_ENVIRONMENT_NAME=не передана в сборку). Это не юридическое одобрение — см. docs/release/go-no-go.md.
+[release-guard] предупреждение: Выпуск с ПРЕЖНИМИ текстами /privacy и /consent по решению владельца от 2026-11-01. Новые проекты не публикуются; прежний текст не описывает Яндекс Метрику, Railway и срок хранения — docs/release/go-no-go.md.
+[release-guard] предупреждение: content/legal/privacy.md: незаполненные поля (5) — проект не публикуется: [УТОЧНИТЬ С ЮРИСТОМ] · [УТОЧНИТЬ ПО ДОГОВОРАМ И С ЮРИСТОМ] · [ОПИСАТЬ ЗАКОННУЮ СХЕМУ ПОСЛЕ ПРОВЕРКИ] · [УТОЧНИТЬ] · [УТОЧНИТЬ]
+[release-guard] предупреждение: content/legal/consent.md: незаполненные поля (1) — проект не публикуется: [УТОЧНИТЬ С ЮРИСТОМ ДО ПУБЛИКАЦИИ]
+[release-guard] предупреждение: RATE_LIMIT_CLIENT_IP не задан — лимит по IP выключен, действует только общий лимит 10 заявок/мин (безопасный режим до проверки на staging)
+ ✓ Compiled successfully in 11.0s
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/65) ...
+   Generating static pages (16/65)
+   Generating static pages (32/65)
+   Generating static pages (48/65)
+ ✓ Generating static pages (65/65)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                      Size  First Load JS
+┌ ○ /                                         1.15 kB         121 kB
+├ ○ /_not-found                                 138 B         103 kB
+├ ○ /about                                      399 B         114 kB
+├ ƒ /api/lead                                   138 B         103 kB
+├ ƒ /api/tools/recommendation                   138 B         103 kB
+├ ○ /blog                                       399 B         114 kB
+├ ● /blog/[slug]                                399 B         114 kB
+├   ├ /blog/skolko-stoit-ruchnaya-otchetnost
+├   ├ /blog/kogda-ii-biznesu-ne-nuzhen
+├   ├ /blog/kogda-ne-nuzhno-svoe-prilozhenie
+├   └ [+24 more paths]
+├ ● /blog/category/[category]                   399 B         114 kB
+├   ├ /blog/category/avtomatizaciya
+├   ├ /blog/category/razrabotka-prilozheniy
+├   ├ /blog/category/ii-dlya-biznesa
+├   └ [+2 more paths]
+├ ○ /consent                                    181 B         112 kB
+├ ○ /contact                                    183 B         115 kB
+├ ○ /manifest.webmanifest                       138 B         103 kB
+├ ○ /privacy                                    181 B         112 kB
+├ ○ /products                                   181 B         112 kB
+├ ● /products/[slug]                            181 B         112 kB
+├   ├ /products/ai-career
+├   └ /products/automation-priorities
+├ ○ /projects                                   399 B         114 kB
+├ ● /projects/[slug]                            399 B         114 kB
+├   ├ /projects/eatlyy
+├   └ /projects/club-ops
+├ ○ /robots.txt                                 138 B         103 kB
+├ ○ /services                                   386 B         115 kB
+├ ● /services/[slug]                          1.21 kB         116 kB
+├   ├ /services/cto
+├   ├ /services/development
+├   ├ /services/support
+├   └ [+4 more paths]
+├ ○ /sitemap.xml                                138 B         103 kB
+├ ○ /solutions                                  386 B         115 kB
+├ ● /solutions/[slug]                         3.76 kB         123 kB
+├   ├ /solutions/corporate-academy
+├   ├ /solutions/employee-kpi
+├   ├ /solutions/management-analytics
+├   └ [+2 more paths]
+├ ○ /tools                                      162 B         106 kB
+├ ƒ /tools/automation-cost                      135 B         132 kB
+└ ƒ /tools/labor-cost                           135 B         132 kB
++ First Load JS shared by all                  103 kB
+  ├ chunks/255-b1e2483a7e02feee.js            46.6 kB
+  ├ chunks/4bd1b696-c023c6e3521b1417.js       54.2 kB
+  └ other shared chunks (total)               1.93 kB
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand

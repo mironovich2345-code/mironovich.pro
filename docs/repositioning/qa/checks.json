@@ -1,0 +1,1834 @@
+{
+  "mode": "local production build; synthetic forms; no external delivery",
+  "http": [
+    {
+      "path": "/",
+      "status": 200,
+      "canonical": "https://mironovich.pro",
+      "jsonLd": true
+    },
+    {
+      "path": "/solutions",
+      "status": 200,
+      "canonical": "https://mironovich.pro/solutions",
+      "jsonLd": true
+    },
+    {
+      "path": "/solutions/corporate-academy",
+      "status": 200,
+      "canonical": "https://mironovich.pro/solutions/corporate-academy",
+      "jsonLd": true
+    },
+    {
+      "path": "/solutions/employee-kpi",
+      "status": 200,
+      "canonical": "https://mironovich.pro/solutions/employee-kpi",
+      "jsonLd": true
+    },
+    {
+      "path": "/solutions/management-analytics",
+      "status": 200,
+      "canonical": "https://mironovich.pro/solutions/management-analytics",
+      "jsonLd": true
+    },
+    {
+      "path": "/solutions/branch-standards",
+      "status": 200,
+      "canonical": "https://mironovich.pro/solutions/branch-standards",
+      "jsonLd": true
+    },
+    {
+      "path": "/solutions/lead-engine",
+      "status": 200,
+      "canonical": "https://mironovich.pro/solutions/lead-engine",
+      "jsonLd": true
+    },
+    {
+      "path": "/products",
+      "status": 200,
+      "canonical": "https://mironovich.pro/products",
+      "jsonLd": true
+    },
+    {
+      "path": "/products/ai-career",
+      "status": 200,
+      "canonical": "https://mironovich.pro/products/ai-career",
+      "jsonLd": true
+    },
+    {
+      "path": "/products/automation-priorities",
+      "status": 200,
+      "canonical": "https://mironovich.pro/products/automation-priorities",
+      "jsonLd": true
+    },
+    {
+      "path": "/tools",
+      "status": 200,
+      "canonical": "https://mironovich.pro/tools",
+      "jsonLd": true
+    },
+    {
+      "path": "/tools/labor-cost",
+      "status": 200,
+      "canonical": "https://mironovich.pro/tools/labor-cost",
+      "jsonLd": true
+    },
+    {
+      "path": "/tools/automation-cost",
+      "status": 200,
+      "canonical": "https://mironovich.pro/tools/automation-cost",
+      "jsonLd": true
+    },
+    {
+      "path": "/services",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services",
+      "jsonLd": true
+    },
+    {
+      "path": "/services/cto",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services/cto",
+      "jsonLd": true
+    },
+    {
+      "path": "/services/development",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services/development",
+      "jsonLd": true
+    },
+    {
+      "path": "/services/support",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services/support",
+      "jsonLd": true
+    },
+    {
+      "path": "/services/expertise",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services/expertise",
+      "jsonLd": true
+    },
+    {
+      "path": "/services/automation",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services/automation",
+      "jsonLd": true
+    },
+    {
+      "path": "/services/apps",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services/apps",
+      "jsonLd": true
+    },
+    {
+      "path": "/services/training",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services/training",
+      "jsonLd": true
+    },
+    {
+      "path": "/projects",
+      "status": 200,
+      "canonical": "https://mironovich.pro/projects",
+      "jsonLd": true
+    },
+    {
+      "path": "/projects/eatlyy",
+      "status": 200,
+      "canonical": "https://mironovich.pro/projects/eatlyy",
+      "jsonLd": true
+    },
+    {
+      "path": "/projects/club-ops",
+      "status": 200,
+      "canonical": "https://mironovich.pro/projects/club-ops",
+      "jsonLd": true
+    },
+    {
+      "path": "/about",
+      "status": 200,
+      "canonical": "https://mironovich.pro/about",
+      "jsonLd": true
+    },
+    {
+      "path": "/contact",
+      "status": 200,
+      "canonical": "https://mironovich.pro/contact",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/category/avtomatizaciya",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/category/avtomatizaciya",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/category/razrabotka-prilozheniy",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/category/razrabotka-prilozheniy",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/category/ii-dlya-biznesa",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/category/ii-dlya-biznesa",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/category/obuchenie-sotrudnikov",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/category/obuchenie-sotrudnikov",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/skolko-stoit-ruchnaya-otchetnost",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/skolko-stoit-ruchnaya-otchetnost",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kogda-ii-biznesu-ne-nuzhen",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kogda-ii-biznesu-ne-nuzhen",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kogda-ne-nuzhno-svoe-prilozhenie",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kogda-ne-nuzhno-svoe-prilozhenie",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/integraciya-crm-tablicy-telefoniya",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/integraciya-crm-tablicy-telefoniya",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kak-proverit-smetu-razrabotchika",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kak-proverit-smetu-razrabotchika",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kak-vybrat-razrabotchika-i-prinyat-rabotu",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kak-vybrat-razrabotchika-i-prinyat-rabotu",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/razrabotchik-ushel-kak-prinyat-proekt",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/razrabotchik-ushel-kak-prinyat-proekt",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/skolko-stoit-soprovozhdenie-prilozheniya",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/skolko-stoit-soprovozhdenie-prilozheniya",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kogda-nuzhen-vneshniy-cto",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kogda-nuzhen-vneshniy-cto",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kak-izmerit-effekt-ot-vnedreniya-ii",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kak-izmerit-effekt-ot-vnedreniya-ii",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/avtomatizaciya-otdela-prodazh",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/avtomatizaciya-otdela-prodazh",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/avtomatizaciya-biznesa-bez-programmista",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/avtomatizaciya-biznesa-bez-programmista",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/razrabotka-crm-dlya-biznesa",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/razrabotka-crm-dlya-biznesa",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/lichnyy-kabinet-klienta",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/lichnyy-kabinet-klienta",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/adaptaciya-novyh-sotrudnikov-pervye-30-dney",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/adaptaciya-novyh-sotrudnikov-pervye-30-dney",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/avtomatizaciya-obucheniya-sotrudnikov",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/avtomatizaciya-obucheniya-sotrudnikov",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/crm-pod-zadachi-ili-gotovaya-sistema",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/crm-pod-zadachi-ili-gotovaya-sistema",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/ii-assistent-dlya-biznesa",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/ii-assistent-dlya-biznesa",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kakie-processy-avtomatizirovat",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kakie-processy-avtomatizirovat",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/stoimost-razrabotki-prilozheniya-dlya-biznesa",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/stoimost-razrabotki-prilozheniya-dlya-biznesa",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/stoimost-vnedreniya-ii-v-biznes",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/stoimost-vnedreniya-ii-v-biznes",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/telegram-mini-app-dlya-biznesa",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/telegram-mini-app-dlya-biznesa",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kak-postroit-sistemu-obucheniya-s-nulya",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kak-postroit-sistemu-obucheniya-s-nulya",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kak-ponyat-chto-net-sistemy-obucheniya",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kak-ponyat-chto-net-sistemy-obucheniya",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/stoimost-plohoy-adaptacii-sotrudnika",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/stoimost-plohoy-adaptacii-sotrudnika",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/pochemu-sotrudniki-posle-obucheniya-delayut-po-svoemu",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/pochemu-sotrudniki-posle-obucheniya-delayut-po-svoemu",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kompaniya-zavisit-ot-odnogo-cheloveka",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kompaniya-zavisit-ot-odnogo-cheloveka",
+      "jsonLd": true
+    },
+    {
+      "path": "/projects/corporate-learning",
+      "status": 404,
+      "privateOrUnknown": true
+    },
+    {
+      "path": "/projects/employee-kpi",
+      "status": 404,
+      "privateOrUnknown": true
+    },
+    {
+      "path": "/projects/branch-standards",
+      "status": 404,
+      "privateOrUnknown": true
+    },
+    {
+      "path": "/projects/lead-engine",
+      "status": 404,
+      "privateOrUnknown": true
+    },
+    {
+      "path": "/solutions/not-published",
+      "status": 404,
+      "privateOrUnknown": true
+    },
+    {
+      "path": "/prototype/business-map",
+      "status": 404,
+      "privateOrUnknown": true
+    },
+    {
+      "path": "/api/business-map/chat",
+      "status": 404,
+      "privateOrUnknown": true
+    },
+    {
+      "path": "/privacy",
+      "status": 200,
+      "noindex": true
+    },
+    {
+      "path": "/consent",
+      "status": 200,
+      "noindex": true
+    }
+  ],
+  "flows": [
+    {
+      "name": "Exact hero, two actions, five prices, tools separated, CTA analytics",
+      "width": 320,
+      "passed": true
+    },
+    {
+      "name": "Native other-services disclosure Enter/Space and eight working service URLs",
+      "width": 320,
+      "passed": true
+    },
+    {
+      "name": "Navigation menu, Escape, focus and route close",
+      "width": 320,
+      "passed": true
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 320,
+      "passed": true,
+      "solution": "corporate-academy"
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 320,
+      "passed": true,
+      "solution": "employee-kpi"
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 320,
+      "passed": true,
+      "solution": "management-analytics"
+    },
+    {
+      "name": "Client navigation changes the solution and resets form context",
+      "width": 320,
+      "passed": true
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 320,
+      "passed": true,
+      "solution": "branch-standards"
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 320,
+      "passed": true,
+      "solution": "lead-engine"
+    },
+    {
+      "name": "CTO 150000/30, archives, allowed cases, preparing products and tools preserved",
+      "width": 320,
+      "passed": true
+    },
+    {
+      "name": "Consent blocks POST; real local unconfigured API returns honest failure, no fake success",
+      "width": 320,
+      "passed": true
+    },
+    {
+      "name": "Exact hero, two actions, five prices, tools separated, CTA analytics",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "name": "Native other-services disclosure Enter/Space and eight working service URLs",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "name": "Navigation menu, Escape, focus and route close",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 375,
+      "passed": true,
+      "solution": "corporate-academy"
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 375,
+      "passed": true,
+      "solution": "employee-kpi"
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 375,
+      "passed": true,
+      "solution": "management-analytics"
+    },
+    {
+      "name": "Client navigation changes the solution and resets form context",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 375,
+      "passed": true,
+      "solution": "branch-standards"
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 375,
+      "passed": true,
+      "solution": "lead-engine"
+    },
+    {
+      "name": "CTO 150000/30, archives, allowed cases, preparing products and tools preserved",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "name": "Consent blocks POST; real local unconfigured API returns honest failure, no fake success",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "name": "Exact hero, two actions, five prices, tools separated, CTA analytics",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "name": "Native other-services disclosure Enter/Space and eight working service URLs",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "name": "Navigation menu, Escape, focus and route close",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 768,
+      "passed": true,
+      "solution": "corporate-academy"
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 768,
+      "passed": true,
+      "solution": "employee-kpi"
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 768,
+      "passed": true,
+      "solution": "management-analytics"
+    },
+    {
+      "name": "Client navigation changes the solution and resets form context",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 768,
+      "passed": true,
+      "solution": "branch-standards"
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 768,
+      "passed": true,
+      "solution": "lead-engine"
+    },
+    {
+      "name": "CTO 150000/30, archives, allowed cases, preparing products and tools preserved",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "name": "Consent blocks POST; real local unconfigured API returns honest failure, no fake success",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "name": "Exact hero, two actions, five prices, tools separated, CTA analytics",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "name": "Native other-services disclosure Enter/Space and eight working service URLs",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "name": "Navigation menu, Escape, focus and route close",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 1024,
+      "passed": true,
+      "solution": "corporate-academy"
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 1024,
+      "passed": true,
+      "solution": "employee-kpi"
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 1024,
+      "passed": true,
+      "solution": "management-analytics"
+    },
+    {
+      "name": "Client navigation changes the solution and resets form context",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 1024,
+      "passed": true,
+      "solution": "branch-standards"
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 1024,
+      "passed": true,
+      "solution": "lead-engine"
+    },
+    {
+      "name": "CTO 150000/30, archives, allowed cases, preparing products and tools preserved",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "name": "Consent blocks POST; real local unconfigured API returns honest failure, no fake success",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "name": "Exact hero, two actions, five prices, tools separated, CTA analytics",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "name": "Native other-services disclosure Enter/Space and eight working service URLs",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "name": "Navigation menu, Escape, focus and route close",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 1440,
+      "passed": true,
+      "solution": "corporate-academy"
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 1440,
+      "passed": true,
+      "solution": "employee-kpi"
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 1440,
+      "passed": true,
+      "solution": "management-analytics"
+    },
+    {
+      "name": "Client navigation changes the solution and resets form context",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 1440,
+      "passed": true,
+      "solution": "branch-standards"
+    },
+    {
+      "name": "Solution scope, gated case/demo, synthetic label, view/CTA events, form anchor",
+      "width": 1440,
+      "passed": true,
+      "solution": "lead-engine"
+    },
+    {
+      "name": "CTO 150000/30, archives, allowed cases, preparing products and tools preserved",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "name": "Consent blocks POST; real local unconfigured API returns honest failure, no fake success",
+      "width": 1440,
+      "passed": true
+    }
+  ],
+  "screenshots": [
+    "screenshots/320-home.png",
+    "screenshots/320-home-solutions.png",
+    "screenshots/320-other-services.png",
+    "screenshots/320-solutions.png",
+    "screenshots/320-corporate-academy.png",
+    "screenshots/320-employee-kpi.png",
+    "screenshots/320-management-analytics.png",
+    "screenshots/320-branch-standards.png",
+    "screenshots/320-lead-engine.png",
+    "screenshots/320-cto.png",
+    "screenshots/320-services.png",
+    "screenshots/320-cases.png",
+    "screenshots/320-products.png",
+    "screenshots/320-tools.png",
+    "screenshots/320-contact.png",
+    "screenshots/375-home.png",
+    "screenshots/375-home-solutions.png",
+    "screenshots/375-other-services.png",
+    "screenshots/375-solutions.png",
+    "screenshots/375-corporate-academy.png",
+    "screenshots/375-corporate-academy-synthetic.png",
+    "screenshots/375-employee-kpi.png",
+    "screenshots/375-employee-kpi-synthetic.png",
+    "screenshots/375-management-analytics.png",
+    "screenshots/375-management-analytics-synthetic.png",
+    "screenshots/375-branch-standards.png",
+    "screenshots/375-branch-standards-synthetic.png",
+    "screenshots/375-lead-engine.png",
+    "screenshots/375-lead-engine-synthetic.png",
+    "screenshots/375-cto.png",
+    "screenshots/375-cto-hours.png",
+    "screenshots/375-services.png",
+    "screenshots/375-cases.png",
+    "screenshots/375-products.png",
+    "screenshots/375-tools.png",
+    "screenshots/375-contact.png",
+    "screenshots/768-home.png",
+    "screenshots/768-home-solutions.png",
+    "screenshots/768-other-services.png",
+    "screenshots/768-solutions.png",
+    "screenshots/768-corporate-academy.png",
+    "screenshots/768-employee-kpi.png",
+    "screenshots/768-management-analytics.png",
+    "screenshots/768-branch-standards.png",
+    "screenshots/768-lead-engine.png",
+    "screenshots/768-cto.png",
+    "screenshots/768-services.png",
+    "screenshots/768-cases.png",
+    "screenshots/768-products.png",
+    "screenshots/768-tools.png",
+    "screenshots/768-contact.png",
+    "screenshots/1024-home.png",
+    "screenshots/1024-home-solutions.png",
+    "screenshots/1024-other-services.png",
+    "screenshots/1024-solutions.png",
+    "screenshots/1024-corporate-academy.png",
+    "screenshots/1024-employee-kpi.png",
+    "screenshots/1024-management-analytics.png",
+    "screenshots/1024-branch-standards.png",
+    "screenshots/1024-lead-engine.png",
+    "screenshots/1024-cto.png",
+    "screenshots/1024-services.png",
+    "screenshots/1024-cases.png",
+    "screenshots/1024-products.png",
+    "screenshots/1024-tools.png",
+    "screenshots/1024-contact.png",
+    "screenshots/1440-home.png",
+    "screenshots/1440-home-solutions.png",
+    "screenshots/1440-other-services.png",
+    "screenshots/1440-solutions.png",
+    "screenshots/1440-corporate-academy.png",
+    "screenshots/1440-corporate-academy-synthetic.png",
+    "screenshots/1440-employee-kpi.png",
+    "screenshots/1440-employee-kpi-synthetic.png",
+    "screenshots/1440-management-analytics.png",
+    "screenshots/1440-management-analytics-synthetic.png",
+    "screenshots/1440-branch-standards.png",
+    "screenshots/1440-branch-standards-synthetic.png",
+    "screenshots/1440-lead-engine.png",
+    "screenshots/1440-lead-engine-synthetic.png",
+    "screenshots/1440-cto.png",
+    "screenshots/1440-cto-hours.png",
+    "screenshots/1440-services.png",
+    "screenshots/1440-cases.png",
+    "screenshots/1440-products.png",
+    "screenshots/1440-tools.png",
+    "screenshots/1440-contact.png"
+  ],
+  "layout": [
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "home-solutions",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "other-services-open",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/corporate-academy",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy-example-0",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy-example-1",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/employee-kpi",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/management-analytics",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-example-0",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-example-1",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-example-2",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/branch-standards",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards-example-0",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards-example-1",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/lead-engine",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/services/cto",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/services",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/projects",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/products",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/tools",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/contact",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "home-solutions",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "other-services-open",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/corporate-academy",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy-example-0",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy-example-1",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/employee-kpi",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/management-analytics",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-example-0",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-example-1",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-example-2",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/branch-standards",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards-example-0",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards-example-1",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/lead-engine",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/services/cto",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/services",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/projects",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/products",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/tools",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/contact",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "home-solutions",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "other-services-open",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/corporate-academy",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy-example-0",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy-example-1",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/employee-kpi",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/management-analytics",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-example-0",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-example-1",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-example-2",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/branch-standards",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards-example-0",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards-example-1",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/lead-engine",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/services/cto",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/services",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/projects",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/products",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/tools",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/contact",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "home-solutions",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "other-services-open",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/corporate-academy",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy-example-0",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy-example-1",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/employee-kpi",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/management-analytics",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-example-0",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-example-1",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-example-2",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/branch-standards",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards-example-0",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards-example-1",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/lead-engine",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/services/cto",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/services",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/projects",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/products",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/tools",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/contact",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "home-solutions",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "other-services-open",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/corporate-academy",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy-example-0",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy-example-1",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/employee-kpi",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/management-analytics",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-example-0",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-example-1",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-example-2",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/branch-standards",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards-example-0",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards-example-1",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions/lead-engine",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/services/cto",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/services",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/projects",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/products",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/tools",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/contact",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    }
+  ],
+  "axe": [
+    {
+      "width": 320,
+      "phase": "home-hero",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "other-services-open",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "solutions",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "corporate-academy",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "employee-kpi",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "management-analytics",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "branch-standards",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "lead-engine",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "cto",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "services",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "cases",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "products",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "tools",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "contact",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "home-hero",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "other-services-open",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "solutions",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "corporate-academy",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "employee-kpi",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "management-analytics",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "branch-standards",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "lead-engine",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "cto",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "services",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "cases",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "products",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "tools",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "contact",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "home-hero",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "other-services-open",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "solutions",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "corporate-academy",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "employee-kpi",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "management-analytics",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "branch-standards",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "lead-engine",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "cto",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "services",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "cases",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "products",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "tools",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "contact",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "home-hero",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "other-services-open",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "solutions",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "corporate-academy",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "employee-kpi",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "management-analytics",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "branch-standards",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "lead-engine",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "cto",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "services",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "cases",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "products",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "tools",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "contact",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "home-hero",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "other-services-open",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "solutions",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "corporate-academy",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "employee-kpi",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "management-analytics",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "branch-standards",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "lead-engine",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "cto",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "services",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "cases",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "products",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "tools",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "contact",
+      "violations": []
+    }
+  ],
+  "javascriptErrors": [],
+  "externalRequests": 0,
+  "formSuccesses": 0,
+  "viewports": [
+    {
+      "width": 320,
+      "height": 812
+    },
+    {
+      "width": 375,
+      "height": 812
+    },
+    {
+      "width": 768,
+      "height": 1000
+    },
+    {
+      "width": 1024,
+      "height": 1000
+    },
+    {
+      "width": 1440,
+      "height": 1000
+    }
+  ],
+  "physicalPhone": "not available",
+  "axeStatus": "enabled",
+  "clientBundleDraftLeaks": 0,
+  "browserVersion": "156.0.8078.79",
+  "axeVersion": "4.14.0",
+  "passed": true
+}

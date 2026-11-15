@@ -15,12 +15,14 @@
  */
 
 import type { ServiceSlug } from "../config/services";
+import { SOLUTION_SLUGS, type SolutionSlug } from "../config/solutions";
 import { REDACTED, looksPersonal, normalizePagePath } from "./lead";
 
 export type AnalyticsEvent =
   | "tool_start" | "tool_step" | "tool_abandon" | "tool_complete" | "tool_consultation"
   | "tool_calculate"
   | "service_view"
+  | "solution_view"
   | "cta_click"
   | "form_start"
   | "lead_submit_success"
@@ -29,7 +31,8 @@ export type AnalyticsEvent =
 
 export type CtaLocation =
   | "hero" | "sticky" | "header" | "about" | "article" | "blog"
-  | "problems" | "services" | "diagnostics" | "not_found" | "service_page" | "services_index" | "projects" | "tools";
+  | "problems" | "services" | "diagnostics" | "not_found" | "service_page" | "services_index" | "projects" | "tools"
+  | "hero_solutions" | "solutions_index" | "solution_card" | "solution_page" | "cto_offer";
 
 export type ContactLocation = "footer" | "contact_page" | "form_fallback";
 
@@ -39,6 +42,7 @@ export type EventParams = {
   step?: "processes" | "employees" | "frequency" | "duration" | "schedule" | "actual_shifts" | "shift_hours" | "pay" | "obstacle" | "issue_frequency" | "consequence" | "result";
   location?: CtaLocation | ContactLocation;
   service?: ServiceSlug;
+  solution?: SolutionSlug;
   channel?: "telegram" | "instagram";
   reason?: "validation" | "network" | "delivery";
   utm_source?: string;
@@ -46,7 +50,7 @@ export type EventParams = {
   utm_campaign?: string;
 };
 
-const ALLOWED_KEYS = ["location", "service", "channel", "reason", "utm_source", "utm_medium", "utm_campaign", "tool", "step"] as const;
+const ALLOWED_KEYS = ["location", "service", "solution", "channel", "reason", "utm_source", "utm_medium", "utm_campaign", "tool", "step"] as const;
 
 /** The ID is interpolated into an inline script and the CSP, so anything malformed disables Metrica. */
 const rawMetrica = process.env.NEXT_PUBLIC_YANDEX_METRICA_ID?.trim() || "";
@@ -64,6 +68,7 @@ function clean(params: EventParams): Record<string, string> {
   const out: Record<string, string> = {};
   for (const k of ALLOWED_KEYS) {
     const raw = params[k];
+    if (k === "solution" && !SOLUTION_SLUGS.includes(raw as SolutionSlug)) continue;
     if (k === "tool" && !["labor", "automation"].includes(String(raw))) continue;
     if (k === "step" && !["processes", "employees", "frequency", "duration", "schedule", "actual_shifts", "shift_hours", "pay", "obstacle", "issue_frequency", "consequence", "result"].includes(String(raw))) continue;
     // check before tokenising: «ivan@mail.ru» would otherwise survive as «ivanmail.ru»

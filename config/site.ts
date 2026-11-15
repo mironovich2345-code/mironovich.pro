@@ -1,19 +1,22 @@
 import { contactList, contacts, sameAs } from "./contacts";
 import { services } from "./services";
+import { solutions, solutionHref } from "./solutions";
 import { toolsNavigation } from "./tools";
 import { projects } from "@/content/projects";
+import type { NavLink } from "./routes";
+export { contactHref } from "./routes";
 
 export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://mironovich.pro").replace(/\/$/, "");
 
 export const site = {
   name: "MIRONOVICH",
   url: siteUrl,
-  tagline: "Внешний CTO · Разработка · Сопровождение",
+  tagline: "Цифровые системы · Разработка · Внедрение",
   person: "Данил Миронович",
-  jobTitle: "внешний технологический директор и технический партнёр бизнеса",
-  title: "Внешний технологический директор для бизнеса — MIRONOVICH",
+  jobTitle: "разработчик цифровых систем и технический партнёр бизнеса",
+  title: "Цифровые системы для сотрудников, продаж и филиалов — MIRONOVICH.PRO",
   description:
-    "Помогаю бизнесу выбирать, внедрять и сопровождать технологии. Внешний CTO, разработка, техническое сопровождение и экспертиза. Данил Миронович.",
+    "Корпоративная академия, KPI и мотивация, управленческая аналитика, стандарты филиалов и ИИ для работы с клиентами. Разработка и внедрение. Данил Миронович.",
   // owner-confirmed, see config/contacts.ts
   instagram: contacts.instagram.href,
   telegram: contacts.telegram.href,
@@ -25,22 +28,22 @@ export const site = {
  */
 export const projectsPublished = projects.length > 0;
 
-export type NavLink = { href: string; label: string };
+export type { NavLink } from "./routes";
 
 /** Service submenu — from the shared service list. */
 export const serviceLinks: NavLink[] = services.map((s) => ({ href: s.href, label: s.label }));
+export const solutionLinks: NavLink[] = solutions.map(s => ({ href: solutionHref(s), label: s.title }));
 
 /** Top-level links after the «Услуги» group. */
 export const navLinks: NavLink[] = [
-  { href: "/products", label: "Продукты" },
-  ...(projectsPublished ? [{ href: "/projects", label: "Проекты" }] : []),
+  ...(projectsPublished ? [{ href: "/projects", label: "Кейсы" }] : []),
   ...(toolsNavigation.enabled ? [{ href: toolsNavigation.href, label: toolsNavigation.label }] : []),
+  { href: "/services/cto", label: "Внешний CTO" },
   { href: "/blog", label: "Блог" },
   { href: "/about", label: "Обо мне" },
 ];
 
 /** Where «Обсудить задачу» leads from pages without their own form section. */
-export const contactHref = "/contact";
 
 /**
  * Version appended to favicon URLs (app/layout.tsx → metadata.icons). Browsers keep

@@ -1,0 +1,36 @@
+{
+  "base": "09fc3030ca4f47a7a481fe0894dc3a1d9692177b",
+  "subject": "working tree before acceptance commit",
+  "node": "v22.23.5",
+  "startedAt": "2026-11-15T15:16:40.152Z",
+  "checks": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "durationMs": 6317
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "durationMs": 11826
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "durationMs": 45989
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "durationMs": 6120
+    }
+  ],
+  "tests": {
+    "tests": 236,
+    "pass": 236,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  }
+}

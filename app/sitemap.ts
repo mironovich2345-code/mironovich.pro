@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { products } from "@/content/products";
 import { tools } from "@/config/tools";
 import { allServices } from "@/config/services";
+import { solutions, solutionHref } from "@/config/solutions";
 import { projectsPublished, siteUrl } from "@/config/site";
 import { projectsWithCase } from "@/content/projects";
 import { MIN_POSTS_TO_INDEX_CATEGORY, categoryHref } from "@/config/blog";
@@ -15,6 +16,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     { url: siteUrl + "/", changeFrequency: "monthly", priority: 1 },
+    { url: siteUrl + "/solutions", changeFrequency: "monthly", priority: 0.9 },
+    ...solutions.map(s => ({ url: siteUrl + solutionHref(s), changeFrequency: "monthly" as const, priority: 0.9 })),
     { url: siteUrl + "/products", changeFrequency: "monthly", priority: 0.7 },
     ...products.map(p => ({ url: siteUrl + "/products/" + p.slug, changeFrequency: "monthly" as const, priority: 0.6 })),
     { url: siteUrl + "/tools", changeFrequency: "monthly", priority: 0.8 },

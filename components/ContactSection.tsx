@@ -1,14 +1,19 @@
 import LeadForm from "./LeadForm";
 import SectionLabel from "./SectionLabel";
+import type { LeadDirection } from "@/lib/lead";
 
 export default function ContactSection({
   index = "08",
-  title = "Обсудим вашу техническую задачу",
-  lead = "Нужно выбрать решение, проверить предложение или наладить сопровождение продукта? Опишите ситуацию: я изучу обращение и свяжусь, чтобы уточнить детали. Первичное обсуждение бесплатно.",
+  title = "Обсудим ваш проект",
+  lead = "Расскажите, какой процесс нужно изменить, кто будет пользоваться системой и что уже работает в компании. Я изучу задачу и свяжусь, чтобы уточнить состав первого этапа. Первичное обсуждение бесплатно.",
+  defaultDirection,
+  defaultTask,
 }: {
   index?: string;
   title?: string;
   lead?: string;
+  defaultDirection?: LeadDirection;
+  defaultTask?: string;
 }) {
   return (
     <section id="contact" className="bg-graphite px-[22px] py-16 min-[560px]:py-24">
@@ -24,7 +29,7 @@ export default function ContactSection({
           </div>
 
           <div className="relative">
-            <LeadForm />
+            <LeadForm defaultDirection={defaultDirection} defaultTask={defaultTask} />
           </div>
         </div>
       </div>

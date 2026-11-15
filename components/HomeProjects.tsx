@@ -11,7 +11,7 @@ export default function HomeProjects() {
   return (
     <section id="projects" className="bg-cream px-[22px] py-16 min-[560px]:py-24">
       <div className="mx-auto max-w-[1080px]">
-        <SectionLabel index="05" label="Продукты и проекты" note="Реализовано · В разработке · Демонстрация" tone="light" />
+        <SectionLabel index="02" label="Кейсы и проекты" note="Разрешённые материалы · готовность указана" tone="light" />
         <div className={"grid gap-8 " + (projects.length > 2 ? "min-[760px]:grid-cols-3" : "min-[760px]:grid-cols-2")}>{projects.slice(0, 3).map(p=><ProjectCard key={p.slug} project={p} compact/>)}</div>
         <Link
           href="/projects"

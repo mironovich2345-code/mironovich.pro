@@ -10,7 +10,7 @@ export default function Diagnostics() {
   return (
     <section id="diagnostics" className="bg-cream px-[22px] py-16 min-[560px]:py-24">
       <div className="mx-auto max-w-[1080px]">
-        <SectionLabel index="04" label="С чего начать" note="Без готового ТЗ" tone="light" />
+        <SectionLabel index="08" label="С чего начать" note="Без готового ТЗ" tone="light" />
 
         <div className="mb-12 grid gap-6 min-[860px]:mb-16 min-[860px]:grid-cols-[1fr_1fr] min-[860px]:items-end min-[860px]:gap-16">
           <h2 className="m-0 max-w-[16ch] text-balance font-display text-[clamp(30px,5.8vw,54px)] font-extrabold uppercase leading-[1.03] tracking-[-0.02em] text-graphite">

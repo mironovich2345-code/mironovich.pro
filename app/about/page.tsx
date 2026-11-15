@@ -9,9 +9,9 @@ import { contactHref, site, siteUrl, socialProfiles } from "@/config/site";
 import { jsonLd } from "@/lib/jsonld";
 import { breadcrumbList, pageMetadata } from "@/lib/seo";
 
-const title = "Данил Миронович — внешний технологический директор";
+const title = "Данил Миронович — разработка цифровых систем для бизнеса";
 const description =
-  "Внешний CTO и технический партнёр бизнеса. Управленческий опыт, разработка, выбор подрядчиков и сопровождение IT-продуктов.";
+  "Разрабатываю и внедряю системы обучения, KPI, аналитики и управления филиалами. Управленческий опыт, разработка и сопровождение.";
 
 export const metadata: Metadata = pageMetadata({ title, description, path: "/about", type: "profile" });
 
@@ -113,7 +113,7 @@ export default function AboutPage() {
                 Данил Миронович<span className="text-signal">.</span>
               </h1>
               <p className="m-0 max-w-[30ch] text-balance text-[clamp(18px,2.6vw,24px)] leading-[1.35] tracking-[-0.01em] text-cream/80">
-                Внешний технологический директор. Разработка и сопровождение продуктов для бизнеса.
+                Разработка и внедрение цифровых систем для сотрудников, продаж и филиалов.
               </p>
               <div className="flex flex-col gap-2.5 min-[480px]:flex-row min-[480px]:items-center min-[480px]:gap-6">
                 <CtaLink href={contactHref} location="about" className={ctaClass}>
