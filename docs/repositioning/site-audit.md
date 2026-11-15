@@ -1,0 +1,22 @@
+# Аудит перед переупаковкой
+
+15 ноября 2026. База — свежий `origin/main`, SHA `09fc3030ca4f47a7a481fe0894dc3a1d9692177b`. Новая ветка `feature/business-solutions-positioning` в отдельном worktree. Business Map AI и его ветка не используются как база и не изменяются. До начала рабочее дерево чистое. AGENTS.md в проекте и родительских каталогах нет.
+
+Прочитаны главная, Hero/Problems/Services/Scenarios/Diagnostics/HomeProjects, header/mobile menu/footer, LeadForm, реестры services/site/tools/projects/products, CTO content, API/lead/analytics/SEO/sitemap/JSON-LD, layout/local fonts, legal switches, evidence-report и правила публикации. Текущие 7 service URL и 2 калькулятора рабочие; 2 цифровых продукта готовятся. Публичны только EATLYY и CLUB OPS; корпоративный кейс draft. Live demo URL не подтверждены.
+
+| Текущий блок | Изменение | Причина | Файлы | Риск и проверка |
+|---|---|---|---|---|
+| Hero: внешний CTO + калькуляторы | Точный новый заголовок/подзаголовок, две CTA, личный бренд; инструменты ниже | За первые секунды видны конкретные системы | Hero, config/site, app/page | Длинный заголовок: пять CSS-ширин, видимость CTA |
+| Problems: управление подрядчиками | Проблемы сотрудников/данных/филиалов, ссылки на направления | Узнаваемые бизнес-задачи | Problems | Не обещать эффект без замера |
+| Services: 4 общих направления | Пять предложений с аудиторией, составом, стартовыми ценами; `/solutions` + 5 detail URL | Продуктовая ясность без второй системы портфолио | config/solutions, SolutionCard, SolutionPage, Services, app/solutions | Связь цены/границ пилота; отличать предложение от подтверждённого кейса |
+| CTO — основа сайта | Отдельный блок и прежний `/services/cto`: 150 000 ₽/месяц, до 30 часов, границы и первый месяц | Отделить управление от разработки | content/services/cto, config/services, CtoOffer | Не обещать 24/7, безлимит или гарантированную экономию |
+| Общие услуги | Native details «Другие услуги» на главной и в каталогах; все прежние URL сохранены | Не терять полезные страницы | OtherServices, services/page, Footer | Keyboard/скринридер/мобильный список, без 301 |
+| Scenarios / Diagnostics / Process | Сценарии пилота и приёмки, сохранён бесплатный разговор и отдельная платная работа | Понятный путь к заказу | Scenarios, Diagnostics, Process, ContactSection | Не выдавать план за реализованный проект |
+| 2 разрешённых проекта и 1 draft | Переиспользовать ProjectCard/HomeProjects/routes. Подготовить данные кейсов направлений в том же реестре, новые записи draft | Соблюдение ранее подтверждённых прав | content/projects, ProjectCard | Фильтр публикации, draft 404/нет в sitemap; EATLYY/CLUB OPS остаются |
+| Экономические примеры | Отдельный интерактивный учебный блок, постоянная подпись о синтетике | Показать формат измерения без ложных результатов | SyntheticExample, config/solution-examples | Ни в рекламе, ни в JSON-LD кейсов нет выдуманного результата |
+| Header / footer | Решения, кейсы, инструменты, CTO, блог, обо мне, проект; продукты и архив услуг в footer | Новая иерархия, прежние разделы доступны | config/site, SiteHeader, ServicesMenu, MobileMenu, Footer | Escape/Tab/фокус, меню на 1024, внутренние ссылки |
+| LeadForm / API | Категории пяти решений + CTO; контекст страницы и CTA. Старый набор полей/согласие сохранён | Различать входящие задачи, не расширяя ПД | lib/lead, analytics, CtaLink, ContactSection, API | Extended flag остаётся off; без согласия нет отправки, успех только по подтверждённой доставке |
+| SEO / OpenGraph | Title/description, OG-изображение в прежнем стиле, schema/breadcrumbs/sitemap новых страниц | Согласованная поисковая упаковка | lib/seo, StructuredData, sitemap, new routes, about | Сохранить старые URL; draft и закрытый Business Map не публиковать |
+| Правовые документы / калькуляторы / продукты / блог | Сохранить документы и формулы, статусы preparing и все разделы | Ограничения задания и действующего релиза | Без правок content/legal, config/legal, lib/tools | Проверка diff, существующие тесты и HTTP |
+
+Визуальная база остаётся: graphite/signal/cream/maroon, локальные Inter и Roboto Condensed, типографика, сетка, портрет. Новые зависимости/анимации/декоративные техно-иллюстрации не нужны. Реальные внешние приложения, API, права на корпоративный код и доступность отдельных демо не подтверждаются этим аудитом. Необходимые подтверждения перечисляются в case-evidence/release-checklist.

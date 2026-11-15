@@ -2,10 +2,10 @@ import Link from "next/link";
 import CtaLink from "./CtaLink";
 import MobileMenu from "./MobileMenu";
 import ServicesMenu from "./ServicesMenu";
-import { contactHref, navLinks, serviceLinks, site } from "@/config/site";
+import { contactHref, navLinks, solutionLinks, site } from "@/config/site";
 
 /**
- * Sticky editorial top bar: wordmark, «Услуги» group, page links, one CTA.
+ * Sticky editorial top bar: wordmark, «Решения» disclosure, page links, one CTA.
  * Server component; only the services disclosure and the mobile menu ship JS.
  */
 export default function SiteHeader() {
@@ -21,7 +21,7 @@ export default function SiteHeader() {
         </Link>
 
         <nav aria-label="Основная навигация" className="hidden items-center gap-4 min-[1150px]:flex">
-          <ServicesMenu links={serviceLinks} />
+          <ServicesMenu links={solutionLinks} />
           {navLinks.map((l) => (
             <Link
               key={l.href}
@@ -36,11 +36,11 @@ export default function SiteHeader() {
             location="header"
             className="inline-flex min-h-[44px] items-center bg-signal px-5 text-[13px] font-medium uppercase tracking-[0.06em] text-white transition-colors hover:bg-[#b82323]"
           >
-            Обсудить задачу
+            Обсудить проект
           </CtaLink>
         </nav>
 
-        <MobileMenu services={serviceLinks} links={navLinks} />
+        <MobileMenu services={solutionLinks} links={navLinks} />
       </div>
     </header>
   );

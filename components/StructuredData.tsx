@@ -1,12 +1,15 @@
 import { homeFaq } from "./Faq";
-import { serviceId, services } from "@/config/services";
+import { serviceId, serviceBySlug } from "@/config/services";
+import { solutions } from "@/config/solutions";
+import { solutionServiceSchema } from "@/lib/solution-schema";
+import { ctoOffer } from "@/config/commercial";
 import { site, siteUrl, socialProfiles } from "@/config/site";
 import { jsonLd } from "@/lib/jsonld";
 
 /**
- * Homepage graph: WebSite, Person, WebPage, one Service per direction and the
- * visible FAQ. Nothing here is invented: no organisation, awards, clients,
- * ratings, prices or reviews, and sameAs is emitted only for profiles set in env.
+ * Homepage graph: five offered systems, the separate CTO format and visible FAQ.
+ * Starting prices come from the owner's brief. No invented organisation, clients,
+ * ratings, reviews or client results; sameAs uses configured profiles only.
  */
 export default function StructuredData() {
   const person = { "@id": siteUrl + "/#person" };
@@ -54,7 +57,8 @@ export default function StructuredData() {
       isPartOf: { "@id": siteUrl + "/#website" },
       about: person,
     },
-    ...services.map((s) => ({
+    ...solutions.map(s => solutionServiceSchema(s, siteUrl)),
+    ...[serviceBySlug("cto")].map((s) => ({
       "@type": "Service",
       "@id": serviceId(siteUrl, s.slug),
       name: s.title,
@@ -62,6 +66,7 @@ export default function StructuredData() {
       description: s.lead + " " + s.gives,
       provider: person,
       url: siteUrl + s.href,
+      offers: { "@type": "Offer", priceSpecification: { "@type": "UnitPriceSpecification", price: ctoOffer.monthlyPrice, priceCurrency: "RUB", billingDuration: "P1M", description: `До ${ctoOffer.hours} часов в месяц; дополнительные работы отдельно.` } },
     })),
     {
       "@type": "FAQPage",

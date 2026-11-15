@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import CtaLink from "./CtaLink";
-import { contactHref, type NavLink } from "@/config/site";
+import { contactHref, type NavLink } from "@/config/routes";
 
 const FOCUSABLE = 'a[href], button:not([disabled])';
 
@@ -83,11 +83,11 @@ export default function MobileMenu({ services, links }: { services: NavLink[]; l
         >
           <nav aria-label="Основная навигация">
             <Link
-              href="/services"
+              href="/solutions"
               onClick={close}
               className="mb-1 mt-1 inline-flex min-h-[44px] items-center text-[11px] uppercase tracking-[0.22em] text-signal"
             >
-              Услуги — все направления →
+              Решения — все направления →
             </Link>
             <ul className="m-0 mb-6 flex list-none flex-col border-t border-cream/10 p-0">
               {services.map((l) => (
@@ -114,7 +114,7 @@ export default function MobileMenu({ services, links }: { services: NavLink[]; l
             onClick={close}
             className="mt-8 flex min-h-[56px] items-center justify-center bg-signal text-[15px] font-medium uppercase tracking-[0.06em] text-white"
           >
-            Обсудить задачу бесплатно
+            Обсудить проект
           </CtaLink>
         </div>,
         document.body,

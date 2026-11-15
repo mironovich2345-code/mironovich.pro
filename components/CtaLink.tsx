@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { track, type CtaLocation } from "@/lib/analytics";
+import type { SolutionSlug } from "@/config/solutions";
 
 /**
  * A link that reports which CTA was used. On-page anchors ("#contact") stay a
@@ -13,18 +14,20 @@ import { track, type CtaLocation } from "@/lib/analytics";
 export default function CtaLink({
   href,
   location,
+  solution,
   className,
   onClick,
   children,
 }: {
   href: string;
   location: CtaLocation;
+  solution?: SolutionSlug;
   className?: string;
   onClick?: () => void;
   children: ReactNode;
 }) {
   const handleClick = () => {
-    track("cta_click", { location });
+    track("cta_click", { location, solution });
     onClick?.();
   };
 

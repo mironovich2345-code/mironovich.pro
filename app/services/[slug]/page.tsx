@@ -78,6 +78,7 @@ export default async function Page({ params }: Props) {
         description: page.offer,
         url,
         provider: person,
+        ...(page.retainer ? { offers: { "@type": "Offer", url, priceSpecification: { "@type": "UnitPriceSpecification", price: page.retainer.monthlyPrice, priceCurrency: "RUB", billingDuration: "P1M", description: `До ${page.retainer.hours} часов в месяц; дополнительные работы, лицензии и подрядчики отдельно.` } } } : {}),
       },
       { "@type": "Person", "@id": siteUrl + "/#person", name: site.person, url: siteUrl + "/about" },
       { ...breadcrumbList(crumbs), "@id": url + "#breadcrumb" },

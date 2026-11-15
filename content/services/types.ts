@@ -1,4 +1,5 @@
 import type { ServiceSlug } from "@/config/services";
+import type { ctoOffer } from "@/config/commercial";
 
 export type Item = { title: string; body: string };
 
@@ -35,6 +36,7 @@ export type ServicePageContent = {
   process: { title: string; items: Item[] };
   costFactors: string[];
   engagement?: { title: string; body: string; note: string };
+  retainer?: typeof ctoOffer;
   specialisations?: ServiceSlug[];
   faq: [string, string][];
   /** Article slugs; only published ones are rendered */

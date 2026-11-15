@@ -65,7 +65,7 @@ export default async function CasePage({ params }: Props) {
         </section>
         <section className="bg-cream px-[22px] py-14 min-[560px]:py-20">
           <div className="mx-auto max-w-[780px]">
-            <ProjectCard project={{ ...p, caseStudy: undefined }} />
+            <ProjectCard project={p} showCaseLink={false} />
             <div className="mt-10 flex flex-col gap-10">
               {p.caseStudy.sections.map((s) => (
                 <section key={s.heading}>

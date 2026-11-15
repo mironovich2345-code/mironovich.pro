@@ -1,24 +1,31 @@
 import Link from "next/link";
 import Image from "next/image";
 import { serviceBySlug } from "@/config/services";
-import { PROJECT_STATUSES, type Project } from "@/content/projects";
+import { PROJECT_STATUSES, verifiedProjectDemo, type Project } from "@/content/projects";
 
 const statusClass: Record<Project["status"], string> = {
   done: "bg-signal text-white",
   in_progress: "border border-graphite text-graphite",
   demo: "border border-dashed border-graphite text-graphite",
+  awaiting_permission: "border border-graphite text-graphite",
 };
 
 /** One portfolio entry. Rows without confirmed data (tech, result, stage) are simply not rendered. */
-export default function ProjectCard({ project, compact = false }: { project: Project; compact?: boolean }) {
+export default function ProjectCard({ project, compact = false, showCaseLink = true }: { project: Project; compact?: boolean; showCaseLink?: boolean }) {
   const status = PROJECT_STATUSES.find((s) => s.value === project.status)!;
   const service = serviceBySlug(project.direction);
+  const demo = verifiedProjectDemo(project);
   const rows: [string, string | undefined][] = [
     ["Задача", project.task],
     ["Что разработано", project.built],
     ["Текущий этап", project.stage],
     ["Технологии", project.tech?.join(", ")],
     ["Результат", project.result],
+    ["Для какого бизнеса", project.caseEvidence?.audience],
+    ["Состав демонстрации", project.caseEvidence?.demoComposition],
+    ["Проверяемые показатели", project.caseEvidence?.metrics.join("; ")],
+    ["Готовность", project.caseEvidence?.readiness],
+    ["Разрешение на публикацию", project.caseEvidence?.permission],
   ];
 
   return (
@@ -50,13 +57,13 @@ export default function ProjectCard({ project, compact = false }: { project: Pro
           ))}
       </dl>
       <div className="flex flex-wrap gap-x-6 gap-y-1">
-        {project.caseStudy && (
+        {showCaseLink && project.caseStudy && (
           <Link href={"/projects/" + project.slug} className="inline-flex min-h-[44px] items-center text-[13px] uppercase tracking-[0.1em] text-maroon underline underline-offset-4 hover:text-signal">
             Подробный разбор →
           </Link>
         )}
-        {project.demoUrl && (
-          <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center text-[13px] uppercase tracking-[0.1em] text-maroon underline underline-offset-4 hover:text-signal">
+        {demo && (
+          <a href={demo} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center text-[13px] uppercase tracking-[0.1em] text-maroon underline underline-offset-4 hover:text-signal">
             Открыть демо →
           </a>
         )}

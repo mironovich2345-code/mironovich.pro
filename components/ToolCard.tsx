@@ -16,7 +16,7 @@ export default function ToolCard({ tool }: { tool: ToolDefinition }) {
       {available && <span aria-hidden="true">↗</span>}
     </div>
     <h2 className="m-0 max-w-[19ch] text-balance font-display text-[clamp(23px,2.3vw,30px)] font-extrabold uppercase leading-[1.04] tracking-[-0.01em]">{tool.title}</h2>
-    <p className="m-0 max-w-[32ch] text-pretty text-[14px] leading-[1.5] text-white/85">{tool.description}</p>
+    <p className="m-0 max-w-[32ch] text-pretty text-[14px] leading-[1.5] text-white">{tool.description}</p>
   </>;
   return available
     ? <Link href={tool.href} className={className}>{content}</Link>

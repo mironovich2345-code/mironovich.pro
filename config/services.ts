@@ -1,6 +1,6 @@
 /**
- * The service registry — one source for the homepage, /services catalogue,
- * navigation, footer and structured data. Page content lives in content/services/.
+ * Existing service-page registry. URLs stay stable; the five commercial offers
+ * live in config/solutions.ts. Detailed service content lives in content/services/.
  */
 
 export type ServiceSlug = "cto" | "development" | "support" | "expertise" | "automation" | "apps" | "training";
@@ -90,11 +90,11 @@ const legacyServices: readonly Service[] = [
   },
 ];
 
-/** Primary commercial directions. Legacy specialisations remain published below. */
+/** Service formats retained for existing URLs and references. */
 export const services: readonly Service[] = [
   {
-    slug: "cto", index: "01", label: "Внешний CTO", title: "Внешний CTO",
-    lead: "Помогаю управлять технологиями без технологического директора в штате.",
+    slug: "cto", index: "01", label: "Внешний CTO", title: "Внешний технологический директор",
+    lead: "Технологическое управление: 150 000 ₽ в месяц, до 30 часов. Стратегия, подрядчики, качество и приёмка.",
     does: ["Технологическая стратегия и приоритеты", "Оценка бюджета и рисков", "Управление разработкой и подрядчиками"],
     gives: "Понятный план действий и человек, с которым можно обсуждать технические решения на языке бизнеса.",
     href: "/services/cto", serviceType: "Внешний технологический директор",

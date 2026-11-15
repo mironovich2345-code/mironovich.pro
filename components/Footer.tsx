@@ -3,7 +3,7 @@ import FitDisplay from "./FitDisplay";
 import ConsentSettingsButton from "./ConsentSettingsButton";
 import ContactLink from "./ContactLink";
 import { contactList } from "@/config/contacts";
-import { navLinks, serviceLinks, site } from "@/config/site";
+import { navLinks, solutionLinks, site } from "@/config/site";
 import { tools } from "@/config/tools";
 
 const linkClass = "inline-flex min-h-[32px] items-center text-stone transition-colors hover:text-cream";
@@ -22,13 +22,14 @@ export default function Footer() {
             <p className="m-0 mt-2 max-w-[28ch] text-[13px] leading-[1.6] text-stone">{site.tagline}</p>
           </div>
 
-          <nav aria-label="Услуги" className="flex flex-col">
-            <p className={headClass}>Услуги</p>
+          <nav aria-label="Решения" className="flex flex-col">
+            <p className={headClass}>Решения</p>
             <ul className="m-0 flex list-none flex-col p-0 text-[14px]">
-              {serviceLinks.map((l) => (
+              {solutionLinks.map((l) => (
                 <li key={l.href}><Link href={l.href} className={linkClass}>{l.label}</Link></li>
               ))}
               <li><Link href="/services" className={linkClass}>Все услуги</Link></li>
+              <li><Link href="/services#other-services" className={linkClass}>Другие услуги</Link></li>
             </ul>
           </nav>
 
@@ -36,6 +37,8 @@ export default function Footer() {
             <p className={headClass}>Разделы</p>
             <ul className="m-0 flex list-none flex-col p-0 text-[14px]">
               <li><Link href="/" className={linkClass}>Главная</Link></li>
+              <li><Link href="/solutions" className={linkClass}>Все решения</Link></li>
+              <li><Link href="/products" className={linkClass}>Цифровые продукты</Link></li>
               {navLinks.map((l) => (
                 <li key={l.href}><Link href={l.href} className={linkClass}>{l.label}</Link></li>
               ))}

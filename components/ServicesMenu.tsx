@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import type { NavLink } from "@/config/site";
+import type { NavLink } from "@/config/routes";
 
 /** «Услуги» disclosure for the desktop header: button + list of links, no menu-role semantics. */
 export default function ServicesMenu({ links }: { links: NavLink[] }) {
@@ -49,7 +49,7 @@ export default function ServicesMenu({ links }: { links: NavLink[] }) {
         onClick={() => setOpen((v) => !v)}
         className="inline-flex min-h-[44px] items-center gap-2 text-[13.5px] uppercase tracking-[0.08em] text-stone transition-colors hover:text-cream aria-expanded:text-cream"
       >
-        Услуги
+        Решения
         <span aria-hidden className={"text-[10px] transition-transform " + (open ? "rotate-180" : "")}>▼</span>
       </button>
 
@@ -74,11 +74,11 @@ export default function ServicesMenu({ links }: { links: NavLink[] }) {
           ))}
           <li className="mt-1 border-t border-cream/10 pt-1">
             <Link
-              href="/services"
+              href="/solutions"
               onClick={() => setOpen(false)}
               className="flex min-h-[44px] items-center px-3 text-[13px] uppercase tracking-[0.08em] text-stone transition-colors hover:text-cream"
             >
-              Все услуги →
+              Все решения →
             </Link>
           </li>
         </ul>
