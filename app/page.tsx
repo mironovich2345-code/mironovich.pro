@@ -1,25 +1,24 @@
 import type { Metadata } from "next";
-import About from "@/components/About";
 import ContactSection from "@/components/ContactSection";
-import Diagnostics from "@/components/Diagnostics";
 import Faq from "@/components/Faq";
 import Hero from "@/components/Hero";
 import HomeProjects from "@/components/HomeProjects";
-import Problems from "@/components/Problems";
-import Process from "@/components/Process";
-import Scenarios from "@/components/Scenarios";
 import Services from "@/components/Services";
 import StickyCta from "@/components/StickyCta";
 import StructuredData from "@/components/StructuredData";
-import CtoOffer from "@/components/CtoOffer";
-import FreeTools from "@/components/FreeTools";
+import CtoComparison from "@/components/CtoComparison";
+import WorkApproach from "@/components/WorkApproach";
 import OtherServices from "@/components/OtherServices";
 import { projectsPublished, site } from "@/config/site";
 import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = pageMetadata({ title: site.title, description: site.description, path: "/" });
+export const metadata: Metadata = pageMetadata({
+  title: site.title,
+  description: site.description,
+  path: "/",
+});
 
-// Only approved portfolio records appear after the five commercial offers.
+// The portfolio registry remains the only source of approved public projects.
 export default function Page() {
   return (
     <>
@@ -27,16 +26,11 @@ export default function Page() {
         <Hero />
         <Services />
         {projectsPublished && <HomeProjects />}
-        <Problems />
-        <Scenarios />
-        <CtoOffer />
+        <CtoComparison />
         <OtherServices />
-        <FreeTools />
-        <Diagnostics />
-        <About index="09" />
-        <Process index="10" />
-        <Faq index="11" />
-        <ContactSection index="12" />
+        <WorkApproach />
+        <Faq index="06" />
+        <ContactSection index="07" />
       </main>
       <StickyCta />
       <StructuredData />

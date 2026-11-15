@@ -1,5 +1,8 @@
-import Link from "next/link";
+"use client";
+
+import CtaLink from "./CtaLink";
 import { additionalServices } from "@/config/commercial";
+import { track } from "@/lib/analytics";
 
 /** Native disclosure works with keyboard/screen readers and without client JavaScript. */
 export default function OtherServices() {
@@ -9,10 +12,16 @@ export default function OtherServices() {
       className="bg-cream px-[22px] py-12 min-[560px]:py-16"
     >
       <div className="mx-auto max-w-[1080px]">
-        <details className="group border-y border-graphite/20">
+        <details
+          className="group border-y border-graphite/20"
+          onToggle={(e) => {
+            if (e.currentTarget.open)
+              track("additional_services_open", { location: "other_services" });
+          }}
+        >
           <summary className="flex min-h-[80px] cursor-pointer list-none items-center justify-between gap-5 py-5 text-graphite [&::-webkit-details-marker]:hidden">
             <span className="font-display text-[clamp(28px,4vw,42px)] font-extrabold uppercase leading-tight">
-              Другие услуги
+                Другие услуги
             </span>
             <span
               aria-hidden
@@ -27,25 +36,29 @@ export default function OtherServices() {
                 key={s.title}
                 className="border-b border-graphite/15 py-6 last:border-b-0"
               >
-                <Link
+                <CtaLink
                   href={s.href}
+                  location="other_services"
+                  service={s.service}
+                  topic={s.id}
                   className="inline-flex min-h-[44px] items-center gap-3 text-[18px] font-medium text-graphite underline decoration-maroon/40 underline-offset-4 hover:text-maroon"
                 >
                   {s.title}
-                  <span aria-hidden>↗</span>
-                </Link>
+                  <span aria-hidden>→</span>
+                </CtaLink>
                 <p className="m-0 mt-2 text-[14px] leading-relaxed text-graphite/75">
                   {s.description}
                 </p>
               </li>
             ))}
           </ul>
-          <Link
+          <CtaLink
             href="/services"
+            location="other_services"
             className="my-6 inline-flex min-h-[44px] items-center text-maroon underline underline-offset-4"
           >
-            Все услуги и прежние направления →
-          </Link>
+            Посмотреть все возможности →
+          </CtaLink>
         </details>
       </div>
     </section>

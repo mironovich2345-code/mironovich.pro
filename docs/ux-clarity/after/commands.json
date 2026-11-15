@@ -1,0 +1,35 @@
+{
+  "base": "a53537b1ad26ab7764f2c0299998b008ba76dec9",
+  "branch": "feature/ux-clarity-and-conversion",
+  "node": "22.23.5",
+  "commands": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "tests": 241,
+      "passed": 241,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "mode": "local production build, no deployment"
+    }
+  ],
+  "dependenciesChanged": false,
+  "mathChanged": false,
+  "businessMapAIChanged": false,
+  "legalChanged": false,
+  "casePermissionsChanged": false,
+  "telegramDelivery": "not configured; local 503 only",
+  "productionChanged": false
+}

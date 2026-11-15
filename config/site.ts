@@ -1,6 +1,6 @@
 import { contactList, contacts, sameAs } from "./contacts";
 import { services } from "./services";
-import { solutions, solutionHref } from "./solutions";
+import { directions } from "./directions";
 import { toolsNavigation } from "./tools";
 import { projects } from "@/content/projects";
 import type { NavLink } from "./routes";
@@ -32,7 +32,7 @@ export type { NavLink } from "./routes";
 
 /** Service submenu — from the shared service list. */
 export const serviceLinks: NavLink[] = services.map((s) => ({ href: s.href, label: s.label }));
-export const solutionLinks: NavLink[] = solutions.map(s => ({ href: solutionHref(s), label: s.title }));
+export const solutionLinks: NavLink[] = directions.filter(d => d.solution).map(d => ({ href: d.href, label: d.title }));
 
 /** Top-level links after the «Услуги» group. */
 export const navLinks: NavLink[] = [

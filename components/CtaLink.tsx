@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { track, type CtaLocation } from "@/lib/analytics";
+import { track, type CtaLocation, type EventParams } from "@/lib/analytics";
 import type { SolutionSlug } from "@/config/solutions";
 
 /**
@@ -15,6 +15,10 @@ export default function CtaLink({
   href,
   location,
   solution,
+  service,
+  tool,
+  product,
+  topic,
   className,
   onClick,
   children,
@@ -22,12 +26,16 @@ export default function CtaLink({
   href: string;
   location: CtaLocation;
   solution?: SolutionSlug;
+  service?: EventParams["service"];
+  tool?: EventParams["tool"];
+  product?: EventParams["product"];
+  topic?: EventParams["topic"];
   className?: string;
   onClick?: () => void;
   children: ReactNode;
 }) {
   const handleClick = () => {
-    track("cta_click", { location, solution });
+    track("cta_click", { location, solution, service, tool, product, topic });
     onClick?.();
   };
 

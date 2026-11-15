@@ -1,0 +1,4236 @@
+{
+  "mode": "local production build; synthetic forms; no external delivery",
+  "http": [
+    {
+      "path": "/",
+      "status": 200,
+      "canonical": "https://mironovich.pro",
+      "jsonLd": true
+    },
+    {
+      "path": "/solutions",
+      "status": 200,
+      "canonical": "https://mironovich.pro/solutions",
+      "jsonLd": true
+    },
+    {
+      "path": "/solutions/corporate-academy",
+      "status": 200,
+      "canonical": "https://mironovich.pro/solutions/corporate-academy",
+      "jsonLd": true
+    },
+    {
+      "path": "/solutions/employee-kpi",
+      "status": 200,
+      "canonical": "https://mironovich.pro/solutions/employee-kpi",
+      "jsonLd": true
+    },
+    {
+      "path": "/solutions/management-analytics",
+      "status": 200,
+      "canonical": "https://mironovich.pro/solutions/management-analytics",
+      "jsonLd": true
+    },
+    {
+      "path": "/solutions/branch-standards",
+      "status": 200,
+      "canonical": "https://mironovich.pro/solutions/branch-standards",
+      "jsonLd": true
+    },
+    {
+      "path": "/solutions/lead-engine",
+      "status": 200,
+      "canonical": "https://mironovich.pro/solutions/lead-engine",
+      "jsonLd": true
+    },
+    {
+      "path": "/products",
+      "status": 200,
+      "canonical": "https://mironovich.pro/products",
+      "jsonLd": true
+    },
+    {
+      "path": "/products/ai-career",
+      "status": 200,
+      "canonical": "https://mironovich.pro/products/ai-career",
+      "jsonLd": true
+    },
+    {
+      "path": "/products/automation-priorities",
+      "status": 200,
+      "canonical": "https://mironovich.pro/products/automation-priorities",
+      "jsonLd": true
+    },
+    {
+      "path": "/tools",
+      "status": 200,
+      "canonical": "https://mironovich.pro/tools",
+      "jsonLd": true
+    },
+    {
+      "path": "/tools/labor-cost",
+      "status": 200,
+      "canonical": "https://mironovich.pro/tools/labor-cost",
+      "jsonLd": true
+    },
+    {
+      "path": "/tools/automation-cost",
+      "status": 200,
+      "canonical": "https://mironovich.pro/tools/automation-cost",
+      "jsonLd": true
+    },
+    {
+      "path": "/services",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services",
+      "jsonLd": true
+    },
+    {
+      "path": "/services/cto",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services/cto",
+      "jsonLd": true
+    },
+    {
+      "path": "/services/development",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services/development",
+      "jsonLd": true
+    },
+    {
+      "path": "/services/support",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services/support",
+      "jsonLd": true
+    },
+    {
+      "path": "/services/expertise",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services/expertise",
+      "jsonLd": true
+    },
+    {
+      "path": "/services/automation",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services/automation",
+      "jsonLd": true
+    },
+    {
+      "path": "/services/apps",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services/apps",
+      "jsonLd": true
+    },
+    {
+      "path": "/services/training",
+      "status": 200,
+      "canonical": "https://mironovich.pro/services/training",
+      "jsonLd": true
+    },
+    {
+      "path": "/projects",
+      "status": 200,
+      "canonical": "https://mironovich.pro/projects",
+      "jsonLd": true
+    },
+    {
+      "path": "/projects/eatlyy",
+      "status": 200,
+      "canonical": "https://mironovich.pro/projects/eatlyy",
+      "jsonLd": true
+    },
+    {
+      "path": "/projects/club-ops",
+      "status": 200,
+      "canonical": "https://mironovich.pro/projects/club-ops",
+      "jsonLd": true
+    },
+    {
+      "path": "/about",
+      "status": 200,
+      "canonical": "https://mironovich.pro/about",
+      "jsonLd": true
+    },
+    {
+      "path": "/contact",
+      "status": 200,
+      "canonical": "https://mironovich.pro/contact",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/category/avtomatizaciya",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/category/avtomatizaciya",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/category/razrabotka-prilozheniy",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/category/razrabotka-prilozheniy",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/category/ii-dlya-biznesa",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/category/ii-dlya-biznesa",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/category/obuchenie-sotrudnikov",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/category/obuchenie-sotrudnikov",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/skolko-stoit-ruchnaya-otchetnost",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/skolko-stoit-ruchnaya-otchetnost",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kogda-ii-biznesu-ne-nuzhen",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kogda-ii-biznesu-ne-nuzhen",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kogda-ne-nuzhno-svoe-prilozhenie",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kogda-ne-nuzhno-svoe-prilozhenie",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/integraciya-crm-tablicy-telefoniya",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/integraciya-crm-tablicy-telefoniya",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kak-proverit-smetu-razrabotchika",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kak-proverit-smetu-razrabotchika",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kak-vybrat-razrabotchika-i-prinyat-rabotu",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kak-vybrat-razrabotchika-i-prinyat-rabotu",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/razrabotchik-ushel-kak-prinyat-proekt",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/razrabotchik-ushel-kak-prinyat-proekt",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/skolko-stoit-soprovozhdenie-prilozheniya",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/skolko-stoit-soprovozhdenie-prilozheniya",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kogda-nuzhen-vneshniy-cto",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kogda-nuzhen-vneshniy-cto",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kak-izmerit-effekt-ot-vnedreniya-ii",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kak-izmerit-effekt-ot-vnedreniya-ii",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/avtomatizaciya-otdela-prodazh",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/avtomatizaciya-otdela-prodazh",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/avtomatizaciya-biznesa-bez-programmista",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/avtomatizaciya-biznesa-bez-programmista",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/razrabotka-crm-dlya-biznesa",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/razrabotka-crm-dlya-biznesa",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/lichnyy-kabinet-klienta",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/lichnyy-kabinet-klienta",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/adaptaciya-novyh-sotrudnikov-pervye-30-dney",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/adaptaciya-novyh-sotrudnikov-pervye-30-dney",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/avtomatizaciya-obucheniya-sotrudnikov",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/avtomatizaciya-obucheniya-sotrudnikov",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/crm-pod-zadachi-ili-gotovaya-sistema",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/crm-pod-zadachi-ili-gotovaya-sistema",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/ii-assistent-dlya-biznesa",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/ii-assistent-dlya-biznesa",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kakie-processy-avtomatizirovat",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kakie-processy-avtomatizirovat",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/stoimost-razrabotki-prilozheniya-dlya-biznesa",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/stoimost-razrabotki-prilozheniya-dlya-biznesa",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/stoimost-vnedreniya-ii-v-biznes",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/stoimost-vnedreniya-ii-v-biznes",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/telegram-mini-app-dlya-biznesa",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/telegram-mini-app-dlya-biznesa",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kak-postroit-sistemu-obucheniya-s-nulya",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kak-postroit-sistemu-obucheniya-s-nulya",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kak-ponyat-chto-net-sistemy-obucheniya",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kak-ponyat-chto-net-sistemy-obucheniya",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/stoimost-plohoy-adaptacii-sotrudnika",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/stoimost-plohoy-adaptacii-sotrudnika",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/pochemu-sotrudniki-posle-obucheniya-delayut-po-svoemu",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/pochemu-sotrudniki-posle-obucheniya-delayut-po-svoemu",
+      "jsonLd": true
+    },
+    {
+      "path": "/blog/kompaniya-zavisit-ot-odnogo-cheloveka",
+      "status": 200,
+      "canonical": "https://mironovich.pro/blog/kompaniya-zavisit-ot-odnogo-cheloveka",
+      "jsonLd": true
+    },
+    {
+      "path": "/projects/corporate-learning",
+      "status": 404,
+      "privateOrUnknown": true
+    },
+    {
+      "path": "/projects/employee-kpi",
+      "status": 404,
+      "privateOrUnknown": true
+    },
+    {
+      "path": "/projects/branch-standards",
+      "status": 404,
+      "privateOrUnknown": true
+    },
+    {
+      "path": "/projects/lead-engine",
+      "status": 404,
+      "privateOrUnknown": true
+    },
+    {
+      "path": "/solutions/not-published",
+      "status": 404,
+      "privateOrUnknown": true
+    },
+    {
+      "path": "/prototype/business-map",
+      "status": 404,
+      "privateOrUnknown": true
+    },
+    {
+      "path": "/api/business-map/chat",
+      "status": 404,
+      "privateOrUnknown": true
+    },
+    {
+      "path": "/privacy",
+      "status": 200,
+      "noindex": true
+    },
+    {
+      "path": "/consent",
+      "status": 200,
+      "noindex": true
+    }
+  ],
+  "flows": [
+    {
+      "name": "Six offers with original prices; source portfolio; CTO typical roles and scope",
+      "width": 320,
+      "passed": true
+    },
+    {
+      "name": "Hero primary contact and calculator entry",
+      "width": 320,
+      "passed": true
+    },
+    {
+      "name": "Owner, HR, employee and CTO journeys with distinct safe analytics",
+      "width": 320,
+      "passed": true
+    },
+    {
+      "name": "Eight links: HTTP route, topic/result, visible heading, sticky offset, form, analytics; direct and client navigation",
+      "width": 320,
+      "passed": true
+    },
+    {
+      "name": "Sixth direction CTO, all-capabilities link and legacy home anchors",
+      "width": 320,
+      "passed": true
+    },
+    {
+      "name": "Enter/Space disclosure, Escape focus restore and menu route close",
+      "width": 320,
+      "passed": true
+    },
+    {
+      "name": "Form start once, consent, no added fields, unconfigured backend honest 503, no false success/PII",
+      "width": 320,
+      "passed": true
+    },
+    {
+      "name": "Six offers with original prices; source portfolio; CTO typical roles and scope",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "name": "Hero primary contact and calculator entry",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "name": "Owner, HR, employee and CTO journeys with distinct safe analytics",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "name": "Eight links: HTTP route, topic/result, visible heading, sticky offset, form, analytics; direct and client navigation",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "name": "Sixth direction CTO, all-capabilities link and legacy home anchors",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "name": "Enter/Space disclosure, Escape focus restore and menu route close",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "name": "Form start once, consent, no added fields, unconfigured backend honest 503, no false success/PII",
+      "width": 375,
+      "passed": true
+    },
+    {
+      "name": "Six offers with original prices; source portfolio; CTO typical roles and scope",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "name": "Hero primary contact and calculator entry",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "name": "Owner, HR, employee and CTO journeys with distinct safe analytics",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "name": "Eight links: HTTP route, topic/result, visible heading, sticky offset, form, analytics; direct and client navigation",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "name": "Sixth direction CTO, all-capabilities link and legacy home anchors",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "name": "Enter/Space disclosure, Escape focus restore and menu route close",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "name": "Form start once, consent, no added fields, unconfigured backend honest 503, no false success/PII",
+      "width": 768,
+      "passed": true
+    },
+    {
+      "name": "Six offers with original prices; source portfolio; CTO typical roles and scope",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "name": "Hero primary contact and calculator entry",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "name": "Owner, HR, employee and CTO journeys with distinct safe analytics",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "name": "Eight links: HTTP route, topic/result, visible heading, sticky offset, form, analytics; direct and client navigation",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "name": "Sixth direction CTO, all-capabilities link and legacy home anchors",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "name": "Enter/Space disclosure, Escape focus restore and menu route close",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "name": "Form start once, consent, no added fields, unconfigured backend honest 503, no false success/PII",
+      "width": 1024,
+      "passed": true
+    },
+    {
+      "name": "Six offers with original prices; source portfolio; CTO typical roles and scope",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "name": "Hero primary contact and calculator entry",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "name": "Owner, HR, employee and CTO journeys with distinct safe analytics",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "name": "Eight links: HTTP route, topic/result, visible heading, sticky offset, form, analytics; direct and client navigation",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "name": "Sixth direction CTO, all-capabilities link and legacy home anchors",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "name": "Enter/Space disclosure, Escape focus restore and menu route close",
+      "width": 1440,
+      "passed": true
+    },
+    {
+      "name": "Form start once, consent, no added fields, unconfigured backend honest 503, no false success/PII",
+      "width": 1440,
+      "passed": true
+    }
+  ],
+  "screenshots": [
+    "screenshots/320-home.png",
+    "screenshots/320-services.png",
+    "screenshots/320-cases.png",
+    "screenshots/320-cto.png",
+    "screenshots/320-ai-career.png",
+    "screenshots/320-owner-offer.png",
+    "screenshots/320-owner-kpi-offer.png",
+    "screenshots/320-hr-offer.png",
+    "screenshots/320-operations-offer.png",
+    "screenshots/320-sales-offer.png",
+    "screenshots/320-cto-offer.png",
+    "screenshots/320-other-services.png",
+    "screenshots/320-contact.png",
+    "screenshots/375-home.png",
+    "screenshots/375-hero-employee.png",
+    "screenshots/375-services.png",
+    "screenshots/375-cases.png",
+    "screenshots/375-cto.png",
+    "screenshots/375-ai-career.png",
+    "screenshots/375-ai-career-cover.png",
+    "screenshots/375-owner-offer.png",
+    "screenshots/375-owner-kpi-offer.png",
+    "screenshots/375-hr-offer.png",
+    "screenshots/375-hr-synthetic.png",
+    "screenshots/375-operations-offer.png",
+    "screenshots/375-sales-offer.png",
+    "screenshots/375-cto-offer.png",
+    "screenshots/375-other-services.png",
+    "screenshots/375-topic-crm.png",
+    "screenshots/375-topic-api.png",
+    "screenshots/375-topic-ai-assistants.png",
+    "screenshots/375-topic-sales-trainers.png",
+    "screenshots/375-topic-voice-ai.png",
+    "screenshots/375-topic-custom-crm.png",
+    "screenshots/375-topic-expertise.png",
+    "screenshots/375-topic-support.png",
+    "screenshots/375-menu.png",
+    "screenshots/375-solutions.png",
+    "screenshots/375-services-catalogue.png",
+    "screenshots/375-tools.png",
+    "screenshots/375-projects.png",
+    "screenshots/375-products.png",
+    "screenshots/375-contact.png",
+    "screenshots/375-form-error.png",
+    "screenshots/768-home.png",
+    "screenshots/768-services.png",
+    "screenshots/768-cases.png",
+    "screenshots/768-cto.png",
+    "screenshots/768-ai-career.png",
+    "screenshots/768-owner-offer.png",
+    "screenshots/768-owner-kpi-offer.png",
+    "screenshots/768-hr-offer.png",
+    "screenshots/768-operations-offer.png",
+    "screenshots/768-sales-offer.png",
+    "screenshots/768-cto-offer.png",
+    "screenshots/768-other-services.png",
+    "screenshots/768-contact.png",
+    "screenshots/1024-home.png",
+    "screenshots/1024-services.png",
+    "screenshots/1024-cases.png",
+    "screenshots/1024-cto.png",
+    "screenshots/1024-ai-career.png",
+    "screenshots/1024-owner-offer.png",
+    "screenshots/1024-owner-kpi-offer.png",
+    "screenshots/1024-hr-offer.png",
+    "screenshots/1024-operations-offer.png",
+    "screenshots/1024-sales-offer.png",
+    "screenshots/1024-cto-offer.png",
+    "screenshots/1024-other-services.png",
+    "screenshots/1024-contact.png",
+    "screenshots/1440-home.png",
+    "screenshots/1440-services.png",
+    "screenshots/1440-cases.png",
+    "screenshots/1440-cto.png",
+    "screenshots/1440-ai-career.png",
+    "screenshots/1440-ai-career-cover.png",
+    "screenshots/1440-owner-offer.png",
+    "screenshots/1440-owner-kpi-offer.png",
+    "screenshots/1440-hr-offer.png",
+    "screenshots/1440-hr-synthetic.png",
+    "screenshots/1440-operations-offer.png",
+    "screenshots/1440-sales-offer.png",
+    "screenshots/1440-cto-offer.png",
+    "screenshots/1440-other-services.png",
+    "screenshots/1440-topic-crm.png",
+    "screenshots/1440-topic-api.png",
+    "screenshots/1440-topic-ai-assistants.png",
+    "screenshots/1440-topic-sales-trainers.png",
+    "screenshots/1440-topic-voice-ai.png",
+    "screenshots/1440-topic-custom-crm.png",
+    "screenshots/1440-topic-expertise.png",
+    "screenshots/1440-topic-support.png",
+    "screenshots/1440-menu.png",
+    "screenshots/1440-solutions.png",
+    "screenshots/1440-services-catalogue.png",
+    "screenshots/1440-tools.png",
+    "screenshots/1440-projects.png",
+    "screenshots/1440-products.png",
+    "screenshots/1440-contact.png"
+  ],
+  "layout": [
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "ai-career",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-synthetic-0",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-synthetic-1",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-synthetic-2",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "employee-kpi",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy-synthetic-0",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy-synthetic-1",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards-synthetic-0",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards-synthetic-1",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "lead-engine",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "cto-offer",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "crm-anchor",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/services/automation#crm",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "api-anchor",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/services/automation#api",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "ai-assistants-anchor",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/services/development#ai-assistants",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "sales-trainers-anchor",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/services/training#sales-trainers",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "voice-ai-anchor",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/services/automation#voice-ai",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "custom-crm-anchor",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/services/apps#custom-crm",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "expertise-anchor",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/services/expertise#expertise",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "support-anchor",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/services/support#support",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/#services",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/#about",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "menu-open",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "solutions",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/services",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "services-catalogue",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/tools",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "tools",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/projects",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "projects",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/products",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "products",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/contact",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "contact",
+      "width": 320,
+      "scroll": 320,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "ai-career",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-synthetic-0",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-synthetic-1",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-synthetic-2",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "employee-kpi",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy-synthetic-0",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy-synthetic-1",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards-synthetic-0",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards-synthetic-1",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "lead-engine",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "cto-offer",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "crm-anchor",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/services/automation#crm",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "api-anchor",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/services/automation#api",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "ai-assistants-anchor",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/services/development#ai-assistants",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "sales-trainers-anchor",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/services/training#sales-trainers",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "voice-ai-anchor",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/services/automation#voice-ai",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "custom-crm-anchor",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/services/apps#custom-crm",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "expertise-anchor",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/services/expertise#expertise",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "support-anchor",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/services/support#support",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/#services",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/#about",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "menu-open",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "solutions",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/services",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "services-catalogue",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/tools",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "tools",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/projects",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "projects",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/products",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "products",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/contact",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "contact",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 375,
+      "scroll": 375,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "ai-career",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-synthetic-0",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-synthetic-1",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-synthetic-2",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "employee-kpi",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy-synthetic-0",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy-synthetic-1",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards-synthetic-0",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards-synthetic-1",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "lead-engine",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "cto-offer",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "crm-anchor",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/services/automation#crm",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "api-anchor",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/services/automation#api",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "ai-assistants-anchor",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/services/development#ai-assistants",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "sales-trainers-anchor",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/services/training#sales-trainers",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "voice-ai-anchor",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/services/automation#voice-ai",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "custom-crm-anchor",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/services/apps#custom-crm",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "expertise-anchor",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/services/expertise#expertise",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "support-anchor",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/services/support#support",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/#services",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/#about",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "menu-open",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "solutions",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/services",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "services-catalogue",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/tools",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "tools",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/projects",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "projects",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/products",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "products",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/contact",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "contact",
+      "width": 768,
+      "scroll": 768,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "ai-career",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-synthetic-0",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-synthetic-1",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-synthetic-2",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "employee-kpi",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy-synthetic-0",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy-synthetic-1",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards-synthetic-0",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards-synthetic-1",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "lead-engine",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "cto-offer",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "crm-anchor",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/services/automation#crm",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "api-anchor",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/services/automation#api",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "ai-assistants-anchor",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/services/development#ai-assistants",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "sales-trainers-anchor",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/services/training#sales-trainers",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "voice-ai-anchor",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/services/automation#voice-ai",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "custom-crm-anchor",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/services/apps#custom-crm",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "expertise-anchor",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/services/expertise#expertise",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "support-anchor",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/services/support#support",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/#services",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/#about",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "menu-open",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "solutions",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/services",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "services-catalogue",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/tools",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "tools",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/projects",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "projects",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/products",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "products",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/contact",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "contact",
+      "width": 1024,
+      "scroll": 1024,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "ai-career",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-synthetic-0",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-synthetic-1",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "management-analytics-synthetic-2",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "employee-kpi",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy-synthetic-0",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "corporate-academy-synthetic-1",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards-synthetic-0",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "branch-standards-synthetic-1",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "lead-engine",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "cto-offer",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "crm-anchor",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/services/automation#crm",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "api-anchor",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/services/automation#api",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "ai-assistants-anchor",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/services/development#ai-assistants",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "sales-trainers-anchor",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/services/training#sales-trainers",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "voice-ai-anchor",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/services/automation#voice-ai",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "custom-crm-anchor",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/services/apps#custom-crm",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "expertise-anchor",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/services/expertise#expertise",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "support-anchor",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/services/support#support",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/#services",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/#about",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "menu-open",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/solutions",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "solutions",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/services",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "services-catalogue",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/tools",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "tools",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/projects",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "projects",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/products",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "products",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/contact",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "contact",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    },
+    {
+      "phase": "/",
+      "width": 1440,
+      "scroll": 1440,
+      "overflow": []
+    }
+  ],
+  "axe": [
+    {
+      "width": 320,
+      "phase": "home",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "services",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "cto",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "ai-career",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "management-analytics",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "employee-kpi",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "corporate-academy",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "branch-standards",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "lead-engine",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "cto-offer",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "other-services",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "crm-anchor",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "api-anchor",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "ai-assistants-anchor",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "sales-trainers-anchor",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "voice-ai-anchor",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "custom-crm-anchor",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "expertise-anchor",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "support-anchor",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "menu-open",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "solutions",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "services-catalogue",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "tools",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "projects",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "products",
+      "violations": []
+    },
+    {
+      "width": 320,
+      "phase": "contact",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "home",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "services",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "cto",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "ai-career",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "management-analytics",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "employee-kpi",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "corporate-academy",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "branch-standards",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "lead-engine",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "cto-offer",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "other-services",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "crm-anchor",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "api-anchor",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "ai-assistants-anchor",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "sales-trainers-anchor",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "voice-ai-anchor",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "custom-crm-anchor",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "expertise-anchor",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "support-anchor",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "menu-open",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "solutions",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "services-catalogue",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "tools",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "projects",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "products",
+      "violations": []
+    },
+    {
+      "width": 375,
+      "phase": "contact",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "home",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "services",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "cto",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "ai-career",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "management-analytics",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "employee-kpi",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "corporate-academy",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "branch-standards",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "lead-engine",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "cto-offer",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "other-services",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "crm-anchor",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "api-anchor",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "ai-assistants-anchor",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "sales-trainers-anchor",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "voice-ai-anchor",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "custom-crm-anchor",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "expertise-anchor",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "support-anchor",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "menu-open",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "solutions",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "services-catalogue",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "tools",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "projects",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "products",
+      "violations": []
+    },
+    {
+      "width": 768,
+      "phase": "contact",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "home",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "services",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "cto",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "ai-career",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "management-analytics",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "employee-kpi",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "corporate-academy",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "branch-standards",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "lead-engine",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "cto-offer",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "other-services",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "crm-anchor",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "api-anchor",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "ai-assistants-anchor",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "sales-trainers-anchor",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "voice-ai-anchor",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "custom-crm-anchor",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "expertise-anchor",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "support-anchor",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "menu-open",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "solutions",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "services-catalogue",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "tools",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "projects",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "products",
+      "violations": []
+    },
+    {
+      "width": 1024,
+      "phase": "contact",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "home",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "services",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "cto",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "ai-career",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "management-analytics",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "employee-kpi",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "corporate-academy",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "branch-standards",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "lead-engine",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "cto-offer",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "other-services",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "crm-anchor",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "api-anchor",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "ai-assistants-anchor",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "sales-trainers-anchor",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "voice-ai-anchor",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "custom-crm-anchor",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "expertise-anchor",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "support-anchor",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "menu-open",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "solutions",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "services-catalogue",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "tools",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "projects",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "products",
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "phase": "contact",
+      "violations": []
+    }
+  ],
+  "javascriptErrors": [],
+  "externalRequests": 0,
+  "formSuccesses": 0,
+  "journeys": [
+    {
+      "role": "employee",
+      "width": 320,
+      "clicksToProduct": 1,
+      "preparing": true,
+      "purchase": false
+    },
+    {
+      "role": "owner",
+      "width": 320,
+      "clicksToForm": 2,
+      "solution": "management-analytics",
+      "syntheticLabel": true
+    },
+    {
+      "role": "owner-kpi",
+      "width": 320,
+      "clicksToForm": 2,
+      "solution": "employee-kpi",
+      "syntheticLabel": true
+    },
+    {
+      "role": "hr",
+      "width": 320,
+      "clicksToForm": 2,
+      "solution": "corporate-academy",
+      "syntheticLabel": true
+    },
+    {
+      "role": "operations",
+      "width": 320,
+      "clicksToForm": 2,
+      "solution": "branch-standards",
+      "syntheticLabel": true
+    },
+    {
+      "role": "sales",
+      "width": 320,
+      "clicksToForm": 2,
+      "solution": "lead-engine",
+      "syntheticLabel": true
+    },
+    {
+      "role": "cto",
+      "width": 320,
+      "clicksToForm": 2,
+      "comparisonOnHome": true,
+      "scope": true
+    },
+    {
+      "role": "employee",
+      "width": 375,
+      "clicksToProduct": 1,
+      "preparing": true,
+      "purchase": false
+    },
+    {
+      "role": "owner",
+      "width": 375,
+      "clicksToForm": 2,
+      "solution": "management-analytics",
+      "syntheticLabel": true
+    },
+    {
+      "role": "owner-kpi",
+      "width": 375,
+      "clicksToForm": 2,
+      "solution": "employee-kpi",
+      "syntheticLabel": true
+    },
+    {
+      "role": "hr",
+      "width": 375,
+      "clicksToForm": 2,
+      "solution": "corporate-academy",
+      "syntheticLabel": true
+    },
+    {
+      "role": "operations",
+      "width": 375,
+      "clicksToForm": 2,
+      "solution": "branch-standards",
+      "syntheticLabel": true
+    },
+    {
+      "role": "sales",
+      "width": 375,
+      "clicksToForm": 2,
+      "solution": "lead-engine",
+      "syntheticLabel": true
+    },
+    {
+      "role": "cto",
+      "width": 375,
+      "clicksToForm": 2,
+      "comparisonOnHome": true,
+      "scope": true
+    },
+    {
+      "role": "employee",
+      "width": 768,
+      "clicksToProduct": 1,
+      "preparing": true,
+      "purchase": false
+    },
+    {
+      "role": "owner",
+      "width": 768,
+      "clicksToForm": 2,
+      "solution": "management-analytics",
+      "syntheticLabel": true
+    },
+    {
+      "role": "owner-kpi",
+      "width": 768,
+      "clicksToForm": 2,
+      "solution": "employee-kpi",
+      "syntheticLabel": true
+    },
+    {
+      "role": "hr",
+      "width": 768,
+      "clicksToForm": 2,
+      "solution": "corporate-academy",
+      "syntheticLabel": true
+    },
+    {
+      "role": "operations",
+      "width": 768,
+      "clicksToForm": 2,
+      "solution": "branch-standards",
+      "syntheticLabel": true
+    },
+    {
+      "role": "sales",
+      "width": 768,
+      "clicksToForm": 2,
+      "solution": "lead-engine",
+      "syntheticLabel": true
+    },
+    {
+      "role": "cto",
+      "width": 768,
+      "clicksToForm": 2,
+      "comparisonOnHome": true,
+      "scope": true
+    },
+    {
+      "role": "employee",
+      "width": 1024,
+      "clicksToProduct": 1,
+      "preparing": true,
+      "purchase": false
+    },
+    {
+      "role": "owner",
+      "width": 1024,
+      "clicksToForm": 2,
+      "solution": "management-analytics",
+      "syntheticLabel": true
+    },
+    {
+      "role": "owner-kpi",
+      "width": 1024,
+      "clicksToForm": 2,
+      "solution": "employee-kpi",
+      "syntheticLabel": true
+    },
+    {
+      "role": "hr",
+      "width": 1024,
+      "clicksToForm": 2,
+      "solution": "corporate-academy",
+      "syntheticLabel": true
+    },
+    {
+      "role": "operations",
+      "width": 1024,
+      "clicksToForm": 2,
+      "solution": "branch-standards",
+      "syntheticLabel": true
+    },
+    {
+      "role": "sales",
+      "width": 1024,
+      "clicksToForm": 2,
+      "solution": "lead-engine",
+      "syntheticLabel": true
+    },
+    {
+      "role": "cto",
+      "width": 1024,
+      "clicksToForm": 2,
+      "comparisonOnHome": true,
+      "scope": true
+    },
+    {
+      "role": "employee",
+      "width": 1440,
+      "clicksToProduct": 1,
+      "preparing": true,
+      "purchase": false
+    },
+    {
+      "role": "owner",
+      "width": 1440,
+      "clicksToForm": 2,
+      "solution": "management-analytics",
+      "syntheticLabel": true
+    },
+    {
+      "role": "owner-kpi",
+      "width": 1440,
+      "clicksToForm": 2,
+      "solution": "employee-kpi",
+      "syntheticLabel": true
+    },
+    {
+      "role": "hr",
+      "width": 1440,
+      "clicksToForm": 2,
+      "solution": "corporate-academy",
+      "syntheticLabel": true
+    },
+    {
+      "role": "operations",
+      "width": 1440,
+      "clicksToForm": 2,
+      "solution": "branch-standards",
+      "syntheticLabel": true
+    },
+    {
+      "role": "sales",
+      "width": 1440,
+      "clicksToForm": 2,
+      "solution": "lead-engine",
+      "syntheticLabel": true
+    },
+    {
+      "role": "cto",
+      "width": 1440,
+      "clicksToForm": 2,
+      "comparisonOnHome": true,
+      "scope": true
+    }
+  ],
+  "topicLinks": [
+    {
+      "width": 320,
+      "href": "/services/automation#crm",
+      "heading": "Настройка CRM",
+      "headingTop": 72.4,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 320,
+      "href": "/services/automation#api",
+      "heading": "API-интеграции",
+      "headingTop": 71.9,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 320,
+      "href": "/services/development#ai-assistants",
+      "heading": "ИИ-помощники",
+      "headingTop": 72.4,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 320,
+      "href": "/services/training#sales-trainers",
+      "heading": "ИИ-тренажёры продаж",
+      "headingTop": 71.8,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 320,
+      "href": "/services/automation#voice-ai",
+      "heading": "Голосовые ИИ-интеграции",
+      "headingTop": 72.2,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 320,
+      "href": "/services/apps#custom-crm",
+      "heading": "Специализированные CRM",
+      "headingTop": 72.4,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 320,
+      "href": "/services/expertise#expertise",
+      "heading": "Техническая экспертиза",
+      "headingTop": 72.4,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 320,
+      "href": "/services/support#support",
+      "heading": "Техническое сопровождение",
+      "headingTop": 72.2,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 375,
+      "href": "/services/automation#crm",
+      "heading": "Настройка CRM",
+      "headingTop": 71.6,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 375,
+      "href": "/services/automation#api",
+      "heading": "API-интеграции",
+      "headingTop": 72.5,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 375,
+      "href": "/services/development#ai-assistants",
+      "heading": "ИИ-помощники",
+      "headingTop": 71.6,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 375,
+      "href": "/services/training#sales-trainers",
+      "heading": "ИИ-тренажёры продаж",
+      "headingTop": 71.8,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 375,
+      "href": "/services/automation#voice-ai",
+      "heading": "Голосовые ИИ-интеграции",
+      "headingTop": 72.4,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 375,
+      "href": "/services/apps#custom-crm",
+      "heading": "Специализированные CRM",
+      "headingTop": 71.6,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 375,
+      "href": "/services/expertise#expertise",
+      "heading": "Техническая экспертиза",
+      "headingTop": 71.6,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 375,
+      "href": "/services/support#support",
+      "heading": "Техническое сопровождение",
+      "headingTop": 72.4,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 768,
+      "href": "/services/automation#crm",
+      "heading": "Настройка CRM",
+      "headingTop": 72.2,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 768,
+      "href": "/services/automation#api",
+      "heading": "API-интеграции",
+      "headingTop": 72.1,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 768,
+      "href": "/services/development#ai-assistants",
+      "heading": "ИИ-помощники",
+      "headingTop": 72.2,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 768,
+      "href": "/services/training#sales-trainers",
+      "heading": "ИИ-тренажёры продаж",
+      "headingTop": 71.6,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 768,
+      "href": "/services/automation#voice-ai",
+      "heading": "Голосовые ИИ-интеграции",
+      "headingTop": 72.0,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 768,
+      "href": "/services/apps#custom-crm",
+      "heading": "Специализированные CRM",
+      "headingTop": 71.5,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 768,
+      "href": "/services/expertise#expertise",
+      "heading": "Техническая экспертиза",
+      "headingTop": 71.5,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 768,
+      "href": "/services/support#support",
+      "heading": "Техническое сопровождение",
+      "headingTop": 72.2,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 1024,
+      "href": "/services/automation#crm",
+      "heading": "Настройка CRM",
+      "headingTop": 72.4,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 1024,
+      "href": "/services/automation#api",
+      "heading": "API-интеграции",
+      "headingTop": 71.6,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 1024,
+      "href": "/services/development#ai-assistants",
+      "heading": "ИИ-помощники",
+      "headingTop": 72.4,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 1024,
+      "href": "/services/training#sales-trainers",
+      "heading": "ИИ-тренажёры продаж",
+      "headingTop": 71.7,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 1024,
+      "href": "/services/automation#voice-ai",
+      "heading": "Голосовые ИИ-интеграции",
+      "headingTop": 71.9,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 1024,
+      "href": "/services/apps#custom-crm",
+      "heading": "Специализированные CRM",
+      "headingTop": 71.8,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 1024,
+      "href": "/services/expertise#expertise",
+      "heading": "Техническая экспертиза",
+      "headingTop": 71.8,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 1024,
+      "href": "/services/support#support",
+      "heading": "Техническое сопровождение",
+      "headingTop": 72.4,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 1440,
+      "href": "/services/automation#crm",
+      "heading": "Настройка CRM",
+      "headingTop": 71.7,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 1440,
+      "href": "/services/automation#api",
+      "heading": "API-интеграции",
+      "headingTop": 72.0,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 1440,
+      "href": "/services/development#ai-assistants",
+      "heading": "ИИ-помощники",
+      "headingTop": 71.7,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 1440,
+      "href": "/services/training#sales-trainers",
+      "heading": "ИИ-тренажёры продаж",
+      "headingTop": 71.9,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 1440,
+      "href": "/services/automation#voice-ai",
+      "heading": "Голосовые ИИ-интеграции",
+      "headingTop": 72.2,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 1440,
+      "href": "/services/apps#custom-crm",
+      "heading": "Специализированные CRM",
+      "headingTop": 72,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 1440,
+      "href": "/services/expertise#expertise",
+      "heading": "Техническая экспертиза",
+      "headingTop": 72,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    },
+    {
+      "width": 1440,
+      "href": "/services/support#support",
+      "heading": "Техническое сопровождение",
+      "headingTop": 71.7,
+      "result": true,
+      "form": true,
+      "clientNavigation": true
+    }
+  ],
+  "homeSections": [
+    {
+      "width": 320,
+      "height": 11812,
+      "sections": [
+        {
+          "id": "hero",
+          "height": 1205
+        },
+        {
+          "id": "solutions",
+          "height": 2547
+        },
+        {
+          "id": "projects",
+          "height": 1896
+        },
+        {
+          "id": "cto",
+          "height": 1474
+        },
+        {
+          "id": "other-services",
+          "height": 178
+        },
+        {
+          "id": "process",
+          "height": 1134
+        },
+        {
+          "id": "faq",
+          "height": 1154
+        },
+        {
+          "id": "contact",
+          "height": 1088
+        }
+      ]
+    },
+    {
+      "width": 375,
+      "height": 10952,
+      "sections": [
+        {
+          "id": "hero",
+          "height": 1159
+        },
+        {
+          "id": "solutions",
+          "height": 2191
+        },
+        {
+          "id": "projects",
+          "height": 1805
+        },
+        {
+          "id": "cto",
+          "height": 1397
+        },
+        {
+          "id": "other-services",
+          "height": 178
+        },
+        {
+          "id": "process",
+          "height": 1008
+        },
+        {
+          "id": "faq",
+          "height": 1016
+        },
+        {
+          "id": "contact",
+          "height": 1062
+        }
+      ]
+    },
+    {
+      "width": 768,
+      "height": 8561,
+      "sections": [
+        {
+          "id": "hero",
+          "height": 776
+        },
+        {
+          "id": "solutions",
+          "height": 1437
+        },
+        {
+          "id": "projects",
+          "height": 1184
+        },
+        {
+          "id": "cto",
+          "height": 1377
+        },
+        {
+          "id": "other-services",
+          "height": 210
+        },
+        {
+          "id": "process",
+          "height": 637
+        },
+        {
+          "id": "faq",
+          "height": 958
+        },
+        {
+          "id": "contact",
+          "height": 1129
+        }
+      ]
+    },
+    {
+      "width": 1024,
+      "height": 7826,
+      "sections": [
+        {
+          "id": "hero",
+          "height": 654
+        },
+        {
+          "id": "solutions",
+          "height": 1453
+        },
+        {
+          "id": "projects",
+          "height": 1179
+        },
+        {
+          "id": "cto",
+          "height": 1038
+        },
+        {
+          "id": "other-services",
+          "height": 221
+        },
+        {
+          "id": "process",
+          "height": 575
+        },
+        {
+          "id": "faq",
+          "height": 979
+        },
+        {
+          "id": "contact",
+          "height": 832
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 7894,
+      "sections": [
+        {
+          "id": "hero",
+          "height": 708
+        },
+        {
+          "id": "solutions",
+          "height": 1489
+        },
+        {
+          "id": "projects",
+          "height": 1179
+        },
+        {
+          "id": "cto",
+          "height": 1015
+        },
+        {
+          "id": "other-services",
+          "height": 223
+        },
+        {
+          "id": "process",
+          "height": 575
+        },
+        {
+          "id": "faq",
+          "height": 979
+        },
+        {
+          "id": "contact",
+          "height": 813
+        }
+      ]
+    }
+  ],
+  "compatibility": [
+    {
+      "width": 320,
+      "href": "/#services",
+      "visible": true
+    },
+    {
+      "width": 320,
+      "href": "/#about",
+      "visible": true
+    },
+    {
+      "width": 375,
+      "href": "/#services",
+      "visible": true
+    },
+    {
+      "width": 375,
+      "href": "/#about",
+      "visible": true
+    },
+    {
+      "width": 768,
+      "href": "/#services",
+      "visible": true
+    },
+    {
+      "width": 768,
+      "href": "/#about",
+      "visible": true
+    },
+    {
+      "width": 1024,
+      "href": "/#services",
+      "visible": true
+    },
+    {
+      "width": 1024,
+      "href": "/#about",
+      "visible": true
+    },
+    {
+      "width": 1440,
+      "href": "/#services",
+      "visible": true
+    },
+    {
+      "width": 1440,
+      "href": "/#about",
+      "visible": true
+    }
+  ],
+  "viewports": [
+    {
+      "width": 320,
+      "height": 812
+    },
+    {
+      "width": 375,
+      "height": 812
+    },
+    {
+      "width": 768,
+      "height": 1000
+    },
+    {
+      "width": 1024,
+      "height": 1000
+    },
+    {
+      "width": 1440,
+      "height": 1000
+    }
+  ],
+  "physicalPhone": "not available",
+  "axeStatus": "enabled",
+  "clientBundleDraftLeaks": 0,
+  "browserVersion": "156.0.8078.79",
+  "axeVersion": "4.14.0",
+  "passed": true
+}

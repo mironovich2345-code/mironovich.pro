@@ -33,6 +33,7 @@ export default function CtoOffer() {
           <CtaLink
             href="/services/cto"
             location="cto_offer"
+            service="cto"
             className="inline-flex min-h-[48px] items-center text-cream underline decoration-signal underline-offset-4"
           >
             Состав работы, границы и первый месяц →
