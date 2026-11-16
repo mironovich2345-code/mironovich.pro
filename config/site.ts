@@ -3,7 +3,7 @@ import { services } from "./services.ts";
 import { directions } from "./directions.ts";
 import { toolsNavigation } from "./tools.ts";
 import { projects } from "../content/projects.ts";
-import type { NavLink } from "./routes.ts";
+import type { HeaderNavGroup, NavLink } from "./routes.ts";
 export { contactHref } from "./routes.ts";
 
 export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://mironovich.pro").replace(/\/$/, "");
@@ -33,6 +33,38 @@ export type { NavLink } from "./routes.ts";
 /** Service submenu — from the shared service list. */
 export const serviceLinks: NavLink[] = services.map((s) => ({ href: s.href, label: s.label }));
 export const solutionLinks: NavLink[] = directions.filter(d => d.solution).map(d => ({ href: d.href, label: d.title }));
+
+/** Four top-bar choices: three audience menus + a single lead CTA. */
+export const headerGroups: readonly HeaderNavGroup[] = [
+  {
+    id: "business",
+    label: "Бизнесу",
+    links: [
+      { href: "/solutions", label: "Решения для бизнеса" },
+      { href: "/services", label: "Разработка и услуги" },
+      { href: "/services/cto", label: "Внешний CTO" },
+      { href: "/services/expertise", label: "Техническая экспертиза" },
+      ...(projectsPublished ? [{ href: "/projects", label: "Кейсы и демо" }] : []),
+      ...(toolsNavigation.enabled ? [{ href: toolsNavigation.href, label: "Инструменты и калькуляторы" }] : []),
+      { href: "/products/automation-priorities", label: "Продукт для руководителей" },
+    ],
+  },
+  {
+    id: "employees",
+    label: "Сотрудникам",
+    links: [
+      { href: "/products/ai-career", label: "Как стать ценнее с помощью ИИ" },
+    ],
+  },
+  {
+    id: "about",
+    label: "Обо мне",
+    links: [
+      { href: "/about", label: "Мой опыт и подход" },
+      { href: "/blog", label: "Блог и исследования" },
+    ],
+  },
+];
 
 /** Top-level links after the «Услуги» group. */
 export const navLinks: NavLink[] = [
