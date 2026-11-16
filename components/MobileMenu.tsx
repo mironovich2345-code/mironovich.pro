@@ -5,20 +5,15 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import CtaLink from "./CtaLink";
-import { contactHref, type NavLink } from "@/config/routes";
+import { contactHref, type HeaderNavGroup } from "@/config/routes";
 
 const FOCUSABLE = 'a[href], button:not([disabled])';
 
 /**
- * Full-screen menu below 860px: closes on link tap, route change and Escape,
- * keeps Tab inside while open, locks page scroll and returns focus to the toggle.
- *
- * The panel is portalled into <body>: the sticky header uses backdrop-filter,
- * which would make it the containing block of a `position: fixed` child and
- * clip the panel to the header's height. Its top edge follows the header's
- * actual bottom.
+ * Accessible full-screen menu below 1150px: same audience categories as desktop.
+ * Scrollable content, Escape to dismiss, focus trap, and scroll lock.
  */
-export default function MobileMenu({ services, links }: { services: NavLink[]; links: NavLink[] }) {
+export default function MobileMenu({ groups }: { groups: readonly HeaderNavGroup[] }) {
   const [open, setOpen] = useState(false);
   const [top, setTop] = useState(65);
   const pathname = usePathname();
@@ -30,32 +25,39 @@ export default function MobileMenu({ services, links }: { services: NavLink[]; l
   useEffect(() => {
     if (!open) return;
     const toggle = toggleRef.current;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") return setOpen(false);
-      if (e.key !== "Tab" || !panelRef.current) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") return setOpen(false);
+      if (event.key !== "Tab" || !panelRef.current) return;
       const items = [toggle, ...panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE)].filter(Boolean) as HTMLElement[];
       const first = items[0];
       const last = items[items.length - 1];
-      // The panel is portalled after the page. Bridge both directions between
-      // the toggle and its first link instead of following background DOM order.
-      if (!e.shiftKey && document.activeElement === toggle) { e.preventDefault(); items[1]?.focus(); }
-      else if (e.shiftKey && document.activeElement === items[1]) { e.preventDefault(); toggle?.focus(); }
-      else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      if (!event.shiftKey && document.activeElement === toggle) {
+        event.preventDefault();
+        items[1]?.focus();
+      } else if (event.shiftKey && document.activeElement === items[1]) {
+        event.preventDefault();
+        toggle?.focus();
+      } else if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
     window.addEventListener("keydown", onKey);
-    const prev = document.body.style.overflow;
+    const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prev;
+      document.body.style.overflow = previous;
       toggle?.focus();
     };
   }, [open]);
 
   const close = () => setOpen(false);
   const itemClass =
-    "flex min-h-[52px] items-center justify-between border-b border-cream/10 text-[16px] uppercase tracking-[0.04em] text-cream hover:text-signal";
+    "flex min-h-[48px] items-center justify-between border-b border-cream/10 text-[15px] uppercase tracking-[0.04em] text-cream hover:text-signal";
 
   return (
     <div className="min-[1150px]:hidden">
@@ -67,7 +69,7 @@ export default function MobileMenu({ services, links }: { services: NavLink[]; l
         onClick={() => {
           const header = toggleRef.current?.closest("header");
           if (header) setTop(Math.round(header.getBoundingClientRect().bottom));
-          setOpen((v) => !v);
+          setOpen((value) => !value);
         }}
         className="relative z-50 inline-flex min-h-[44px] items-center border border-cream/25 px-4 text-[13px] uppercase tracking-[0.06em] text-cream transition-colors hover:border-signal"
       >
@@ -75,46 +77,29 @@ export default function MobileMenu({ services, links }: { services: NavLink[]; l
       </button>
 
       {open && createPortal(
-        <div
-          ref={panelRef}
-          id="mobile-menu"
-          style={{ top }}
-          className="fixed inset-x-0 bottom-0 z-40 overflow-y-auto border-t border-cream/10 bg-graphite px-[22px] pb-[calc(24px+env(safe-area-inset-bottom))] pt-4"
-        >
+        <div ref={panelRef} id="mobile-menu" style={{ top }}
+          className="fixed inset-x-0 bottom-0 z-40 overflow-y-auto border-t border-cream/10 bg-graphite px-[22px] pb-[calc(24px+env(safe-area-inset-bottom))] pt-4">
           <nav aria-label="Основная навигация">
-            <Link
-              href="/solutions"
-              onClick={close}
-              className="mb-1 mt-1 inline-flex min-h-[44px] items-center text-[11px] uppercase tracking-[0.22em] text-signal"
-            >
-              Решения — все направления →
-            </Link>
-            <ul className="m-0 mb-6 flex list-none flex-col border-t border-cream/10 p-0">
-              {services.map((l) => (
-                <li key={l.href}>
-                  <Link href={l.href} onClick={close} className={itemClass}>
-                    {l.label} <span aria-hidden className="text-stone">→</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <ul className="m-0 flex list-none flex-col border-t border-cream/10 p-0">
-              {links.map((l) => (
-                <li key={l.href}>
-                  <Link href={l.href} onClick={close} className={itemClass}>
-                    {l.label} <span aria-hidden className="text-stone">→</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            {groups.map((group) => (
+              <section key={group.id} aria-labelledby={"mobile-nav-" + group.id} className="mb-5">
+                <h2 id={"mobile-nav-" + group.id} className="m-0 mb-2 text-[12px] font-medium uppercase tracking-[0.18em] text-signal">
+                  {group.label}
+                </h2>
+                <ul className="m-0 flex list-none flex-col border-t border-cream/10 p-0">
+                  {group.links.map((link) => (
+                    <li key={link.href}>
+                      <Link href={link.href} onClick={close} className={itemClass}>
+                        {link.label} <span aria-hidden className="text-stone">→</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ))}
           </nav>
-          <CtaLink
-            href={contactHref}
-            location="header"
-            onClick={close}
-            className="mt-8 flex min-h-[56px] items-center justify-center bg-signal text-[15px] font-medium uppercase tracking-[0.06em] text-white"
-          >
-            Запросить консультацию
+          <CtaLink href={contactHref} location="header" onClick={close}
+            className="mt-6 flex min-h-[56px] items-center justify-center bg-signal text-[15px] font-medium uppercase tracking-[0.06em] text-white">
+            Разбор задачи
           </CtaLink>
         </div>,
         document.body,

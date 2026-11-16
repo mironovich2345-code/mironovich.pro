@@ -7,7 +7,7 @@ import { additionalServices } from '../config/commercial.ts';
 import { allServices } from '../config/services.ts';
 import { serviceTopics } from '../content/service-topics.ts';
 import { products, productBySlug } from '../content/products.ts';
-import { navLinks } from '../config/site.ts';
+import { headerGroups } from '../config/site.ts';
 import { track, trackFormStartOnce } from '../lib/analytics.ts';
 
 test('six directions preserve offer URLs and derive pilot prices from the existing registry', () => {
@@ -61,7 +61,8 @@ test('homepage separates company and employee journeys and exposes the employee 
   assert.match(hero, /href="\/tools\/labor-cost"/);
   assert.match(hero, /href="\/products\/ai-career"/);
   assert.match(hero, /Запросить консультацию/);
-  assert.ok(navLinks.some(link => link.href === '/products/ai-career' && link.label === 'Сотрудникам'));
+  assert.ok(headerGroups.find(group => group.id === 'employees')?.links.some(link => link.href === '/products/ai-career'));
+  assert.ok(headerGroups.find(group => group.id === 'business')?.links.some(link => link.href === '/products/automation-priorities'));
 });
 
 test('new entry events carry only allowed identifiers; unknown topics and PII are dropped or redacted', () => {
