@@ -22,5 +22,7 @@ export const seller = {
   taxRegime: "Налог на профессиональный доход (НПД)",
   postalAddress: "г. Нижний Новгород, ул. Минеева, д. 25, кв. 3",
   email: "damironovich@mail.ru",
+  phone: "+7 952 754-14-98",
+  phoneHref: "tel:+79527541498",
   telegram: "https://t.me/mironovich_pro",
 } as const;
