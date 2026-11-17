@@ -67,9 +67,9 @@ test("completed draft package remains blocked from legal publication", async () 
   assert.ok(attempt.errors.some(e => /незаполненные поля/.test(e)));
   const preview = checkRelease({ env: { LEGAL_PREVIEW: "1", NEXT_PUBLIC_SITE_URL: "https://mironovich.pro" }, legal, docs });
   assert.ok(preview.errors.some(e => /LEGAL_PREVIEW/.test(e)));
-  assert.match(docs.privacy, /ru-central1/);
-  assert.match(docs.privacy, /не сообщает, что они уже подключены/);
-  assert.match(docs.privacy, /согласие само по себе не устраняет/);
+  assert.match(docs.privacy, /Railway не предоставляет регион размещения в РФ/);
+  assert.match(docs.privacy, /только синтетические/);
+  assert.match(docs.privacy, /согласие само по себе не устраняет/i);
 });
 
 test("draft consent purposes are separated from offer and optional tracking", () => {

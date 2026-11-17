@@ -48,7 +48,7 @@ function credentials(keys: SandboxKeys): string {
 function assertUUID(value: string, name: string): void {
   if (!UUID.test(value)) throw new Error("Invalid " + name + ": expected UUID");
 }
-function returnUrl(origin: string, orderId: string): string {
+function returnUrl(origin: string): string {
   const url = new URL(origin);
   const localTest = url.protocol === "http:" && url.hostname === "127.0.0.1";
   const hostedTest = url.protocol === "https:" && url.hostname === "mironovich.pro";
@@ -91,7 +91,7 @@ async function apiRequest(path: string, keys: SandboxKeys, init: RequestInit, fe
 export async function createSandboxPayment(order: SandboxOrder, keys: SandboxKeys, fetcher: Fetch = fetch) {
   assertUUID(order.orderId, "orderId");
   assertUUID(order.idempotenceKey, "idempotenceKey");
-  const url = returnUrl(order.returnOrigin, order.orderId);
+  const url = returnUrl(order.returnOrigin);
   const payload = {
     amount: { value: PRICE, currency: "RUB" },
     capture: true,
