@@ -12,6 +12,7 @@ test("checkout stays disabled during payment onboarding preparation", () => {
   assert.match(cfg, /legalApproved:\s*false/);
   assert.match(cfg, /priceRub:\s*1990/);
   assert.match(cfg, /extensionPriceRub:\s*1490/);
+  assert.match(cfg, /phoneHref:\s*"tel:\+79527541498"/);
 });
 
 test("commerce information pages and links exist", () => {
@@ -21,6 +22,9 @@ test("commerce information pages and links exist", () => {
     assert.match(read(file), /CommerceDocument/);
   }
   const footer = read("components/Footer.tsx");
+  assert.match(footer, /seller\.phoneHref/);
+  assert.match(read("app/requisites/page.tsx"), /seller\.phone/);
+  assert.match(read("app/contact/page.tsx"), /seller\.phoneHref/);
   for (const href of ["/offer/ai-career", "/delivery", "/refund", "/requisites"]) {
     assert.ok(footer.includes(href), href);
   }
