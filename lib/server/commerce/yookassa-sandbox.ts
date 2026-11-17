@@ -1,7 +1,7 @@
 /**
- * ЮKassa sandbox adapter for the *future Yandex Cloud customer app*.
+ * ЮKassa sandbox adapter for Railway-only staging with synthetic test orders.
  *
- * Not imported by any public Railway route. Not wired to checkout or access.
+ * Not imported by any public HTTP route. Not wired to checkout or access.
  * No buyer PII enters this module. Test-only credentials are injected at runtime.
  * Never grant access on redirect or notification alone. Persist an order and verify
  * payment status via GET /payments/{id} before updating the order in a transaction.
@@ -18,7 +18,7 @@ export type SandboxOrder = {
   orderId: string;
   /** Persist once with the pending order; reuse on HTTP retries. */
   idempotenceKey: string;
-  /** Future dedicated app: https://app.mironovich.pro */
+  /** Dedicated Railway-hosted sandbox origin: https://mironovich.pro */
   returnOrigin: string;
 };
 export type SandboxPayment = {
@@ -51,9 +51,9 @@ function assertUUID(value: string, name: string): void {
 function returnUrl(origin: string, orderId: string): string {
   const url = new URL(origin);
   const localTest = url.protocol === "http:" && url.hostname === "127.0.0.1";
-  const hostedTest = url.protocol === "https:" && url.hostname === "app.mironovich.pro";
+  const hostedTest = url.protocol === "https:" && url.hostname === "mironovich.pro";
   if ((!localTest && !hostedTest) || url.username || url.password || url.search || url.hash || url.pathname !== "/") {
-    throw new Error("Unsupported return origin for the dedicated account app");
+    throw new Error("Unsupported return origin for the Railway sandbox");
   }
   return new URL("/payment/result", url.origin).toString();
 }
