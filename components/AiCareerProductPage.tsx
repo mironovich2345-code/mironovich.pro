@@ -30,7 +30,7 @@ export default function AiCareerProductPage({ product }: { product: DigitalProdu
         ]} />
         <section className="mt-10 grid items-center gap-10 min-[860px]:grid-cols-2">
           <div>
-            <p className="mb-4 text-sm uppercase tracking-wider text-stone">Сотрудникам и специалистам · 16+</p>
+            <p className="mb-4 text-sm uppercase tracking-wider text-stone">Сотрудникам и специалистам · 18+</p>
             <h1 className="font-display text-[clamp(34px,5vw,62px)] font-extrabold uppercase leading-[1.04]">{product.title}</h1>
             <p className="mt-6 text-[18px] leading-relaxed text-cream/85">
               Разберите свои рабочие задачи, выясните, где ИИ действительно может помочь, и получите личный план практики на 30 дней.
