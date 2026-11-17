@@ -16,7 +16,7 @@ import { CONSENT_EVENT, analyticsAllowed, clearLegacyGaCookies, consentRequired,
  * first page view itself and PageViewTracker one hit per later App Router
  * navigation. No other analytics provider exists (GA4 removed 2026-11-01).
  */
-export default function Analytics() {
+function PublicAnalytics() {
   const [allowed, setAllowed] = useState(false);
 
   useEffect(() => {
@@ -67,4 +67,11 @@ function PageViewTracker() {
   }, [pathname]);
 
   return null;
+}
+
+/** Private synthetic workspace is never an analytics surface. Enter via a full document load. */
+export default function Analytics() {
+  const pathname = usePathname();
+  if (pathname === "/career/sandbox" || pathname === "/payment/result") return null;
+  return <PublicAnalytics />;
 }
