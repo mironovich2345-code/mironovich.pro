@@ -71,6 +71,7 @@ export default function ContactPage() {
                   Расскажите о продукте, идее или технической проблеме. Первичное обсуждение — бесплатно.
                 </p>
 
+                <div className="text-[15px] leading-[1.8] text-cream"><a className="underline underline-offset-4" href="tel:+79527541498">+7 952 754-14-98</a><span className="mx-2 text-stone">·</span><a className="underline underline-offset-4" href="mailto:damironovich@mail.ru">damironovich@mail.ru</a></div>
                 {confirmedContacts.length > 0 && (
                   <div className="hidden border-t border-cream/15 pt-6 min-[900px]:block">
                     <ContactList />
