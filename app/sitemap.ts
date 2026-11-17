@@ -23,6 +23,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: siteUrl + "/tools", changeFrequency: "monthly", priority: 0.8 },
     ...tools.filter((t) => t.status === "available").map((t) => ({ url: siteUrl + t.href, changeFrequency: "monthly" as const, priority: 0.8 })),
     { url: siteUrl + "/services", changeFrequency: "monthly", priority: 0.8 },
+    { url: siteUrl + "/service-prices", changeFrequency: "monthly", priority: 0.8 },
+    { url: siteUrl + "/service-delivery", changeFrequency: "yearly", priority: 0.3 },
+    { url: siteUrl + "/service-terms", changeFrequency: "yearly", priority: 0.3 },
+    { url: siteUrl + "/service-refunds", changeFrequency: "yearly", priority: 0.3 },
+    { url: siteUrl + "/requisites", changeFrequency: "yearly", priority: 0.3 },
     ...allServices.map((s) => ({ url: siteUrl + s.href, changeFrequency: "monthly" as const, priority: 0.9 })),
     // /projects only once it has confirmed entries — an empty portfolio is noindex
     ...(projectsPublished ? [{ url: siteUrl + "/projects", changeFrequency: "monthly" as const, priority: 0.7 }] : []),
