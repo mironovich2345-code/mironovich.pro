@@ -19,6 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         title: p.title + " — MIRONOVICH",
         description: p.problem + " Материал готовится.",
         path: "/products/" + p.slug,
+        noindex: p.status === "preparing",
         ...(p.slug === "ai-career"
           ? {
               image: {
