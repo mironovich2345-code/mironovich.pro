@@ -65,6 +65,7 @@ export default function Page() {
             >
               Выбрать задачу и посмотреть цены →
             </Link>
+            <p className="mt-5 text-sm text-stone">Все стартовые тарифы и условия заказа — <Link href="/service-prices" className="text-cream underline underline-offset-4">Услуги и цены</Link>. Способ получения результата и условия возврата — <Link href="/service-delivery" className="text-cream underline underline-offset-4">порядок оказания услуг</Link>.</p>
           </div>
         </section>
         <section className="bg-cream px-[22px] py-14">
