@@ -3,6 +3,7 @@ import FitDisplay from "./FitDisplay";
 import ConsentSettingsButton from "./ConsentSettingsButton";
 import ContactLink from "./ContactLink";
 import { contactList } from "@/config/contacts";
+import { seller } from "@/config/ai-career-commerce";
 import { navLinks, solutionLinks, site } from "@/config/site";
 import { tools } from "@/config/tools";
 
