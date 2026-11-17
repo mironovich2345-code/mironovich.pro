@@ -6,7 +6,7 @@ import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
   title: "Услуги и цены — MIRONOVICH.PRO",
-  description: "Реальные предложения: внешний CTO от 150 000 ₽ в месяц и пять направлений разработки с пилотными тарифами.",
+  description: "Реальные предложения: внешний CTO за 150 000 ₽ в месяц и пять направлений разработки с пилотными тарифами.",
   path: "/service-prices",
 });
 
@@ -16,7 +16,7 @@ export default function ServicePrices() {
         "150 000 ₽ в месяц, до 30 часов. Технологические приоритеты, оценка смет и подрядчиков, управление задачами разработки, контроль качества и приёмка.",
         "Это отдельный формат сопровождения, а не готовый цифровой товар. Срок начала, список задач и порядок коммуникаций согласовываются с заказчиком.",
       ]}] }>
-    <section className="bg-cream px-[22px] pb-20 pt-5 text-graphite">
+    <section className="mt-10 rounded-xl bg-cream px-5 py-9 text-graphite">
       <div className="mx-auto max-w-[940px]">
         <h2 className="mb-7 font-display text-3xl font-extrabold uppercase">Пилотные проекты и MVP</h2>
         <div className="grid gap-6 min-[700px]:grid-cols-2">
