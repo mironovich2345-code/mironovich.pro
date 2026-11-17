@@ -11,9 +11,21 @@ export const aiCareerCommerce = {
   retentionDaysAfterExpiry: 30,
   extensionMonths: 12,
   analysesIncluded: 1,
+  minimumBuyerAge: 18,
+  planDays: 30,
+  refundWindowDays: 7,
+  refundProcessingDays: 10,
   supportEmail: "damironovich@mail.ru",
   salesEnabled: false,
   legalApproved: false,
+} as const;
+
+/** Shared proposed terms, never a statement that checkout or hosting is live. */
+export const commerceCopy = {
+  initialPurchase: "1 990 ₽: одна диагностика, один персональный анализ, план на 30 дней, PDF и 90 дней доступа с момента фактической выдачи.",
+  refundWindow: "Полный возврат при отказе в течение семи дней, не считая дня оплаты; прохождение анализа и скачивание PDF не уменьшают сумму возврата.",
+  age: "Покупатели продукта — только совершеннолетние лица 18+.",
+  edition: "Проект к утверждению от 17 ноября 2026 года; дата начала действия не назначена.",
 } as const;
 
 export const seller = {

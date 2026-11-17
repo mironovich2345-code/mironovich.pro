@@ -17,7 +17,7 @@ import { findPlaceholders } from "./release-guard.mjs";
  */
 
 export type LegalSlug = "privacy" | "consent";
-export type LegalDoc = { slug: LegalSlug; title: string; edition: string; blocks: Block[]; placeholders: string[] };
+export type LegalDoc = { slug: LegalSlug; title: string; edition: string; draftDate?: string; blocks: Block[]; placeholders: string[] };
 export type LegalMode = "published" | "preview" | "legacy";
 
 
@@ -34,6 +34,7 @@ export function getLegalDoc(slug: LegalSlug): LegalDoc {
     slug,
     title: meta.title,
     edition: meta.edition,
+    draftDate: meta.draftDate,
     blocks: parseMarkdown(body, readImage),
     placeholders: findPlaceholders(body),
   };

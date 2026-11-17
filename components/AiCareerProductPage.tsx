@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import { aiCareerCommerce } from "@/config/ai-career-commerce";
+import { aiCareerCommerce, commerceCopy } from "@/config/ai-career-commerce";
 import type { DigitalProduct } from "@/content/products";
 
 const features = [
@@ -17,6 +17,7 @@ const legalLinks = [
   { href: "/refund", label: "Возврат средств" },
   { href: "/requisites", label: "Реквизиты и контакты" },
   { href: "/privacy", label: "Персональные данные" },
+  { href: "/consent", label: "Согласие для обращения" },
 ];
 
 export default function AiCareerProductPage({ product }: { product: DigitalProduct }) {
@@ -38,6 +39,7 @@ export default function AiCareerProductPage({ product }: { product: DigitalProdu
             <div className="mt-7 border-t border-cream/20 pt-5">
               <p className="m-0 text-4xl font-bold">{aiCareerCommerce.priceRub.toLocaleString("ru-RU")} ₽</p>
               <p className="mt-2 text-sm text-stone">Единоразовая цена при запуске · 90 дней доступа · один персональный анализ</p>
+              <p className="mt-3 text-sm leading-relaxed text-stone">{commerceCopy.initialPurchase}</p>
             </div>
             <p role="status" className="my-6 border-l-2 border-signal bg-cream/5 p-4 text-sm leading-relaxed">
               Платформа разрабатывается. Заказы и оплата пока недоступны. Эта страница описывает запланированный состав продукта, а не уже открытый доступ.

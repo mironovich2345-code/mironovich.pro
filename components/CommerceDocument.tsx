@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import { aiCareerCommerce } from "@/config/ai-career-commerce";
+import { aiCareerCommerce, commerceCopy } from "@/config/ai-career-commerce";
 
 type Section = { title: string; paragraphs: string[] };
 type Props = { title: string; lead: string; sections: Section[] };
@@ -11,6 +11,7 @@ const related = [
   { href: "/refund", label: "Возврат денежных средств" },
   { href: "/requisites", label: "Реквизиты и контакты" },
   { href: "/privacy", label: "Обработка персональных данных" },
+  { href: "/consent", label: "Согласие для обращения" },
 ];
 
 export default function CommerceDocument({ title, lead, sections }: Props) {
@@ -24,6 +25,8 @@ export default function CommerceDocument({ title, lead, sections }: Props) {
         ]} />
         <h1 className="mb-6 mt-10 font-display text-[clamp(32px,5.5vw,58px)] font-extrabold uppercase leading-tight">{title}</h1>
         <p className="max-w-[72ch] text-[17px] leading-[1.65] text-cream/85">{lead}</p>
+        <p className="mt-4 text-sm leading-relaxed text-stone">{commerceCopy.edition}</p>
+        <p className="mt-2 text-sm leading-relaxed text-cream">{commerceCopy.age}</p>
         {!aiCareerCommerce.legalApproved && (
           <p role="status" className="mt-7 border-l-2 border-signal bg-cream/5 p-4 text-sm leading-relaxed text-cream">
             Предварительные условия будущих продаж. Продукт ещё разрабатывается, оплата не подключена.
