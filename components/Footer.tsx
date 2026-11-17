@@ -38,7 +38,7 @@ export default function Footer() {
             <ul className="m-0 flex list-none flex-col p-0 text-[14px]">
               <li><Link href="/" className={linkClass}>Главная</Link></li>
               <li><Link href="/solutions" className={linkClass}>Все решения</Link></li>
-              <li><Link href="/products" className={linkClass}>Цифровые продукты</Link></li>
+              <li><Link href="/service-prices" className={linkClass}>Услуги и цены</Link></li>
               {navLinks.map((l) => (
                 <li key={l.href}><Link href={l.href} className={linkClass}>{l.label}</Link></li>
               ))}
@@ -55,6 +55,12 @@ export default function Footer() {
               {contactList.map((c) => (
                 <li key={c.channel}><ContactLink contact={c} location="footer" className={linkClass} /></li>
               ))}
+              <li><a className={linkClass} href="tel:+79527541498">+7 952 754-14-98</a></li>
+              <li><a className={linkClass} href="mailto:damironovich@mail.ru">damironovich@mail.ru</a></li>
+              <li><Link href="/service-delivery" className={linkClass}>Получение услуг</Link></li>
+              <li><Link href="/service-terms" className={linkClass}>Условия оказания услуг</Link></li>
+              <li><Link href="/service-refunds" className={linkClass}>Отказ и возврат</Link></li>
+              <li><Link href="/requisites" className={linkClass}>Реквизиты исполнителя</Link></li>
               <li><Link href="/privacy" className={linkClass}>Политика конфиденциальности</Link></li>
               <li><Link href="/consent" className={linkClass}>Согласие на обработку ПД</Link></li>
               <ConsentSettingsButton className={linkClass} />
