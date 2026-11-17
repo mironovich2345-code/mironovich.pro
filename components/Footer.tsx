@@ -55,6 +55,10 @@ export default function Footer() {
               {contactList.map((c) => (
                 <li key={c.channel}><ContactLink contact={c} location="footer" className={linkClass} /></li>
               ))}
+              <li><Link href="/offer/ai-career" className={linkClass}>Условия покупки продукта</Link></li>
+              <li><Link href="/delivery" className={linkClass}>Получение доступа</Link></li>
+              <li><Link href="/refund" className={linkClass}>Возврат денежных средств</Link></li>
+              <li><Link href="/requisites" className={linkClass}>Реквизиты продавца</Link></li>
               <li><Link href="/privacy" className={linkClass}>Политика конфиденциальности</Link></li>
               <li><Link href="/consent" className={linkClass}>Согласие на обработку ПД</Link></li>
               <ConsentSettingsButton className={linkClass} />
