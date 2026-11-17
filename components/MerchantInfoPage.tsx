@@ -9,8 +9,8 @@ export const merchantLinks = [
   { href: "/service-refunds", label: "Отказ и возврат" },
   { href: "/requisites", label: "Реквизиты и контакты" },
 ];
-export default function MerchantInfoPage({ title, lead, path, sections }: {
-  title: string; lead: string; path: string; sections: MerchantSection[];
+export default function MerchantInfoPage({ title, lead, path, sections, children }: {
+  title: string; lead: string; path: string; sections: MerchantSection[]; children?: React.ReactNode;
 }) {
   return <main id="main" className="bg-graphite px-[22px] pb-20 pt-8 text-cream">
     <div className="mx-auto max-w-[940px]">
@@ -26,6 +26,7 @@ export default function MerchantInfoPage({ title, lead, path, sections }: {
           {section.items && <ul className="mt-4 list-disc space-y-2 pl-5 text-[15px] leading-[1.7] text-cream/85">{section.items.map((item) => <li key={item}>{item}</li>)}</ul>}
         </section>)}
       </div>
+      {children}
       <nav aria-label="Документы и информация для заказчиков" className="mt-14 border-t border-cream/25 pt-7">
         <h2 className="mb-4 text-lg font-semibold">Для заказчиков</h2>
         <ul className="flex flex-wrap gap-x-6 gap-y-3 text-sm">{merchantLinks.map(l=><li key={l.href}><Link href={l.href} className="underline underline-offset-4 hover:text-signal">{l.label}</Link></li>)}</ul>
