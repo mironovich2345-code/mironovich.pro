@@ -42,3 +42,43 @@ test("existing personal data publication is unchanged", () => {
   const guard = read("config/legal.json");
   assert.match(guard, /"published": false/);
 });
+
+test("one canonical offer is shared by commerce pages and product, including buyer age", async () => {
+  const { aiCareerCommerce: c, commerceCopy } = await import("../config/ai-career-commerce.ts");
+  const { productBySlug } = await import("../content/products.ts");
+  assert.equal(c.priceRub, 1990);
+  assert.equal(c.minimumBuyerAge, 18);
+  assert.equal(c.analysesIncluded, 1);
+  assert.equal(c.planDays, 30);
+  assert.equal(c.accessDays, 90);
+  assert.equal(c.refundWindowDays, 7);
+  assert.equal(productBySlug("ai-career").plannedPrice, c.priceRub);
+  for (const part of ["1 990 ₽", "один персональный анализ", "30 дней", "PDF", "90 дней"]) assert.ok(commerceCopy.initialPurchase.includes(part), part);
+  for (const file of ["app/offer/ai-career/page.tsx", "app/delivery/page.tsx", "app/refund/page.tsx", "app/requisites/page.tsx", "components/AiCareerProductPage.tsx"]) assert.ok(read(file).includes("commerceCopy.initialPurchase"), file);
+  assert.match(read("components/CommerceDocument.tsx"), /commerceCopy\.age/);
+});
+
+test("completed draft package remains blocked from legal publication", async () => {
+  const { checkRelease } = await import("../lib/release-guard.mjs");
+  const legal = JSON.parse(read("config/legal.json"));
+  const docs = { privacy: read("content/legal/privacy.md"), consent: read("content/legal/consent.md") };
+  assert.equal(legal.published, false);
+  const attempt = checkRelease({ env: { NEXT_PUBLIC_SITE_URL: "https://mironovich.pro" }, legal: { ...legal, published: true }, docs });
+  assert.ok(attempt.errors.some(e => /незаполненные поля/.test(e)));
+  const preview = checkRelease({ env: { LEGAL_PREVIEW: "1", NEXT_PUBLIC_SITE_URL: "https://mironovich.pro" }, legal, docs });
+  assert.ok(preview.errors.some(e => /LEGAL_PREVIEW/.test(e)));
+  assert.match(docs.privacy, /ru-central1/);
+  assert.match(docs.privacy, /не сообщает, что они уже подключены/);
+  assert.match(docs.privacy, /согласие само по себе не устраняет/);
+});
+
+test("draft consent purposes are separated from offer and optional tracking", () => {
+  const consent = read("docs/commerce/ai-career-consents-approval-draft.md");
+  assert.match(consent, /Мне исполнилось 18 лет/);
+  assert.match(consent, /Данные диагностики/);
+  assert.match(consent, /Необязательная аналитика/);
+  assert.match(consent, /Маркетинговое согласие не добавляется/);
+  assert.match(consent, /Существующий обязательный consent-gate Метрики сохраняется/);
+  const related = read("components/CommerceDocument.tsx");
+  for (const href of ["/privacy", "/consent", "/offer/ai-career", "/refund", "/delivery", "/requisites"]) assert.ok(related.includes(href), href);
+});
