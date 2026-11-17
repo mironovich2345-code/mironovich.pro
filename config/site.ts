@@ -36,7 +36,7 @@ export const solutionLinks: NavLink[] = directions.filter(d => d.solution).map(d
 
 /** Top-level links after the «Услуги» group. */
 export const navLinks: NavLink[] = [
-  { href: "/products/ai-career", label: "Сотрудникам" },
+  // Digital products still preparing: do not put them in the merchant-review primary navigation.
   ...(projectsPublished ? [{ href: "/projects", label: "Кейсы" }] : []),
   ...(toolsNavigation.enabled ? [{ href: toolsNavigation.href, label: toolsNavigation.label }] : []),
   { href: "/services/cto", label: "Внешний CTO" },
