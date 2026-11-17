@@ -56,6 +56,7 @@ export default function Footer() {
               {contactList.map((c) => (
                 <li key={c.channel}><ContactLink contact={c} location="footer" className={linkClass} /></li>
               ))}
+              <li><a href={seller.phoneHref} className={linkClass} aria-label={"Телефон для покупателей " + seller.phone}>{seller.phone}</a></li>
               <li><Link href="/offer/ai-career" className={linkClass}>Условия покупки продукта</Link></li>
               <li><Link href="/delivery" className={linkClass}>Получение доступа</Link></li>
               <li><Link href="/refund" className={linkClass}>Возврат денежных средств</Link></li>
