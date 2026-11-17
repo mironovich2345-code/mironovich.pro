@@ -11,12 +11,11 @@ export const metadata: Metadata = pageMetadata({
 });
 
 export default function ServicePrices() {
-  return <>
-    <MerchantInfoPage path="/service-prices" title="Услуги и цены" lead="Работаю с компаниями над разработкой приложений, управленческими системами и техническими решениями. Ниже — реальные направления, доступные для обсуждения и заказа, и открытые стартовые тарифы. Итоговая цена, объём и срок закрепляются письменно до оплаты."
+  return <MerchantInfoPage path="/service-prices" title="Услуги и цены" lead="Работаю с компаниями над разработкой приложений, управленческими системами и техническими решениями. Ниже — реальные направления, доступные для обсуждения и заказа, и открытые стартовые тарифы. Итоговая цена, объём и срок закрепляются письменно до оплаты."
       sections={[{heading:"Внешний технологический директор",paragraphs:[
         "150 000 ₽ в месяц, до 30 часов. Технологические приоритеты, оценка смет и подрядчиков, управление задачами разработки, контроль качества и приёмка.",
         "Это отдельный формат сопровождения, а не готовый цифровой товар. Срок начала, список задач и порядок коммуникаций согласовываются с заказчиком.",
-      ]}]}/>
+      ]}] }>
     <section className="bg-cream px-[22px] pb-20 pt-5 text-graphite">
       <div className="mx-auto max-w-[940px]">
         <h2 className="mb-7 font-display text-3xl font-extrabold uppercase">Пилотные проекты и MVP</h2>
@@ -33,5 +32,5 @@ export default function ServicePrices() {
         <Link href="/contact" className="mt-6 inline-flex min-h-[48px] items-center bg-signal px-6 text-sm font-semibold text-white">Обсудить задачу бесплатно</Link>
       </div>
     </section>
-  </>;
+  </MerchantInfoPage>;
 }
