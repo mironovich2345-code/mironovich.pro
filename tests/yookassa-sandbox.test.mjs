@@ -4,7 +4,7 @@ import { randomUUID } from "node:crypto";
 import {createSandboxPayment, verifySandboxPayment} from "../lib/server/commerce/yookassa-sandbox.ts";
 
 const keys = {shopId:"1534248",secretKey:"test_" + "a".repeat(35)};
-const order = () => ({orderId:randomUUID(),idempotenceKey:randomUUID(),returnOrigin:"https://app.mironovich.pro/"});
+const order = () => ({orderId:randomUUID(),idempotenceKey:randomUUID(),returnOrigin:"https://mironovich.pro/"});
 const provider = (o, extra={}) => ({
   id:randomUUID(),status:"pending",paid:false,test:true,
   amount:{value:"1990.00",currency:"RUB"},
@@ -27,7 +27,7 @@ test("creates test payment at fixed RUB 1990 without PII and returns redirect", 
     assert.equal(payload.amount.value,"1990.00");
     assert.equal(payload.amount.currency,"RUB");
     assert.deepEqual(payload.metadata,{order_id:o.orderId});
-    assert.equal(payload.confirmation.return_url,"https://app.mironovich.pro/payment/result");
+    assert.equal(payload.confirmation.return_url,"https://mironovich.pro/payment/result");
     assert.equal(JSON.stringify(payload).includes("@"),false);
   }));
   assert.equal(result.sandbox,true);
