@@ -22,7 +22,8 @@ test("prelaunch documents are explicitly not an offer for available checkout", (
   assert.match(commerce, /salesEnabled: false/);
   assert.match(commerce, /legalApproved: false/);
   const legal = JSON.parse(read("config/legal.json"));
-  assert.equal(legal.published, false, "unfinished privacy and consent must remain unpublished");
+  assert.equal(legal.published, true, "current Railway privacy and contact-form consent are published independently of commerce approval");
+  assert.equal(legal.edition, "2026-11-18");
 });
 
 test("published pages have no legal placeholders or live payment links", () => {
