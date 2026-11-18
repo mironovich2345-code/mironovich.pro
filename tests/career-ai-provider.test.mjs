@@ -82,6 +82,9 @@ test("restricted or unapproved scenario remains deterministic even in AI pilot",
     { dataSensitivity: "restricted" },
     { accessRules: "ask_first" },
     { accessRules: "forbidden" },
+    { errorImpact: "high" },
+    { reviewTime: "none" },
+    { decisionAuthority: "regulated" },
   ]) {
     const a = syntheticAnswers();
     Object.assign(a.questions, patch);
