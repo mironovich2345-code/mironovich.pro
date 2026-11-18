@@ -236,11 +236,11 @@ try {
   assert.equal(pdf.status(), 200);
   assert.match((await pdf.body()).subarray(0, 8).toString(), /^%PDF-/);
   assert.equal(pdf.headers()["cache-control"], "private, no-store");
-  await a.page.getByLabel(/^День 1\./).check();
+  await a.page.getByLabel(/^Шаг 1\./).check();
   await a.page
     .getByRole("button", { name: "Обновить кабинет", exact: true })
     .click();
-  assert(await a.page.getByLabel(/^День 1\./).isChecked());
+  assert(await a.page.getByLabel(/^Шаг 1\./).isChecked());
   const first = await (
     await a.context.request.get("/api/career/session")
   ).json();
@@ -254,7 +254,7 @@ try {
   assert.equal(second.orders.length, 0);
   assert.equal(second.active, false);
   pass(
-    "18-question diagnostic, single report, real PDF download, 30-day progress and visitor isolation",
+    "18-question diagnostic, single report, real PDF download, 30-step progress and visitor isolation",
   );
   await a.page
     .getByRole("button", {
