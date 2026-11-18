@@ -43,11 +43,6 @@ export default function AiCareerProductPage({ product }: { product: DigitalProdu
             <p className="mt-6 text-[18px] leading-relaxed text-cream/85">
               Разберите свои рабочие задачи, выясните, где ИИ действительно поможет, и получите персональный план из 30 последовательных шагов.
             </p>
-            <div className="mt-7 border-t border-cream/20 pt-5">
-              <p className="m-0 text-4xl font-bold">{aiCareerCommerce.priceRub.toLocaleString("ru-RU")} ₽</p>
-              <p className="mt-2 text-sm text-stone">Единоразовая цена при запуске · 90 дней доступа · один персональный анализ</p>
-              <p className="mt-3 text-sm leading-relaxed text-stone">{commerceCopy.initialPurchase}</p>
-            </div>
             <p role="status" className="my-6 border-l-2 border-signal bg-cream/5 p-4 text-sm leading-relaxed">
               Платформа разрабатывается. Заказы и оплата пока недоступны. Эта страница описывает запланированный состав продукта, а не уже открытый доступ.
             </p>
@@ -96,6 +91,21 @@ export default function AiCareerProductPage({ product }: { product: DigitalProdu
             ))}
           </ol>
           <p className="mt-5 text-sm leading-relaxed text-stone">Рекомендации не гарантируют сохранение работы, повышение зарплаты или конкретную экономию времени.</p>
+        </section>
+        <section className="mt-16 border-t border-cream/25 pt-10" aria-labelledby="ai-career-price-heading">
+          <div className="grid gap-6 border-l-2 border-signal bg-cream/[0.035] p-6 min-[700px]:grid-cols-[minmax(0,1fr)_auto] min-[700px]:items-center min-[700px]:p-8">
+            <div>
+              <p className="m-0 text-xs font-semibold uppercase tracking-[0.14em] text-signal">Планируемая цена при запуске</p>
+              <h2 id="ai-career-price-heading" className="mt-3 font-display text-[clamp(25px,4vw,35px)] font-extrabold uppercase leading-[1.1]">Стоимость программы</h2>
+              <p className="mt-3 max-w-[65ch] text-[14px] leading-relaxed text-stone">{commerceCopy.initialPurchase}</p>
+              <p className="mt-2 max-w-[65ch] text-xs leading-relaxed text-stone">Продукт ещё не продавался. Зачёркнутая сумма — плановая стандартная цена, а не цена состоявшихся продаж.</p>
+            </div>
+            <div className="min-w-[170px]">
+              <del className="block text-[21px] text-stone">{aiCareerCommerce.referencePriceRub.toLocaleString("ru-RU")} ₽</del>
+              <strong className="mt-1 block font-display text-[clamp(34px,4vw,46px)] leading-none text-cream">{aiCareerCommerce.priceRub.toLocaleString("ru-RU")} ₽</strong>
+              <span className="mt-3 block text-[13px] text-cream/70">90 дней доступа · один персональный анализ</span>
+            </div>
+          </div>
         </section>
         <section className="mt-16 grid gap-6 border-t border-cream/25 pt-8 min-[700px]:grid-cols-2">
           <div>
