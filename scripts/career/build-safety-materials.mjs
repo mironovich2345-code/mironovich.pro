@@ -273,7 +273,7 @@ function tocHtml(headings, pages) {
   return `<section class="toc"><h2 id="toc">Содержание</h2><ol>${items.join("")}</ol></section>`;
 }
 
-function documentHtml(parts, format, pages) {
+export function documentHtml(parts, format, pages) {
   // parts: [{meta, body}] — first part supplies the cover
   const headings = [];
   const bodies = parts.map((p, k) => renderMarkdown(p.body, { headings, prefix: "s" + k }));
@@ -288,7 +288,7 @@ function documentHtml(parts, format, pages) {
 // ------------------------------------------------------------------ pdf
 // TOC page numbers come from the PDF's own named destinations: Chromium writes one for every
 // in-document link target (the TOC links to each heading id). No text extraction involved.
-async function headingPages(pdf, headings) {
+export async function headingPages(pdf, headings) {
   const doc = await PDFDocument.load(readFileSync(pdf), { updateMetadata: false });
   const dests = doc.catalog.lookupMaybe(PDFName.of("Dests"), PDFDict);
   if (!dests) throw new Error("no named destinations in " + pdf);

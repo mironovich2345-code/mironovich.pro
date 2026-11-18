@@ -53,7 +53,15 @@ jobs:
         run: |
           npx --no-install playwright --version
           fc-match "DejaVu Sans" || true
-          for f in "$SAFETY_PDF_KEEP"/*.pdf; do echo "== $f"; pdfinfo "$f" | grep -E "Pages|Page size"; pdffonts "$f" | tail -n +3; done
+          mkdir -p "$SAFETY_PDF_KEEP/text"
+          for f in "$SAFETY_PDF_KEEP"/*.pdf; do
+            n=$(basename "$f" .pdf)
+            echo "== $n"; pdfinfo "$f" | grep -E "Pages|Page size"; pdffonts "$f" | tail -n +3
+            # page-by-page text of the rebuilt and the committed PDF, to diff locally
+            pdftotext -layout "$f" "$SAFETY_PDF_KEEP/text/$n.rebuilt.txt"
+            pdftotext -layout "content/career/v3/materials/safety/pdf/$n.pdf" "$SAFETY_PDF_KEEP/text/$n.committed.txt"
+            diff -q "$SAFETY_PDF_KEEP/text/$n.committed.txt" "$SAFETY_PDF_KEEP/text/$n.rebuilt.txt" || diff "$SAFETY_PDF_KEEP/text/$n.committed.txt" "$SAFETY_PDF_KEEP/text/$n.rebuilt.txt" | head -40
+          done
       - name: Upload rebuilt PDFs for inspection
         if: failure()
         uses: actions/upload-artifact@v4

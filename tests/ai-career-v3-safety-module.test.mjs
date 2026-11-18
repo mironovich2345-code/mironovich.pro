@@ -220,3 +220,29 @@ test("Russian quotes are balanced in every source: «…» outside, „…“ in
     }
   }
 });
+
+// Regression for the CI failure on 5bd2cef ("heading not found in PDF text"): TOC page numbers
+// used to be found by matching pdftotext lines, which broke on a clean runner. They now come
+// from the PDF's named destinations, so wrapping, hyphenation and line endings do not matter.
+test("TOC page numbers come from PDF destinations and survive wrapped headings", async () => {
+  const { documentHtml, headingPages } = await import("../scripts/career/build-safety-materials.mjs");
+  const guide = parseFrontMatter(md("guide.md"));
+  for (const [file, format] of [["safety-guide-a4.pdf", "a4"], ["safety-guide-mobile.pdf", "mobile"]]) {
+    const { headings } = documentHtml([guide], format);
+    const listed = headings.filter(h => h.level === 2 || h.toc);
+    const pages = await headingPages(MAT + "pdf/" + file, headings);
+    assert.equal(Object.keys(pages).length, listed.length, file);
+    const order = listed.map(h => pages[h.id]);
+    assert.deepEqual(order, [...order].sort((a, b) => a - b), file + ": headings must appear in document order");
+    assert.ok(order[0] >= 3, file + ": first chapter must follow the cover and TOC");
+    // headings that wrap onto two lines on the phone layout are still located
+    assert.ok(listed.some(h => h.text.length > 45), "fixture must include long, wrapping headings");
+    // the TOC printed in the PDF carries exactly these numbers
+    const printed = documentHtml([guide], format, pages).html;
+    for (const h of listed) assert.ok(printed.includes(`href="#${h.id}"`), h.id);
+  }
+  await assert.rejects(
+    headingPages(MAT + "pdf/safety-guide-a4.pdf", [{ level: 2, id: "s0-999", text: "Несуществующий раздел" }]),
+    /no destination for heading: Несуществующий раздел/);
+  await assert.rejects(headingPages(MAT + "pdf/safety-checklist-a4.pdf", [{ level: 2, id: "s0-1", text: "x" }]), /no named destinations|no destination/);
+});
