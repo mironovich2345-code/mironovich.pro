@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { navLinks, secondaryLinks } from "../config/site.ts";
+import { aboutMenuLinks, navLinks, secondaryLinks } from "../config/site.ts";
 
 const read = path => fs.readFileSync(path,"utf8");
 
@@ -48,4 +48,25 @@ test("hero matches the 30-step offer, not the old 30-day plan",()=>{
   const hero=read("components/Hero.tsx");
   assert.match(hero,/план из 30 шагов/);
   assert.doesNotMatch(hero,/план на 30 дней/);
+});
+
+test("Who I am submenu has blog, cases and personal page on desktop and mobile",()=>{
+  assert.deepEqual(aboutMenuLinks,[
+    {href:"/blog",label:"Блог"},
+    {href:"/projects",label:"Кейсы"},
+    {href:"/about",label:"Конкретно я"},
+  ]);
+  assert.match(read("components/SiteHeader.tsx"), /aboutMenuLinks\.map/);
+  assert.match(read("components/MobileMenu.tsx"), /aboutMenuLinks\.map/);
+});
+test("home keeps the manual labor calculator but hides employee pricing",()=>{
+  const hero=read("components/Hero.tsx");
+  assert.match(hero, /href="\/tools\/labor-cost"/);
+  assert.doesNotMatch(hero, /career\.plannedPrice|rub\(career/);
+});
+test("business page leads with free task review and clear CTA",()=>{
+  const page=read("app/solutions/page.tsx");
+  assert.match(page, /Хотите, чтобы бизнес работал проще и быстрее/);
+  assert.match(page, /Получить бесплатный разбор/);
+  assert.match(page, /href="\/contact"/);
 });

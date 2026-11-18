@@ -59,3 +59,18 @@ test("privacy document explains cookie consent without raw technical storage lab
   assert.match(privacy, /edition: 2026-11-18/);
   assert.equal(JSON.parse(read("config/legal.json")).published, true);
 });
+
+test("employee price is below the steps, and all public prelaunch prices agree",()=>{
+  const product=read("components/AiCareerProductPage.tsx");
+  assert.ok(product.indexOf('id="ai-career-price-heading"') > product.indexOf('id="product-steps-title"'));
+  assert.match(product, /<del className=/);
+  const commerce=read("config/ai-career-commerce.ts");
+  assert.match(commerce, /priceRub: 1993/);
+  assert.match(commerce, /referencePriceRub: 3990/);
+  assert.match(commerce, /salesEnabled: false/);
+  assert.match(commerce, /legalApproved: false/);
+  for (const p of ["config/ai-career-commerce.ts", "app/offer/ai-career/page.tsx", "app/refund/page.tsx"]) {
+    assert.match(read(p), /1 993 ₽/, p);
+  }
+  assert.match(read("content/products.ts"), /plannedPrice: 1993/);
+});
