@@ -75,9 +75,13 @@ export function buildPlan(ctx: EngineContext, input: { result: DiagnosticResultV
       const key = `${c.lessonId}|${c.exerciseId}|${c.templateId}`;
       const action = c.action.toLowerCase().replace(/[^a-zа-яё0-9]+/gi, " ").trim();
       if (seenKey.has(key) || seenAction.has(action)) continue; // the same exercise+template or the same action is never repeated
-      seenKey.add(key); seenAction.add(action);
       const base = ctx.modulePhases[lesson.moduleId];
       const phase = base === "safety" || base === "next_level" ? base : (ctx.templateKindPhases[kind] ?? base);
+      // One exercise appears at most once per phase: a prompt version and a manual version of the
+      // same exercise are alternatives, not two steps (candidates are in the lesson's own order).
+      const exercisePhase = `${c.lessonId}|${c.exerciseId}|${phase}`;
+      if (seenKey.has(exercisePhase)) continue;
+      seenKey.add(key); seenKey.add(exercisePhase); seenAction.add(action);
       pool.push({ c, lesson, item, phase, kind });
     }
   }

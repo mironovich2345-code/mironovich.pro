@@ -43,7 +43,7 @@
 | Промпт-шаблонов в плане | 4 | 0 | 0 |
 | Сессий (по времени Q17) | 11 × до 45 мин | 11 × до 30 мин | 30 × до 15 мин |
 
-Общих шагов: B2B и новичок — 13 из 30; новичок и «ИИ запрещён» — 22 из 30; B2B и «ИИ запрещён» — 18 из 30.
+Общих шагов: B2B и новичок — 16 из 30; новичок и «ИИ запрещён» — 22 из 30; B2B и «ИИ запрещён» — 20 из 30.
 
 ## Полный план из 30 шагов: опытный B2B-менеджер
 
@@ -54,22 +54,22 @@
 | 3 | Безопасность | SAF-03 / SAF03-TASK-1 / TPL-SAF03-1 (checklist) | error_rate | mandatory_module, subtype_fit, level_fit | 2 |
 | 4 | Безопасность | SAF-04 / SAF04-TASK-1 / TPL-SAF04-1 (checklist) | error_rate | mandatory_module, subtype_fit, level_fit | 2 |
 | 5 | Применение | SAL-01 / SAL01-TASK-1 / TPL-SAL01-1 (prompt) | error_rate | selected_task, scenario, work_area, goal_fit, subtype_fit, level_fit | 3 |
-| 6 | Применение | SAL-01 / SAL01-TASK-1 / TPL-SAL01-2 (script) | error_rate | selected_task, scenario, work_area, goal_fit, subtype_fit, level_fit | 3 |
-| 7 | Применение | SAL-03 / SAL03-TASK-1 / TPL-SAL03-1 (prompt) | error_rate | selected_task, scenario, work_area, goal_fit, subtype_fit, level_fit | 3 |
-| 8 | Применение | SAL-03 / SAL03-TASK-1 / TPL-SAL03-2 (script) | error_rate | selected_task, scenario, work_area, goal_fit, subtype_fit, level_fit | 3 |
-| 9 | Применение | SAL-04 / SAL04-TASK-1 / TPL-SAL04-1 (prompt) | error_rate | selected_task, scenario, work_area, goal_fit, subtype_fit, level_fit | 4 |
-| 10 | Применение | SAL-04 / SAL04-TASK-1 / TPL-SAL04-2 (script) | error_rate | selected_task, scenario, work_area, goal_fit, subtype_fit, level_fit | 4 |
-| 11 | Применение | SAL-07 / SAL07-TASK-1 / TPL-SAL07-1 (prompt) | error_rate | scenario, work_area, goal_fit, subtype_fit, level_fit | 4 |
-| 12 | Проверка | SAL-01 / SAL01-TASK-2 / TPL-SAL01-3 (checklist) | error_rate | selected_task, scenario, work_area, goal_fit, subtype_fit, level_fit | 4 |
+| 6 | Применение | SAL-03 / SAL03-TASK-1 / TPL-SAL03-1 (prompt) | error_rate | selected_task, scenario, work_area, goal_fit, subtype_fit, level_fit | 3 |
+| 7 | Применение | SAL-04 / SAL04-TASK-1 / TPL-SAL04-1 (prompt) | error_rate | selected_task, scenario, work_area, goal_fit, subtype_fit, level_fit | 3 |
+| 8 | Применение | SAL-07 / SAL07-TASK-1 / TPL-SAL07-1 (prompt) | error_rate | scenario, work_area, goal_fit, subtype_fit, level_fit | 4 |
+| 9 | Применение | MAP-01 / MAP01-TASK-1 / TPL-MAP01-1 (script) | error_rate | subtype_fit, level_fit, prerequisite | 4 |
+| 10 | Применение | MAP-02 / MAP02-TASK-1 / TPL-MAP02-1 (script) | error_rate | subtype_fit, level_fit | 4 |
+| 11 | Применение | MAP-03 / MAP03-TASK-1 / TPL-MAP03-1 (script) | error_rate | subtype_fit, level_fit | 4 |
+| 12 | Проверка | SAL-01 / SAL01-TASK-2 / TPL-SAL01-3 (checklist) | error_rate | selected_task, scenario, work_area, goal_fit, subtype_fit, level_fit | 5 |
 | 13 | Проверка | SAL-03 / SAL03-TASK-2 / TPL-SAL03-3 (checklist) | error_rate | selected_task, scenario, work_area, goal_fit, subtype_fit, level_fit | 5 |
 | 14 | Проверка | SAL-04 / SAL04-TASK-2 / TPL-SAL04-3 (checklist) | error_rate | selected_task, scenario, work_area, goal_fit, subtype_fit, level_fit | 5 |
-| 15 | Проверка | SAL-07 / SAL07-TASK-2 / TPL-SAL07-3 (checklist) | error_rate | scenario, work_area, goal_fit, subtype_fit, level_fit | 5 |
+| 15 | Проверка | SAL-07 / SAL07-TASK-2 / TPL-SAL07-3 (checklist) | error_rate | scenario, work_area, goal_fit, subtype_fit, level_fit | 6 |
 | 16 | Проверка | MAP-01 / MAP01-TASK-2 / TPL-MAP01-2 (checklist) | error_rate | subtype_fit, level_fit, prerequisite | 6 |
 | 17 | Проверка | MAP-02 / MAP02-TASK-2 / TPL-MAP02-2 (checklist) | error_rate | subtype_fit, level_fit | 6 |
-| 18 | Проверка | MAP-03 / MAP03-TASK-2 / TPL-MAP03-2 (checklist) | error_rate | subtype_fit, level_fit | 7 |
+| 18 | Проверка | MAP-03 / MAP03-TASK-2 / TPL-MAP03-2 (checklist) | error_rate | subtype_fit, level_fit | 6 |
 | 19 | Измерение | SAL-01 / SAL01-TASK-3 / TPL-SAL01-4 (measurement_sheet) | research_time | selected_task, scenario, work_area, goal_fit, subtype_fit, level_fit | 7 |
 | 20 | Измерение | SAL-03 / SAL03-TASK-3 / TPL-SAL03-4 (measurement_sheet) | proposal_quality | selected_task, scenario, work_area, goal_fit, subtype_fit, level_fit | 7 |
-| 21 | Измерение | SAL-04 / SAL04-TASK-3 / TPL-SAL04-4 (measurement_sheet) | error_rate | selected_task, scenario, work_area, goal_fit, subtype_fit, level_fit | 8 |
+| 21 | Измерение | SAL-04 / SAL04-TASK-3 / TPL-SAL04-4 (measurement_sheet) | error_rate | selected_task, scenario, work_area, goal_fit, subtype_fit, level_fit | 7 |
 | 22 | Измерение | SAL-07 / SAL07-TASK-3 / TPL-SAL07-4 (measurement_sheet) | proposal_quality | scenario, work_area, goal_fit, subtype_fit, level_fit | 8 |
 | 23 | Ценность | VAL-01 / VAL01-TASK-2 / TPL-VAL01-2 (script) | error_rate | goal_fit, subtype_fit, level_fit, prerequisite | 8 |
 | 24 | Ценность | VAL-02 / VAL02-TASK-2 / TPL-VAL02-2 (script) | error_rate | goal_fit, subtype_fit, level_fit | 9 |

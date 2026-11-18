@@ -211,6 +211,7 @@ test("every ready plan: exactly 30 unique steps from approved candidates, all si
     assert.equal(new Set(plan.steps.map((s) => s.stableId)).size, 30, id);
     assert.equal(new Set(plan.steps.map((s) => `${s.lessonId}|${s.exerciseId}|${s.templateId}`)).size, 30, id + " exercise+template repeated");
     assert.equal(new Set(plan.steps.map((s) => s.action)).size, 30, id + " repeated action");
+    assert.equal(new Set(plan.steps.map((s) => `${s.lessonId}|${s.exerciseId}|${s.phase}`)).size, 30, id + " same exercise twice in one phase (prompt/manual alternatives)");
     for (const ph of PHASES) assert.ok(plan.phaseCounts[ph] >= 1, `${id}: phase ${ph}`);
     const perLesson = {}, perExercise = {};
     for (const s of plan.steps) {
@@ -244,10 +245,14 @@ test("profiles differ in content and order, not just a permutation of the same 3
   const overlap = (a, b) => [...ids(a)].filter((x) => ids(b).has(x)).length;
   // Different subtype and/or level: most of the plan differs.
   for (const [a, b, max] of [
-    ["FX-inbound-starter", "FX-b2b-experienced-public-tools", 15],
+    ["FX-inbound-starter", "FX-b2b-experienced-public-tools", 17],
     ["FX-b2b-experienced-public-tools", "FX-account-approved", 20],
     ["FX-inbound-starter", "FX-account-ai-prohibited", 22],
   ]) assert.ok(overlap(a, b) <= max, `${a} vs ${b}: ${overlap(a, b)} shared steps of 30`);
+  // Shared steps across subtypes come only from mandatory safety and common modules — practice steps never overlap.
+  const practice = (k) => new Set(ALL[k].plan.steps.filter((x) => x.lessonId.startsWith("SAL-")).map((x) => x.stableId));
+  const sharedPractice = [...practice("FX-inbound-starter")].filter((x) => practice("FX-b2b-experienced-public-tools").has(x));
+  assert.deepEqual(sharedPractice, [], "inbound starter and B2B experienced share no practice steps");
   // Same subtype and level, different company rules: prompt work is replaced and every restriction changes.
   const ok = ALL["FX-account-approved"].plan, banned = ALL["FX-account-ai-prohibited"].plan;
   assert.ok(30 - overlap("FX-account-approved", "FX-account-ai-prohibited") >= 4);
