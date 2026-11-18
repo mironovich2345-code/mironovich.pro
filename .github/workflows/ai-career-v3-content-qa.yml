@@ -9,6 +9,9 @@ on:
       - "content/career/v3/**"
       - "docs/products/ai-career-v3/**"
       - "tests/ai-career-v3-role-sales.test.mjs"
+      - "tests/ai-career-v3-sales-lessons.test.mjs"
+      - "scripts/career/validate-v3-*.mjs"
+      - "scripts/career/build-sales-lesson-materials.mjs"
       - ".github/workflows/ai-career-v3-content-qa.yml"
 
 permissions:
@@ -28,6 +31,10 @@ jobs:
         run: npm ci
       - name: Validate sales role matrix and constraints
         run: node --test tests/ai-career-v3-role-sales.test.mjs
+      - name: Validate practical sales lessons (SAL-02, SAL-05)
+        run: |
+          node scripts/career/validate-v3-sales-lessons.mjs
+          node scripts/career/build-sales-lesson-materials.mjs --check
       - name: Run full app and synthetic career regression tests
         run: npm test
       - name: Check TypeScript and ESLint
