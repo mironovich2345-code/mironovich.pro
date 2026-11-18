@@ -1,10 +1,11 @@
 /**
  * Analytics consent — always required, not a setting.
  *
- * Whenever Yandex Metrica is configured (NEXT_PUBLIC_YANDEX_METRICA_ID), the
- * banner is shown and nothing is loaded until the visitor presses «Разрешить»;
- * the choice is kept in localStorage. Declining loads nothing. Without a Metrica
- * ID there is nothing to consent to: no banner, no analytics.
+ * Always show a transparent cookie notice, even when analytics is disabled.
+ * When Yandex Metrica is configured (NEXT_PUBLIC_YANDEX_METRICA_ID), ask for
+ * affirmative consent before loading any counter. When it is absent, display
+ * informational notice only: no premature consent to a future counter.
+ * A counter-specific storage key requires a NEW choice if Metrica is enabled later.
  *
  * The former switch NEXT_PUBLIC_ANALYTICS_CONSENT is no longer read: analytics
  * can no longer load without consent because a variable was missed.
@@ -22,9 +23,9 @@ export type ConsentChoice = "granted" | "denied";
  */
 export const consentPreview = !metricaId && process.env.NEXT_PUBLIC_CONSENT_PREVIEW === "1";
 
-export const consentRequired = Boolean(metricaId) || consentPreview;
+export const consentRequired = true; // technical cookie notice remains available without analytics
 
-const KEY = "mrnv_analytics_consent_v1";
+const KEY = "mrnv_analytics_consent_v2_" + (metricaId || "notice");
 export const CONSENT_EVENT = "mrnv:consent";
 
 export function readConsent(): ConsentChoice | null {
