@@ -8,8 +8,9 @@ on:
     paths:
       - "content/career/v3/**"
       - "docs/products/ai-career-v3/**"
-      - "tests/ai-career-v3-role-sales.test.mjs"
-      - "tests/ai-career-v3-engine.test.mjs"
+      - "tests/ai-career-v3-*.test.mjs"
+      - "scripts/career/validate-v3-content.mjs"
+      - "scripts/career/build-safety-materials.mjs"
       - "lib/career-v3/**"
       - "lib/server/career-v3/**"
       - ".github/workflows/ai-career-v3-content-qa.yml"
@@ -31,6 +32,10 @@ jobs:
         run: npm ci
       - name: Validate sales role matrix and constraints
         run: node --test tests/ai-career-v3-role-sales.test.mjs
+      - name: Validate lessons, safety module, sources and downloadable files
+        run: |
+          node scripts/career/validate-v3-content.mjs
+          node --test tests/ai-career-v3-safety-module.test.mjs
       - name: Validate v3 engine (library, diagnostic, readiness)
         run: node --test --experimental-strip-types tests/ai-career-v3-engine.test.mjs
       - name: Run full app and synthetic career regression tests
