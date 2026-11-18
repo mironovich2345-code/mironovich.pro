@@ -2,17 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import CtoOffer from "@/components/CtoOffer";
-import OtherServices from "@/components/OtherServices";
 import ContactSection from "@/components/ContactSection";
 import { allServices } from "@/config/services";
-import { directions } from "@/config/directions";
 import { siteUrl } from "@/config/site";
 import { pageMetadata, breadcrumbList } from "@/lib/seo";
 import { jsonLd } from "@/lib/jsonld";
 
 const title = "Услуги: разработка, внедрение и внешний CTO — MIRONOVICH.PRO";
 const description =
-  "Разработка цифровых систем, внешний технологический директор, CRM, API-интеграции, ИИ-помощники, экспертиза и сопровождение. Все прежние направления сохранены.";
+  "Внешний технический директор, разработка, автоматизация, экспертиза и сопровождение. Выберите конкретную услугу или формат управления.";
 export const metadata: Metadata = pageMetadata({
   title,
   description,
@@ -67,29 +65,7 @@ export default function Page() {
             </Link>
           </div>
         </section>
-        <section className="bg-cream px-[22px] py-14">
-          <div className="mx-auto max-w-[1080px]">
-            <h2 className="m-0 mb-6 font-display text-[32px] font-extrabold uppercase text-graphite">
-              Решения для компании
-            </h2>
-            <ul className="m-0 grid list-none gap-3 p-0 min-[760px]:grid-cols-2">
-              {/* the same client-language titles as on the home page and /solutions */}
-              {directions.filter((d) => d.solution).map((s) => (
-                <li key={s.id}>
-                  <Link
-                    href={s.href}
-                    className="flex min-h-[56px] items-center justify-between gap-4 border-b border-graphite/20 py-4 text-[17px] text-graphite hover:text-maroon"
-                  >
-                    {s.title}
-                    <span aria-hidden>↗</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
         <CtoOffer />
-        <OtherServices />
         <section className="bg-cream px-[22px] pb-14">
           <div className="mx-auto max-w-[1080px]">
             <h2 className="m-0 mb-5 font-display text-[28px] font-extrabold uppercase text-graphite">
@@ -103,7 +79,7 @@ export default function Page() {
               aria-label="Отдельные услуги"
               className="flex flex-wrap gap-x-8 gap-y-2"
             >
-              {allServices.map((s) => (
+              {allServices.filter((s) => s.slug !== "cto").map((s) => (
                 <Link
                   key={s.slug}
                   href={s.href}
