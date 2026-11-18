@@ -9,7 +9,7 @@ export const SESSION_COOKIE = "career_test_session";
 export const GATE_COOKIE = "career_test_gate";
 export const UUID_PATTERN =
   /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
-export const TERMS_VERSION = "2026-11-17-synthetic-v1";
+export const TERMS_VERSION = "2026-11-18-synthetic-1993-steps-v2";
 export const syntheticEmail = (value: unknown): value is string =>
   typeof value === "string" &&
   /^demo-[a-z0-9-]{1,48}@example\.invalid$/.test(value);
