@@ -1,0 +1,116 @@
+{
+  "schemaVersion": "1.0.0",
+  "lastChecked": "2026-11-18",
+  "status": "review",
+  "note": "Реестр источников практических уроков продаж. Правовые нормы проверены по КонсультантПлюс; официальный портал publication.pravo.gov.ru из среды проверки был недоступен, поэтому сверка с официальным опубликованием не выполнена. Применение норм к конкретной компании определяет её юрист.",
+  "nextReviewOn": "2027-05-18",
+  "sources": [
+    {
+      "id": "SRC-152FZ-15",
+      "document": "152-ФЗ",
+      "edition": "ред. от 26.07.2026",
+      "title": "Федеральный закон от 27.07.2006 № 152-ФЗ «О персональных данных», статья 15",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_61801/5656527e0713bf229a6932ac7084dec50d0ebe1f/",
+      "publisher": "КонсультантПлюс",
+      "kind": "law",
+      "checkedOn": "2026-11-18",
+      "verificationStatus": "checked_secondary_publisher_official_publication_not_compared",
+      "supportsClaim": "Ч. 1: обработка персональных данных в целях продвижения товаров, работ, услуг путём прямых контактов с потенциальным потребителем с помощью средств связи допускается только с предварительного согласия субъекта; согласие должен доказать оператор. Ч. 2: по требованию субъекта такую обработку нужно немедленно прекратить.",
+      "usedBy": [
+        "SAL-02"
+      ]
+    },
+    {
+      "id": "SRC-38FZ-18",
+      "document": "38-ФЗ",
+      "edition": "ред. от 04.08.2026",
+      "title": "Федеральный закон от 13.03.2006 № 38-ФЗ «О рекламе», статья 18",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_58968/f892dec1383709792452f18d36e7043306e2be0a/",
+      "publisher": "КонсультантПлюс",
+      "kind": "law",
+      "checkedOn": "2026-11-18",
+      "verificationStatus": "checked_secondary_publisher_official_publication_not_compared",
+      "supportsClaim": "Ч. 1: реклама по сетям электросвязи допускается только при предварительном согласии абонента или адресата. Ч. 2: не допускается распространение рекламы с автоматической рассылкой без участия человека.",
+      "usedBy": [
+        "SAL-02"
+      ]
+    },
+    {
+      "id": "SRC-38FZ-3",
+      "document": "38-ФЗ",
+      "edition": "ред. от 04.08.2026",
+      "title": "Федеральный закон от 13.03.2006 № 38-ФЗ «О рекламе», статья 3",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_58968/4f41fe599ce341751e4e34dc50a4b676674c1416/",
+      "publisher": "КонсультантПлюс",
+      "kind": "law",
+      "checkedOn": "2026-11-18",
+      "verificationStatus": "checked_secondary_publisher_official_publication_not_compared",
+      "supportsClaim": "Реклама — информация, распространённая любым способом и адресованная неопределённому кругу лиц, направленная на привлечение внимания к объекту рекламирования. Поэтому квалификация персонального делового письма зависит от обстоятельств.",
+      "usedBy": [
+        "SAL-02"
+      ]
+    },
+    {
+      "id": "SRC-GK-435",
+      "document": "ГК РФ, часть первая",
+      "edition": "ред. от 10.06.2026, с изм. от 22.10.2026",
+      "title": "Гражданский кодекс РФ, статья 435. Оферта",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_5142/892c4b89172aef07157d5d6c0e5dcde6e37b3a83/",
+      "publisher": "КонсультантПлюс",
+      "kind": "law",
+      "checkedOn": "2026-11-18",
+      "verificationStatus": "checked_secondary_publisher_official_publication_not_compared",
+      "supportsClaim": "Офертой признаётся адресованное конкретным лицам достаточно определённое предложение с существенными условиями, выражающее намерение заключить договор; оферта связывает отправителя с момента получения адресатом.",
+      "usedBy": [
+        "SAL-02",
+        "SAL-05"
+      ]
+    },
+    {
+      "id": "SRC-NIST-600-1",
+      "document": "NIST AI 600-1",
+      "edition": "July 2024",
+      "title": "NIST AI 600-1. Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile (July 2024)",
+      "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf",
+      "publisher": "National Institute of Standards and Technology",
+      "kind": "standard",
+      "checkedOn": "2026-11-18",
+      "verificationStatus": "checked_primary_publisher",
+      "supportsClaim": "Конфабуляция — генерация уверенно поданного ошибочного или ложного содержания; модели могут добавлять детали, которых нет во входных данных, а уверенный тон усиливает доверие к ним.",
+      "usedBy": [
+        "SAL-02",
+        "SAL-05"
+      ]
+    },
+    {
+      "id": "SRC-152FZ-5",
+      "document": "152-ФЗ",
+      "edition": "ред. от 26.07.2026",
+      "title": "Федеральный закон от 27.07.2006 № 152-ФЗ «О персональных данных», статья 5",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_61801/96fbc469f91f57235cc842a85e0516a99f23dc85/",
+      "publisher": "КонсультантПлюс",
+      "kind": "law",
+      "checkedOn": "2026-11-18",
+      "verificationStatus": "checked_secondary_publisher_official_publication_not_compared",
+      "supportsClaim": "Ч. 2: обработка ограничивается достижением конкретных, заранее определённых и законных целей. Ч. 5: содержание и объём данных должны соответствовать целям и не быть избыточными. Ч. 6: обеспечиваются точность и актуальность данных, неточные данные удаляются или уточняются.",
+      "usedBy": [
+        "SAL-05"
+      ]
+    },
+    {
+      "id": "SRC-152FZ-10",
+      "document": "152-ФЗ",
+      "edition": "ред. от 26.07.2026",
+      "title": "Федеральный закон от 27.07.2006 № 152-ФЗ «О персональных данных», статья 10",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_61801/26edb2934b899bf9c74c3a8f7e574651c6565e6d/",
+      "publisher": "КонсультантПлюс",
+      "kind": "law",
+      "checkedOn": "2026-11-18",
+      "verificationStatus": "checked_secondary_publisher_official_publication_not_compared",
+      "supportsClaim": "Специальные категории персональных данных — в том числе о состоянии здоровья, политических взглядах, религиозных или философских убеждениях — обрабатываются только в случаях, прямо предусмотренных статьёй.",
+      "usedBy": [
+        "SAL-05"
+      ]
+    }
+  ]
+}
