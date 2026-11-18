@@ -1,0 +1,48 @@
+name: Career cloud demo QA
+on:
+  push:
+    branches:
+      - demo/career-cloud-20261118
+  pull_request:
+    paths:
+      - "demos/career-cloud/**"
+      - ".github/workflows/career-cloud-demo-qa.yml"
+permissions:
+  contents: read
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Generate source-derived 18-question 30-step dataset
+        run: node --experimental-strip-types demos/career-cloud/build.mjs
+      - name: Syntax and isolation
+        run: |
+          node --check demos/career-cloud/server.mjs
+          node --check demos/career-cloud/app.js
+          node --check demos/career-cloud/demo.browser.mjs
+          node -e "const d=require('./demos/career-cloud/data.json'); if(d.questions.length!==18||Object.values(d.plans).some(p=>p.length!==30)) process.exit(1)"
+      - name: Install browser smoke-test dependency
+        run: |
+          npm install --no-save --no-package-lock playwright
+          npx playwright install --with-deps chromium
+      - name: Run standalone demo and browser workflows
+        shell: bash
+        env:
+          PORT: "3207"
+        run: |
+          set -euo pipefail
+          node demos/career-cloud/server.mjs > /tmp/career-cloud-demo.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:3207/health >/dev/null; then break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:3207/data.json >/dev/null
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3207/api/career/session)" = 404
+          node demos/career-cloud/demo.browser.mjs
