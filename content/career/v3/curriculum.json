@@ -42,7 +42,8 @@
       "title": "Какие данные нельзя передавать ИИ",
       "scenarioId": null,
       "status": "planned",
-      "publishedLessonId": null
+      "publishedLessonId": null,
+      "draftLessonId": "SAF-01"
     },
     {
       "id": "SAF-02",
@@ -50,7 +51,8 @@
       "title": "Правила работодателя и согласование инструмента",
       "scenarioId": null,
       "status": "planned",
-      "publishedLessonId": null
+      "publishedLessonId": null,
+      "draftLessonId": "SAF-02"
     },
     {
       "id": "SAF-03",
@@ -58,7 +60,8 @@
       "title": "Почему ИИ ошибается: проверка фактов и расчётов",
       "scenarioId": null,
       "status": "planned",
-      "publishedLessonId": null
+      "publishedLessonId": null,
+      "draftLessonId": "SAF-03"
     },
     {
       "id": "SAF-04",
@@ -66,7 +69,8 @@
       "title": "Человек отвечает за решения и обещания",
       "scenarioId": null,
       "status": "planned",
-      "publishedLessonId": null
+      "publishedLessonId": null,
+      "draftLessonId": "SAF-04"
     },
     {
       "id": "MAP-01",

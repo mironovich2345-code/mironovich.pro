@@ -129,6 +129,72 @@ export function validateCatalog(catalog, role, lesson, step, lessonSchema, stepS
   return e;
 }
 
+
+// ------------------------------------------------------------------ real lessons (#42+)
+const REVIEW_STATES=["draft","review"];
+export function validateLesson(lesson, role, lessonSchema, exists=(p)=>existsSync(new URL("../../"+p, import.meta.url))) {
+  const e=[];
+  const good=(value,msg)=>{if(!value)e.push(lesson.id+": "+msg);};
+  schemaCheck(lessonSchema,lesson,lesson.id||"lesson",e);
+  if(e.length) return e;
+  good(lesson.audience.roleIds.includes(role.roleId),"lesson must match sales role");
+  good(lesson.audience.taskIds.every(id=>role.tasks.some(t=>t.id===id)),"unknown task in lesson");
+  good(lesson.audience.subtypeIds.every(id=>role.subtypes.some(t=>t.id===id)),"unknown subtype in lesson");
+  good(lesson.audience.scenarioId===null||role.scenarios.some(x=>x.id===lesson.audience.scenarioId),"unknown scenario in lesson");
+  good(lesson.security.allowEmployerData===false,"employer data must stay prohibited until a reviewed policy exists");
+  good(lesson.security.requireHumanReview===true,"human review must be mandatory");
+  const ids=arr=>new Set(arr.map(x=>x.id));
+  for(const section of ["workedExamples","procedure","templates","exercises","quiz"]) {
+    const arr=lesson.content[section];
+    good(ids(arr).size===arr.length,"duplicate IDs in "+section);
+  }
+  for(const q of lesson.content.quiz) {
+    good(new Set(q.options.map(x=>x.id)).size===q.options.length,"duplicate quiz option "+q.id);
+    good(q.options.some(x=>x.id===q.correctId),"quiz lacks correct choice "+q.id);
+  }
+  for(const d of lesson.downloads)
+    good(!d.repositoryPath.includes("..")&&exists(d.repositoryPath),"download file missing: "+d.repositoryPath);
+  good(new Set(lesson.downloads.map(d=>d.id)).size===lesson.downloads.length,"duplicate download IDs");
+  good(lesson.sources.length>=1,"lesson needs dated sources");
+  if(REVIEW_STATES.includes(lesson.status)) {
+    good(lesson.quality.canBePublished===false,"unreviewed lesson cannot be published");
+    good(lesson.quality.reviewedOn===null,"unreviewed lesson cannot claim a completed review");
+  }
+  good(lesson.status!=="prototype","real lessons must not use the prototype status");
+  good(!lesson.sourcePolicy.factualClaimsChecked||lesson.quality.reviewedOn!==null,"claimed fact-check needs completed review");
+  good(!lesson.sourcePolicy.timeSensitive||lesson.sourcePolicy.nextReviewOn!==null,"time-sensitive lesson needs next review date");
+  good(!lesson.quality.canBePublished||(lesson.status==="approved"&&lesson.quality.reviewedOn!==null&&
+    lesson.sourcePolicy.factualClaimsChecked===true&&lesson.downloads.length>=1),"published lesson requires approvals, sources and resources");
+  return e;
+}
+
+export function validateSafetyModule(lessons, catalog, registry) {
+  const e=[];
+  const good=(value,msg)=>{if(!value)e.push("safety module: "+msg);};
+  const slots=catalog.slots.filter(s=>s.moduleId==="safety");
+  good(lessons.length===slots.length,"every safety slot needs a lesson");
+  for(const s of slots) good(lessons.some(l=>l.id===s.draftLessonId&&l.id===s.id),"slot "+s.id+" must point to its draft lesson");
+  for(const l of lessons) good(l.moduleId==="safety","lesson "+l.id+" is not in the safety module");
+  const all=k=>lessons.flatMap(l=>l.content[k]);
+  for(const k of ["workedExamples","procedure","templates","exercises","quiz"])
+    good(new Set(all(k).map(x=>x.id)).size===all(k).length,"IDs in "+k+" must be unique across the module");
+  good(all("workedExamples").length>=7,"at least seven worked cases");
+  good(all("exercises").length>=4,"at least four practice tasks");
+  good(all("quiz").length>=10,"at least ten test questions");
+  good(all("templates").filter(t=>t.kind==="prompt").length>=5,"five ready prompts");
+  good(all("templates").some(t=>t.kind==="checklist"),"a safety checklist");
+  good(all("templates").some(t=>t.kind==="script"),"a request template for the manager");
+  const correct=all("quiz").map(q=>q.correctId);
+  good(new Set(correct).size>=3,"correct answers must not all sit in the same position");
+  const known=new Map(registry.sources.map(s=>[s.id,s]));
+  for(const l of lessons) for(const s of l.sources) {
+    const r=known.get(s.id);
+    good(r&&r.url===s.url&&r.checkedOn===s.checkedOn,"source "+s.id+" in "+l.id+" must match sources.json");
+    good(r&&["confirmed","partially_confirmed"].includes(r.status),"source "+s.id+" is not confirmed");
+  }
+  return e;
+}
+
 if (process.argv[1] && fileURLToPath(import.meta.url)===process.argv[1]) {
   const catalog=json("../../content/career/v3/curriculum.json");
   const role=json("../../content/career/v3/roles/sales-manager.json");
@@ -137,12 +203,16 @@ if (process.argv[1] && fileURLToPath(import.meta.url)===process.argv[1]) {
   const lessonSchema=json("../../content/career/v3/schemas/lesson.schema.json");
   const stepSchema=json("../../content/career/v3/schemas/plan-step.schema.json");
   errors.push(...validateCatalog(catalog,role,lesson,step,lessonSchema,stepSchema));
+  const safety=["SAF-01","SAF-02","SAF-03","SAF-04"].map(id=>json("../../content/career/v3/lessons/"+id+".json"));
+  for(const l of safety) errors.push(...validateLesson(l,role,lessonSchema));
+  errors.push(...validateSafetyModule(safety,catalog,json("../../content/career/v3/materials/safety/sources.json")));
   if(errors.length) {
     for(const issue of errors)console.error("FAIL content: "+issue);
     process.exitCode=1;
   } else {
     console.log("PASS: five modules; "+catalog.slots.length+" planned slots; seven mapped sales scenarios");
     console.log("PASS: lesson structure, safety, human review, exercise, quiz and step references");
-    console.log("NOT FOR SALE: validated content is a prototype, not approved teaching materials");
+    console.log("PASS: safety module SAF-01..04 — structure, links, downloads, sources");
+    console.log("NOT FOR SALE: lessons are drafts in review, not approved teaching materials");
   }
 }
