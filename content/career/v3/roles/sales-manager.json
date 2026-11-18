@@ -651,7 +651,7 @@
       "humanResponsibility": "Выводы о причинах и выбор эксперимента",
       "metricId": "funnel_hypotheses",
       "scenarioId": "S06",
-      "skillId": "sales_diagnostics",
+      "skillId": "task_decomposition",
       "exampleType": "synthetic_only"
     },
     {
