@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { metricaId } from "@/lib/analytics";
 import { useEffect, useRef, useState } from "react";
-import { CONSENT_OPEN_EVENT, readConsent, revokeConsent, saveConsent, type ConsentChoice } from "@/lib/consent";
+import { CONSENT_OPEN_EVENT, purgeOptionalTracking, readConsent, revokeConsent, saveConsent, type ConsentChoice } from "@/lib/consent";
 
 /**
- * Compact cookies notice: informational-only when no Yandex Metrica counter is
- * configured; accept/reject analytics when a counter exists. The choice key is
- * tied to the counter so an acknowledgement cannot authorize future tracking.
- * Can be reopened from the footer; the lead form always works.
+ * Explicit opt-in for OPTIONAL analytics/attribution storage, whether or not
+ * Yandex Metrica is configured. No optional data is stored or transmitted
+ * until "Согласен"; a rejection must be equally easy and leave the form working.
+ * If Metrica is configured later, a different consent key requires a NEW choice.
  *
  * Layout: a bottom panel 12px from the screen edges on phones, a 440px card in
  * the bottom-right corner on desktop. While open, the page gets matching bottom
@@ -72,6 +72,7 @@ export default function ConsentBanner() {
     // withdrawing a previous «yes» must also remove the counters' cookies
     if (c === "denied" && current === "granted") return revokeConsent();
     saveConsent(c);
+    if (c === "denied") purgeOptionalTracking();
     setCurrent(c);
     setOpen(false);
   };
@@ -99,28 +100,27 @@ export default function ConsentBanner() {
           <circle cx="8" cy="15.5" r="1" fill="currentColor" />
         </svg>
         <h2 id="consent-title" className="m-0 text-[15px] font-medium tracking-[-0.005em] text-cream">
-          Используем cookies
+          Настройки cookies
         </h2>
       </div>
 
       <p className="m-0 text-pretty text-[13.5px] leading-[1.5] text-cream/80">
         {metricaId
-          ? "С вашего разрешения Яндекс Метрика использует cookies и локальное хранилище для анализа посещаемости. Можно разрешить или отклонить аналитику."
-          : "Сайт использует техническое локальное хранилище для работы интерфейса. Яндекс Метрика пока не подключена. Если включим аналитику, отдельно запросим ваше согласие."}
+          ? "Только с вашего согласия мы используем необязательные cookies и данные о посещениях для Яндекс Метрики и аналитики сайта. До согласия аналитика не загружается. Отказ не мешает пользоваться сайтом."
+          : "Только с вашего согласия мы сохраняем необязательные данные об источниках посещений. Яндекс Метрика пока не подключена. Без согласия необязательные cookies и отслеживание отключены."}
       </p>
-      {metricaId && current && (
+      {current && (
         <p className="m-0 mt-2.5 flex items-center gap-2 text-[12.5px] leading-[1.45] text-cream/85">
           <span
             aria-hidden
             className={`h-2 w-2 flex-none rounded-full ${current === "granted" ? "bg-[#3FB27F]" : "bg-stone"}`}
           />
           <span>
-            Текущий выбор: аналитика <strong className="font-medium text-cream">{current === "granted" ? "разрешена" : "отклонена"}</strong>
+            Ваш выбор: <strong className="font-medium text-cream">{current === "granted" ? "согласие дано" : "согласия нет"}</strong>
           </span>
         </p>
       )}
 
-      {metricaId ? (
       <div className="mt-3.5 grid grid-cols-2 gap-2">
         <button
           ref={firstButtonRef}
@@ -128,26 +128,16 @@ export default function ConsentBanner() {
           onClick={() => choose("granted")}
           className="min-h-[44px] rounded-[4px] bg-signal px-3 text-center text-[14px] font-medium leading-[1.2] text-white transition-colors hover:bg-[#b82323]"
         >
-          Разрешить
+          Согласен
         </button>
         <button
           type="button"
           onClick={() => choose("denied")}
           className="min-h-[44px] rounded-[4px] border border-cream/35 bg-transparent px-3 text-center text-[14px] font-medium leading-[1.2] text-cream transition-colors hover:border-cream hover:bg-cream/5"
         >
-          Отклонить
+          Не согласен
         </button>
       </div>
-      ) : (
-        <button
-          ref={firstButtonRef}
-          type="button"
-          onClick={() => choose("denied")}
-          className="mt-3.5 min-h-[44px] w-full rounded-[4px] border border-cream/35 px-3 text-center text-[14px] font-medium text-cream transition-colors hover:border-cream hover:bg-cream/5"
-        >
-          Понятно
-        </button>
-      )}
 
       <Link
         href="/privacy"

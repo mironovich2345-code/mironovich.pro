@@ -1,11 +1,13 @@
 /**
  * First-touch attribution. Written once, on the very first page view of a
- * browser, and never overwritten — so navigating the site cannot lose the
- * source. No fingerprinting: only URL parameters, document.referrer and a
- * timestamp, all kept in the visitor's own localStorage.
+ * consenting browser, never overwritten while consent is active.
+ * Without explicit consent, no attribution is read, captured or submitted.
+ * No fingerprinting: only URL parameters, document.referrer and timestamp.
  */
 
 import { REDACTED, looksPersonal } from "./lead";
+import { metricaId } from "./analytics";
+import { hasTrackingConsent } from "./tracking-consent";
 
 const KEY = "mrnv_attr_v1";
 
@@ -81,7 +83,7 @@ function capture(): Attribution {
  * (first touch wins), then returns whatever is stored.
  */
 export function initAttribution(): Attribution {
-  if (typeof window === "undefined") return emptyAttribution();
+  if (typeof window === "undefined" || !hasTrackingConsent(metricaId)) return emptyAttribution();
   try {
     const stored = window.localStorage.getItem(KEY);
     if (stored) return { ...emptyAttribution(), ...(JSON.parse(stored) as Attribution) };
@@ -95,7 +97,7 @@ export function initAttribution(): Attribution {
 }
 
 export function getAttribution(): Attribution {
-  if (typeof window === "undefined") return emptyAttribution();
+  if (typeof window === "undefined" || !hasTrackingConsent(metricaId)) return emptyAttribution();
   try {
     const stored = window.localStorage.getItem(KEY);
     if (stored) return { ...emptyAttribution(), ...(JSON.parse(stored) as Attribution) };

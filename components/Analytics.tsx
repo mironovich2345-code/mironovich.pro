@@ -6,11 +6,11 @@ import { useEffect, useRef, useState } from "react";
 import ConsentBanner from "./ConsentBanner";
 import { metricaId, trackPageView } from "@/lib/analytics";
 import { initAttribution } from "@/lib/attribution";
-import { CONSENT_EVENT, analyticsAllowed, clearLegacyGaCookies, consentRequired, readConsent, type ConsentChoice } from "@/lib/consent";
+import { CONSENT_EVENT, analyticsAllowed, clearLegacyGaCookies, consentRequired, purgeOptionalTracking, readConsent } from "@/lib/consent";
 
 /**
- * Captures first-touch attribution (used only inside a submitted lead) and loads
- * Yandex Metrica — only when its ID is set AND the visitor pressed «Разрешить».
+ * Captures attribution ONLY after explicit opt-in and loads Yandex Metrica
+ * ONLY when its ID is configured AND the visitor explicitly pressed «Согласен».
  *
  * `defer: true` turns off Metrica's automatic hit; the init script sends the
  * first page view itself and PageViewTracker one hit per later App Router
@@ -20,11 +20,19 @@ export default function Analytics() {
   const [allowed, setAllowed] = useState(false);
 
   useEffect(() => {
-    initAttribution();
+    // No non-essential tracking/attribution storage until affirmative consent.
     clearLegacyGaCookies();
-    if (!consentRequired) return;
-    setAllowed(analyticsAllowed(readConsent()));
-    const onChange = (e: Event) => setAllowed(analyticsAllowed((e as CustomEvent<ConsentChoice>).detail));
+    const initial = analyticsAllowed(readConsent());
+    if (initial) initAttribution();
+    else purgeOptionalTracking(); // clear optional state left by older versions
+    setAllowed(initial);
+    const onChange = () => {
+      // Fail closed if browser storage rejects the choice; never trust an event payload.
+      const next = analyticsAllowed(readConsent());
+      if (next) initAttribution();
+      else purgeOptionalTracking();
+      setAllowed(next);
+    };
     window.addEventListener(CONSENT_EVENT, onChange);
     return () => window.removeEventListener(CONSENT_EVENT, onChange);
   }, []);

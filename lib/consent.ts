@@ -1,17 +1,16 @@
 /**
  * Analytics consent — always required, not a setting.
  *
- * Always show a transparent cookie notice, even when analytics is disabled.
- * When Yandex Metrica is configured (NEXT_PUBLIC_YANDEX_METRICA_ID), ask for
- * affirmative consent before loading any counter. When it is absent, display
- * informational notice only: no premature consent to a future counter.
- * A counter-specific storage key requires a NEW choice if Metrica is enabled later.
+ * Always require an explicit GRANTED or DENIED choice before any optional
+ * analytics, attribution or form-start tracking. If a Metrica counter is added
+ * later, its different key prompts for consent again. Strict opt-in by default.
  *
  * The former switch NEXT_PUBLIC_ANALYTICS_CONSENT is no longer read: analytics
  * can no longer load without consent because a variable was missed.
  */
 
 import { metricaId } from "./analytics";
+import { trackingConsentKey } from "./tracking-consent";
 
 export type ConsentChoice = "granted" | "denied";
 
@@ -23,9 +22,9 @@ export type ConsentChoice = "granted" | "denied";
  */
 export const consentPreview = !metricaId && process.env.NEXT_PUBLIC_CONSENT_PREVIEW === "1";
 
-export const consentRequired = true; // technical cookie notice remains available without analytics
+export const consentRequired = true; // show two equally available choices even without a counter
 
-const KEY = "mrnv_analytics_consent_v2_" + (metricaId || "notice");
+const KEY = trackingConsentKey(metricaId);
 export const CONSENT_EVENT = "mrnv:consent";
 
 export function readConsent(): ConsentChoice | null {
@@ -47,10 +46,10 @@ export function saveConsent(choice: ConsentChoice) {
   window.dispatchEvent(new CustomEvent<ConsentChoice>(CONSENT_EVENT, { detail: choice }));
 }
 
-/** Whether analytics may load right now: only after an explicit «Разрешить». */
+/** Whether optional tracking may run: only after explicit «Согласен». */
 export const analyticsAllowed = (choice: ConsentChoice | null) => choice === "granted";
 
-/** Footer «Настройки аналитики» reopens the banner through this event. */
+/** Footer «Настройки cookies» reopens the banner through this event. */
 export const CONSENT_OPEN_EVENT = "mrnv:consent-open";
 
 export const openConsentSettings = () => window.dispatchEvent(new Event(CONSENT_OPEN_EVENT));
@@ -75,19 +74,29 @@ function deleteCookies(match: RegExp) {
 export const clearLegacyGaCookies = () => deleteCookies(LEGACY_GA_COOKIE);
 
 /**
- * Withdrawal: store «denied», delete the counters' first-party cookies on this
- * host and its parent domains, then reload so no analytics code stays in memory.
+ * Clear stale optional tracking data, including records created by pre-consent
+ * versions of the site. Can run before a choice or after rejection/revocation.
+ * The only retained local entry after rejection is the essential choice itself.
  */
-export function revokeConsent() {
-  saveConsent("denied");
+export function purgeOptionalTracking() {
+  if (typeof window === "undefined") return;
   deleteCookies(METRICA_COOKIE);
   deleteCookies(LEGACY_GA_COOKIE);
-  // Metrica's own localStorage entries (_ym_uid, _ym<id>_lsid, _ym_retryReqs, …)
   try {
-    for (const k of Object.keys(window.localStorage)) if (k.startsWith("_ym")) window.localStorage.removeItem(k);
-  } catch {
-    /* storage blocked */
-  }
+    window.localStorage.removeItem("mrnv_attr_v1");
+    for (const k of Object.keys(window.localStorage)) {
+      if (k.startsWith("_ym")) window.localStorage.removeItem(k);
+    }
+  } catch { /* storage blocked */ }
+  try {
+    window.sessionStorage.removeItem("mrnv_form_start_v1");
+  } catch { /* storage blocked */ }
+}
+
+/** Revoke consent, clean all optional storage and stop an already loaded tag. */
+export function revokeConsent() {
+  saveConsent("denied");
+  purgeOptionalTracking();
   window.location.reload();
 }
 
