@@ -12,7 +12,7 @@ import { CONSENT_OPEN_EVENT, purgeOptionalTracking, readConsent, revokeConsent, 
  * If Metrica is configured later, a different consent key requires a NEW choice.
  *
  * Layout: on small screens this panel is placed in normal document flow,
- * ahead of the sticky header; it cannot cover calls to action or sale status.
+ * below the sticky header; it cannot cover calls to action or sale status.
  * From 760px it becomes a bottom-right overlay with matching body padding.
  *
  * Rendered open on the server so it paints with the page (it is often the LCP
