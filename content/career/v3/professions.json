@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "career-v3-professions/1",
+  "engineVersion": "career-v3-engine/0.1",
+  "pilotProfessionId": "sales_manager",
+  "note": "Реестр профессий движка AI Career 3.0. Новая профессия подключается записью здесь и собственными файлами роли, диагностики и программы — без изменения кода. Сейчас реализован только пилот sales_manager; статус planned не выдаётся пользователям.",
+  "shared": {
+    "lessonSchema": "content/career/v3/schemas/lesson.schema.json",
+    "planStepSchema": "content/career/v3/schemas/plan-step.schema.json",
+    "prototypeDir": "content/career/v3/examples"
+  },
+  "professions": [
+    {
+      "id": "sales_manager",
+      "title": "Менеджер по продажам",
+      "status": "pilot",
+      "files": {
+        "role": "content/career/v3/roles/sales-manager.json",
+        "diagnostic": "content/career/v3/diagnostic-sales.json",
+        "curriculum": "content/career/v3/curriculum.json"
+      },
+      "lessonDirs": ["content/career/v3/lessons"],
+      "planCandidateDirs": ["content/career/v3/plan-candidates"],
+      "diagnosticBinding": {
+        "subtypeQuestion": "Q01",
+        "subtypeClarifier": "F02",
+        "mixedSubtypeValue": "mixed",
+        "levelQuestion": "Q02",
+        "levelMap": { "starter": "starter", "independent": "independent", "experienced": "experienced" },
+        "aiExperienceQuestion": "Q10",
+        "aiExperienceBasic": ["none"],
+        "aiExperienceAdvanced": ["regular", "advanced"],
+        "workAreaQuestion": "Q03",
+        "taskQuestion": "Q04",
+        "obstacleQuestion": "Q05",
+        "frequencyQuestion": "Q06",
+        "durationQuestion": "Q07",
+        "kpiQuestion": "Q08",
+        "kpiMetricMap": {
+          "revenue": ["proposal_quality"],
+          "conversion": ["reply_rate", "qualification_quality"],
+          "speed": ["first_response_time", "research_time"],
+          "quality": ["error_rate", "proposal_quality"],
+          "crm": ["crm_completeness"],
+          "retention": ["renewal_rate", "case_resolution_time"],
+          "unknown": []
+        },
+        "baselineQuestion": "Q09",
+        "baselineMissing": ["none", "unknown"],
+        "paceQuestion": "Q17",
+        "paceMinutes": { "10_15": 15, "20_30": 30, "45_plus": 45, "unknown": null },
+        "goalQuestion": "Q18",
+        "company": {
+          "toolsQuestion": "Q11",
+          "toolsUnavailable": ["none", "unknown"],
+          "policyQuestion": "Q12",
+          "policyApproved": ["approved_specific"],
+          "policyContactQuestion": "F01",
+          "dataQuestion": "Q13",
+          "errorCostQuestion": "Q14",
+          "reviewQuestion": "Q15",
+          "approvalQuestion": "Q16"
+        },
+        "safetyEffects": {
+          "SAFE-01": ["synthetic_only", "company_policy_first"],
+          "SAFE-02": ["no_real_data_upload"],
+          "SAFE-03": ["human_review_required", "no_unattended_changes"],
+          "SAFE-04": ["no_personal_commitments"],
+          "SAFE-05": ["no_inference"]
+        },
+        "mandatoryModuleId": "safety"
+      }
+    }
+  ]
+}

@@ -7,7 +7,7 @@ const json = (p) => JSON.parse(readFileSync(new URL(p, import.meta.url), "utf8")
 const errors = [];
 const isObject = v => v !== null && typeof v === "object" && !Array.isArray(v);
 
-function schemaCheck(rule, value, loc, issues=[]) {
+export function schemaCheck(rule, value, loc, issues=[]) {
   if (rule.anyOf) {
     if (!rule.anyOf.some(candidate => {
       const trial = []; schemaCheck(candidate,value,loc,trial); return trial.length===0;

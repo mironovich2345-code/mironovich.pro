@@ -11,6 +11,9 @@ on:
       - "components/CareerSandbox.tsx"
       - "lib/career-diagnostic.ts"
       - "lib/server/career/**"
+      - "lib/server/career-v3/**"
+      - "lib/career-v3/**"
+      - "content/career/v3/professions.json"
       - "lib/server/commerce/**"
       - "migrations/career/**"
       - "tests/career-*.mjs"
@@ -125,6 +128,7 @@ jobs:
           done
           if [ "$ready" -ne 1 ]; then echo "Synthetic fixture not ready"; exit 1; fi
           npm run career:test:integration
+          npm run career:test:v3-integration
           npm run career:cleanup
           # Browser checks remain isolated to loopback, fake messages and payments.
           npm install --no-save --no-package-lock playwright
