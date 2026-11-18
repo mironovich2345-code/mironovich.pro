@@ -12,7 +12,7 @@ export default function Services() {
       <div className="mx-auto max-w-[1080px]">
         <SectionLabel
           index="01"
-          label="Шесть направлений"
+          label="Пять решений"
           note="Выберите свою задачу"
         />
         <h2 className="m-0 mb-5 font-display text-[clamp(30px,5vw,48px)] font-extrabold uppercase leading-[1.05] text-cream">
@@ -22,7 +22,7 @@ export default function Services() {
           Выберите задачу, похожую на вашу. Цена — ориентир для первого этапа.
         </p>
         <ol className="m-0 list-none border-t border-cream/25 p-0">
-          {directions.map((d, i) => (
+          {directions.filter((d) => d.solution).map((d, i) => (
             <li
               key={d.id}
               data-direction={d.id}
