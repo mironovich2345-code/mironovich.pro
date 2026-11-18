@@ -146,8 +146,6 @@ async function start(config) {
   if (!existsSync(composePath)) fail("Local Docker Compose file is missing.");
   const env = safeEnv(config);
   run("docker", ["--version"], env, true);
-  run("docker", composeArgs(["up", "-d", "--wait"]), env);
-
   let fixture, server, closing = false;
   function cleanup() {
     if (closing) return;
@@ -160,6 +158,7 @@ async function start(config) {
   process.on("SIGINT", () => { cleanup(); process.exit(0); });
   process.on("SIGTERM", () => { cleanup(); process.exit(0); });
   try {
+    run("docker", composeArgs(["up", "-d", "--wait"]), env);
     run(process.execPath, ["--experimental-strip-types", "scripts/career/runtime.mjs", "migrate"], env);
     fixture = spawn(process.execPath, ["scripts/career/fixtures.mjs"], {
       cwd: root, env, stdio: "inherit",
@@ -167,15 +166,15 @@ async function start(config) {
     await waitFor(
       "http://127.0.0.1:3305/fixture/mail/demo-health@example.invalid",
       { headers: { "x-fixture-key": config.CAREER_FIXTURE_CONTROL_SECRET } },
-      15000, () => fixture.exitCode !== null,
+      15000, () => fixture.exitCode !== null || fixture.signalCode !== null,
     );
     run(process.execPath, ["--experimental-strip-types", "scripts/career/runtime.mjs", "build"], env);
     server = spawn(process.execPath,
-      ["--experimental-strip-types", "scripts/career/runtime.mjs", "start"], {
+      ["node_modules/next/dist/bin/next", "start", "--hostname", "127.0.0.1", "--port", "3300"], {
         cwd: root, env, stdio: "inherit",
       });
     await waitFor("http://127.0.0.1:3300/career/sandbox", {}, 30000,
-      () => server.exitCode !== null);
+      () => server.exitCode !== null || server.signalCode !== null);
     console.log("\n[career-local] Open http://127.0.0.1:3300/career/sandbox");
     console.log("[career-local] Run 'npm run career:local:gate' in another terminal for the tester code.");
     console.log("[career-local] Use ONLY demo-...@example.invalid. Read OTP with career:local:otp.");
