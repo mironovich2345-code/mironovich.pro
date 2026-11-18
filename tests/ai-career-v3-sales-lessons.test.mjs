@@ -191,3 +191,21 @@ test("validator and worksheet builder CLIs pass", () => {
   const w = spawnSync(process.execPath, ["scripts/career/build-sales-lesson-materials.mjs", "--check"], { encoding: "utf8" });
   assert.equal(w.status, 0, w.stderr);
 });
+
+test("plan candidates: every exercise is executed, extra steps give a different result, data IDs exist", () => {
+  const steps = base.plan.steps;
+  assert.equal(steps.length, 8);
+  for (const id of SALES_LESSON_IDS) {
+    const kinds = new Set(steps.filter((s) => s.lessonId === id).map((s) => base.lessons[id].content.templates.find((t) => t.id === s.templateId).kind));
+    assert.ok(kinds.has("measurement_sheet") && kinds.has("checklist"), id + " has measurement and checklist steps");
+  }
+  const rephrased = fresh();
+  const copy = rephrased.plan.steps[4];
+  const original = rephrased.plan.steps.find((s) => s.exerciseId === copy.exerciseId && s !== copy);
+  copy.expectedArtifact = original.expectedArtifact;
+  copy.completionCriteria = [...original.completionCriteria];
+  assert.match(issues(rephrased), /repeats STEP-01 \(same artifact and checks\)/);
+  const badData = fresh();
+  badData.plan.steps[4].action = badData.plan.steps[4].action.replace("SAL02-DATA-B1…B3", "SAL02-DATA-B1…B7");
+  assert.match(issues(badData), /unknown practice data SAL02-DATA-B4/);
+});

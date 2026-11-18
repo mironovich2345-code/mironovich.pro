@@ -245,6 +245,23 @@ export function validateSalesLessons(ctx) {
   }
   for (const id of SALES_LESSON_IDS)
     for (const x of lessons[id].content.exercises) good(steps.some(s => s.exerciseId === x.id), `plan: exercise ${x.id} has no step`);
+  const stepKeys = steps.map(s => `${s.lessonId}|${s.exerciseId}|${s.templateId}`);
+  good(new Set(stepKeys).size === steps.length, "plan: exercise+template repeated");
+  good(new Set(steps.map(s => s.action)).size === steps.length, "plan: repeated action");
+  for (const [i, a] of steps.entries()) for (const b of steps.slice(i + 1)) {
+    if (a.lessonId !== b.lessonId || a.exerciseId !== b.exerciseId) continue;
+    const sameChecks = [...a.completionCriteria].sort().join("|") === [...b.completionCriteria].sort().join("|");
+    good(a.expectedArtifact !== b.expectedArtifact || !sameChecks, `plan ${b.stepId}: repeats ${a.stepId} (same artifact and checks)`);
+  }
+  for (const s of steps) {
+    const dataIds = new Set(JSON.stringify(practice[s.lessonId] ?? {}).match(/SAL0\d-DATA-[A-Z0-9]+/g) ?? []);
+    for (const m of s.action.matchAll(/(SAL0\d)-DATA-([A-Z]+)(\d+)(?:…|-|\.\.\.)?(?:[A-Z]*(\d+))?/g)) {
+      const from = Number(m[3]), to = Number(m[4] ?? m[3]);
+      for (let n = from; n <= to; n++) good(dataIds.has(`${m[1]}-DATA-${m[2]}${n}`), `plan ${s.stepId}: unknown practice data ${m[1]}-DATA-${m[2]}${n}`);
+    }
+    for (const m of s.action.matchAll(/\b(SAL0\d)-DATA-([A-Z]+)\d+ и ([A-Z]+)(\d+)/g))
+      good(dataIds.has(`${m[1]}-DATA-${m[3]}${m[4]}`), `plan ${s.stepId}: unknown practice data ${m[1]}-DATA-${m[3]}${m[4]}`);
+  }
 
   const questions = new Map([...diagnostic.primaryQuestions, ...diagnostic.followUps].map(q => [q.id, new Set((q.options || []).map(o => o.value))]));
   const safeRules = new Set(diagnostic.safetyRules.map(r => r.id));
