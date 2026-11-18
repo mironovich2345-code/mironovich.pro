@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Content quality gate for AI Career v3. No external dependencies, production APIs or PII.
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const json = (p) => JSON.parse(readFileSync(new URL(p, import.meta.url), "utf8"));
@@ -84,9 +84,10 @@ export function validateCatalog(catalog, role, lesson, step, lessonSchema, stepS
 
   schemaCheck(lessonSchema,lesson,"lesson",e);
   schemaCheck(stepSchema,step,"step",e);
-  good(lesson.status==="prototype"&&!lesson.quality.canBePublished,
-      "example lesson must remain unpublished");
-  good(lesson.quality.reviewedOn===null,"prototype cannot claim complete review");
+  good(lesson.status!=="prototype"||!lesson.quality.canBePublished,
+      "prototype lesson must remain unpublished");
+  good(lesson.status!=="prototype"||lesson.quality.reviewedOn===null,
+      "prototype cannot claim complete review");
   good(lesson.audience.roleIds.includes(role.roleId),"lesson must match sales role");
   good(lesson.audience.taskIds.every(id=>role.tasks.some(t=>t.id===id)),"unknown task in lesson");
   good(lesson.audience.scenarioId===null ||
@@ -106,8 +107,8 @@ export function validateCatalog(catalog, role, lesson, step, lessonSchema, stepS
     good(q.options.some(x=>x.id===q.correctId),"quiz lacks correct choice "+q.id);
   }
   good(step.lessonId===lesson.id,"step references missing lesson");
-  good(ids(content.exercises).has(step.exerciseId),"step references missing exercise");
-  good(ids(content.templates).has(step.templateId),"step references missing template");
+  good(ids(content.exercises||[]).has(step.exerciseId),"step references missing exercise");
+  good(ids(content.templates||[]).has(step.templateId),"step references missing template");
   good(step.linkedTaskId===null||role.tasks.some(x=>x.id===step.linkedTaskId),
     "step references nonexistent sales task");
   good(step.metricId===null||role.metrics.some(x=>x.id===step.metricId),
@@ -121,7 +122,9 @@ export function validateCatalog(catalog, role, lesson, step, lessonSchema, stepS
   good(!lesson.quality.canBePublished||(
     lesson.status==="approved" && lesson.quality.reviewedOn!==null &&
     lesson.sourcePolicy.factualClaimsChecked===true &&
-    lesson.downloads.every(x=>typeof x.repositoryPath==="string")
+    lesson.downloads.length>=1 && lesson.downloads.every(x=>
+      typeof x.repositoryPath==="string" && !x.repositoryPath.includes("..") &&
+      existsSync(new URL("../../"+x.repositoryPath, import.meta.url)))
   ),"published lesson requires approvals, sources and resources");
 
   return e;
