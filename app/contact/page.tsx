@@ -4,6 +4,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import ContactLink from "@/components/ContactLink";
 import LeadForm from "@/components/LeadForm";
 import { services } from "@/config/services";
+import { seller } from "@/config/ai-career-commerce";
 import { confirmedContacts, site, siteUrl } from "@/config/site";
 import { jsonLd } from "@/lib/jsonld";
 import { breadcrumbList, pageMetadata } from "@/lib/seo";
@@ -160,6 +161,7 @@ function ContactList({ tone = "dark" }: { tone?: "dark" | "light" }) {
     <div>
       <h2 className={"m-0 mb-3 text-[12px] font-normal uppercase tracking-[0.18em] " + head}>Написать напрямую</h2>
       <ul className="m-0 flex list-none flex-col gap-1 p-0">
+        <li><a href={seller.phoneHref} className={"inline-flex min-h-[44px] items-center gap-x-3 text-[16px] transition-colors " + link}><span className="text-[12px] uppercase tracking-[0.14em] opacity-70">Телефон</span>{seller.phone}</a></li>
         {confirmedContacts.map((c) => (
           <li key={c.channel}>
             <ContactLink contact={c} location="contact_page" className={"inline-flex max-w-full min-h-[44px] flex-wrap items-center gap-x-3 break-all text-[16px] transition-colors " + link}>

@@ -3,12 +3,15 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { test } from "node:test";
-import { checkRelease, findPlaceholders, releaseTarget, runReleaseGuard } from "../lib/release-guard.mjs";
+import { allPlaceholders, checkRelease, findPlaceholders, releaseTarget, runReleaseGuard } from "../lib/release-guard.mjs";
 
 const repo = path.resolve(import.meta.dirname, "..");
 const quiet = { log() {}, warn() {} };
 const PROD = { NEXT_PUBLIC_SITE_URL: "https://mironovich.pro" };
 const IDS = { NEXT_PUBLIC_YANDEX_METRICA_ID: "12345678" };
+// Drafts evolve; verify the exact current count instead of a historical 5/1.
+const draftCount = (slug) => allPlaceholders(fs.readFileSync(path.join(repo, "content/legal", slug + ".md"), "utf8")).length;
+const draftWarning = (slug) => new RegExp(`${slug}\\.md: незаполненные поля \\(${draftCount(slug)}\\)`);
 
 /** Copy of the repo's legal sources in a temp dir, optionally edited. */
 function fixture({ published, fill = false, edit = (s) => s } = {}) {
@@ -71,8 +74,10 @@ test("current repository: owner-approved release with the CURRENT legal texts pa
   const r = runReleaseGuard({ cwd: repo, env: { ...PROD, ...IDS }, log: { log() {}, warn: (m) => warned.push(m) } });
   assert.equal(r.blocked, false, r.message);
   assert.ok(warned.some((m) => m.includes("ПРЕЖНИМИ текстами")));
-  assert.ok(warned.some((m) => /privacy\.md: незаполненные поля \(5\) — проект не публикуется/.test(m)));
-  assert.ok(warned.some((m) => /consent\.md: незаполненные поля \(1\) — проект не публикуется/.test(m)));
+  for (const slug of ["privacy", "consent"]) {
+    assert.ok(draftCount(slug) > 0);
+    assert.ok(warned.some((m) => draftWarning(slug).test(m) && m.includes("— проект не публикуется")));
+  }
 });
 
 
@@ -80,7 +85,7 @@ test("legacy texts WITHOUT a recorded owner decision → refused (unfilled draft
   const r = runReleaseGuard({ cwd: withLegal({ legacyRelease: undefined }), env: { ...PROD, ...IDS }, log: quiet });
   assert.equal(r.blocked, true);
   assert.match(r.message, /legacyRelease/);
-  assert.match(r.message, /незаполненные поля \(5\)/);
+  assert.match(r.message, draftWarning("privacy"));
   for (const bad of [{}, { approvedBy: "" , date: "2026-11-01" }, { approvedBy: "владелец", date: "скоро" }, "yes", true]) {
     assert.equal(runReleaseGuard({ cwd: withLegal({ legacyRelease: bad }), env: { ...PROD, ...IDS }, log: quiet }).blocked, true, JSON.stringify(bad));
   }
@@ -95,7 +100,7 @@ test("legacy release never allows draft pages or other preview switches in produ
 test("published=true ignores the legacy decision: drafts must be complete", () => {
   const r = runReleaseGuard({ cwd: withLegal({ published: true }), env: { ...PROD, ...IDS }, log: quiet });
   assert.equal(r.blocked, true);
-  assert.match(r.message, /незаполненные поля \(5\)/);
+  assert.match(r.message, draftWarning("privacy"));
 });
 
 test("current repository: staging and local builds are never blocked, only reported", () => {

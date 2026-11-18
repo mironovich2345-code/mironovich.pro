@@ -19,7 +19,9 @@ export default function LegalDocument({ doc, mode, other }: { doc: LegalDoc; mod
             {doc.title}
           </h1>
           <p className="m-0 text-[14px] text-stone">
-            Редакция от <time dateTime={doc.edition}>{formatEdition(doc.edition)}</time>
+            {mode === "preview" ? <>
+              Проект от <time dateTime={doc.draftDate ?? doc.edition}>{formatEdition(doc.draftDate ?? doc.edition)}</time>. Дата начала действия не назначена.
+            </> : <>Редакция от <time dateTime={doc.edition}>{formatEdition(doc.edition)}</time></>}
           </p>
         </div>
       </section>
