@@ -1,6 +1,5 @@
 import CtaLink from "./CtaLink";
 import { productBySlug } from "@/content/products";
-import { rub } from "@/config/solutions";
 
 const cardClass =
   "flex min-w-0 flex-col border border-cream/20 bg-[#15151a] p-5 transition-colors hover:border-cream min-[560px]:p-6";
@@ -77,12 +76,6 @@ export default function Hero() {
                   Готовится к запуску
                 </p>
               </div>
-              <p className="m-0 shrink-0 text-right font-display text-[28px] font-bold leading-none text-cream">
-                {rub(career.plannedPrice)}
-                <span className="mt-1 block font-sans text-[11px] font-normal leading-normal text-stone">
-                  после запуска
-                </span>
-              </p>
             </div>
             <h2 className="m-0 font-display text-[clamp(23px,2.2vw,29px)] font-extrabold uppercase leading-[1.08] text-cream">
               {career.title}
