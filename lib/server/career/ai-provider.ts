@@ -42,7 +42,7 @@ function safeGeneratedText(value: unknown): value is string {
   if (s.length < 12 || s.length > 220 || /[\u0000-\u001f<>]/u.test(s)) return false;
   if (/(?:https?:\/\/|www\.|@|(?:\+7|8)[-\s(]*\d{3}|(?:паспорт|снилс|инн)\s*[:№]?\s*\d|\d{2,}%)/iu.test(s))
     return false;
-  if (/(?:гарантир\w*\s+(?:доход|зарплат|работ|повыш)|(?:отправ|загру|переда)\w*\s+(?:парол|паспорт|секрет|данн))/iu.test(s))
+  if (/(?:гарантир[а-яё]*\s+(?:доход|зарплат|работ|повыш)|(?:отправ|загру|переда)[а-яё]*\s+(?:парол|паспорт|секрет|данн)|без\s+(?:проверки|контроля)\s+человека)/iu.test(s))
     return false;
   return true;
 }
@@ -136,10 +136,13 @@ export async function generateCareerAnalysis(
   // Never call an outside service when the selected scenario disallows tools
   // or may involve confidential material, even though only codes are supplied.
   if (valid.questions.dataSensitivity === "restricted" ||
-      valid.questions.accessRules !== "approved") {
+      valid.questions.accessRules !== "approved" ||
+      valid.questions.errorImpact === "high" ||
+      valid.questions.reviewTime === "none" ||
+      valid.questions.decisionAuthority === "regulated") {
     return {
       ...base,
-      disclaimer: "Учебный план на вымышленных данных. Внешний ИИ не вызывался: для выбранного сценария отсутствует разрешение на использование инструментов или данных.",
+      disclaimer: "Учебный план на вымышленных данных. Внешний ИИ не вызывался: использование инструментов не разрешено либо задача имеет высокий риск ошибки.",
     };
   }
 
@@ -215,7 +218,7 @@ export async function generateCareerAnalysis(
     })),
     directions: ai.directions,
     plan: base.plan.map((step) => {
-      const phase = PHASE_STARTS.indexOf(step.day as 1 & 7 & 15 & 24);
+      const phase = PHASE_STARTS.indexOf(step.day as 1 | 7 | 15 | 24);
       return phase < 0 ? step : {
         ...step,
         action: step.action + " Учебный акцент: " + ai.phaseFocus[phase],
