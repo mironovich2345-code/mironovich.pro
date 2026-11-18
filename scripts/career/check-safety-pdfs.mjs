@@ -26,7 +26,10 @@ const run = (cmd, args) => {
 const info = f => Object.fromEntries(run("pdfinfo", [f]).split("\n").filter(Boolean).map(l => {
   const i = l.indexOf(":"); return [l.slice(0, i).trim(), l.slice(i + 1).trim()];
 }));
-const pages = f => run("pdftotext", ["-layout", f, "-"]).split("\f").map(p => p.replace(/[ \t]+/g, " ").replace(/\s+\n/g, "\n").trim());
+// Line structure is compared exactly; spaces inside a line are ignored, because pdftotext guesses
+// word gaps from glyph positions (letter-spaced headings come out as "M IR ON OVICH").
+const pages = f => run("pdftotext", ["-layout", f, "-"]).split("\f")
+  .map(p => p.split("\n").map(l => l.replace(/\s+/g, "")).filter(Boolean).join("\n"));
 const fonts = f => run("pdffonts", [f]).split("\n").slice(2).filter(Boolean);
 const uris = f => new Set([...readFileSync(f, "latin1").matchAll(/\/URI \(([^)]*)\)/g)].map(m => m[1]));
 

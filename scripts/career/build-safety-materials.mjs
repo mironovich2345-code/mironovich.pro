@@ -378,7 +378,9 @@ async function main() {
     { parts: [memo], format: "a4", out: join(out, "safety-rules-memo-a4.pdf"), footer: memo.meta.title },
     { parts: [memo], format: "mobile", out: join(out, "safety-rules-memo-mobile.pdf"), footer: "10 правил безопасной работы с ИИ" },
   ];
-  const browser = await playwright.chromium.launch();
+  // Glyph advances must not depend on the host's fontconfig hinting, otherwise line breaks and
+  // page counts differ between machines (seen on the GitHub runner: 76 vs 77 phone pages).
+  const browser = await playwright.chromium.launch({ args: ["--font-render-hinting=none"] });
   try {
     for (const job of jobs) { await buildDocument(browser, job); console.log("built", job.out.replace(ROOT + "/", "")); }
   } finally { await browser.close(); }
