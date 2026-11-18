@@ -1,0 +1,39 @@
+name: YooKassa storefront QA
+
+on:
+  push:
+    branches:
+      - feature/career-yookassa-public-20261118
+  pull_request:
+    paths:
+      - "app/products/**"
+      - "app/solutions/page.tsx"
+      - "app/delivery/page.tsx"
+      - "app/requisites/page.tsx"
+      - "components/AiCareerProductPage.tsx"
+      - "components/ProductCard.tsx"
+      - "components/Services.tsx"
+      - "content/products.ts"
+      - "tests/yookassa-site-review.test.mjs"
+      - ".github/workflows/yookassa-storefront-qa.yml"
+permissions:
+  contents: read
+jobs:
+  public-site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_PUBLIC_SITE_URL: https://mironovich.pro
+      NEXT_PUBLIC_YANDEX_METRICA_ID: ""
+      CAREER_SANDBOX_ENABLED: "0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
