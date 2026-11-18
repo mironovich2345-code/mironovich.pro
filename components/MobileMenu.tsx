@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import CtaLink from "./CtaLink";
 import { contactHref, type NavLink } from "@/config/routes";
+import { aboutMenuLinks } from "@/config/site";
 
 const FOCUSABLE = 'a[href], button:not([disabled])';
 
@@ -85,9 +86,24 @@ export default function MobileMenu({ links }: { links: NavLink[] }) {
             <ul className="m-0 flex list-none flex-col border-t border-cream/10 p-0">
               {links.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} onClick={close} className={itemClass}>
-                    {l.label} <span aria-hidden className="text-stone">→</span>
-                  </Link>
+                  {l.href === "/about" ? (
+                    <div>
+                      <p className={itemClass + " m-0"}>Кто я</p>
+                      <ul className="m-0 list-none border-b border-cream/10 py-2 pl-4">
+                        {aboutMenuLinks.map((item) => (
+                          <li key={item.href}>
+                            <Link href={item.href} onClick={close} className="flex min-h-[46px] items-center text-[14px] text-cream/85 hover:text-signal">
+                              {item.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : (
+                    <Link href={l.href} onClick={close} className={itemClass}>
+                      {l.label} <span aria-hidden className="text-stone">→</span>
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
