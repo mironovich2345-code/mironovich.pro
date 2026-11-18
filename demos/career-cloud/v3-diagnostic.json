@@ -1,0 +1,925 @@
+{
+  "schemaVersion": "ai-career-diagnostic-v3-draft1",
+  "lastReviewed": "2026-11-18",
+  "status": "content_design_only_no_public_ui",
+  "roleMatrix": "content/career/v3/roles/sales-manager.json",
+  "primaryQuestions": [
+    {
+      "id": "Q01",
+      "section": "Профессия",
+      "prompt": "Какие продажи занимают большую часть вашей работы?",
+      "help": "Выберите по реальным задачам, а не по названию должности. Если сочетаете направления — отметьте смешанную работу.",
+      "why": "Определяет набор задач, учебных примеров и показателей под ваш вид продаж, чтобы не предлагать посторонние упражнения.",
+      "affects": [
+        "roleSubtypes",
+        "taskCandidates",
+        "lessonOrdering"
+      ],
+      "kind": "single",
+      "options": [
+        {
+          "value": "outbound_b2b",
+          "label": "Ищу новых клиентов и первым выхожу на контакт (B2B)"
+        },
+        {
+          "value": "inbound",
+          "label": "Обрабатываю входящие заявки и обращения"
+        },
+        {
+          "value": "account",
+          "label": "Работаю с действующими клиентами, продлениями и развитием"
+        },
+        {
+          "value": "mixed",
+          "label": "Веду несколько направлений одновременно"
+        }
+      ]
+    },
+    {
+      "id": "Q02",
+      "section": "Профессия",
+      "prompt": "Насколько самостоятельно вы сейчас ведёте продажи?",
+      "help": "Не оцениваем вас как специалиста. Нужно только подобрать сложность примеров и объяснений.",
+      "why": "Определяет сложность уроков; не используется как оценка компетентности или ценности человека.",
+      "affects": [
+        "lessonLevel",
+        "lessonOrdering"
+      ],
+      "kind": "single",
+      "options": [
+        {
+          "value": "starter",
+          "label": "Только начинаю или ещё осваиваю задачи"
+        },
+        {
+          "value": "independent",
+          "label": "Самостоятельно веду обычные сделки"
+        },
+        {
+          "value": "experienced",
+          "label": "Веду сложные случаи, улучшаю процессы или помогаю коллегам"
+        }
+      ]
+    },
+    {
+      "id": "Q03",
+      "section": "Рабочие задачи",
+      "prompt": "С чем вы работаете чаще всего? Выберите до трёх вариантов.",
+      "help": "Например, «КП и расчёты» — если регулярно готовите предложения. Можно выбрать несколько направлений.",
+      "why": "Сужает длинный перечень рабочих операций до знакомых вам действий, чтобы следующий вопрос оставался коротким и полезным.",
+      "affects": [
+        "taskCandidates",
+        "taskRanking"
+      ],
+      "kind": "multi",
+      "options": [
+        {
+          "value": "research",
+          "label": "Поиск клиентов и подготовка информации"
+        },
+        {
+          "value": "outreach",
+          "label": "Письма, звонки и первые сообщения"
+        },
+        {
+          "value": "qualification",
+          "label": "Вопросы клиенту и выяснение потребностей"
+        },
+        {
+          "value": "crm",
+          "label": "CRM, заметки после общения, задачи"
+        },
+        {
+          "value": "proposal",
+          "label": "Коммерческие предложения, расчёты, условия"
+        },
+        {
+          "value": "negotiation",
+          "label": "Возражения, переговоры, согласование"
+        },
+        {
+          "value": "analytics",
+          "label": "Воронка продаж, отчёты, причины отказов"
+        },
+        {
+          "value": "account",
+          "label": "Сопровождение, продления и проблемы клиентов"
+        }
+      ],
+      "minSelected": 1,
+      "maxSelected": 3
+    },
+    {
+      "id": "Q04",
+      "section": "Рабочие задачи",
+      "prompt": "Какие конкретные задачи больше всего хочется упростить?",
+      "help": "После предыдущего ответа покажем только подходящие действия: например, «Подготовить справку о компании» или «Заполнить CRM после звонка».",
+      "why": "Определяет первоочередные уроки и рабочие сценарии; не требует вводить данные клиентов.",
+      "affects": [
+        "taskRanking",
+        "lessonOrdering",
+        "metricSelection"
+      ],
+      "kind": "matrix_task_multi",
+      "options": [],
+      "minSelected": 1,
+      "maxSelected": 3,
+      "optionsFrom": "sales-manager.json#tasks",
+      "maxVisible": 10,
+      "showTaskIds": false,
+      "allowOption": "none_of_these",
+      "allowOptionLabel": "Ничего не подходит — пока не знаю"
+    },
+    {
+      "id": "Q05",
+      "section": "Рабочие задачи",
+      "prompt": "Что больше всего мешает вам делать эту работу быстрее или качественнее?",
+      "help": "Выберите главное препятствие. Не нужно рассказывать о внутренних процессах компании или писать названия клиентов.",
+      "why": "Помогает выбрать тип первого упражнения: структура процесса, проверка данных, коммуникация или согласование.",
+      "affects": [
+        "lessonOrdering",
+        "taskRanking"
+      ],
+      "kind": "single",
+      "options": [
+        {
+          "value": "repetition",
+          "label": "Много повторяющихся ручных действий"
+        },
+        {
+          "value": "fragmented_info",
+          "label": "Нужно искать и сводить информацию"
+        },
+        {
+          "value": "complex_communication",
+          "label": "Сложно подобрать правильные слова или вести диалог"
+        },
+        {
+          "value": "quality",
+          "label": "Много исправлений и проверок"
+        },
+        {
+          "value": "tools",
+          "label": "Нет понятных или разрешённых инструментов"
+        },
+        {
+          "value": "unknown",
+          "label": "Пока не могу выделить одну причину"
+        }
+      ]
+    },
+    {
+      "id": "Q06",
+      "section": "Рабочие задачи",
+      "prompt": "Как часто повторяется выбранная вами основная задача?",
+      "help": "Имеется в виду одна и та же категория действия: например, подготовка предложений или ответы на типовые вопросы.",
+      "why": "Влияет на приоритет практики и возможность сравнить результат до и после.",
+      "affects": [
+        "taskRanking",
+        "metricSelection"
+      ],
+      "kind": "single",
+      "options": [
+        {
+          "value": "daily",
+          "label": "Каждый рабочий день"
+        },
+        {
+          "value": "weekly",
+          "label": "Несколько раз в неделю"
+        },
+        {
+          "value": "monthly",
+          "label": "Несколько раз в месяц"
+        },
+        {
+          "value": "rare",
+          "label": "Реже одного раза в месяц"
+        },
+        {
+          "value": "unknown",
+          "label": "Не отслеживал(а)"
+        }
+      ]
+    },
+    {
+      "id": "Q07",
+      "section": "Рабочие задачи",
+      "prompt": "Сколько примерно времени занимает один такой повтор?",
+      "help": "Если действие состоит из нескольких частей, оцените всё время, включая проверки. Если не знаете — так и отметьте.",
+      "why": "Помогает подобрать измеримую задачу, но не генерирует выдуманную экономию.",
+      "affects": [
+        "metricSelection",
+        "taskRanking"
+      ],
+      "kind": "single",
+      "options": [
+        {
+          "value": "under_15",
+          "label": "До 15 минут"
+        },
+        {
+          "value": "15_60",
+          "label": "Примерно 15–60 минут"
+        },
+        {
+          "value": "over_60",
+          "label": "Больше часа"
+        },
+        {
+          "value": "unknown",
+          "label": "Не замерял(а)"
+        }
+      ]
+    },
+    {
+      "id": "Q08",
+      "section": "Результат для компании",
+      "prompt": "По чему руководитель чаще всего оценивает вашу работу?",
+      "help": "Выберите основной показатель. Это не обязательно «продажи в рублях»: скорость и качество тоже могут быть важными.",
+      "why": "Подбирает метрику раздела «Мои результаты» и способ рассказать о пользе компании.",
+      "affects": [
+        "metricSelection",
+        "impactStory"
+      ],
+      "kind": "single",
+      "options": [
+        {
+          "value": "revenue",
+          "label": "Выручка или выполнение плана"
+        },
+        {
+          "value": "conversion",
+          "label": "Конверсия обращений в сделки"
+        },
+        {
+          "value": "speed",
+          "label": "Скорость ответа и выполнение сроков"
+        },
+        {
+          "value": "quality",
+          "label": "Качество коммуникации и отсутствие ошибок"
+        },
+        {
+          "value": "crm",
+          "label": "Порядок в CRM и выполнение задач"
+        },
+        {
+          "value": "retention",
+          "label": "Продления и удержание клиентов"
+        },
+        {
+          "value": "unknown",
+          "label": "Не знаю, как это оценивают"
+        }
+      ]
+    },
+    {
+      "id": "Q09",
+      "section": "Результат для компании",
+      "prompt": "Есть ли у вас исходные цифры, чтобы сравнить «было» и «стало»?",
+      "help": "Например, время на подготовку КП, скорость ответа или доля карточек CRM без ошибок. Никаких конкретных чисел вводить не нужно.",
+      "why": "Определяет, начинать ли с первого замера или с анализа уже имеющихся показателей.",
+      "affects": [
+        "metricSelection",
+        "lessonOrdering"
+      ],
+      "kind": "single",
+      "options": [
+        {
+          "value": "measured",
+          "label": "Да, показатели регулярно замеряются"
+        },
+        {
+          "value": "some",
+          "label": "Есть приблизительные записи или отдельные замеры"
+        },
+        {
+          "value": "none",
+          "label": "Нет — нужно научиться измерять"
+        },
+        {
+          "value": "unknown",
+          "label": "Не знаю, где посмотреть данные"
+        }
+      ]
+    },
+    {
+      "id": "Q10",
+      "section": "Опыт с ИИ",
+      "prompt": "Что вы уже пробовали делать с ИИ?",
+      "help": "Выберите самый близкий вариант. Опыт работы в ChatGPT, встроенном помощнике CRM или другом сервисе — любой, если он действительно был.",
+      "why": "Помогает выбрать глубину объяснений и сложность практики, не приписывая человеку навыки, которых у него пока нет.",
+      "affects": [
+        "lessonLevel",
+        "lessonOrdering"
+      ],
+      "kind": "single",
+      "options": [
+        {
+          "value": "none",
+          "label": "Не пробовал(а) использовать ИИ в работе"
+        },
+        {
+          "value": "occasionally",
+          "label": "Пару раз спрашивал(а) или просил(а) написать текст"
+        },
+        {
+          "value": "regular",
+          "label": "Регулярно делаю черновики, сводки или анализ"
+        },
+        {
+          "value": "advanced",
+          "label": "Строил(а) повторяемые сценарии и проверял(а) качество"
+        }
+      ]
+    },
+    {
+      "id": "Q11",
+      "section": "Инструменты и правила",
+      "prompt": "Какие ИИ-инструменты реально доступны вам для работы?",
+      "help": "Выбирайте лишь то, что разрешено использовать. Если доступ есть, но разрешение неизвестно, дальше мы обязательно уточним правила.",
+      "why": "Подбирает упражнения с доступным инструментом либо полностью без подключения ИИ.",
+      "affects": [
+        "toolAvailability",
+        "safetyMode",
+        "lessonOrdering"
+      ],
+      "kind": "multi",
+      "options": [
+        {
+          "value": "chat",
+          "label": "Отдельный чат с ИИ"
+        },
+        {
+          "value": "office",
+          "label": "ИИ внутри документов, почты или таблиц"
+        },
+        {
+          "value": "crm",
+          "label": "ИИ внутри CRM или корпоративной системы"
+        },
+        {
+          "value": "none",
+          "label": "Никакие инструменты недоступны"
+        },
+        {
+          "value": "unknown",
+          "label": "Не знаю, что доступно и разрешено"
+        }
+      ],
+      "minSelected": 1,
+      "maxSelected": 3,
+      "exclusiveOptions": [
+        "none",
+        "unknown"
+      ]
+    },
+    {
+      "id": "Q12",
+      "section": "Инструменты и правила",
+      "prompt": "Что компания разрешает передавать и делать через ИИ?",
+      "help": "Если правил не знаете — это нормальный ответ. Программа покажет безопасные учебные упражнения без данных работодателя.",
+      "why": "Главный переключатель безопасного маршрута: запрет или неопределённость не дают доступа к работе с реальными данными.",
+      "affects": [
+        "safetyMode",
+        "lessonOrdering",
+        "humanApproval"
+      ],
+      "kind": "single",
+      "options": [
+        {
+          "value": "approved_specific",
+          "label": "Есть одобренные инструменты и понятные ограничения по данным"
+        },
+        {
+          "value": "general_only",
+          "label": "Разрешено пользоваться ИИ, но правила работы с данными неясны"
+        },
+        {
+          "value": "prohibited",
+          "label": "ИИ для рабочих задач запрещён"
+        },
+        {
+          "value": "unknown",
+          "label": "Не знаю, есть ли у нас правила"
+        }
+      ]
+    },
+    {
+      "id": "Q13",
+      "section": "Инструменты и правила",
+      "prompt": "С какими типами информации вы обычно работаете?",
+      "help": "Выбирайте только категории — никогда не вставляйте реальные имена клиентов, телефоны, договоры или записи разговоров.",
+      "why": "Влияет на блок безопасности: для чувствительной информации — только вымышленные примеры, пока нет разрешённой среды.",
+      "affects": [
+        "safetyMode",
+        "riskControls",
+        "lessonOrdering"
+      ],
+      "kind": "multi",
+      "options": [
+        {
+          "value": "public",
+          "label": "Общедоступные сведения о компаниях и продуктах"
+        },
+        {
+          "value": "internal",
+          "label": "Внутренние цены, условия и коммерческая информация"
+        },
+        {
+          "value": "personal",
+          "label": "Контакты и другие персональные данные клиентов"
+        },
+        {
+          "value": "transcripts",
+          "label": "Записи и расшифровки звонков"
+        },
+        {
+          "value": "synthetic",
+          "label": "Только учебные или вымышленные данные"
+        },
+        {
+          "value": "unknown",
+          "label": "Не уверен(а), к какому типу относятся данные"
+        }
+      ],
+      "minSelected": 1,
+      "maxSelected": 4,
+      "exclusiveOptions": [
+        "unknown"
+      ]
+    },
+    {
+      "id": "Q14",
+      "section": "Инструменты и правила",
+      "prompt": "Что произойдёт, если ИИ ошибётся в вашей задаче?",
+      "help": "Подумайте о наиболее серьёзной реалистичной ошибке: неверная цена, обещанный срок, данные клиента или неудачное письмо.",
+      "why": "Определяет необходимость обязательной проверки и запрет автоматических решений.",
+      "affects": [
+        "riskControls",
+        "humanApproval"
+      ],
+      "kind": "single",
+      "options": [
+        {
+          "value": "minor",
+          "label": "Небольшая правка внутри черновика"
+        },
+        {
+          "value": "customer",
+          "label": "Клиент получит неточную информацию"
+        },
+        {
+          "value": "money",
+          "label": "Компания может потерять деньги или нарушить условия"
+        },
+        {
+          "value": "privacy",
+          "label": "Могут раскрыться закрытые или личные данные"
+        },
+        {
+          "value": "unknown",
+          "label": "Сложно оценить последствия"
+        }
+      ]
+    },
+    {
+      "id": "Q15",
+      "section": "Инструменты и правила",
+      "prompt": "Как сейчас проверяют письма, предложения и итоги общения?",
+      "help": "Выберите обычный порядок. Если отдельной проверки нет — программа научит пользоваться контрольным списком.",
+      "why": "Подбирает безопасную проверку результата и сложность упражнений.",
+      "affects": [
+        "riskControls",
+        "lessonOrdering"
+      ],
+      "kind": "single",
+      "options": [
+        {
+          "value": "checklist",
+          "label": "Есть утверждённый чек-лист или стандарты"
+        },
+        {
+          "value": "supervisor",
+          "label": "Проверяет руководитель или ответственное лицо"
+        },
+        {
+          "value": "self",
+          "label": "Проверяю самостоятельно"
+        },
+        {
+          "value": "none",
+          "label": "Специальной проверки пока нет"
+        },
+        {
+          "value": "unknown",
+          "label": "Не знаю точного порядка"
+        }
+      ]
+    },
+    {
+      "id": "Q16",
+      "section": "Инструменты и правила",
+      "prompt": "Кто имеет право согласовывать цену, скидку и обязательства перед клиентом?",
+      "help": "В разных компаниях это устроено по-разному. ИИ никогда не получает право утверждать коммерческие условия вместо уполномоченного человека.",
+      "why": "Исключает сценарии, в которых система предлагает действия за пределами полномочий пользователя.",
+      "affects": [
+        "humanApproval",
+        "riskControls",
+        "lessonOrdering"
+      ],
+      "kind": "single",
+      "options": [
+        {
+          "value": "within_limits",
+          "label": "Могу утверждать самостоятельно в установленных пределах"
+        },
+        {
+          "value": "manager",
+          "label": "Согласовываю с руководителем или другим ответственным"
+        },
+        {
+          "value": "no_deals",
+          "label": "В моих задачах нет утверждения коммерческих условий"
+        },
+        {
+          "value": "unknown",
+          "label": "Не знаю, где проходит граница полномочий"
+        }
+      ]
+    },
+    {
+      "id": "Q17",
+      "section": "Формат развития",
+      "prompt": "Сколько времени удобно выделять на обучение и упражнения?",
+      "help": "Это ориентир для длины уроков, не требование заниматься 30 дней подряд. Программа состоит из 30 шагов в вашем темпе.",
+      "why": "Настраивает рекомендуемый объём материала за подход; не лишает пользователя уроков.",
+      "affects": [
+        "learningPace",
+        "lessonOrdering"
+      ],
+      "kind": "single",
+      "options": [
+        {
+          "value": "10_15",
+          "label": "10–15 минут за раз"
+        },
+        {
+          "value": "20_30",
+          "label": "20–30 минут"
+        },
+        {
+          "value": "45_plus",
+          "label": "45 минут или больше"
+        },
+        {
+          "value": "unknown",
+          "label": "Хочу проходить без расписания"
+        }
+      ]
+    },
+    {
+      "id": "Q18",
+      "section": "Цель",
+      "prompt": "Что вы хотите изменить с помощью ИИ в ближайшее время?",
+      "help": "Можно выбрать две цели. Например, «убрать рутину» и «показать руководителю результат».",
+      "why": "Определяет приоритет 30 шагов и итоговый артефакт, но не обещает повышение или сохранение должности.",
+      "affects": [
+        "goal",
+        "lessonOrdering",
+        "impactStory"
+      ],
+      "kind": "multi",
+      "options": [
+        {
+          "value": "less_routine",
+          "label": "Сократить повторяющуюся работу"
+        },
+        {
+          "value": "quality",
+          "label": "Делать меньше ошибок и лучше проверять результат"
+        },
+        {
+          "value": "customers",
+          "label": "Лучше помогать клиентам и вести сделки"
+        },
+        {
+          "value": "manager",
+          "label": "Доказать пользу своей работы руководителю"
+        },
+        {
+          "value": "grow",
+          "label": "Освоить навыки для следующего карьерного уровня"
+        }
+      ],
+      "minSelected": 1,
+      "maxSelected": 2
+    }
+  ],
+  "followUps": [
+    {
+      "id": "F01",
+      "section": "Уточнение безопасности",
+      "prompt": "У кого в компании можно уточнить правила использования ИИ?",
+      "help": "Не нужно указывать человека или контакты. Мы подскажем, как корректно запросить разрешение и что спросить.",
+      "why": "Не выдаёт разрешение автоматически, а добавляет памятку и пример обращения.",
+      "affects": [
+        "safetyMode",
+        "humanApproval"
+      ],
+      "kind": "single",
+      "options": [
+        {
+          "value": "manager",
+          "label": "У руководителя"
+        },
+        {
+          "value": "it",
+          "label": "У ИТ-отдела или службы безопасности"
+        },
+        {
+          "value": "legal",
+          "label": "У юриста или ответственного за данные"
+        },
+        {
+          "value": "unknown",
+          "label": "Не знаю, у кого спросить"
+        }
+      ],
+      "showWhen": {
+        "questionId": "Q12",
+        "valueIn": [
+          "general_only",
+          "unknown"
+        ]
+      }
+    },
+    {
+      "id": "F02",
+      "section": "Уточнение специализации",
+      "prompt": "Если совмещаете направления, где у вас сейчас больше всего задач?",
+      "help": "Выберите ведущую специализацию только для подбора первых уроков; другие задачи останутся доступны.",
+      "why": "Разрешает неоднозначность смешанной роли без случайного выбора материалов.",
+      "affects": [
+        "roleSubtypes",
+        "taskRanking",
+        "lessonOrdering"
+      ],
+      "kind": "single",
+      "options": [
+        {
+          "value": "outbound_b2b",
+          "label": "Поиск новых B2B-клиентов"
+        },
+        {
+          "value": "inbound",
+          "label": "Обработка входящих обращений"
+        },
+        {
+          "value": "account",
+          "label": "Сопровождение действующих клиентов"
+        }
+      ],
+      "showWhen": {
+        "questionId": "Q01",
+        "valueIn": [
+          "mixed"
+        ]
+      }
+    }
+  ],
+  "maxTotalQuestions": 20,
+  "noFreeText": true,
+  "optionsSourceRules": {
+    "matrix_task_multi": {
+      "roleFilters": {
+        "outbound_b2b": [
+          "outbound_b2b"
+        ],
+        "inbound": [
+          "inbound"
+        ],
+        "account": [
+          "account"
+        ],
+        "mixed": [
+          "outbound_b2b",
+          "inbound",
+          "account"
+        ]
+      },
+      "stageFilterQuestion": "Q03",
+      "subtypeQuestion": "Q01",
+      "rankBy": [
+        "selected_work_area",
+        "role_subtype",
+        "stable_task_id"
+      ],
+      "showMax": 10,
+      "selectedMax": 3,
+      "fallback": "При отсутствии подходящего выбора предложить один безопасный учебный пример и уточнить задачу позже; не делать выводы о реальной работе человека",
+      "invalidatedAnswers": "Если пользователь меняет Q01/Q03, перепроверить выбранные ID задач; прежние невалидные выборы снять с понятным уведомлением",
+      "areaStageAliases": {
+        "research": [
+          "research"
+        ],
+        "outreach": [
+          "outreach"
+        ],
+        "qualification": [
+          "qualification"
+        ],
+        "crm": [
+          "crm",
+          "handover"
+        ],
+        "proposal": [
+          "proposal"
+        ],
+        "negotiation": [
+          "negotiation"
+        ],
+        "analytics": [
+          "analytics",
+          "reporting"
+        ],
+        "account": [
+          "account",
+          "support"
+        ]
+      }
+    }
+  },
+  "safetyRules": [
+    {
+      "id": "SAFE-01",
+      "condition": "Q12 in [prohibited,unknown,general_only]",
+      "action": "safetyMode=synthetic_only; show company policy lesson and do not recommend use of real employer data"
+    },
+    {
+      "id": "SAFE-02",
+      "condition": "Q13 includes internal,personal,transcripts or unknown",
+      "action": "do not prompt to upload real data; synthetic-only unless a separately reviewed approved environment exists"
+    },
+    {
+      "id": "SAFE-03",
+      "condition": "Q14 in [money,privacy,unknown]",
+      "action": "human review mandatory; prevent unattended changes to customer communication or CRM"
+    },
+    {
+      "id": "SAFE-04",
+      "condition": "Q16 in [manager,unknown,no_deals]",
+      "action": "do not recommend personally confirming prices, concessions or customer promises"
+    },
+    {
+      "id": "SAFE-05",
+      "condition": "Never infer job loss probability, replaceability of role, actual money saved or consent from answers",
+      "action": "offer explanatory conditions and exercises only"
+    }
+  ],
+  "selectionRules": [
+    {
+      "id": "PERS-01",
+      "from": "Q01 and F02",
+      "to": "role subtype; stage and scenarios filtered by sales matrix"
+    },
+    {
+      "id": "PERS-02",
+      "from": "Q03 and Q04",
+      "to": "rank suitable tasks and seven canonical learning scenarios"
+    },
+    {
+      "id": "PERS-03",
+      "from": "Q08 and Q09",
+      "to": "select measurement template; if unknown, first learn baseline rather than invent results"
+    },
+    {
+      "id": "PERS-04",
+      "from": "Q10 and Q02",
+      "to": "choose beginner vs advanced explanations; avoid skipping mandatory safety lessons"
+    },
+    {
+      "id": "PERS-05",
+      "from": "Q11–Q16",
+      "to": "select safe exercise variant, human gates and permissions"
+    },
+    {
+      "id": "PERS-06",
+      "from": "Q17",
+      "to": "adjust lesson session size; plan remains 30 steps, not 30 calendar days"
+    },
+    {
+      "id": "PERS-07",
+      "from": "Q18 and Q05",
+      "to": "set goal and choose evidence-of-value project"
+    },
+    {
+      "id": "PERS-08",
+      "from": "If no suitable published lessons",
+      "to": "do not fabricate an individual plan; show fallback educational materials and note coverage gap"
+    }
+  ],
+  "sampleProfiles": [
+    {
+      "id": "P-inbound-starter",
+      "story": "Новичок, входящие заявки, нет ясной политики ИИ",
+      "answers": {
+        "Q01": "inbound",
+        "Q02": "starter",
+        "Q03": [
+          "outreach",
+          "crm"
+        ],
+        "Q05": "repetition",
+        "Q08": "speed",
+        "Q09": "none",
+        "Q10": "none",
+        "Q11": [
+          "unknown"
+        ],
+        "Q12": "unknown",
+        "Q13": [
+          "personal"
+        ],
+        "Q14": "customer",
+        "Q15": "self",
+        "Q16": "manager",
+        "Q17": "20_30",
+        "Q18": [
+          "less_routine",
+          "quality"
+        ],
+        "F01": "manager"
+      },
+      "expected": "Только синтетические упражнения, сначала правила компании, затем первый ответ и CRM; метрика скорости плюс качество"
+    },
+    {
+      "id": "P-b2b-experienced",
+      "story": "Опытный B2B-менеджер; инструменты утверждены для публичных источников",
+      "answers": {
+        "Q01": "outbound_b2b",
+        "Q02": "experienced",
+        "Q03": [
+          "research",
+          "proposal",
+          "negotiation"
+        ],
+        "Q05": "fragmented_info",
+        "Q08": "conversion",
+        "Q09": "measured",
+        "Q10": "regular",
+        "Q11": [
+          "chat",
+          "office"
+        ],
+        "Q12": "approved_specific",
+        "Q13": [
+          "public"
+        ],
+        "Q14": "money",
+        "Q15": "checklist",
+        "Q16": "manager",
+        "Q17": "45_plus",
+        "Q18": [
+          "customers",
+          "manager"
+        ]
+      },
+      "expected": "Исследование, КП и переговоры на учебных данных; цена только после согласования; замер времени и ошибок"
+    },
+    {
+      "id": "P-account-prohibited",
+      "story": "Сопровождение клиентов, внешний ИИ запрещён",
+      "answers": {
+        "Q01": "account",
+        "Q02": "independent",
+        "Q03": [
+          "account",
+          "crm"
+        ],
+        "Q05": "complex_communication",
+        "Q08": "retention",
+        "Q09": "some",
+        "Q10": "occasionally",
+        "Q11": [
+          "none"
+        ],
+        "Q12": "prohibited",
+        "Q13": [
+          "internal",
+          "transcripts"
+        ],
+        "Q14": "privacy",
+        "Q15": "supervisor",
+        "Q16": "manager",
+        "Q17": "10_15",
+        "Q18": [
+          "quality",
+          "grow"
+        ]
+      },
+      "expected": "Нет практики на реальных записях; учебные кейсы переговоров, сценарий согласования пилота, без прогноза удержания"
+    }
+  ]
+}

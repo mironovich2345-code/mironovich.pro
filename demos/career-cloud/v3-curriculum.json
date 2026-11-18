@@ -1,0 +1,233 @@
+{
+  "schemaVersion": "v3.1",
+  "reviewedOn": "2026-11-18",
+  "roleId": "sales_manager",
+  "usableForPaidUser": false,
+  "modules": [
+    {
+      "id": "safety",
+      "title": "Безопасность работы с ИИ",
+      "purpose": "Понимать границы раскрытия информации, разрешения компании, проверку ответов и ответственность",
+      "outcome": "Чек-лист безопасного использования для своей задачи"
+    },
+    {
+      "id": "task_mapping",
+      "title": "Что можно поручить ИИ",
+      "purpose": "Разделять рабочий процесс на операции, оценивать пригодность, ограничения и участие человека",
+      "outcome": "Карта задач с объяснёнными режимами применения ИИ"
+    },
+    {
+      "id": "practice",
+      "title": "ИИ в моей работе",
+      "purpose": "Освоить практические сценарии своей профессии с проверкой качества",
+      "outcome": "Проверенный учебный артефакт и повторяемая инструкция"
+    },
+    {
+      "id": "trends",
+      "title": "Тренды и развитие навыков",
+      "purpose": "Различать подтверждённые возможности, прогнозы и изменения в профессии",
+      "outcome": "План изучения актуальных навыков с источниками и датами"
+    },
+    {
+      "id": "value",
+      "title": "Как показать ценность компании",
+      "purpose": "Измерять улучшения и формулировать результат на языке руководителя",
+      "outcome": "Кейс «было → стало» и мини-предложение улучшения"
+    }
+  ],
+  "slots": [
+    {
+      "id": "SAF-01",
+      "moduleId": "safety",
+      "title": "Какие данные нельзя передавать ИИ",
+      "scenarioId": null,
+      "status": "planned",
+      "publishedLessonId": null
+    },
+    {
+      "id": "SAF-02",
+      "moduleId": "safety",
+      "title": "Правила работодателя и согласование инструмента",
+      "scenarioId": null,
+      "status": "planned",
+      "publishedLessonId": null
+    },
+    {
+      "id": "SAF-03",
+      "moduleId": "safety",
+      "title": "Почему ИИ ошибается: проверка фактов и расчётов",
+      "scenarioId": null,
+      "status": "planned",
+      "publishedLessonId": null
+    },
+    {
+      "id": "SAF-04",
+      "moduleId": "safety",
+      "title": "Человек отвечает за решения и обещания",
+      "scenarioId": null,
+      "status": "planned",
+      "publishedLessonId": null
+    },
+    {
+      "id": "MAP-01",
+      "moduleId": "task_mapping",
+      "title": "Как описать свой рабочий день через задачи",
+      "scenarioId": null,
+      "status": "planned",
+      "publishedLessonId": null
+    },
+    {
+      "id": "MAP-02",
+      "moduleId": "task_mapping",
+      "title": "Что можно автоматизировать частично, а что нет",
+      "scenarioId": null,
+      "status": "planned",
+      "publishedLessonId": null
+    },
+    {
+      "id": "MAP-03",
+      "moduleId": "task_mapping",
+      "title": "Как выбрать безопасный рабочий эксперимент",
+      "scenarioId": null,
+      "status": "planned",
+      "publishedLessonId": null
+    },
+    {
+      "id": "MAP-04",
+      "moduleId": "task_mapping",
+      "title": "Как оценить цену ошибки, сложность и пользу",
+      "scenarioId": null,
+      "status": "planned",
+      "publishedLessonId": null
+    },
+    {
+      "id": "SAL-01",
+      "moduleId": "practice",
+      "title": "Справка о клиенте перед звонком",
+      "scenarioId": "S01",
+      "status": "planned",
+      "publishedLessonId": null
+    },
+    {
+      "id": "SAL-02",
+      "moduleId": "practice",
+      "title": "Первое письмо и корректный follow-up",
+      "scenarioId": "S02",
+      "status": "planned",
+      "publishedLessonId": null
+    },
+    {
+      "id": "SAL-03",
+      "moduleId": "practice",
+      "title": "Коммерческое предложение с проверкой условий",
+      "scenarioId": "S03",
+      "status": "planned",
+      "publishedLessonId": null
+    },
+    {
+      "id": "SAL-04",
+      "moduleId": "practice",
+      "title": "Отработка возражений без манипуляций",
+      "scenarioId": "S04",
+      "status": "planned",
+      "publishedLessonId": null
+    },
+    {
+      "id": "SAL-05",
+      "moduleId": "practice",
+      "title": "Итог звонка и безопасная работа с CRM",
+      "scenarioId": "S05",
+      "status": "planned",
+      "publishedLessonId": null
+    },
+    {
+      "id": "SAL-06",
+      "moduleId": "practice",
+      "title": "Анализ потерь и проверка гипотез воронки",
+      "scenarioId": "S06",
+      "status": "planned",
+      "publishedLessonId": null
+    },
+    {
+      "id": "SAL-07",
+      "moduleId": "practice",
+      "title": "Подготовка к переговорам и границы уступок",
+      "scenarioId": "S07",
+      "status": "planned",
+      "publishedLessonId": null
+    },
+    {
+      "id": "TRD-01",
+      "moduleId": "trends",
+      "title": "Как читать исследования об ИИ и профессиях",
+      "scenarioId": null,
+      "status": "planned",
+      "publishedLessonId": null
+    },
+    {
+      "id": "TRD-02",
+      "moduleId": "trends",
+      "title": "Ключевые изменения инструментов для продавцов",
+      "scenarioId": null,
+      "status": "planned",
+      "publishedLessonId": null
+    },
+    {
+      "id": "TRD-03",
+      "moduleId": "trends",
+      "title": "Навыки следующего уровня: что осваивать и зачем",
+      "scenarioId": null,
+      "status": "planned",
+      "publishedLessonId": null
+    },
+    {
+      "id": "VAL-01",
+      "moduleId": "value",
+      "title": "Как определить, что важно руководителю",
+      "scenarioId": null,
+      "status": "planned",
+      "publishedLessonId": null
+    },
+    {
+      "id": "VAL-02",
+      "moduleId": "value",
+      "title": "Было → стало: корректные замеры времени и качества",
+      "scenarioId": null,
+      "status": "planned",
+      "publishedLessonId": null
+    },
+    {
+      "id": "VAL-03",
+      "moduleId": "value",
+      "title": "Как оформить короткий кейс результата",
+      "scenarioId": null,
+      "status": "planned",
+      "publishedLessonId": null
+    },
+    {
+      "id": "VAL-04",
+      "moduleId": "value",
+      "title": "Как рассказать руководителю о пользе",
+      "scenarioId": null,
+      "status": "planned",
+      "publishedLessonId": null
+    },
+    {
+      "id": "VAL-05",
+      "moduleId": "value",
+      "title": "Как предложить двухнедельный пилот",
+      "scenarioId": null,
+      "status": "planned",
+      "publishedLessonId": null
+    }
+  ],
+  "selectionPolicy": {
+    "onlyApprovedLessons": true,
+    "doNotInferMissingContent": true,
+    "safetyMustComeFirst": true,
+    "planIsNumberedStepsNotCalendarDays": true,
+    "roleMatchRequired": true,
+    "sourceFreshnessReviewedBeforeRelease": true
+  },
+  "displayNote": "Слоты — производственный план, не опубликованные уроки. До настоящего наполнения не показывать их покупателям."
+}

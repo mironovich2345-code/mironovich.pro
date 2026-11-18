@@ -7,6 +7,14 @@ const types = new Map([
   ["/app.js",["app.js","text/javascript; charset=utf-8"]],
   ["/style.css",["style.css","text/css; charset=utf-8"]],
   ["/data.json",["data.json","application/json; charset=utf-8"]],
+  ["/v3-preview",["v3-preview.html","text/html; charset=utf-8"]],
+  ["/v3-preview/",["v3-preview.html","text/html; charset=utf-8"]],
+  ["/v3-preview.css",["v3-preview.css","text/css; charset=utf-8"]],
+  ["/v3-preview.js",["v3-preview.js","text/javascript; charset=utf-8"]],
+  ["/v3-curriculum.json",["v3-curriculum.json","application/json; charset=utf-8"]],
+  ["/v3-diagnostic.json",["v3-diagnostic.json","application/json; charset=utf-8"]],
+  ["/v3-safety-prototype.json",["v3-safety-prototype.json","application/json; charset=utf-8"]],
+  ["/v3-sales-role.json",["v3-sales-role.json","application/json; charset=utf-8"]],
 ]);
 const security = {
   "Content-Security-Policy": "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
