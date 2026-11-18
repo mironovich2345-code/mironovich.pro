@@ -168,7 +168,11 @@ export function generateSyntheticAnalysis(answers: CareerAnswers) {
   // The "day" key is retained only for compatibility with the sandbox progress
   // table and API. In the product these are steps, never calendar dates.
   const focus = ranked[0]?.title ?? "выбранной учебной задачи";
-  const phases = [
+  const phases: ReadonlyArray<{
+    start: number;
+    theme: string;
+    steps: ReadonlyArray<readonly [action: string, evidence: string]>;
+  }> = [
     {
       start: 1,
       theme: "Разберите задачу",
@@ -223,7 +227,7 @@ export function generateSyntheticAnalysis(answers: CareerAnswers) {
         ["Наметьте следующий безопасный эксперимент и критерий его успешности.", "Зафиксирован следующий шаг"],
       ],
     },
-  ] as const;
+  ];
   const plan = phases.flatMap(({ start, theme, steps }) =>
     steps.map(([action, evidence], index) => ({
       day: start + index,
