@@ -95,17 +95,46 @@ export default function AiCareerProductPage({ product }: { product: DigitalProdu
         <section className="mt-16 border-t border-cream/25 pt-10" aria-labelledby="ai-career-price-heading">
           <div className="grid gap-6 border-l-2 border-signal bg-cream/[0.035] p-6 min-[700px]:grid-cols-[minmax(0,1fr)_auto] min-[700px]:items-center min-[700px]:p-8">
             <div>
-              <p className="m-0 text-xs font-semibold uppercase tracking-[0.14em] text-signal">Планируемая цена при запуске</p>
+              <p className="m-0 text-xs font-semibold uppercase tracking-[0.14em] text-signal">Фиксированная стоимость цифрового продукта</p>
               <h2 id="ai-career-price-heading" className="mt-3 font-display text-[clamp(25px,4vw,35px)] font-extrabold uppercase leading-[1.1]">Стоимость программы</h2>
               <p className="mt-3 max-w-[65ch] text-[14px] leading-relaxed text-stone">{commerceCopy.initialPurchase}</p>
-              <p className="mt-2 max-w-[65ch] text-xs leading-relaxed text-stone">Продукт ещё не продавался. Зачёркнутая сумма — плановая стандартная цена, а не цена состоявшихся продаж.</p>
+              <p className="mt-2 max-w-[65ch] text-xs leading-relaxed text-stone">3 990 ₽ — плановая стандартная стоимость, а не цена прежних продаж. Цена первой покупки фиксирована: 1 993 ₽, без обязательных дополнений и подписки.</p>
             </div>
             <div className="min-w-[170px]">
               <del className="block text-[21px] text-stone">{aiCareerCommerce.referencePriceRub.toLocaleString("ru-RU")} ₽</del>
               <strong className="mt-1 block font-display text-[clamp(34px,4vw,46px)] leading-none text-cream">{aiCareerCommerce.priceRub.toLocaleString("ru-RU")} ₽</strong>
               <span className="mt-3 block text-[13px] text-cream/70">90 дней доступа · один персональный анализ</span>
+              <button
+                type="button"
+                disabled
+                aria-describedby="ai-career-payment-status"
+                className="mt-5 inline-flex min-h-[52px] w-full cursor-not-allowed items-center justify-center bg-signal/65 px-5 text-center text-[14px] font-bold uppercase tracking-[0.03em] text-white/90"
+              >
+                Купить за {aiCareerCommerce.priceRub.toLocaleString("ru-RU")} ₽
+              </button>
+              <p id="ai-career-payment-status" role="status" className="mt-3 max-w-[270px] text-[13px] leading-relaxed text-cream/75">
+                Приём онлайн-платежей через ЮKassa ещё подключается. Пока оплатить и получить доступ нельзя.
+              </p>
             </div>
           </div>
+        </section>
+        <section className="mt-10 border-t border-cream/20 pt-8" aria-labelledby="ai-career-checkout-title">
+          <h2 id="ai-career-checkout-title" className="text-[23px] font-semibold">Как будет проходить покупка</h2>
+          <ol className="mt-5 grid gap-4 min-[700px]:grid-cols-3">
+            <li className="list-none border border-cream/20 p-5">
+              <span className="text-xs font-bold text-signal">01 / Оформление</span>
+              <p className="mb-0 mt-3 text-[14px] leading-relaxed text-cream/80">После подключения оплаты вы укажете email, подтвердите возраст 18+ и согласитесь с условиями покупки.</p>
+            </li>
+            <li className="list-none border border-cream/20 p-5">
+              <span className="text-xs font-bold text-signal">02 / Оплата</span>
+              <p className="mb-0 mt-3 text-[14px] leading-relaxed text-cream/80">Оплатите фиксированные 1 993 ₽ через ЮKassa. Доступные способы оплаты отобразятся при оформлении.</p>
+            </li>
+            <li className="list-none border border-cream/20 p-5">
+              <span className="text-xs font-bold text-signal">03 / Доступ</span>
+              <p className="mb-0 mt-3 text-[14px] leading-relaxed text-cream/80">После подтверждения успешной оплаты получите доступ к кабинету по email и сможете пройти диагностику, 30 шагов и скачать PDF.</p>
+            </li>
+          </ol>
+          <p className="mt-4 max-w-[80ch] text-[13px] leading-relaxed text-stone">Это порядок, предусмотренный к запуску. Сейчас оформление и списание денег выключены. Физическая доставка не требуется.</p>
         </section>
         <section className="mt-16 grid gap-6 border-t border-cream/25 pt-8 min-[700px]:grid-cols-2">
           <div>
