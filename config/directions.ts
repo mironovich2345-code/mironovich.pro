@@ -71,7 +71,8 @@ export const directions: readonly Direction[] = [
     result:
       "Технологическая стратегия, приоритеты и контроль реализации в согласованном объёме.",
     href: "/services/cto",
-    price: `${rub(ctoOffer.monthlyPrice)}/мес. · до ${ctoOffer.hours} часов`,
+    // non-breaking spaces keep «до 30 часов» on one line in the price column
+    price: `${rub(ctoOffer.monthlyPrice)}/мес. ·\u00a0до\u00a0${ctoOffer.hours}\u00a0часов`,
     service: "cto",
   },
 ];

@@ -1,0 +1,74 @@
+name: Public UX and consent browser smoke
+
+on:
+  pull_request:
+    paths:
+      - "components/ConsentBanner.tsx"
+      - "components/Hero.tsx"
+      - "components/Services.tsx"
+      - "app/services/**"
+      - "app/solutions/**"
+      - "next.config.mjs"
+      - "scripts/audit/public-ux-smoke.mjs"
+      - "scripts/audit/consent-network.mjs"
+      - "tests/site-ux-audit.test.mjs"
+      - "tests/cookie-notice.test.mjs"
+      - ".github/workflows/public-ux-smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-ux:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install locked project deps and browser test runner
+        run: |
+          npm ci
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Static checks
+        run: |
+          npm test
+          npm run lint
+          npm run typecheck
+      - name: Build strictly local preview with a synthetic analytics ID
+        env:
+          NEXT_PUBLIC_SITE_URL: http://localhost:3101
+          NEXT_PUBLIC_YANDEX_METRICA_ID: "10000001"
+          SITE_NOINDEX: "1"
+        run: npm run build:local
+      - name: Start preview and run browser smoke
+        shell: bash
+        env:
+          NEXT_PUBLIC_SITE_URL: http://localhost:3101
+          NEXT_PUBLIC_YANDEX_METRICA_ID: "10000001"
+          SITE_NOINDEX: "1"
+          SMOKE_BASE: http://localhost:3101
+        run: |
+          set -euo pipefail
+          npx next start -p 3101 > /tmp/public-ux-next.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          ready=0
+          for i in {1..90}; do
+            if curl --max-time 2 -fsS http://localhost:3101 > /dev/null; then
+              ready=1
+              break
+            fi
+            if ! kill -0 "$server_pid" 2>/dev/null; then break; fi
+            sleep 1
+          done
+          if [ "$ready" -ne 1 ]; then
+            tail -n 100 /tmp/public-ux-next.log
+            exit 1
+          fi
+          node scripts/audit/public-ux-smoke.mjs
+          node scripts/audit/consent-network.mjs --base http://localhost:3101

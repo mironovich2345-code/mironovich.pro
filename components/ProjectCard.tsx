@@ -30,13 +30,13 @@ export default function ProjectCard({ project, compact = false, showCaseLink = t
 
   return (
     <article className="flex flex-col gap-5 border-t-2 border-graphite py-8">
-      {project.image?.approved && project.image.src && <Image src={project.image.src} alt={project.image.alt} width={960} height={600} className={compact ? "h-[240px] w-full bg-white object-contain" : "max-h-[680px] w-full object-contain"}/>}
+      {project.image?.approved && project.image.src && <Image src={project.image.src} alt={project.image.alt} width={960} height={600} className={compact ? "h-[240px] w-full bg-[#e8e3d7] object-contain" : "max-h-[680px] w-full object-contain"}/>}
       {!compact && project.image?.approved && project.image.caption && <p className="m-0 text-sm leading-relaxed text-graphite/70">{project.image.caption}</p>}
       <div className="flex flex-wrap items-center gap-3">
         <span className={"inline-flex px-3 py-1.5 text-[12px] font-medium uppercase tracking-[0.12em] " + statusClass[project.status]}>
           {status.label}
         </span>
-        <Link href={service.href} className="text-[12px] uppercase tracking-[0.14em] text-graphite/65 hover:text-maroon">
+        <Link href={service.href} className="inline-flex min-h-[32px] items-center text-[12px] uppercase tracking-[0.14em] text-graphite/65 hover:text-maroon">
           {service.label}
         </Link>
       </div>
@@ -51,7 +51,7 @@ export default function ProjectCard({ project, compact = false, showCaseLink = t
           .filter((r): r is [string, string] => Boolean(r[1]) && (!compact || r[0] === "Задача"))
           .map(([k, v]) => (
             <div key={k}>
-              <dt className="mb-1 text-[11px] uppercase tracking-[0.16em] text-maroon">{k}</dt>
+              <dt className="mb-1 text-[12px] uppercase tracking-[0.16em] text-maroon">{k}</dt>
               <dd className="m-0 max-w-[60ch] text-pretty text-[15px] leading-[1.6] text-graphite/80">{v}</dd>
             </div>
           ))}

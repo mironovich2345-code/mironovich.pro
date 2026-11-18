@@ -3,8 +3,6 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import Link from "next/link";
 import CtaLink from "@/components/CtaLink";
 import Services from "@/components/Services";
-import CtoOffer from "@/components/CtoOffer";
-import OtherServices from "@/components/OtherServices";
 import ContactSection from "@/components/ContactSection";
 import { directions } from "@/config/directions";
 import { siteUrl } from "@/config/site";
@@ -12,7 +10,7 @@ import { pageMetadata, breadcrumbList } from "@/lib/seo";
 import { jsonLd } from "@/lib/jsonld";
 const title = "Решения для сотрудников, продаж и филиалов — MIRONOVICH.PRO";
 const description =
-  "Шесть направлений: обучение, мотивация команды, финансы, стандарты филиалов, работа с клиентами и внешний CTO. Состав первого этапа и стартовые цены.";
+  "Пять решений для бизнеса: обучение, мотивация команды, отчётность, контроль филиалов и обработка клиентов. Объём первого этапа и стартовые цены.";
 export const metadata: Metadata = pageMetadata({
   title,
   description,
@@ -31,7 +29,7 @@ export default function Page() {
       description,
       mainEntity: {
         "@type": "ItemList",
-        itemListElement: directions.map((s, i) => ({
+        itemListElement: directions.filter((d) => d.solution).map((s, i) => ({
           "@type": "ListItem",
           position: i + 1,
           name: s.title,
@@ -78,8 +76,14 @@ export default function Page() {
           </div>
         </section>
         <Services />
-        <CtoOffer />
-        <OtherServices />
+        <section className="bg-graphite px-[22px] pb-12">
+          <div className="mx-auto max-w-[1080px] border-t border-cream/20 pt-6 text-[14px] leading-relaxed text-cream/80">
+            Нужен не отдельный проект, а управление IT или помощь с подрядчиками?{" "}
+            <Link href="/services" className="text-cream underline underline-offset-4 hover:text-signal">
+              Посмотреть услуги и внешний CTO
+            </Link>
+          </div>
+        </section>
         <ContactSection />
       </main>
       <script

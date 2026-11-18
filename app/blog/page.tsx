@@ -79,7 +79,7 @@ export default function BlogPage() {
             {/* Featured article — DOM is [image, text] so mobile shows image → title; grid areas put text left on desktop. */}
             <section className="bg-cream px-[22px] py-14 min-[560px]:py-20">
               <div className="mx-auto max-w-[1080px]">
-                <p className="m-0 mb-8 text-[11px] uppercase tracking-[0.22em] text-maroon min-[560px]:mb-10">Новое</p>
+                <p className="m-0 mb-8 text-[12px] uppercase tracking-[0.22em] text-maroon min-[560px]:mb-10">Новое</p>
                 <div className={"grid gap-8 " + (featured.cover ? "min-[860px]:grid-cols-[1.05fr_0.95fr] min-[860px]:items-center min-[860px]:gap-16 min-[860px]:[grid-template-areas:'text_image']" : "grid-cols-1")}>
                   {featured.cover && (
                     <Link href={"/blog/" + featured.slug} className="block min-[860px]:[grid-area:image]" aria-hidden tabIndex={-1}>
@@ -97,7 +97,7 @@ export default function BlogPage() {
                   <div className={featured.cover ? "min-[860px]:[grid-area:text]" : ""}>
                     <Link
                       href={categoryHref(featured.category)}
-                      className="mb-3 inline-flex min-h-[28px] items-center text-[11px] uppercase tracking-[0.2em] text-signal hover:text-maroon"
+                      className="mb-3 inline-flex min-h-[28px] items-center text-[12px] uppercase tracking-[0.2em] text-signal hover:text-maroon"
                     >
                       {categoryBySlug(featured.category).name}
                     </Link>
@@ -126,7 +126,7 @@ export default function BlogPage() {
             {rest.length > 0 && (
               <section className="bg-graphite px-[22px] py-16 min-[560px]:py-24">
                 <div className="mx-auto max-w-[1080px]">
-                  <h2 className="m-0 mb-10 text-[11px] font-normal uppercase tracking-[0.22em] text-stone min-[560px]:mb-14">Все материалы</h2>
+                  <h2 className="m-0 mb-10 text-[12px] font-normal uppercase tracking-[0.22em] text-stone min-[560px]:mb-14">Все материалы</h2>
                   <PostList posts={rest} startAt={2} />
                 </div>
               </section>

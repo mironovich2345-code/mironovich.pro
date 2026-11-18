@@ -45,6 +45,10 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
+  // Critical search/crawler user agents need metadata in <head> before streaming.
+  // Do not classify ordinary browsers as bots: this can delay their response.
+  // Verify Googlebot, Lighthouse and YandexBot output in browser smoke tests.
+  htmlLimitedBots: /Googlebot|Google-InspectionTool|Lighthouse|Bingbot|Slurp|DuckDuckBot|Baiduspider|YandexBot|YandexMobileBot|facebookexternalhit|Twitterbot|LinkedInBot/i,
   async headers() {
     // staging / preview copies: keep every response out of search indexes
     const noindex = process.env.SITE_NOINDEX === "1" ? [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] : [];

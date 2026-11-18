@@ -31,11 +31,11 @@ export default function Problems() {
                   {it.situation}
                 </h3>
                 <div className="col-start-2 min-[860px]:col-start-auto">
-                  <p className="m-0 mb-1.5 text-[11px] uppercase tracking-[0.16em] text-graphite/65">Чем оборачивается</p>
+                  <p className="m-0 mb-1.5 text-[12px] uppercase tracking-[0.16em] text-graphite/65">Чем оборачивается</p>
                   <p className="m-0 text-pretty text-[15px] leading-[1.55] text-graphite/75">{it.cost}</p>
                 </div>
                 <div className="col-start-2 min-[860px]:col-start-auto">
-                  <p className="m-0 mb-1.5 text-[11px] uppercase tracking-[0.16em] text-maroon">Что можно сделать</p>
+                  <p className="m-0 mb-1.5 text-[12px] uppercase tracking-[0.16em] text-maroon">Что можно сделать</p>
                   <p className="m-0 mb-2 text-pretty text-[15px] font-medium leading-[1.55] text-graphite">{it.solution}</p>
                   <Link
                     href={it.href}

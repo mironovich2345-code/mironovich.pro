@@ -142,7 +142,7 @@ export default function AiCareerProductPage({ product }: { product: DigitalProdu
             <p className="mt-3 text-[15px] leading-relaxed text-stone">
               После запуска продаж доступ предоставляется сразу после подтверждения оплаты через учётную запись по email. Доступ действует 90 дней. Результаты планируется сохранять ещё 30 дней после окончания срока.
             </p>
-            <Link href="/delivery" className="mt-2 inline-block text-sm underline underline-offset-4">Подробнее о получении доступа</Link>
+            <Link href="/delivery" className="mt-2 inline-flex min-h-[44px] items-center text-sm underline underline-offset-4">Подробнее о получении доступа</Link>
           </div>
           <div>
             <h2 className="text-xl font-semibold">Дополнительный доступ</h2>

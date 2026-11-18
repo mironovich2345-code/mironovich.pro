@@ -12,7 +12,7 @@ export default function NotFound() {
   return (
     <main id="main" className="bg-graphite px-[22px] py-20 min-[560px]:py-28">
       <div className="mx-auto max-w-[1080px]">
-        <p className="m-0 mb-8 text-[11px] uppercase tracking-[0.22em] text-signal">Ошибка 404</p>
+        <p className="m-0 mb-8 text-[12px] uppercase tracking-[0.22em] text-signal">Ошибка 404</p>
         <h1 className="m-0 mb-6 max-w-[14ch] font-display text-[clamp(40px,9vw,96px)] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-cream">
           Такой страницы нет<span className="text-signal">.</span>
         </h1>

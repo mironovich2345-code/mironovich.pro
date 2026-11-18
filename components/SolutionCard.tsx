@@ -18,7 +18,7 @@ export default function SolutionCard({
       data-solution={s.slug}
       className="flex min-w-0 flex-col border-t border-cream/20 py-8 min-[860px]:py-10"
     >
-      <p className="m-0 mb-4 text-[11px] uppercase tracking-[0.16em] text-stone">
+      <p className="m-0 mb-4 text-[12px] uppercase tracking-[0.16em] text-stone">
         {String(index + 1).padStart(2, "0")} / {s.short}
       </p>
       <h3 className="m-0 font-display text-[clamp(27px,3vw,36px)] font-extrabold uppercase leading-[1.06] text-cream">

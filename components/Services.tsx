@@ -12,19 +12,17 @@ export default function Services() {
       <div className="mx-auto max-w-[1080px]">
         <SectionLabel
           index="01"
-          label="Шесть направлений"
+          label="Пять решений"
           note="Выберите свою задачу"
         />
         <h2 className="m-0 mb-5 font-display text-[clamp(30px,5vw,48px)] font-extrabold uppercase leading-[1.05] text-cream">
           Что нужно вашему бизнесу?
         </h2>
-        <p className="mb-8 max-w-[64ch] text-[15px] leading-relaxed text-stone">
-          Это примеры направлений и ориентиры бюджета проекта, а не товары интернет-магазина.
-          Обсуждаем задачу, согласуем объём, стоимость и отдельный договор до старта.
-          Онлайн-оплата на сайте предусмотрена только для цифрового продукта сотрудников.
+        <p className="mb-8 max-w-[64ch] text-[16px] leading-relaxed text-cream/80">
+          Выберите задачу, похожую на вашу. Цена — ориентир для первого этапа.
         </p>
         <ol className="m-0 list-none border-t border-cream/25 p-0">
-          {directions.map((d, i) => (
+          {directions.filter((d) => d.solution).map((d, i) => (
             <li
               key={d.id}
               data-direction={d.id}
@@ -62,6 +60,11 @@ export default function Services() {
             </li>
           ))}
         </ol>
+        <p className="mb-0 mt-6 max-w-[64ch] text-[13px] leading-relaxed text-stone">
+          Это примеры направлений и ориентиры бюджета проекта, а не товары интернет-магазина.
+          Обсуждаем задачу, согласуем объём, стоимость и отдельный договор до старта.
+          Онлайн-оплата на сайте предусмотрена только для цифрового продукта сотрудников.
+        </p>
       </div>
     </section>
   );

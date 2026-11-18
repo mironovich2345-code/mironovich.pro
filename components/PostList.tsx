@@ -27,7 +27,7 @@ export default function PostList({ posts, startAt = 1, headingLevel = "h3" }: { 
                 </Link>
               )}
               <div>
-                <Link href={categoryHref(p.category)} className="mb-2 inline-flex min-h-[28px] items-center text-[11px] uppercase tracking-[0.2em] text-signal hover:text-cream">
+                <Link href={categoryHref(p.category)} className="mb-2 inline-flex min-h-[28px] items-center text-[12px] uppercase tracking-[0.2em] text-signal hover:text-cream">
                   {cat.name}
                 </Link>
                 <H className="m-0 mb-2.5 max-w-[32ch] text-balance font-display text-[clamp(21px,3.4vw,27px)] font-extrabold uppercase leading-[1.1] tracking-[-0.015em] text-cream">

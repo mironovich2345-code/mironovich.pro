@@ -41,7 +41,7 @@ export default function Scenarios({
                 (i % 2 === 0 ? "min-[860px]:border-r min-[860px]:border-cream/15 min-[860px]:pr-10" : "min-[860px]:pl-10")
               }
             >
-              <p className="m-0 text-[11px] uppercase tracking-[0.18em] text-stone">Типовой сценарий</p>
+              <p className="m-0 text-[12px] uppercase tracking-[0.18em] text-stone">Типовой сценарий</p>
               {/* inline text, not flex: a long step wraps naturally and the arrow stays next to it */}
               <p className="m-0 text-balance font-display text-[clamp(19px,2.4vw,24px)] font-extrabold uppercase leading-[1.3] tracking-[-0.01em] text-cream">
                 {s.steps.map((step, j) => (

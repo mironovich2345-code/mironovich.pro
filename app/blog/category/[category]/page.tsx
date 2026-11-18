@@ -93,7 +93,7 @@ export default async function CategoryPage({ params }: Props) {
 
         <section className="bg-graphite px-[22px] pb-16 min-[560px]:pb-24">
           <div className="mx-auto max-w-[1080px]">
-            <h2 className="m-0 mb-8 text-[11px] font-normal uppercase tracking-[0.22em] text-stone">
+            <h2 className="m-0 mb-8 text-[12px] font-normal uppercase tracking-[0.22em] text-stone">
               Статьи · {posts.length}
             </h2>
             <PostList posts={posts} />
@@ -103,7 +103,7 @@ export default async function CategoryPage({ params }: Props) {
         <section className="bg-cream px-[22px] py-14 min-[560px]:py-20">
           <div className="mx-auto flex max-w-[1080px] flex-col gap-6 min-[760px]:flex-row min-[760px]:items-center min-[760px]:justify-between">
             <div>
-              <p className="m-0 mb-3 text-[11px] uppercase tracking-[0.22em] text-maroon">{service ? "Связанная услуга" : "Обсудить задачу"}</p>
+              <p className="m-0 mb-3 text-[12px] uppercase tracking-[0.22em] text-maroon">{service ? "Связанная услуга" : "Обсудить задачу"}</p>
               {service ? (
                 <h2 className="m-0 mb-3 font-display text-[clamp(24px,3.6vw,34px)] font-extrabold uppercase leading-[1.08] text-graphite">
                   <Link href={service.href} className="transition-colors hover:text-maroon">

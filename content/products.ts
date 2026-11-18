@@ -20,7 +20,7 @@ export const products: DigitalProduct[] = [
       "Планируемый результат: карта собственных задач и план развития из 30 шагов. Интерактивный продукт ещё разрабатывается и не гарантирует сохранение должности.",
     plannedPrice: 1993,
     status: "preparing",
-    cover: "/products/ai-career-v2.png",
+    cover: "/products/ai-career-v3.png",
     chapters: [
       "Какие рабочие задачи автоматизируются",
       "Какие навыки сохраняют ценность",
