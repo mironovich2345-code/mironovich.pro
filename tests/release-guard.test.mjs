@@ -62,27 +62,26 @@ test("no switch-off: unrelated or made-up variables do not change the target", (
   for (const extra of [{ __MRNV_RELEASE_GUARD_DONE: "1" }, { SKIP_RELEASE_GUARD: "1" }, { NODE_ENV: "development" }, { CI: "1" }]) {
     assert.equal(releaseTarget({ ...PROD, ...extra }).production, true);
     // a repo state that must be refused stays refused, whatever else is set
-    assert.equal(runReleaseGuard({ cwd: withLegal({ legacyRelease: undefined }), env: { ...PROD, ...extra }, log: quiet }).blocked, true);
+    assert.equal(runReleaseGuard({ cwd: withLegal({ legacyRelease: undefined, published: false }), env: { ...PROD, ...extra }, log: quiet }).blocked, true);
   }
 });
 
-test("current repository: owner-approved release with the CURRENT legal texts passes, drafts reported", () => {
+test("current repository: owner-published current policy and consent pass, no draft warning", () => {
   const warned = [];
   const r = runReleaseGuard({ cwd: repo, env: { ...PROD, ...IDS }, log: { log() {}, warn: (m) => warned.push(m) } });
   assert.equal(r.blocked, false, r.message);
-  assert.ok(warned.some((m) => m.includes("ПРЕЖНИМИ текстами")));
-  assert.ok(warned.some((m) => /privacy\.md: незаполненные поля \(5\) — проект не публикуется/.test(m)));
-  assert.ok(warned.some((m) => /consent\.md: незаполненные поля \(1\) — проект не публикуется/.test(m)));
+  assert.equal(warned.some((m) => m.includes("ПРЕЖНИМИ текстами")), false);
+  assert.equal(warned.some((m) => m.includes("незаполненные поля")), false);
 });
 
 
 test("legacy texts WITHOUT a recorded owner decision → refused (unfilled drafts are errors again)", () => {
-  const r = runReleaseGuard({ cwd: withLegal({ legacyRelease: undefined }), env: { ...PROD, ...IDS }, log: quiet });
+  const r = runReleaseGuard({ cwd: withLegal({ legacyRelease: undefined, published: false }), env: { ...PROD, ...IDS }, log: quiet });
   assert.equal(r.blocked, true);
   assert.match(r.message, /legacyRelease/);
-  assert.match(r.message, /незаполненные поля \(5\)/);
+  assert.match(r.message, /published=false/);
   for (const bad of [{}, { approvedBy: "" , date: "2026-11-01" }, { approvedBy: "владелец", date: "скоро" }, "yes", true]) {
-    assert.equal(runReleaseGuard({ cwd: withLegal({ legacyRelease: bad }), env: { ...PROD, ...IDS }, log: quiet }).blocked, true, JSON.stringify(bad));
+    assert.equal(runReleaseGuard({ cwd: withLegal({ legacyRelease: bad, published: false }), env: { ...PROD, ...IDS }, log: quiet }).blocked, true, JSON.stringify(bad));
   }
 });
 
@@ -93,9 +92,9 @@ test("legacy release never allows draft pages or other preview switches in produ
 });
 
 test("published=true ignores the legacy decision: drafts must be complete", () => {
-  const r = runReleaseGuard({ cwd: withLegal({ published: true }), env: { ...PROD, ...IDS }, log: quiet });
+  const r = runReleaseGuard({ cwd: fixture({ published: true, edit: (md, slug) => slug === "privacy" ? md + "\n[УТОЧНИТЬ ПРАВОВОЕ ОСНОВАНИЕ]\n" : md }), env: { ...PROD, ...IDS }, log: quiet });
   assert.equal(r.blocked, true);
-  assert.match(r.message, /незаполненные поля \(5\)/);
+  assert.match(r.message, /незаполненные поля/);
 });
 
 test("current repository: staging and local builds are never blocked, only reported", () => {
@@ -106,13 +105,13 @@ test("current repository: staging and local builds are never blocked, only repor
     env: { NEXT_PUBLIC_SITE_URL: "https://s.up.railway.app", SITE_NOINDEX: "1", LEGAL_PREVIEW: "1" },
   });
   assert.equal(staging.blocked, false);
-  assert.ok(warned.some((m) => m.includes("незаполненные поля")));
+  assert.ok(warned.some((m) => m.includes("LEGAL_PREVIEW=1")));
   assert.equal(runReleaseGuard({ cwd: repo, env: { NEXT_PUBLIC_SITE_URL: "http://localhost:3000" }, log: quiet }).blocked, false);
 });
 
 test("forced production check (npm run release:check -- --production) uses the same rules", () => {
   assert.equal(runReleaseGuard({ cwd: repo, env: { NEXT_PUBLIC_SITE_URL: "http://localhost:3000" }, forceProduction: true, log: quiet }).blocked, false);
-  assert.equal(runReleaseGuard({ cwd: withLegal({ legacyRelease: undefined }), env: {}, forceProduction: true, log: quiet }).blocked, true);
+  assert.equal(runReleaseGuard({ cwd: withLegal({ legacyRelease: undefined, published: false }), env: {}, forceProduction: true, log: quiet }).blocked, true);
 });
 
 test("the target is always printed, so Railway build logs show what the guard saw", () => {
@@ -132,7 +131,7 @@ test("rate limit source: invalid value refused in production, unset is the safe 
 });
 
 test("published but placeholders left → refused", () => {
-  const r = runReleaseGuard({ cwd: fixture({ published: true }), env: { ...PROD, ...IDS }, log: quiet });
+  const r = runReleaseGuard({ cwd: fixture({ published: true, edit: (md, slug) => slug === "consent" ? md + "\n[УТОЧНИТЬ АДРЕС]\n" : md }), env: { ...PROD, ...IDS }, log: quiet });
   assert.equal(r.blocked, true);
   assert.doesNotMatch(r.message, /published=false/);
   assert.match(r.message, /незаполненные поля/);
@@ -158,7 +157,7 @@ test("filled but still published=false and no owner decision → refused (old te
   assert.match(r.message, /published=false/);
 });
 
-const filled = { legal: { published: true, edition: "2026-11-01" } };
+const filled = { legal: { published: true, edition: "2026-11-18" } };
 const docsOf = (dir) => Object.fromEntries(["privacy", "consent"].map((s) => [s, fs.readFileSync(path.join(dir, "content", "legal", s + ".md"), "utf8")]));
 
 test("GA4 is gone: no GA variable is needed, and a leftover one does not block (warning only)", () => {
