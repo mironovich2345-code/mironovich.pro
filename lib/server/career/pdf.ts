@@ -8,6 +8,7 @@ export async function careerPdf(result: CareerResult): Promise<Buffer> {
   pdf.registerFontkit(fontkit);
   pdf.setTitle("Учебный отчёт MIRONOVICH");
   pdf.setAuthor("MIRONOVICH.PRO synthetic sandbox");
+  const aiPilot = result.engine === "openai";
   const font = await pdf.embedFont(
     await readFile(resolve("public/fonts/career/DejaVuSans.ttf")),
     { subset: true },
@@ -35,7 +36,7 @@ export async function careerPdf(result: CareerResult): Promise<Buffer> {
     page.drawText(text, { x: 50, y, size, font, color: rgb(0.08, 0.1, 0.15) });
     y -= size + 5;
   }
-  line("СИНТЕТИЧЕСКИЙ ТЕСТОВЫЙ ОТЧЁТ", 16);
+  line(aiPilot ? "УЧЕБНЫЙ ИИ-АНАЛИЗ · ВЫМЫШЛЕННЫЕ ДАННЫЕ" : "СИНТЕТИЧЕСКИЙ ТЕСТОВЫЙ ОТЧЁТ", 16);
   line("Как стать ценнее для компании с помощью ИИ", 14);
   line(result.disclaimer);
   for (const t of result.tasks) {
@@ -52,7 +53,7 @@ export async function careerPdf(result: CareerResult): Promise<Buffer> {
     line(`Результат: ${d.evidence}`);
   });
   for (const p of pdf.getPages())
-    p.drawText("Синтетический тест · Не настоящий ИИ-анализ", {
+    p.drawText(aiPilot ? "Учебные данные · ИИ-пилот · Не для реальных данных" : "Синтетический тест · Не настоящий ИИ-анализ", {
       x: 50,
       y: 25,
       size: 8,

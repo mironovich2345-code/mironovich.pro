@@ -436,6 +436,58 @@ try {
   pass(
     "Order/access/refund notifications delivered once per order with durable outbox",
   );
+  // The AI pilot is not called here: preseeded counters must block the
+  // request before it could reach any external provider, even with mode ON.
+  const pilotAccount = await login();
+  await sql(
+    "UPDATE career_accounts SET access_started_at=now(),access_until=now()+interval '90 days' WHERE id=$1",
+    [pilotAccount.id],
+  );
+  await analysis.saveDiagnostic(pilotAccount.id, syntheticAnswers());
+  const oldAiEnv = {
+    mode: process.env.CAREER_AI_MODE,
+    enabled: process.env.CAREER_AI_ENABLED,
+    key: process.env.OPENAI_API_KEY,
+  };
+  process.env.CAREER_AI_MODE = "openai";
+  process.env.CAREER_AI_ENABLED = "1";
+  process.env.OPENAI_API_KEY = "sk-" + "x".repeat(32);
+  try {
+    for (let i = 0; i < 3; i++)
+      await sql("INSERT INTO career_ai_requests(id,account_id) VALUES($1,$2)", [
+        randomUUID(), pilotAccount.id,
+      ]);
+    await assert.rejects(analysis.createAnalysis(pilotAccount.id), e => e.status === 429);
+    const state = (await sql(
+      "SELECT analysis_consumed,analysis_state FROM career_accounts WHERE id=$1",
+      [pilotAccount.id],
+    )).rows[0];
+    assert.equal(state.analysis_consumed, false);
+    assert.notEqual(state.analysis_state, "running");
+    pass("Three synthetic AI calls per account in 90 days are enforced before provider access");
+
+    // 25 global calls/day are also enforced for an otherwise unused account.
+    for (let i = 0; i < 22; i++)
+      await sql("INSERT INTO career_ai_requests(id,account_id) VALUES($1,$2)", [
+        randomUUID(), pilotAccount.id,
+      ]);
+    const another = await login();
+    await sql(
+      "UPDATE career_accounts SET access_started_at=now(),access_until=now()+interval '90 days' WHERE id=$1",
+      [another.id],
+    );
+    await analysis.saveDiagnostic(another.id, syntheticAnswers());
+    await assert.rejects(analysis.createAnalysis(another.id), e=>e.status === 429);
+    pass("25 synthetic AI calls per UTC day are enforced before provider access");
+  } finally {
+    if (oldAiEnv.mode === undefined) delete process.env.CAREER_AI_MODE;
+    else process.env.CAREER_AI_MODE = oldAiEnv.mode;
+    if (oldAiEnv.enabled === undefined) delete process.env.CAREER_AI_ENABLED;
+    else process.env.CAREER_AI_ENABLED = oldAiEnv.enabled;
+    if (oldAiEnv.key === undefined) delete process.env.OPENAI_API_KEY;
+    else process.env.OPENAI_API_KEY = oldAiEnv.key;
+    await sql("DELETE FROM career_ai_requests WHERE account_id=$1", [pilotAccount.id]);
+  }
   console.log(
     `${checks} PostgreSQL/SMTP/provider integration scenarios passed`,
   );

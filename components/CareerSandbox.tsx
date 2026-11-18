@@ -172,7 +172,7 @@ export default function CareerSandbox() {
       <p className="mb-4 border-l-2 border-signal bg-cream/5 p-4 text-sm leading-relaxed">
         Закрытый синтетический стенд. Это не действующий магазин. Нельзя вводить
         реальные email, сведения о работе или третьих лицах. Только учебные
-        варианты; реальные платежи и настоящий ИИ отключены.
+        варианты; реальные платежи отключены. ИИ-пилот разрешён только в закрытом локальном тестовом режиме.
       </p>
       <h1 className="font-display text-[clamp(28px,5vw,46px)] font-bold uppercase leading-tight">
         Учебный кабинет продукта сотрудников
