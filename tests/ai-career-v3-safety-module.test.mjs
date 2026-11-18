@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, existsSync } from "node:fs";
 import { PDFDocument, PDFName, PDFDict, PDFArray } from "pdf-lib";
-import { validateLesson, validateSafetyModule } from "../scripts/career/validate-v3-content.mjs";
+import { validateLesson, validateSafetyModule, schemaCheck } from "../scripts/career/validate-v3-content.mjs";
 import { renderMarkdown, parseFrontMatter, buildTestMarkdown } from "../scripts/career/build-safety-materials.mjs";
 
 const load = p => JSON.parse(readFileSync(p, "utf8"));
@@ -245,4 +245,35 @@ test("TOC page numbers come from PDF destinations and survive wrapped headings",
     headingPages(MAT + "pdf/safety-guide-a4.pdf", [{ level: 2, id: "s0-999", text: "Несуществующий раздел" }]),
     /no destination for heading: Несуществующий раздел/);
   await assert.rejects(headingPages(MAT + "pdf/safety-checklist-a4.pdf", [{ level: 2, id: "s0-1", text: "x" }]), /no named destinations|no destination/);
+});
+
+test("plan-step candidates of SAF-01…04 reference real exercises and templates and give distinct results", () => {
+  const plan = load("content/career/v3/plan-candidates/safety.json");
+  const stepSchema = load("content/career/v3/schemas/plan-step.schema.json");
+  assert.equal(plan.status, "review");
+  assert.equal(plan.usableForPaidUser, false);
+  const steps = plan.steps;
+  assert.deepEqual(steps.map((s) => s.position), steps.map((_, i) => i + 1));
+  assert.equal(new Set(steps.map((s) => s.stepId)).size, steps.length);
+  for (const s of steps) {
+    assert.deepEqual(schemaCheck(stepSchema, s, s.stepId, []), [], s.stepId);
+    const l = lessons.find((x) => x.id === s.lessonId);
+    assert.ok(l, s.stepId + " lesson");
+    assert.equal(l.status, "review");
+    assert.ok(l.content.exercises.some((e) => e.id === s.exerciseId), s.stepId + " exercise");
+    assert.ok(l.content.templates.some((t) => t.id === s.templateId), s.stepId + " template");
+    assert.ok(s.linkedTaskId === null || l.audience.taskIds.includes(s.linkedTaskId), s.stepId + " task belongs to the lesson");
+    assert.ok(s.metricId === null || role.metrics.some((m) => m.id === s.metricId), s.stepId + " metric");
+  }
+  for (const l of lessons) assert.ok(steps.some((s) => s.lessonId === l.id), l.id + " has a step");
+  const keys = steps.map((s) => `${s.lessonId}|${s.exerciseId}|${s.templateId}`);
+  assert.equal(new Set(keys).size, keys.length, "exercise+template is never repeated");
+  assert.equal(new Set(steps.map((s) => s.expectedArtifact)).size, steps.length, "every step yields its own artifact");
+  assert.equal(new Set(steps.map((s) => s.action)).size, steps.length);
+  // A manual (no-AI) route keeps at least one step in every safety lesson.
+  for (const l of lessons) {
+    const manual = steps.filter((s) => s.lessonId === l.id && l.content.templates.find((t) => t.id === s.templateId).kind !== "prompt");
+    assert.ok(manual.length >= 1, l.id + " has a step without a prompt template");
+  }
+  assert.doesNotMatch(JSON.stringify(plan), /гарантир|рост (дохода|выручки|конверсии)|увольнени/i);
 });
