@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mironovich.pro/schemas/ai-career-v3-plan-step.schema.json",
+  "title": "AI Career 3.0 — individual plan step",
+  "description": "A step is a concrete learning action, never a generic tip. Runtime must only reference approved lessons.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "stepId",
+    "position",
+    "lessonId",
+    "exerciseId",
+    "linkedTaskId",
+    "learningGoal",
+    "action",
+    "templateId",
+    "expectedArtifact",
+    "completionCriteria",
+    "metricId",
+    "safetyNote",
+    "isCalendarDay"
+  ],
+  "properties": {
+    "stepId": {
+      "type": "string",
+      "pattern": "^STEP-[0-9]{2}$"
+    },
+    "position": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 30
+    },
+    "lessonId": {
+      "type": "string",
+      "minLength": 6
+    },
+    "exerciseId": {
+      "type": "string",
+      "minLength": 3
+    },
+    "linkedTaskId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 3
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "learningGoal": {
+      "type": "string",
+      "minLength": 40
+    },
+    "action": {
+      "type": "string",
+      "minLength": 80
+    },
+    "templateId": {
+      "type": "string",
+      "minLength": 3
+    },
+    "expectedArtifact": {
+      "type": "string",
+      "minLength": 35
+    },
+    "completionCriteria": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "string",
+        "minLength": 30
+      }
+    },
+    "metricId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 3
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "safetyNote": {
+      "type": "string",
+      "minLength": 45
+    },
+    "isCalendarDay": {
+      "type": "boolean",
+      "const": false
+    }
+  }
+}
