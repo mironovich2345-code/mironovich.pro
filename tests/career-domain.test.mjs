@@ -102,7 +102,7 @@ test("high risk or forbidden data never recommended for unattended automation", 
   assert.equal(new Set(high.plan.map((step)=>step.action)).size,30,"each step has its own action");
   assert.ok(high.plan.every((step)=>step.evidence && step.evidence.length>10),"each step has evidence");
   assert.deepEqual([high.plan[0].theme,high.plan[6].theme,high.plan[14].theme,high.plan[23].theme],[
-    "Разберите задачу","Попробуйте подход","Проверьте качество","Оформите результат",
+    "Разберите задачу","Попробуйте ИИ","Проверьте качество","Оформите результат",
   ]);
   assert.equal(new Set(high.plan.map((d) => d.day)).size, 30);
   assert.equal(high.directions.length, 3);
@@ -148,4 +148,17 @@ test("publication guards and commerce flags remain off; dedicated DB migration i
   assert.match(sql, /mironovich_career_test/);
   assert.match(sql, /CHECK\(synthetic\)/);
   assert.match(sql, /CHECK\(test\)/);
+});
+
+test("sandbox progress UI and PDF both describe 30 steps, not 30 calendar days",()=>{
+  const ui=fs.readFileSync("components/CareerSandbox.tsx","utf8");
+  const pdf=fs.readFileSync("lib/server/career/pdf.ts","utf8");
+  const generator=fs.readFileSync("lib/career-diagnostic.ts","utf8");
+  assert.match(ui,/План из 30 шагов/);
+  assert.match(ui,/Шаг \{d\.day\}/);
+  assert.match(ui,/Результат: \{d\.evidence\}/);
+  assert.match(pdf,/План из 30 шагов/);
+  assert.match(pdf,/Результат: \$\{d\.evidence\}/);
+  assert.match(generator,/The 30-step plan must be consecutive/);
+  for (const src of [ui,pdf]) assert.doesNotMatch(src,/План на 30 дней|День \{d\.day\}/);
 });
