@@ -18,7 +18,7 @@ import type { ServiceSlug } from "../config/services.ts";
 import { additionalServices, type ServiceTopicId } from "../config/commercial.ts";
 import { SOLUTION_SLUGS, type SolutionSlug } from "../config/solutions.ts";
 import { REDACTED, looksPersonal, normalizePagePath } from "./lead.ts";
-import { hasTrackingConsent } from "./tracking-consent";
+import { hasTrackingConsent } from "./tracking-consent.ts";
 
 export type AnalyticsEvent =
   | "tool_start" | "tool_step" | "tool_abandon" | "tool_complete" | "tool_consultation"

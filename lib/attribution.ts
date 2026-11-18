@@ -7,7 +7,7 @@
 
 import { REDACTED, looksPersonal } from "./lead";
 import { metricaId } from "./analytics";
-import { hasTrackingConsent } from "./tracking-consent";
+import { hasTrackingConsent } from "./tracking-consent.ts";
 
 const KEY = "mrnv_attr_v1";
 

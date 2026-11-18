@@ -8,7 +8,10 @@ import { allServices } from '../config/services.ts';
 import { serviceTopics } from '../content/service-topics.ts';
 import { products, productBySlug } from '../content/products.ts';
 import { navLinks } from '../config/site.ts';
-import { track, trackFormStartOnce } from '../lib/analytics.ts';
+import { track, trackFormStartOnce, metricaId } from '../lib/analytics.ts';
+import { trackingConsentKey } from '../lib/tracking-consent.ts';
+
+const optedInStorage = () => ({ getItem: (key) => key === trackingConsentKey(metricaId) ? 'granted' : null });
 
 test('six directions preserve offer URLs and derive pilot prices from the existing registry', () => {
   assert.deepEqual(directions.map(d => d.title), [
@@ -41,14 +44,14 @@ test('each additional topic has one real legacy URL, a unique matching anchor an
   assert.match(serviceTopics['voice-ai'].scope, /холодный рекламный обзвон не входит/);
 });
 
-test('ai-career remains the single preparing product at the same URL, with launch price 1990 and a real cover', () => {
+test('ai-career remains the single preparing product at the same URL, with planned launch price 1993 and a real cover', () => {
   const p = productBySlug('ai-career');
   assert.equal(products.filter(p => p.slug === 'ai-career').length, 1);
   assert.equal(p.title, 'Как стать ценнее для компании с помощью ИИ');
-  assert.equal(p.plannedPrice, 1990);
+  assert.equal(p.plannedPrice, 1993);
   assert.equal(p.status, 'preparing');
   assert.ok(existsSync(new URL('../public' + p.cover, import.meta.url)));
-  assert.match(p.chapters.at(-1), /30 дней/);
+  assert.match(p.chapters.at(-1), /30 шагов/);
   assert.equal(productBySlug('automation-priorities').plannedPrice, 4934);
 });
 
@@ -66,7 +69,7 @@ test('homepage separates company and employee journeys and exposes the employee 
 
 test('new entry events carry only allowed identifiers; unknown topics and PII are dropped or redacted', () => {
   const previous = globalThis.window;
-  globalThis.window = { location: { pathname: '/' } };
+  globalThis.window = { location: { pathname: '/' }, localStorage: optedInStorage() };
   try {
     track('cta_click', { location: 'hero_calculator', tool: 'labor' });
     track('cta_click', { location: 'hero_product', product: 'ai-career' });
@@ -87,12 +90,23 @@ test('new entry events carry only allowed identifiers; unknown topics and PII ar
 test('form_start remains once per session across entry routes', () => {
   const previous = globalThis.window;
   const values = new Map();
-  globalThis.window = { location: { pathname: '/solutions/corporate-academy' }, sessionStorage: { getItem: k => values.get(k), setItem: (k,v) => values.set(k,v) } };
+  globalThis.window = { location: { pathname: '/solutions/corporate-academy' }, localStorage: optedInStorage(), sessionStorage: { getItem: k => values.get(k), setItem: (k,v) => values.set(k,v) } };
   try {
     trackFormStartOnce();
     window.location.pathname = '/services/cto';
     trackFormStartOnce();
     assert.equal(window.mrnvEvents.filter(e => e.event === 'form_start').length, 1);
     assert.ok(!window.mrnvEvents.some(e => e.event === 'lead_submit_success'));
+  } finally { globalThis.window = previous; }
+});
+
+
+test('optional analytics events never fire without affirmative cookie consent', () => {
+  const previous = globalThis.window;
+  globalThis.window = { location: { pathname: '/' }, localStorage: { getItem: () => 'denied' } };
+  try {
+    track('cta_click', { location: 'hero_product', product: 'ai-career' });
+    trackFormStartOnce();
+    assert.equal(window.mrnvEvents, undefined);
   } finally { globalThis.window = previous; }
 });
