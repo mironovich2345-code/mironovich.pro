@@ -78,7 +78,10 @@ export async function createAnalysis(
     if (!answers) throw new CareerError(400, "Сначала сохраните 18 ответов");
     const mode = selectedCareerAnalysisMode();
     if (mode === "openai" && answers.questions.dataSensitivity !== "restricted" &&
-        answers.questions.accessRules === "approved") {
+        answers.questions.accessRules === "approved" &&
+        answers.questions.errorImpact !== "high" &&
+        answers.questions.reviewTime !== "none" &&
+        answers.questions.decisionAuthority !== "regulated") {
       // A durable conservative budget; both counters are serialized across
       // concurrent requests using a transaction-scoped advisory lock.
       await tx.query("SELECT pg_advisory_xact_lock($1::bigint)", [480623]);
@@ -86,7 +89,7 @@ export async function createAnalysis(
         "SELECT count(*)::int AS n FROM career_ai_requests WHERE created_at >= date_trunc('day',now() AT TIME ZONE 'UTC') AT TIME ZONE 'UTC'",
       );
       const lifetime = await tx.query(
-        "SELECT count(*)::int AS n FROM career_ai_requests WHERE account_id=$1",
+        "SELECT count(*)::int AS n FROM career_ai_requests WHERE account_id=$1 AND created_at >= now()-interval '90 days'",
         [accountId],
       );
       if (daily.rows[0].n >= 25 || lifetime.rows[0].n >= 3)
