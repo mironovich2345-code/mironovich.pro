@@ -45,6 +45,13 @@ export const navLinks: NavLink[] = [
   { href: "/about", label: "Кто я" },
 ];
 
+/** Exactly three editorial destinations under the third primary menu entry. */
+export const aboutMenuLinks: NavLink[] = [
+  { href: "/blog", label: "Блог" },
+  { href: "/projects", label: "Кейсы" },
+  { href: "/about", label: "Конкретно я" },
+];
+
 /** Discovery links moved out of the header, retained in the footer. */
 export const secondaryLinks: NavLink[] = [
   ...(projectsPublished ? [{ href: "/projects", label: "Кейсы" }] : []),
