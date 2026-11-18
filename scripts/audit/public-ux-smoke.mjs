@@ -11,6 +11,10 @@ const viewports = [
   { width: 320, height: 700 },
   { width: 375, height: 667 },
   { width: 390, height: 800 },
+  // tablets and desktops: the panel used to be a bottom-right overlay that covered the hero CTA
+  { width: 768, height: 1024 },
+  { width: 1024, height: 768 },
+  { width: 1440, height: 900 },
 ];
 const paths = ["/", "/products/ai-career", "/solutions", "/services"];
 let checks = 0;
@@ -57,10 +61,10 @@ try {
       await page.getByRole("button", { name: /Настройки cookies/i }).click();
       await page.locator("[data-consent-banner][data-reopened]").waitFor({ state: "visible" });
       assert.equal(await banner.evaluate(el => getComputedStyle(el).position), "relative",
-        "reopened consent must remain non-overlay on mobile");
+        "reopened consent must remain non-overlay");
       assert.equal(tracked.length, 0, "opening settings may not load analytics");
       await context.close();
-      console.log("PASS mobile consent: " + viewport.width + "x" + viewport.height + " " + path);
+      console.log("PASS consent layout: " + viewport.width + "x" + viewport.height + " " + path);
       checks++;
     }
   }

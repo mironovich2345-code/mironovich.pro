@@ -76,11 +76,13 @@ test("footer allows visitors to change consent choice at any time", () => {
   assert.match(settings, /onClick=\{openConsentSettings\}/);
 });
 
-test("small-screen cookie choices are in normal page flow, never over the hero CTA", () => {
+test("cookie choices are in normal page flow at every width, never over the hero CTA", () => {
   const banner = read("components/ConsentBanner.tsx");
   const layout = read("app/layout.tsx");
   assert.ok(banner.includes('className="relative z-[55] w-full'));
-  assert.ok(banner.includes("min-[760px]:fixed"));
-  assert.match(banner, /max-width: 759px/);
+  // in normal flow at every width: an overlay covered the hero CTA at 768–1440px
+  assert.ok(!banner.includes("min-[760px]:fixed"));
+  assert.ok(banner.includes("min-[760px]:grid-cols-[minmax(0,1fr)_minmax(260px,320px)]"));
+  assert.match(banner, /getComputedStyle\(panel\)\.position !== "fixed"/);
   assert.ok(layout.indexOf("<SiteHeader />") < layout.indexOf("<Analytics />"));
 });

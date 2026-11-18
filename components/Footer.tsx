@@ -29,7 +29,7 @@ export default function Footer() {
                 <li key={l.href}><Link href={l.href} className={linkClass}>{l.label}</Link></li>
               ))}
               <li><Link href="/services" className={linkClass}>Все услуги</Link></li>
-              <li><Link href="/services#other-services" className={linkClass}>Другие услуги</Link></li>
+              <li><Link href="/services#other-services" className={linkClass}>Отдельные услуги</Link></li>
             </ul>
           </nav>
 

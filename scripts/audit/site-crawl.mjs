@@ -18,7 +18,7 @@ const BASE = arg("--base", "http://localhost:3100");
 const OUT = arg("--out", "audit-out");
 const SHOTS = process.argv.includes("--shots");
 const ONLY = arg("--only", null);
-export const WIDTHS = [320, 375, 390, 768, 1024, 1440, 1920];
+export const WIDTHS = (arg("--widths", "") || "320,375,390,768,1024,1440,1920").split(",").map(Number);
 // shown in screenshots: one phone and one desktop width for every page, all widths for key pages
 const KEY = new Set(["/", "/services", "/solutions", "/products/ai-career", "/offer/ai-career", "/contact", "/tools/labor-cost", "/about"]);
 const EXTRA = ["/privacy", "/consent", "/delivery", "/refund", "/requisites", "/offer/ai-career", "/career/sandbox", "/payment/result", "/this-page-does-not-exist"];

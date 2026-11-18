@@ -11,9 +11,10 @@ import { CONSENT_OPEN_EVENT, purgeOptionalTracking, readConsent, revokeConsent, 
  * until "Согласен"; a rejection must be equally easy and leave the form working.
  * If Metrica is configured later, a different consent key requires a NEW choice.
  *
- * Layout: on small screens this panel is placed in normal document flow,
- * below the sticky header; it cannot cover calls to action or sale status.
- * From 760px it becomes a bottom-right overlay with matching body padding.
+ * Layout: at every width the panel is in normal document flow, right below the
+ * sticky header, so it never covers navigation, calls to action or sale status.
+ * From 760px its content is one row inside the 1080px page grid: text left,
+ * choices right. (A bottom-right overlay covered the hero CTA at 768–1440px.)
  *
  * Rendered open on the server so it paints with the page (it is often the LCP
  * element — waiting for hydration cost ~1.5 s). Returning visitors never see it:
@@ -52,8 +53,8 @@ export default function ConsentBanner() {
     const body = document.body;
     const prev = body.style.paddingBottom;
     const apply = () => {
-      // Mobile banner is in normal flow, ahead of the site header: no overlay.
-      if (window.matchMedia("(max-width: 759px)").matches) {
+      // The panel is in normal flow, not an overlay: no extra bottom padding needed.
+      if (getComputedStyle(panel).position !== "fixed") {
         body.style.paddingBottom = prev;
         return;
       }
@@ -89,8 +90,10 @@ export default function ConsentBanner() {
       data-reopened={reopened ? "" : undefined}
       role="region"
       aria-labelledby="consent-title"
-      className="relative z-[55] w-full border-y border-cream/15 bg-graphite px-4 py-3 min-[760px]:fixed min-[760px]:inset-x-auto min-[760px]:bottom-[calc(24px+env(safe-area-inset-bottom))] min-[760px]:right-6 min-[760px]:w-[440px] min-[760px]:rounded-[6px] min-[760px]:border min-[760px]:p-5 min-[760px]:shadow-[0_12px_32px_rgba(0,0,0,0.5)]"
+      className="relative z-[55] w-full border-y border-cream/15 bg-graphite px-4 py-3 min-[760px]:px-[22px] min-[760px]:py-4"
     >
+      <div className="mx-auto max-w-[1080px] min-[760px]:grid min-[760px]:grid-cols-[minmax(0,1fr)_minmax(260px,320px)] min-[760px]:items-center min-[760px]:gap-x-8">
+      <div className="min-w-0">
       <div className="mb-2 flex items-center gap-2.5">
         {/* cookie mark — decorative */}
         <svg aria-hidden width="15" height="15" viewBox="0 0 24 24" fill="none" className="flex-none text-signal">
@@ -126,7 +129,9 @@ export default function ConsentBanner() {
         </p>
       )}
 
-      <div className="mt-3 grid grid-cols-2 gap-2 min-[560px]:mt-3.5">
+      </div>
+      <div>
+      <div className="mt-3 grid grid-cols-2 gap-2 min-[560px]:mt-3.5 min-[760px]:mt-0">
         <button
           ref={firstButtonRef}
           type="button"
@@ -150,6 +155,8 @@ export default function ConsentBanner() {
       >
         Подробнее о cookies
       </Link>
+      </div>
+      </div>
     </div>
   );
 }

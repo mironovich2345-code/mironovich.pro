@@ -93,3 +93,8 @@ test("home hero does not promise an all-in-one deployed platform", () => {
   assert.match(hero, /помогаю автоматизировать обучение/);
   assert.doesNotMatch(hero, /заявки клиентов в одной системе/);
 });
+
+test("footer «Отдельные услуги» points to a section that exists on /services", () => {
+  assert.match(read("components/Footer.tsx"), /href="\/services#other-services"[^>]*>Отдельные услуги</);
+  assert.match(read("app/services/page.tsx"), /<section id="other-services"/);
+});

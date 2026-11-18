@@ -66,7 +66,8 @@ export default function Page() {
           </div>
         </section>
         <CtoOffer />
-        <section className="bg-cream px-[22px] pb-14">
+        {/* target of the footer link «Отдельные услуги» (/services#other-services) */}
+        <section id="other-services" className="bg-cream px-[22px] pb-14">
           <div className="mx-auto max-w-[1080px]">
             <h2 className="m-0 mb-5 font-display text-[28px] font-extrabold uppercase text-graphite">
               Отдельные услуги
