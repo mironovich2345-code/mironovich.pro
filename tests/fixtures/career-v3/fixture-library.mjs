@@ -20,12 +20,14 @@ const TEMPLATE_KINDS = {
   value: ["measurement_sheet", "script"],
 };
 // [exerciseIndex, templateIndex] per plan-step candidate, by module.
+// The first step of an exercise performs it; a later step of the same exercise is a follow-up
+// (checklist → verification, measurement sheet → measurement), as in the real lessons.
 const STEP_PLAN = {
   safety: [[0, 0], [1, 1]],
-  task_mapping: [[0, 0], [1, 1]],
-  practice: [[0, 0], [0, 1], [1, 2], [2, 3]],
+  task_mapping: [[0, 0], [0, 1]],
+  practice: [[0, 0], [0, 2], [1, 1], [1, 3], [2, 1]],
   trends: [[0, 0], [1, 1]],
-  value: [[0, 0], [1, 1]],
+  value: [[0, 1], [0, 0]],
 };
 const LEVELS = {
   "SAL-06": ["independent", "experienced"], "SAL-07": ["independent", "experienced"],

@@ -72,6 +72,11 @@ export function buildPlan(ctx: EngineContext, input: { result: DiagnosticResultV
   // Pool of admissible, distinct candidates.
   const lessons = new Map(library.published.map((l) => [l.id, l]));
   const pool: PoolEntry[] = [];
+  const firstOfExercise = new Map<string, PlanStepCandidate>();
+  for (const c of [...library.planCandidates].sort((a, b) => a.position - b.position)) {
+    const k = `${c.lessonId}|${c.exerciseId}`;
+    if (!firstOfExercise.has(k)) firstOfExercise.set(k, c);
+  }
   const seenKey = new Set<string>(), seenAction = new Set<string>();
   for (const item of selection.items) {
     const lesson = lessons.get(item.lessonId);
@@ -81,8 +86,11 @@ export function buildPlan(ctx: EngineContext, input: { result: DiagnosticResultV
       const key = `${c.lessonId}|${c.exerciseId}|${c.templateId}`;
       const action = c.action.toLowerCase().replace(/[^a-zа-яё0-9]+/gi, " ").trim();
       if (seenKey.has(key) || seenAction.has(action)) continue; // the same exercise+template or the same action is never repeated
+      // The first candidate of an exercise is doing the exercise (module phase); later candidates of the
+      // same exercise are follow-ups whose template kind decides the phase (checklist → verify, sheet → measure).
       const base = ctx.modulePhases[lesson.moduleId];
-      const phase = base === "safety" || base === "next_level" ? base : (ctx.templateKindPhases[kind] ?? base);
+      const isFollowUp = firstOfExercise.get(`${c.lessonId}|${c.exerciseId}`) !== c;
+      const phase = base === "safety" || base === "next_level" || !isFollowUp ? base : (ctx.templateKindPhases[kind] ?? base);
       // One exercise appears at most once per phase: a prompt version and a manual version of the
       // same exercise are alternatives, not two steps (candidates are in the lesson's own order).
       const exercisePhase = `${c.lessonId}|${c.exerciseId}|${phase}`;

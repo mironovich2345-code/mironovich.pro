@@ -415,3 +415,22 @@ test("the fixture demo document is regenerated from the engine (no hand-edited r
   assert.equal(r.status, 0, r.stderr);
   assert.match(readFileSync("docs/products/ai-career-v3/examples/engine-demo-fixture.md", "utf8"), /SYNTHETIC FIXTURE/);
 });
+
+test("phase of a step: doing an exercise is application even with a checklist template; follow-ups move to verify/measure", () => {
+  const src = fixtureLibrarySources();
+  const steps = src.planCandidates[0].document.steps.filter((s) => s.lessonId === "SAL-05");
+  const [first, second] = steps.filter((s) => s.exerciseId === "SAL05-TASK-1").sort((a, b) => a.position - b.position);
+  [first.templateId, second.templateId] = [second.templateId, first.templateId]; // checklist first, prompt second
+  const lib = buildLibrary({ professionId: "sales_manager", today: TODAY, role: ctx.role, lessonSchema, stepSchema, ...src });
+  const result = resultOf("FX-account-approved");
+  const plan = buildPlan(ctx, { result, selection: selectLessons(ctx, result, lib), library: lib, today: TODAY });
+  assert.equal(plan.status, "ready");
+  const doing = plan.steps.find((s) => s.lessonId === "SAL-05" && s.stableId.endsWith(first.stepId));
+  assert.equal(doing?.templateKind, "checklist");
+  assert.equal(doing.phase, "apply", "performing the exercise is application, not verification");
+  for (const s of ALL["FX-account-approved"].plan.steps.filter((x) => x.lessonId.startsWith("SAL-"))) {
+    const firstForExercise = FULL.planCandidates.filter((c) => c.lessonId === s.lessonId && c.exerciseId === s.exerciseId).sort((a, b) => a.position - b.position)[0];
+    if (s.stableId.endsWith("/" + firstForExercise.stepId)) assert.equal(s.phase, "apply");
+    else assert.ok(["verify", "measure"].includes(s.phase), s.stableId);
+  }
+});
