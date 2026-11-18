@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Builds the AI Career v3 safety module PDFs from the Markdown sources in
 // content/career/v3/materials/safety. Dev-only tool: needs a local Chromium via Playwright
-// (not a project dependency) and, for TOC page numbers, poppler's `pdftotext`.
+// (not a project dependency). TOC page numbers are read from the PDF with pdf-lib.
 // No network, no production services, no personal data.
 //
 //   node scripts/career/build-safety-materials.mjs          # build everything
@@ -9,9 +9,9 @@
 import { readFileSync, writeFileSync, mkdirSync, mkdtempSync, rmSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { tmpdir } from "node:os";
-import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { PDFDocument, PDFName, PDFDict, PDFArray } from "pdf-lib";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "../..");
 const MAT = join(ROOT, "content/career/v3/materials/safety");
@@ -286,33 +286,19 @@ function documentHtml(parts, format, pages) {
 }
 
 // ------------------------------------------------------------------ pdf
-const norm = s => s.replace(/\u00ad/g, "").replace(/\s+/g, " ").trim().toLowerCase();
-function pageLines(pdf) {
-  const r = spawnSync("pdftotext", ["-layout", pdf, "-"], { encoding: "utf8" });
-  if (r.status !== 0) return null;
-  // drop the TOC's trailing page numbers so a TOC line equals its heading text
-  return r.stdout.split("\f").map(p => p.split("\n").map(l => norm(l.replace(/\s+(\d+|…)\s*$/, ""))).filter(Boolean));
-}
-// A heading is found where a line starts it (headings are never hyphenated, so a wrapped
-// heading begins on one line). Search in document order, after the table of contents.
-function headingPages(pdf, headings) {
-  const pages = pageLines(pdf);
-  if (!pages) return null;
-  const listed = headings.filter(x => x.level === 2 || x.toc);
-  const full = h => norm(h.text.replace(/\*\*/g, ""));
-  const starts = (line, h) => line.length >= Math.min(12, full(h).length) && (full(h).startsWith(line) || line === full(h));
-  const tocStart = pages.findIndex(lines => lines.includes("содержание"));
-  let from = 0;
-  if (tocStart >= 0) {
-    const last = listed.at(-1);
-    from = pages.findIndex((lines, i) => i >= tocStart && lines.some(l => starts(l, last))) + 1;
-  }
+// TOC page numbers come from the PDF's own named destinations: Chromium writes one for every
+// in-document link target (the TOC links to each heading id). No text extraction involved.
+async function headingPages(pdf, headings) {
+  const doc = await PDFDocument.load(readFileSync(pdf), { updateMetadata: false });
+  const dests = doc.catalog.lookupMaybe(PDFName.of("Dests"), PDFDict);
+  if (!dests) throw new Error("no named destinations in " + pdf);
+  const pageIndex = new Map(doc.getPages().map((p, i) => [p.ref.toString(), i + 1]));
   const out = {};
-  for (const h of listed) {
-    const idx = pages.findIndex((lines, i) => i >= from && lines.some(l => starts(l, h)));
-    if (idx < 0) throw new Error("heading not found in PDF text: " + h.text);
-    out[h.id] = idx + 1;
-    from = idx;
+  for (const h of headings.filter(x => x.level === 2 || x.toc)) {
+    const dest = dests.lookupMaybe(PDFName.of(h.id), PDFArray);
+    const page = dest && pageIndex.get(dest.get(0).toString());
+    if (!page) throw new Error("no destination for heading: " + h.text);
+    out[h.id] = page;
   }
   return out;
 }
@@ -350,11 +336,11 @@ async function renderPdf(browser, html, outPdf, footerTitle) {
 async function buildDocument(browser, { parts, format, out, footer }) {
   const first = documentHtml(parts, format);
   await renderPdf(browser, first.html, out, footer);
-  const pages = headingPages(out, first.headings);
-  if (pages && first.html.includes('class="toc"')) {
+  if (first.html.includes('class="toc"')) {
+    const pages = await headingPages(out, first.headings);
     const second = documentHtml(parts, format, pages);
     await renderPdf(browser, second.html, out, footer);
-    const check = headingPages(out, second.headings);
+    const check = await headingPages(out, second.headings);
     for (const id of Object.keys(pages)) if (check[id] !== pages[id]) throw new Error("TOC page drift for " + id);
   }
   return out;

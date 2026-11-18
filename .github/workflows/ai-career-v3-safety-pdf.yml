@@ -46,6 +46,14 @@ jobs:
         env:
           SAFETY_PDF_KEEP: ${{ runner.temp }}/safety-pdf-rebuilt
         run: node scripts/career/check-safety-pdfs.mjs
+      - name: Diagnostics (fonts, browser, rebuilt PDF summary)
+        if: failure()
+        env:
+          SAFETY_PDF_KEEP: ${{ runner.temp }}/safety-pdf-rebuilt
+        run: |
+          npx --no-install playwright --version
+          fc-match "DejaVu Sans" || true
+          for f in "$SAFETY_PDF_KEEP"/*.pdf; do echo "== $f"; pdfinfo "$f" | grep -E "Pages|Page size"; pdffonts "$f" | tail -n +3; done
       - name: Upload rebuilt PDFs for inspection
         if: failure()
         uses: actions/upload-artifact@v4
