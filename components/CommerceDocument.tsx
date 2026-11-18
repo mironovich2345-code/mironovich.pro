@@ -8,7 +8,7 @@ type Props = { title: string; lead: string; sections: Section[] };
 const related = [
   { href: "/offer/ai-career", label: "Условия использования и оферта" },
   { href: "/delivery", label: "Получение доступа" },
-  { href: "/refund", label: "Возврат денежных средств" },
+  { href: "/refund", label: "Порядок разрешения разногласий" },
   { href: "/requisites", label: "Реквизиты и контакты" },
   { href: "/privacy", label: "Обработка персональных данных" },
   { href: "/consent", label: "Согласие для обращения" },

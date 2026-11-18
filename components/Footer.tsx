@@ -59,7 +59,7 @@ export default function Footer() {
               <li><a href="mailto:damironovich@mail.ru" className={linkClass}>damironovich@mail.ru</a></li>
               <li><Link href="/offer/ai-career" className={linkClass}>Условия будущей покупки</Link></li>
               <li><Link href="/delivery" className={linkClass}>Получение доступа</Link></li>
-              <li><Link href="/refund" className={linkClass}>Условия возврата</Link></li>
+              <li><Link href="/refund" className={linkClass}>Порядок разрешения разногласий</Link></li>
               <li><Link href="/requisites" className={linkClass}>Реквизиты продавца</Link></li>
               <li><Link href="/privacy" className={linkClass}>Политика конфиденциальности</Link></li>
               <li><Link href="/consent" className={linkClass}>Согласие на обработку ПД</Link></li>
