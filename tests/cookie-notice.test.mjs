@@ -82,5 +82,5 @@ test("small-screen cookie choices are in normal page flow, never over the hero C
   assert.match(banner, /className="relative z-\\[55\\] w-full/);
   assert.match(banner, /min-\\[760px\\]:fixed/);
   assert.match(banner, /max-width: 759px/);
-  assert.ok(layout.indexOf("<Analytics />") < layout.indexOf("<SiteHeader />"));
+  assert.ok(layout.indexOf("<SiteHeader />") < layout.indexOf("<Analytics />"));
 });
