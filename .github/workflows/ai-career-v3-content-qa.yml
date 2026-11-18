@@ -1,0 +1,38 @@
+name: AI Career v3 content quality
+
+on:
+  push:
+    branches:
+      - feature/ai-career-v3-sales-role-matrix-20261118
+  pull_request:
+    paths:
+      - "content/career/v3/**"
+      - "docs/products/ai-career-v3/**"
+      - "tests/ai-career-v3-role-sales.test.mjs"
+      - ".github/workflows/ai-career-v3-content-qa.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  role-matrix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install locked project dependencies
+        run: npm ci
+      - name: Validate sales role matrix and constraints
+        run: node --test tests/ai-career-v3-role-sales.test.mjs
+      - name: Run full app and synthetic career regression tests
+        run: npm test
+      - name: Check TypeScript and ESLint
+        run: |
+          npm run typecheck
+          npm run lint
+      - name: Confirm production Next.js build stays intact
+        run: npm run build
