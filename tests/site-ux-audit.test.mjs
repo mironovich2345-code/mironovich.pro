@@ -72,3 +72,7 @@ test("commercial flags stay off", () => {
   assert.match(commerce, /salesEnabled:\s*false/);
   assert.match(commerce, /legalApproved:\s*false/);
 });
+
+test("metadata is rendered in <head> for every client, also on dynamic calculator pages", () => {
+  assert.match(read("next.config.mjs"), /htmlLimitedBots: \/\.\*\//);
+});

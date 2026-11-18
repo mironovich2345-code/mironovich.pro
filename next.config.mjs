@@ -45,6 +45,10 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
+  // Dynamic pages (the calculators) stream metadata into <body> for clients Next does not
+  // list as "HTML-limited bots" — including Googlebot and Lighthouse. Treat every client as
+  // one, so title/description/canonical are always in <head>. Static pages are unaffected.
+  htmlLimitedBots: /.*/,
   async headers() {
     // staging / preview copies: keep every response out of search indexes
     const noindex = process.env.SITE_NOINDEX === "1" ? [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] : [];
