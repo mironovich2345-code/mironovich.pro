@@ -27,7 +27,7 @@ export default function ProductCard({ product: p }: { product: DigitalProduct })
       <div className="mt-auto flex flex-wrap items-center justify-between gap-4 pt-5">
         <p className="m-0 text-lg">
           {rub(p.plannedPrice)}{" "}
-          <span className="block text-sm text-stone">цена после запуска</span>
+          <span className="block text-sm text-stone">фиксированная стоимость · оплата подключается</span>
         </p>
         <Link
           href={"/products/" + p.slug}
