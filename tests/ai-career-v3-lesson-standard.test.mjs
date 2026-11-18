@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, existsSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import { validateCatalog } from "../scripts/career/validate-v3-content.mjs";
 
 const load = (path) => JSON.parse(readFileSync(path, "utf8"));
@@ -116,4 +117,12 @@ test("author templates and future PDFs have actual editorial specifications",()=
   assert.match(doc,/одобренн|approved/i);
   assert.match(doc,/не готовый платный продукт/i);
   assert.match(readFileSync(templates[2],"utf8"),/10 страниц/);
+});
+
+
+test("independent content validator CLI passes and does not access any external service",()=>{
+  const run=spawnSync(process.execPath,["scripts/career/validate-v3-content.mjs"],{encoding:"utf8",timeout:10000});
+  assert.equal(run.status,0,run.stderr);
+  assert.match(run.stdout,/PASS: five modules/);
+  assert.match(run.stdout,/NOT FOR SALE/);
 });
