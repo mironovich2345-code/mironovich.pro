@@ -184,8 +184,27 @@ export function validateSafetyModule(lessons, catalog, registry) {
   good(all("templates").filter(t=>t.kind==="prompt").length>=5,"five ready prompts");
   good(all("templates").some(t=>t.kind==="checklist"),"a safety checklist");
   good(all("templates").some(t=>t.kind==="script"),"a request template for the manager");
-  const correct=all("quiz").map(q=>q.correctId);
+  const quiz=all("quiz");
+  const correct=quiz.map(q=>q.correctId);
   good(new Set(correct).size>=3,"correct answers must not all sit in the same position");
+  // answer key must not be guessable by position or by length
+  const positions=[...new Set(quiz.flatMap(q=>q.options.map(o=>o.id)))];
+  const fair=Math.ceil(quiz.length/positions.length);
+  for(const p of positions) {
+    const n=correct.filter(x=>x===p).length;
+    good(n>=fair-1&&n<=fair+1,"answer position "+p+" used "+n+" times; expected "+(fair-1)+"–"+(fair+1));
+  }
+  let run=1;
+  for(let i=1;i<correct.length;i++){run=correct[i]===correct[i-1]?run+1:1;good(run<=2,"three correct answers in a row share position "+correct[i]);}
+  let longest=0;
+  for(const q of quiz) {
+    const right=q.options.find(o=>o.id===q.correctId).text.length;
+    const wrong=q.options.filter(o=>o.id!==q.correctId).map(o=>o.text.length);
+    const ratio=right/(wrong.reduce((a,b)=>a+b,0)/wrong.length);
+    good(ratio>=0.8&&ratio<=1.2,q.id+": correct option length is "+ratio.toFixed(2)+"× the distractors (allowed 0.8–1.2)");
+    if(right>Math.max(...wrong)) longest++;
+  }
+  good(longest<=Math.ceil(quiz.length/positions.length),"correct option is the longest in "+longest+" questions");
   const known=new Map(registry.sources.map(s=>[s.id,s]));
   for(const l of lessons) for(const s of l.sources) {
     const r=known.get(s.id);

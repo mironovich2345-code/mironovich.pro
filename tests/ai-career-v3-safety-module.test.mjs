@@ -15,7 +15,8 @@ const lessons = ["SAF-01", "SAF-02", "SAF-03", "SAF-04"].map(id => load(`content
 const fresh = x => structuredClone(x);
 const md = f => readFileSync(MAT + f, "utf8");
 const codeBlocks = f => [...md(f).matchAll(/```\n([\s\S]*?)\n```/g)].map(m => m[1]);
-const MD_FILES = ["guide.md", "01-checklist.md", "02-data-matrix.md", "03-prompts.md", "04-manager-request.md", "05-practicum.md", "06-test.md"];
+const MD_FILES = ["guide.md", "01-checklist.md", "02-data-matrix.md", "03-prompts.md", "04-manager-request.md", "05-practicum.md", "06-test.md", "07-rules-memo.md"];
+const claims = load(MAT + "legal-claims.json");
 
 test("four safety lessons pass the schema and the module gate, and stay unpublished drafts", () => {
   for (const l of lessons) assert.deepEqual(validateLesson(l, role, schema), [], l.id);
@@ -38,7 +39,13 @@ test("module contains the required depth: 8 cases, 4 practice tasks, 12 question
   assert.equal(all("quiz").length, 12);
   assert.equal(all("templates").filter(t => t.kind === "prompt").length, 5);
   const positions = all("quiz").map(q => q.correctId);
-  for (const p of ["a", "b", "c"]) assert.ok(positions.filter(x => x === p).length >= 3, "answer position " + p);
+  for (const p of ["a", "b", "c"]) assert.equal(positions.filter(x => x === p).length, 4, "answer position " + p);
+  for (const q of all("quiz")) {
+    const right = q.options.find(o => o.id === q.correctId).text.length;
+    const wrong = q.options.filter(o => o.id !== q.correctId).map(o => o.text.length);
+    const ratio = right / (wrong.reduce((a, b) => a + b) / wrong.length);
+    assert.ok(ratio >= 0.8 && ratio <= 1.2, `${q.id}: length ratio ${ratio.toFixed(2)}`);
+  }
 });
 
 test("promoting, breaking downloads or citing unregistered sources fails validation", () => {
@@ -74,7 +81,12 @@ test("promoting, breaking downloads or citing unregistered sources fails validat
     [right.text, atB.text] = [atB.text, right.text];
     q.correctId = "b";
   }
-  assert.match(validateSafetyModule(predictable, catalog, registry).join("; "), /same position/);
+  assert.match(validateSafetyModule(predictable, catalog, registry).join("; "), /answer position b used 12 times/);
+
+  const telltale = fresh(lessons);
+  const q = telltale[0].content.quiz[0];
+  q.options.find(o => o.id === q.correctId).text += " — это единственный вариант, который соответствует закону, правилам компании и здравому смыслу";
+  assert.match(validateSafetyModule(telltale, catalog, registry).join("; "), /correct option length/);
 });
 
 test("copyable templates in the lessons are identical to the downloadable workbook files", () => {
@@ -101,7 +113,7 @@ test("every external link in the materials is https and backed by the dated sour
   const used = new Set();
   for (const f of MD_FILES) for (const [, url] of md(f).matchAll(/\]\((https?:[^)\s]+)\)/g)) {
     assert.match(url, /^https:\/\//, f);
-    if (url.includes("example-research.org")) continue; // deliberately fake link inside the "find the errors" exercise
+    if (url.includes("research.example")) continue; // deliberately fake link inside the "find the errors" exercise
     assert.ok(registered.has(url), `${f}: link not in sources.json — ${url}`);
     used.add(url);
   }
@@ -155,4 +167,42 @@ test("downloadable PDFs exist, are paginated, titled and keep clickable sources 
   assert.ok(workbook.pages >= 15 && workbook.internal >= 6);
   for (const f of ["checklist", "data-matrix", "prompts", "manager-request", "practicum", "test"])
     assert.ok((await pdfInfo(MAT + `pdf/safety-${f}-a4.pdf`)).pages >= 2, f);
+  const memo = await pdfInfo(MAT + "pdf/safety-rules-memo-a4.pdf");
+  assert.ok(memo.pages >= 1 && memo.pages <= 2, "memo must fit 1–2 A4 pages, got " + memo.pages);
+});
+
+test("legal statements are registered, sourced and interpretations are flagged in the guide", () => {
+  const known = new Set(registry.sources.map(x => x.id));
+  const statuses = Object.keys(claims.statuses);
+  assert.deepEqual(statuses.sort(), ["illustration", "interpretation", "norm_text"]);
+  for (const c of claims.claims) {
+    assert.ok(statuses.includes(c.status), c.id);
+    assert.ok(c.sourceIds.length && c.sourceIds.every(id => known.has(id)), c.id + " cites unknown source");
+  }
+  const interpretations = claims.claims.filter(c => c.status === "interpretation").length;
+  const guide = md("guide.md");
+  const flagged = (guide.match(/^> \[!legal\]\s*$/gm) || []).length;
+  assert.equal(flagged, interpretations, "every interpretation needs a «Юридическая оговорка» block in the guide");
+  assert.match(guide, /\[!legal\] Это не юридическая консультация/);
+  for (const s of registry.sources.filter(x => /consultant\.ru/.test(x.url))) assert.match(s.edition, /^ред\. от \d{2}\.\d{2}\.\d{4}/, s.id);
+});
+
+test("the Air Canada example is framed as a foreign illustration without universal conclusions", () => {
+  const ac = registry.sources.find(x => x.id === "SRC-CRT-AIR-CANADA");
+  assert.equal(ac.status, "partially_confirmed");
+  for (const text of [md("guide.md"), JSON.stringify(lessons)]) {
+    assert.doesNotMatch(text, /принцип универсален|не снимает с компании ответственности/i);
+  }
+  const guide = md("guide.md");
+  assert.match(guide, /Полный текст решения при подготовке пособия получить не удалось/);
+  assert.match(guide, /\*\*не означает\*\*, что любой спор в России решится так же/);
+  assert.doesNotMatch(guide, /Air Canada[^\n]*\d+\s*(\$|долл|CAD)/);
+});
+
+test("the one-page memo has exactly ten rules and the same disclaimer", () => {
+  const { meta, body } = parseFrontMatter(md("07-rules-memo.md"));
+  assert.equal(meta.layout, "memo");
+  assert.equal((body.match(/^\d+\. \*\*/gm) || []).length, 10);
+  assert.match(body, /не юридическая консультация/i);
+  for (const l of lessons) assert.ok(l.downloads.some(d => d.id === "DL-SAF-RULES-MEMO"), l.id);
 });

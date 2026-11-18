@@ -1,0 +1,55 @@
+name: AI Career v3 safety PDFs are reproducible
+
+# Rebuilds the #42 safety-module PDFs from Markdown/JSON sources and compares them with the
+# committed files (pages, page size, text of every page, embedded fonts, links).
+# Runs on PRs that touch the sources and can be started manually from the Actions tab.
+on:
+  pull_request:
+    paths:
+      - "content/career/v3/materials/safety/**"
+      - "content/career/v3/lessons/**"
+      - "scripts/career/build-safety-materials.mjs"
+      - "scripts/career/check-safety-pdfs.mjs"
+      - "assets/blog-covers/fonts/**"
+      - ".github/workflows/ai-career-v3-safety-pdf.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce-pdfs:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      # same Chromium build as the one the committed PDFs were made with
+      PLAYWRIGHT_VERSION: "1.63.0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install locked project dependencies
+        run: npm ci
+      - name: Install PDF tools and fallback fonts
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends poppler-utils fonts-dejavu-core
+      - name: Install Playwright Chromium (dev tool, not a project dependency)
+        run: |
+          npm install --no-save "playwright@${PLAYWRIGHT_VERSION}"
+          npx --no-install playwright install --with-deps chromium
+      - name: Validate content and safety module
+        run: |
+          node scripts/career/validate-v3-content.mjs
+          node --test tests/ai-career-v3-safety-module.test.mjs
+      - name: Rebuild PDFs and compare with committed files
+        env:
+          SAFETY_PDF_KEEP: ${{ runner.temp }}/safety-pdf-rebuilt
+        run: node scripts/career/check-safety-pdfs.mjs
+      - name: Upload rebuilt PDFs for inspection
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: safety-pdf-rebuilt
+          path: ${{ runner.temp }}/safety-pdf-rebuilt
+          retention-days: 7

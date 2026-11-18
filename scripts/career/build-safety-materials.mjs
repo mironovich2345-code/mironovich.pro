@@ -44,7 +44,7 @@ export function parseFrontMatter(md) {
   return { meta, body: md.slice(m[0].length) };
 }
 
-const CALLOUT = { note: "Обратите внимание", warn: "Важно", key: "Что сделать", example: "Пример" };
+const CALLOUT = { note: "Обратите внимание", warn: "Важно", key: "Что сделать", example: "Пример", legal: "Юридическая оговорка — проверить с юристом" };
 
 export function renderMarkdown(body, ctx = { headings: [], prefix: "s" }) {
   const lines = body.replace(/\r\n/g, "\n").split("\n");
@@ -157,24 +157,24 @@ export function buildTestMarkdown(lessons) {
 function fontFace(family, file, range, weight = "100 900") {
   return `@font-face{font-family:"${family}";src:url("${pathToFileURL(join(FONTS, file)).href}") format("woff2");font-weight:${weight};unicode-range:${range};}`;
 }
-const LATIN = "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2190-2193,U+20BD,U+2212,U+2215,U+FEFF,U+FFFD";
+const LATIN = "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2190-2193,U+20BD,U+2212,U+2215,U+FEFF,U+FFFD";
 const CYR = "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116";
 
 function css(format) {
   const mobile = format === "mobile";
-  const page = mobile ? "size:110mm 196mm;margin:12mm 9mm 14mm 9mm;" : "size:A4;margin:18mm 18mm 20mm 18mm;";
+  const page = mobile ? "size:110mm 196mm;margin:11mm 8mm 13mm 8mm;" : "size:A4;margin:18mm 18mm 20mm 18mm;";
   return `
 ${fontFace("Inter", "Inter-latin.woff2", LATIN)}${fontFace("Inter", "Inter-cyrillic.woff2", CYR)}
 ${fontFace("Roboto Condensed", "RobotoCondensed-latin.woff2", LATIN)}${fontFace("Roboto Condensed", "RobotoCondensed-cyrillic.woff2", CYR)}
 @page{${page}background:#F2EFE8;}
-:root{--cream:#F2EFE8;--ink:#0E0E11;--red:#D92D2D;--red-text:#C42828;--muted:#55555c;--line:#d6d1c4;--panel:#e8e3d7;}
+:root{--cream:#F2EFE8;--ink:#0E0E11;--red:#D92D2D;--red-text:#C42828;--red-text-panel:#B02020;--muted:#55555c;--line:#d6d1c4;--panel:#e8e3d7;}
 html{background:var(--cream);-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-body{margin:0;color:var(--ink);font-family:"Inter","DejaVu Sans",sans-serif;font-size:${mobile ? "10.5pt" : "11pt"};line-height:1.5;
+body{margin:0;color:var(--ink);font-family:"Inter","DejaVu Sans",sans-serif;font-size:${mobile ? "12pt" : "11pt"};line-height:${mobile ? "1.45" : "1.5"};
   hyphens:auto;-webkit-hyphens:auto;overflow-wrap:break-word;font-feature-settings:"kern","liga";}
 a{color:var(--red-text);text-decoration:underline;text-underline-offset:2px;}
 h1,h2,h3,h4{font-family:"Roboto Condensed","Inter",sans-serif;line-height:1.15;hyphens:none;-webkit-hyphens:none;break-after:avoid;page-break-after:avoid;}
-h2{font-size:${mobile ? "17pt" : "20pt"};font-weight:700;margin:0 0 10pt;padding-top:4pt;border-top:3pt solid var(--red);padding-top:8pt;margin-top:18pt;}
-h3{font-size:${mobile ? "13pt" : "14pt"};font-weight:700;margin:16pt 0 6pt;}
+h2{font-size:${mobile ? "18pt" : "20pt"};font-weight:700;margin:0 0 10pt;padding-top:4pt;border-top:3pt solid var(--red);padding-top:8pt;margin-top:18pt;}
+h3{font-size:${mobile ? "14.5pt" : "14pt"};font-weight:700;margin:16pt 0 6pt;}
 h4{font-size:12pt;margin:12pt 0 4pt;}
 p{margin:0 0 7pt;orphans:3;widows:3;}
 ul,ol{margin:0 0 8pt;padding-left:${mobile ? "15pt" : "18pt"};}
@@ -182,18 +182,32 @@ li{margin:0 0 3pt;}
 ol li::marker{font-weight:700;color:var(--red-text);}
 strong{font-weight:700;}
 code{white-space:nowrap;font-family:"DejaVu Sans Mono",monospace;font-size:.9em;background:var(--panel);padding:0 2pt;border-radius:2pt;}
-table{width:100%;border-collapse:collapse;margin:6pt 0 10pt;font-size:${mobile ? "9.5pt" : "9.5pt"};line-height:1.38;table-layout:auto;}
+table{width:100%;border-collapse:collapse;margin:6pt 0 10pt;font-size:${mobile ? "11pt" : "9.5pt"};line-height:1.38;table-layout:auto;}
 th{background:var(--ink);color:var(--cream);text-align:left;font-weight:600;padding:4pt 5pt;vertical-align:bottom;}
 td{border-bottom:.6pt solid var(--line);padding:4pt 5pt;vertical-align:top;}
+/* row labels are short words: do not split them with hyphens */
+td:first-child,th{hyphens:none;-webkit-hyphens:none;}
 tr{break-inside:avoid;page-break-inside:avoid;}
 thead{display:table-header-group;}
-.prompt{white-space:pre-wrap;font-family:"Inter",sans-serif;font-size:${mobile ? "9.5pt" : "10pt"};line-height:1.45;background:#fbfaf6;border:1pt solid var(--line);
+.prompt{white-space:pre-wrap;font-family:"Inter",sans-serif;font-size:${mobile ? "11pt" : "10pt"};line-height:1.45;background:#fbfaf6;border:1pt solid var(--line);
   border-left:3pt solid var(--ink);padding:7pt 9pt;margin:4pt 0 9pt;break-inside:avoid;hyphens:none;}
 .callout{border-left:3pt solid var(--red);background:var(--panel);padding:7pt 10pt;margin:8pt 0 10pt;break-inside:avoid;}
 .callout p:last-child{margin-bottom:0;}
-.callout-title{font-family:"Roboto Condensed","Inter",sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:9pt;color:var(--red-text);margin-bottom:3pt;}
+.callout-title{font-family:"Roboto Condensed","Inter",sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:${mobile ? "10pt" : "9pt"};color:var(--red-text-panel);margin-bottom:3pt;}
+.callout a{color:var(--red-text-panel);}
 .callout-example{border-left-color:var(--ink);background:#fbfaf6;border:1pt solid var(--line);border-left:3pt solid var(--ink);}
 .callout-example .callout-title{color:var(--ink);}
+.callout-legal{background:#fbfaf6;border:1pt dashed var(--muted);border-left:3pt solid var(--ink);}
+.callout-legal .callout-title{color:var(--ink);}
+.callout-legal .callout-title::before{content:"§ ";color:var(--red-text);}
+/* one- or two-page memo: compact header instead of a cover */
+.memo-head{border-bottom:1pt solid var(--ink);padding-bottom:6pt;margin-bottom:8pt;}
+.memo-head h1{font-family:"Roboto Condensed","Inter",sans-serif;font-size:${mobile ? "21pt" : "24pt"};margin:6pt 0 3pt;}
+.memo-head .bar{width:30mm;height:3pt;background:var(--red);margin-top:6pt;}
+.memo-head p{color:var(--muted);margin:0;font-size:.92em;}
+.memo h2:first-of-type{display:none;}
+.memo ol>li{margin-bottom:${mobile ? "6pt" : "5pt"};}
+.memo .status-line{font-size:8.5pt;color:var(--muted);margin-top:4pt;}
 .checklist{list-style:none;padding-left:0;}
 .checklist li{position:relative;padding-left:17pt;margin-bottom:4pt;break-inside:avoid;}
 .checklist .box{position:absolute;left:0;top:2.5pt;width:9pt;height:9pt;border:1.1pt solid var(--ink);border-radius:1.5pt;background:#fff;}
@@ -225,7 +239,7 @@ table,thead,tbody,tr,td{display:block;width:auto;}
 thead{display:none;}
 tr{border:1pt solid var(--line);background:#fbfaf6;margin:0 0 6pt;padding:3pt 6pt;}
 td{border:0;padding:2pt 0;}
-td::before{content:attr(data-label);display:block;font-weight:700;font-size:8pt;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;}
+td::before{content:attr(data-label);display:block;font-weight:700;font-size:8.5pt;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;}
 .meta tr{border:0;background:none;padding:0;margin:0;}
 .meta td::before{content:none;}
 ` : ""}
@@ -247,6 +261,12 @@ function coverHtml(meta, format) {
 </section>`;
 }
 
+function memoHeadHtml(meta) {
+  return `<header class="memo-head"><div class="brand">MIRONOVICH<span>.</span>PRO · AI CAREER</div><div class="bar"></div>
+<h1>${inline(meta.title)}</h1><p>${inline(meta.subtitle)}</p>
+<p class="status-line">Версия ${esc(meta.version)} · ${esc(meta.date)} · ${inline(meta.status)}</p></header>`;
+}
+
 function tocHtml(headings, pages) {
   const items = headings.filter(h => h.level === 2 || h.level === 3 && h.toc)
     .map(h => `<li class="l${h.level}"><a href="#${h.id}">${inline(h.text)}</a><span class="pg">${pages?.[h.id] ?? "…"}</span></li>`);
@@ -258,9 +278,11 @@ function documentHtml(parts, format, pages) {
   const headings = [];
   const bodies = parts.map((p, k) => renderMarkdown(p.body, { headings, prefix: "s" + k }));
   headings.forEach(h => { h.toc = h.level === 3 && /^Кейс \d/.test(h.text); });
-  const toc = headings.filter(h => h.level === 2).length > 3 ? tocHtml(headings, pages) : "";
+  const memo = parts[0].meta.layout === "memo";
+  const toc = !memo && headings.filter(h => h.level === 2).length > 3 ? tocHtml(headings, pages) : "";
+  const head = memo ? memoHeadHtml(parts[0].meta) : coverHtml(parts[0].meta, format);
   return { headings, html: `<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>${esc(parts[0].meta.title)}</title>
-<style>${css(format)}</style></head><body>${coverHtml(parts[0].meta, format)}${toc}${bodies.join("\n")}</body></html>` };
+<style>${css(format)}</style></head><body${memo ? ' class="memo"' : ""}>${head}${toc}${bodies.join("\n")}</body></html>` };
 }
 
 // ------------------------------------------------------------------ pdf
@@ -341,28 +363,34 @@ async function buildDocument(browser, { parts, format, out, footer }) {
 const read = f => parseFrontMatter(readFileSync(join(MAT, f), "utf8"));
 
 async function main() {
-  const testMd = buildTestMarkdown(LESSONS);
-  writeFileSync(join(MAT, "06-test.md"), testMd);
+  const outArg = process.argv.indexOf("--out");
+  const out = outArg > 0 ? process.argv[outArg + 1] : OUT;
+  if (outArg > 0 && !out) throw new Error("--out needs a directory");
+  // a check build into another directory must not touch the committed sources
+  if (outArg < 0) writeFileSync(join(MAT, "06-test.md"), buildTestMarkdown(LESSONS));
   if (process.argv.includes("--test-md")) { console.log("wrote 06-test.md"); return; }
 
   let playwright;
   try { playwright = createRequire(import.meta.url)("playwright"); }
   catch { throw new Error("Playwright with Chromium is required to build PDFs (dev-only; not a project dependency)."); }
   if (!existsSync(FONTS)) throw new Error("font directory missing: " + FONTS);
-  mkdirSync(OUT, { recursive: true });
+  mkdirSync(out, { recursive: true });
 
   const guide = read("guide.md");
+  const memo = read("07-rules-memo.md");
   const tools = ["01-checklist.md", "02-data-matrix.md", "03-prompts.md", "04-manager-request.md", "05-practicum.md", "06-test.md"].map(read);
   const workbookMeta = { ...tools[0].meta, id: "SAF-WORKBOOK", title: "Рабочая тетрадь по безопасности ИИ",
-    subtitle: "Чек-лист, матрица данных, промпты, обращение к руководителю, практикум и контрольный тест",
+    subtitle: "Памятка, чек-лист, матрица данных, промпты, обращение к руководителю, практикум и контрольный тест", layout: "",
     audience: "Менеджеры по продажам. Используется вместе с пособием «Безопасность использования ИИ на работе»." };
 
   const jobs = [
-    { parts: [guide], format: "a4", out: join(OUT, "safety-guide-a4.pdf"), footer: "Безопасность использования ИИ на работе" },
-    { parts: [guide], format: "mobile", out: join(OUT, "safety-guide-mobile.pdf"), footer: "Безопасность ИИ" },
-    { parts: [{ meta: workbookMeta, body: tools.map(t => t.body).join("\n<!-- pagebreak -->\n") }], format: "a4", out: join(OUT, "safety-workbook-a4.pdf"), footer: "Рабочая тетрадь по безопасности ИИ" },
+    { parts: [guide], format: "a4", out: join(out, "safety-guide-a4.pdf"), footer: "Безопасность использования ИИ на работе" },
+    { parts: [guide], format: "mobile", out: join(out, "safety-guide-mobile.pdf"), footer: "Безопасность ИИ" },
+    { parts: [{ meta: workbookMeta, body: [memo, ...tools].map(t => t.body).join("\n<!-- pagebreak -->\n") }], format: "a4", out: join(out, "safety-workbook-a4.pdf"), footer: "Рабочая тетрадь по безопасности ИИ" },
     ...[["safety-checklist-a4.pdf", 0], ["safety-data-matrix-a4.pdf", 1], ["safety-prompts-a4.pdf", 2], ["safety-manager-request-a4.pdf", 3], ["safety-practicum-a4.pdf", 4], ["safety-test-a4.pdf", 5]]
-      .map(([file, k]) => ({ parts: [tools[k]], format: "a4", out: join(OUT, file), footer: tools[k].meta.title })),
+      .map(([file, k]) => ({ parts: [tools[k]], format: "a4", out: join(out, file), footer: tools[k].meta.title })),
+    { parts: [memo], format: "a4", out: join(out, "safety-rules-memo-a4.pdf"), footer: memo.meta.title },
+    { parts: [memo], format: "mobile", out: join(out, "safety-rules-memo-mobile.pdf"), footer: "10 правил безопасной работы с ИИ" },
   ];
   const browser = await playwright.chromium.launch();
   try {
