@@ -1,14 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { metricaId } from "@/lib/analytics";
 import { useEffect, useRef, useState } from "react";
 import { CONSENT_OPEN_EVENT, readConsent, revokeConsent, saveConsent, type ConsentChoice } from "@/lib/consent";
 
 /**
- * Compact consent panel, shown when Yandex Metrica is configured and no
- * choice is stored, or when reopened from «Настройки аналитики» in the footer.
- * Wording approved by the owner; the full list of analytics services is in the
- * privacy policy. Declining affects analytics only — the lead form always works.
+ * Compact cookies notice: informational-only when no Yandex Metrica counter is
+ * configured; accept/reject analytics when a counter exists. The choice key is
+ * tied to the counter so an acknowledgement cannot authorize future tracking.
+ * Can be reopened from the footer; the lead form always works.
  *
  * Layout: a bottom panel 12px from the screen edges on phones, a 440px card in
  * the bottom-right corner on desktop. While open, the page gets matching bottom
@@ -103,9 +104,11 @@ export default function ConsentBanner() {
       </div>
 
       <p className="m-0 text-pretty text-[13.5px] leading-[1.5] text-cream/80">
-        Мы используем cookies для анализа посещаемости и улучшения сайта. Вы можете разрешить или отклонить аналитику.
+        {metricaId
+          ? "С вашего разрешения Яндекс Метрика использует cookies и локальное хранилище для анализа посещаемости. Можно разрешить или отклонить аналитику."
+          : "Сайт использует техническое локальное хранилище для работы интерфейса. Яндекс Метрика пока не подключена. Если включим аналитику, отдельно запросим ваше согласие."}
       </p>
-      {current && (
+      {metricaId && current && (
         <p className="m-0 mt-2.5 flex items-center gap-2 text-[12.5px] leading-[1.45] text-cream/85">
           <span
             aria-hidden
@@ -117,6 +120,7 @@ export default function ConsentBanner() {
         </p>
       )}
 
+      {metricaId ? (
       <div className="mt-3.5 grid grid-cols-2 gap-2">
         <button
           ref={firstButtonRef}
@@ -134,6 +138,16 @@ export default function ConsentBanner() {
           Отклонить
         </button>
       </div>
+      ) : (
+        <button
+          ref={firstButtonRef}
+          type="button"
+          onClick={() => choose("denied")}
+          className="mt-3.5 min-h-[44px] w-full rounded-[4px] border border-cream/35 px-3 text-center text-[14px] font-medium text-cream transition-colors hover:border-cream hover:bg-cream/5"
+        >
+          Понятно
+        </button>
+      )}
 
       <Link
         href="/privacy"
