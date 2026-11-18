@@ -1,18 +1,47 @@
 {
   "syntheticFixture": true,
   "notForUsers": true,
-  "note": "Технические синтетические профили для тестов движка v3. Ответы основаны на sampleProfiles из diagnostic-sales.json; недостающие в образцах ответы Q04, Q06, Q07 добавлены, чтобы анкета была полной. Не являются данными реальных людей и не загружаются в кабинет.",
+  "note": "Технические синтетические профили для тестов движка v3 (10 штук). Первые три основаны на sampleProfiles из diagnostic-sales.json; недостающие в образцах ответы Q04, Q06, Q07 добавлены, чтобы анкета была полной. Не являются данными реальных людей и не загружаются в кабинет.",
   "profiles": [
     {
       "id": "FX-b2b-experienced-public-tools",
       "basedOn": "P-b2b-experienced",
       "story": "Опытный B2B-менеджер; компания утвердила ИИ-инструменты для публичных данных",
       "answers": {
-        "Q01": "outbound_b2b", "Q02": "experienced", "Q03": ["research", "proposal", "negotiation"],
-        "Q04": ["T01", "T11", "T13"], "Q05": "fragmented_info", "Q06": "weekly", "Q07": "15_60",
-        "Q08": "conversion", "Q09": "measured", "Q10": "regular", "Q11": ["chat", "office"],
-        "Q12": "approved_specific", "Q13": ["public"], "Q14": "money", "Q15": "checklist",
-        "Q16": "manager", "Q17": "45_plus", "Q18": ["customers", "manager"]
+        "Q01": "outbound_b2b",
+        "Q02": "experienced",
+        "Q03": [
+          "research",
+          "proposal",
+          "negotiation"
+        ],
+        "Q04": [
+          "T01",
+          "T11",
+          "T13"
+        ],
+        "Q05": "fragmented_info",
+        "Q06": "weekly",
+        "Q07": "15_60",
+        "Q08": "conversion",
+        "Q09": "measured",
+        "Q10": "regular",
+        "Q11": [
+          "chat",
+          "office"
+        ],
+        "Q12": "approved_specific",
+        "Q13": [
+          "public"
+        ],
+        "Q14": "money",
+        "Q15": "checklist",
+        "Q16": "manager",
+        "Q17": "45_plus",
+        "Q18": [
+          "customers",
+          "manager"
+        ]
       }
     },
     {
@@ -20,11 +49,38 @@
       "basedOn": "P-inbound-starter",
       "story": "Начинающий менеджер входящих продаж; правила использования ИИ неизвестны",
       "answers": {
-        "Q01": "inbound", "Q02": "starter", "Q03": ["outreach", "crm"],
-        "Q04": ["T07", "T10"], "Q05": "repetition", "Q06": "daily", "Q07": "under_15",
-        "Q08": "speed", "Q09": "none", "Q10": "none", "Q11": ["unknown"],
-        "Q12": "unknown", "Q13": ["personal"], "Q14": "customer", "Q15": "self",
-        "Q16": "manager", "Q17": "20_30", "Q18": ["less_routine", "quality"], "F01": "manager"
+        "Q01": "inbound",
+        "Q02": "starter",
+        "Q03": [
+          "outreach",
+          "crm"
+        ],
+        "Q04": [
+          "T07",
+          "T10"
+        ],
+        "Q05": "repetition",
+        "Q06": "daily",
+        "Q07": "under_15",
+        "Q08": "speed",
+        "Q09": "none",
+        "Q10": "none",
+        "Q11": [
+          "unknown"
+        ],
+        "Q12": "unknown",
+        "Q13": [
+          "personal"
+        ],
+        "Q14": "customer",
+        "Q15": "self",
+        "Q16": "manager",
+        "Q17": "20_30",
+        "Q18": [
+          "less_routine",
+          "quality"
+        ],
+        "F01": "manager"
       }
     },
     {
@@ -32,11 +88,300 @@
       "basedOn": "P-account-prohibited",
       "story": "Сопровождение клиентов; в компании внешний ИИ запрещён",
       "answers": {
-        "Q01": "account", "Q02": "independent", "Q03": ["account", "crm"],
-        "Q04": ["T19", "T10"], "Q05": "complex_communication", "Q06": "weekly", "Q07": "15_60",
-        "Q08": "retention", "Q09": "some", "Q10": "occasionally", "Q11": ["none"],
-        "Q12": "prohibited", "Q13": ["internal", "transcripts"], "Q14": "privacy", "Q15": "supervisor",
-        "Q16": "manager", "Q17": "10_15", "Q18": ["quality", "grow"]
+        "Q01": "account",
+        "Q02": "independent",
+        "Q03": [
+          "account",
+          "crm"
+        ],
+        "Q04": [
+          "T19",
+          "T10"
+        ],
+        "Q05": "complex_communication",
+        "Q06": "weekly",
+        "Q07": "15_60",
+        "Q08": "retention",
+        "Q09": "some",
+        "Q10": "occasionally",
+        "Q11": [
+          "none"
+        ],
+        "Q12": "prohibited",
+        "Q13": [
+          "internal",
+          "transcripts"
+        ],
+        "Q14": "privacy",
+        "Q15": "supervisor",
+        "Q16": "manager",
+        "Q17": "10_15",
+        "Q18": [
+          "quality",
+          "grow"
+        ]
+      }
+    },
+    {
+      "id": "FX-account-approved",
+      "story": "Аккаунт-менеджер; утверждённые инструменты, только общедоступные данные",
+      "answers": {
+        "Q01": "account",
+        "Q02": "independent",
+        "Q03": [
+          "account",
+          "crm"
+        ],
+        "Q04": [
+          "T19",
+          "T20"
+        ],
+        "Q05": "fragmented_info",
+        "Q06": "weekly",
+        "Q07": "15_60",
+        "Q08": "retention",
+        "Q09": "some",
+        "Q10": "occasionally",
+        "Q11": [
+          "office"
+        ],
+        "Q12": "approved_specific",
+        "Q13": [
+          "public"
+        ],
+        "Q14": "customer",
+        "Q15": "self",
+        "Q16": "within_limits",
+        "Q17": "20_30",
+        "Q18": [
+          "customers",
+          "manager"
+        ]
+      }
+    },
+    {
+      "id": "FX-no-policy",
+      "story": "Исходящие продажи; ИИ-чат есть, но правила работы с данными не утверждены",
+      "answers": {
+        "Q01": "outbound_b2b",
+        "Q02": "independent",
+        "Q03": [
+          "outreach",
+          "qualification"
+        ],
+        "Q04": [
+          "T03",
+          "T05"
+        ],
+        "Q05": "repetition",
+        "Q06": "daily",
+        "Q07": "15_60",
+        "Q08": "conversion",
+        "Q09": "some",
+        "Q10": "occasionally",
+        "Q11": [
+          "chat"
+        ],
+        "Q12": "general_only",
+        "F01": "it",
+        "Q13": [
+          "public"
+        ],
+        "Q14": "customer",
+        "Q15": "self",
+        "Q16": "manager",
+        "Q17": "20_30",
+        "Q18": [
+          "less_routine"
+        ]
+      }
+    },
+    {
+      "id": "FX-no-baseline",
+      "story": "Входящие заявки; инструменты утверждены, исходных замеров нет",
+      "answers": {
+        "Q01": "inbound",
+        "Q02": "independent",
+        "Q03": [
+          "qualification",
+          "proposal"
+        ],
+        "Q04": [
+          "T06",
+          "T11"
+        ],
+        "Q05": "quality",
+        "Q06": "daily",
+        "Q07": "under_15",
+        "Q08": "unknown",
+        "Q09": "unknown",
+        "Q10": "occasionally",
+        "Q11": [
+          "chat",
+          "office"
+        ],
+        "Q12": "approved_specific",
+        "Q13": [
+          "public",
+          "synthetic"
+        ],
+        "Q14": "customer",
+        "Q15": "none",
+        "Q16": "manager",
+        "Q17": "20_30",
+        "Q18": [
+          "manager"
+        ]
+      }
+    },
+    {
+      "id": "FX-high-error-cost",
+      "story": "Опытный B2B; инструменты утверждены, но ошибка может раскрыть закрытые данные",
+      "answers": {
+        "Q01": "outbound_b2b",
+        "Q02": "experienced",
+        "Q03": [
+          "proposal",
+          "negotiation"
+        ],
+        "Q04": [
+          "T11",
+          "T12"
+        ],
+        "Q05": "quality",
+        "Q06": "weekly",
+        "Q07": "over_60",
+        "Q08": "quality",
+        "Q09": "measured",
+        "Q10": "advanced",
+        "Q11": [
+          "chat",
+          "office",
+          "crm"
+        ],
+        "Q12": "approved_specific",
+        "Q13": [
+          "public"
+        ],
+        "Q14": "privacy",
+        "Q15": "supervisor",
+        "Q16": "no_deals",
+        "Q17": "45_plus",
+        "Q18": [
+          "quality",
+          "grow"
+        ]
+      }
+    },
+    {
+      "id": "FX-mixed-duties",
+      "story": "Смешанные обязанности, ведущая — входящие обращения; полномочия неизвестны",
+      "answers": {
+        "Q01": "mixed",
+        "F02": "inbound",
+        "Q02": "independent",
+        "Q03": [
+          "outreach",
+          "account"
+        ],
+        "Q04": [
+          "T07",
+          "T19"
+        ],
+        "Q05": "complex_communication",
+        "Q06": "daily",
+        "Q07": "15_60",
+        "Q08": "speed",
+        "Q09": "some",
+        "Q10": "occasionally",
+        "Q11": [
+          "chat"
+        ],
+        "Q12": "approved_specific",
+        "Q13": [
+          "public"
+        ],
+        "Q14": "customer",
+        "Q15": "self",
+        "Q16": "unknown",
+        "Q17": "20_30",
+        "Q18": [
+          "customers"
+        ]
+      }
+    },
+    {
+      "id": "FX-minimal-time",
+      "story": "Начинающий в исходящих продажах; 10–15 минут на обучение",
+      "answers": {
+        "Q01": "outbound_b2b",
+        "Q02": "starter",
+        "Q03": [
+          "research",
+          "outreach"
+        ],
+        "Q04": [
+          "T01",
+          "T03"
+        ],
+        "Q05": "tools",
+        "Q06": "daily",
+        "Q07": "15_60",
+        "Q08": "speed",
+        "Q09": "none",
+        "Q10": "none",
+        "Q11": [
+          "chat"
+        ],
+        "Q12": "approved_specific",
+        "Q13": [
+          "public"
+        ],
+        "Q14": "minor",
+        "Q15": "supervisor",
+        "Q16": "manager",
+        "Q17": "10_15",
+        "Q18": [
+          "less_routine"
+        ]
+      }
+    },
+    {
+      "id": "FX-diagnostic-changed",
+      "story": "Профиль, у которого после диагностики изменилась версия анкеты (тест устаревания)",
+      "answers": {
+        "Q01": "inbound",
+        "Q02": "starter",
+        "Q03": [
+          "outreach",
+          "crm"
+        ],
+        "Q04": [
+          "T07",
+          "T10"
+        ],
+        "Q05": "repetition",
+        "Q06": "daily",
+        "Q07": "under_15",
+        "Q08": "speed",
+        "Q09": "none",
+        "Q10": "none",
+        "Q11": [
+          "unknown"
+        ],
+        "Q12": "unknown",
+        "Q13": [
+          "personal"
+        ],
+        "Q14": "customer",
+        "Q15": "self",
+        "Q16": "manager",
+        "Q17": "20_30",
+        "Q18": [
+          "less_routine",
+          "quality"
+        ],
+        "F01": "manager"
       }
     }
   ]

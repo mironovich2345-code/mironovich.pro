@@ -1,44 +1,68 @@
-// AI Career 3.0 — contracts for the next components (#45 task map, lesson selection, #46 30-step
-// constructor, progress and artifacts, #47 measurements, profession onboarding).
-// Types only, plus one implemented guard: assessPlanReadiness(), which decides whether the
-// approved library can support a 30-step plan at all. It never produces steps itself.
+// AI Career 3.0 — contracts: task map (#45, lib/career-v3/task-map.ts), lesson selection
+// (selection.ts), 30-step plan (#46, plan.ts), progress/artifacts and measurements (#47, types only),
+// plus assessPlanReadiness(), a quick guard that never produces steps itself.
 import type { DiagnosticResultV3 } from "./diagnostic.ts";
-import type { LibraryIndex, PlanStepCandidate, ProfessionId } from "./types.ts";
+import type { LibraryIndex, MetricKind, PlanPhase, PlanStepCandidate, ProfessionId } from "./types.ts";
 
 export const PLAN_STEPS_REQUIRED = 30;
 
 // ---------- Personal task map (#45) ----------
 
-export interface LessonRef { lessonId: string; version: string; exerciseId: string | null }
+export interface LessonRef { lessonId: string; version: string; exerciseIds: string[]; title: string }
+
+export interface MetricRef {
+  metricId: string;
+  label: string;
+  method: string;
+  caveat: string;
+  kind: MetricKind;
+  /** Training metrics are measured on the learner's artifacts; workplace outcomes are observed only. */
+  attribution: "exercise_result" | "observed_not_attributed";
+}
 
 export interface TaskMapItem {
   taskId: string;
+  title: string;
+  explanation: string;
   decision: "ai_can_take_part" | "ai_assists" | "human_decides";
-  /** Why: from the role matrix (modeMeaning / humanResponsibility), never generated. */
-  why: string;
-  conditions: string[];
+  decisionLabel: string;
+  /** Whether AI may be used for the real work task now (separate from the matrix decision). */
+  workUse: "allowed_with_review" | "not_until_rules_confirmed" | "not_allowed";
+  workUseLabel: string;
+  /** Basis comes from the role matrix (mode, modeMeaning, humanResponsibility) — never generated. */
+  basis: { roleMode: string; modeMeaning: string; humanResponsibility: string; tightenedBySafety: boolean; safetyRules: string[] };
+  companyRestrictions: string[];
   risks: string[];
-  restrictions: string[];
-  metricId: string;
+  mandatoryChecks: string[];
+  skill: { skillId: string; name: string; why: string } | null;
+  metric: MetricRef | null;
   lessonRefs: LessonRef[];
 }
 
 export interface TaskMapV3 {
   modelVersion: "career-v3-task-map/1";
   professionId: ProfessionId;
-  diagnosticResultId: string;
-  programVersion: string;
+  builtOn: string;
+  versions: { diagnostic: string; role: string; program: string; library: string; resultModel: string };
   status: "ready" | "unavailable";
-  unavailableReason?: "no_approved_lessons" | "no_tasks_selected";
+  unavailableReason: null | "no_tasks_selected";
   tasks: TaskMapItem[];
-  strengths: { skillId: string; basis: string }[];
-  growthSkills: { skillId: string; lessonRefs: LessonRef[] }[];
+  fallback: null | { kind: "training_example"; message: string };
+  /** Bases for development taken from the person's own answers. Not a proven assessment of strengths. */
+  developmentBasis: {
+    status: "answer_based" | "no_basis";
+    items: { id: string; label: string; skillId: string; source: "self_reported_answer"; answer: string }[];
+    note: string;
+  };
+  level: { id: string; label: string; description: string };
+  growthSkills: { skillId: string; name: string; why: string; reasons: string[]; lessonRefs: LessonRef[] }[];
+  learningRoute: { status: "available" | "unavailable"; reason: string | null; message: string | null };
 }
 
 // ---------- Lesson selection ----------
 
 export type SelectionReason =
-  | "mandatory_module" | "selected_task" | "work_area" | "subtype_fit" | "level_fit"
+  | "mandatory_module" | "prerequisite" | "selected_task" | "scenario" | "work_area" | "subtype_fit" | "level_fit"
   | "goal_fit" | "baseline_first" | "safe_variant";
 
 export interface LessonSelectionItem {
@@ -49,6 +73,7 @@ export interface LessonSelectionItem {
   mandatory: boolean;
   variant: "synthetic_practice" | "approved_tools_public_data" | "manual_without_ai";
   reasons: SelectionReason[];
+  score: number;
 }
 
 export interface LessonSelectionV3 {
@@ -56,36 +81,52 @@ export interface LessonSelectionV3 {
   professionId: ProfessionId;
   programVersion: string;
   status: "ready" | "unavailable";
+  unavailableReason: null | "no_approved_lessons" | "content_errors" | "mandatory_module_missing" | "diagnostic_outdated" | "nothing_fits_profile";
+  variant: LessonSelectionItem["variant"];
   items: LessonSelectionItem[];
+  excluded: { lessonId: string; reason: string }[];
   coverageGaps: string[];
 }
 
 // ---------- 30-step constructor (#46) ----------
 
-export type PlanPhase = "safety" | "apply" | "verify" | "measure" | "value" | "next_level";
-
 export interface PlanStepV3 extends PlanStepCandidate {
+  /** Stable across rebuilds: lesson/version/candidate. stepId/position are the order in this plan. */
+  stableId: string;
   phase: PlanPhase;
   lessonVersion: string;
-  personalization: SelectionReason[];
+  lessonTitle: string;
+  templateKind: string;
+  variant: LessonSelectionItem["variant"];
+  metric: MetricRef | null;
   restrictions: string[];
+  why: { reasons: SelectionReason[]; text: string };
+  estimatedMinutes: number;
+  session: number;
 }
+
+export interface PlanGap { phase: PlanPhase | "total"; needed: number; available: number; missing: string }
 
 export type PlanV3 =
   | {
     modelVersion: "career-v3-plan/1";
     status: "ready";
     professionId: ProfessionId;
-    programVersion: string;
-    diagnosticResultId: string;
-    steps: PlanStepV3[]; // exactly PLAN_STEPS_REQUIRED, each pointing to a delivered lesson/exercise/template
+    builtOn: string;
+    versions: { diagnostic: string; role: string; program: string; library: string; resultModel: string; lessons: Record<string, string> };
+    variant: LessonSelectionItem["variant"];
+    sessionMinutes: number;
+    phaseCounts: Record<PlanPhase, number>;
+    steps: PlanStepV3[]; // exactly PLAN_STEPS_REQUIRED; each references a delivered lesson/exercise/template
   }
   | {
     modelVersion: "career-v3-plan/1";
     status: "unavailable";
     professionId: ProfessionId;
-    programVersion: string;
-    readiness: PlanReadiness;
+    builtOn: string;
+    reason: "no_approved_lessons" | "content_errors" | "mandatory_module_missing" | "diagnostic_outdated" | "nothing_fits_profile" | "insufficient_material";
+    message: string;
+    gaps: PlanGap[];
     steps: []; // never filled with placeholders
   };
 
@@ -143,6 +184,11 @@ export interface CareerV3Api {
   "POST diagnostic": { body: { answers: Record<string, string | string[]> }; response: { result: DiagnosticResultV3; savedAt: string } };
   "GET diagnostic": { response: { result: DiagnosticResultV3 | null } };
   "GET plan/readiness": { response: PlanReadiness };
+  "POST task-map": { response: { taskMap: TaskMapV3; savedAt: string } };
+  "GET task-map": { response: { taskMap: TaskMapV3 | null; stale: boolean; staleReasons: string[] } };
+  "GET lessons/selection": { response: LessonSelectionV3 };
+  "POST plan": { response: { plan: PlanV3; savedAt: string | null } };
+  "GET plan": { response: { plan: PlanV3 | null; stale: boolean; staleReasons: string[] } };
 }
 
 // ---------- Plan readiness guard (implemented) ----------

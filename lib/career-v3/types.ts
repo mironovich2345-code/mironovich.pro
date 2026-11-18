@@ -44,6 +44,8 @@ export interface DiagnosticBinding {
     toolsUnavailable: string[];
     policyQuestion: string;
     policyApproved: string[];
+    /** Policy answers meaning "AI is prohibited": the route switches to manual work without AI. */
+    policyProhibited: string[];
     policyContactQuestion: string | null;
     dataQuestion: string;
     errorCostQuestion: string;
@@ -65,10 +67,28 @@ export type SafetyEffect =
   | "no_personal_commitments"
   | "no_inference";
 
+export type PlanPhase = "safety" | "apply" | "verify" | "measure" | "value" | "next_level";
+export type MetricKind = "exercise" | "workplace_outcome";
+
+/** Profession-specific inputs of the task map, selection and plan — declarative, reviewed by the owner. */
+export interface EngineConfig {
+  /** exercise = measurable on the learner's own training artifact; workplace_outcome = observable at work, never attributed to AI. */
+  metricKinds: Record<string, MetricKind>;
+  /** KPI→metric links from diagnosticBinding.kpiMetricMap that need methodological acceptance. */
+  disputedKpiMappings: { kpi: string; metricId: string; issue: string }[];
+  /** Self-reported answers that give a basis for development — never presented as proven strengths. */
+  developmentBasisSignals: { id: string; label: string; questionId: string; values: string[]; skillId: string }[];
+  /** Human description of each canonical level, including the middle one (independent). */
+  levelProfiles: Record<"starter" | "independent" | "experienced", { label: string; description: string }>;
+  /** Development goal answer → curriculum modules that get priority. */
+  goalModuleMap: Record<string, string[]>;
+}
+
 export interface ProfessionConfig {
   id: ProfessionId;
   title: string;
   status: "pilot" | "planned";
+  engine: EngineConfig;
   files: {
     role: string;
     diagnostic: string;
@@ -83,7 +103,15 @@ export interface ProfessionRegistry {
   schemaVersion: string;
   engineVersion: string;
   pilotProfessionId: ProfessionId;
-  shared: { lessonSchema: string; planStepSchema: string; prototypeDir: string };
+  shared: {
+    lessonSchema: string;
+    planStepSchema: string;
+    prototypeDir: string;
+    /** Product modules are shared by all professions; each maps to a default plan phase. */
+    modulePhases: Record<string, PlanPhase>;
+    /** Template kinds that move a step of an "apply" module to a later phase. */
+    templateKindPhases: Record<string, PlanPhase>;
+  };
   professions: ProfessionConfig[];
 }
 
@@ -112,7 +140,8 @@ export interface RoleMatrix {
   roleName: string;
   subtypes: { id: string; label: string; primaryMetrics: string[] }[];
   levels: { id: string; label: string }[];
-  skills: { id: string; name: string }[];
+  skills: { id: string; name: string; why: string }[];
+  constraints?: { general: string; neverUpload: string[]; whenNotApproved: string; whenHighRisk: string };
   metrics: { id: string; label: string; method: string; caveat: string }[];
   scenarios: { id: string; title: string; metricId: string; taskIds: string[] }[];
   tasks: RoleTask[];
@@ -293,6 +322,8 @@ export type LibraryAvailability =
 export interface LibraryIndex {
   professionId: ProfessionId;
   programVersion: string;
+  /** Changes whenever the set or versions of delivered lessons change (used for staleness). */
+  librarySignature: string;
   entries: LessonEntry[];
   published: PublishedLesson[];
   planCandidates: PlanStepCandidate[];
