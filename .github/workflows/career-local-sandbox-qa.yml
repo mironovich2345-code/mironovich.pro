@@ -1,0 +1,63 @@
+name: Career local sandbox smoke test
+
+on:
+  push:
+    branches:
+      - feature/career-isolated-local-sandbox-20261118
+  pull_request:
+    paths:
+      - "scripts/career/local-sandbox.mjs"
+      - "docker-compose.career-local.yml"
+      - "docs/commerce/career-local-sandbox-setup.md"
+      - "tests/career-local-sandbox.test.mjs"
+      - "package.json"
+      - ".github/workflows/career-local-sandbox-qa.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  local:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Validate launcher and create ignored synthetic secrets
+        run: |
+          node --check scripts/career/local-sandbox.mjs
+          npm run career:local:init
+          npm run career:local:verify
+          docker compose --env-file .env.career.local -f docker-compose.career-local.yml config --quiet
+      - name: Start actual localhost-only test cabinet with ephemeral PostgreSQL and fake providers
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/career/local-sandbox.mjs start > /tmp/career-local-smoke.log 2>&1 &
+          runner_pid=$!
+          cleanup() {
+            kill "$runner_pid" 2>/dev/null || true
+            npm run career:local:destroy >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+          ready=0
+          for i in {1..120}; do
+            if curl --max-time 2 -fsS "http://127.0.0.1:3300/career/sandbox" > /tmp/career-local-page.html; then
+              ready=1
+              break
+            fi
+            if ! kill -0 "$runner_pid" 2>/dev/null; then break; fi
+            sleep 1
+          done
+          if [ "$ready" -ne 1 ]; then
+            echo "Synthetic local cabinet did not start"
+            tail -n 80 /tmp/career-local-smoke.log
+            exit 1
+          fi
+          grep -qi 'учебн' /tmp/career-local-page.html
+          curl -fsS -o /dev/null -w "%{http_code}" "http://127.0.0.1:3300/products/ai-career" | grep -q '200'
+          echo "PASS isolated synthetic UI: localhost-only, separate PostgreSQL, fake SMTP and payment provider"
