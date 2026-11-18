@@ -20,7 +20,13 @@
     "career:fixtures": "node --experimental-strip-types scripts/career/fixtures.mjs",
     "career:mail": "node --experimental-strip-types scripts/career/runtime.mjs mail",
     "career:test:integration": "node --experimental-strip-types tests/career-integration.mjs",
-    "career:test:browser": "node tests/career-browser.mjs"
+    "career:test:browser": "node tests/career-browser.mjs",
+    "career:local:init": "node scripts/career/local-sandbox.mjs init",
+    "career:local:verify": "node scripts/career/local-sandbox.mjs verify",
+    "career:local:start": "node scripts/career/local-sandbox.mjs start",
+    "career:local:gate": "node scripts/career/local-sandbox.mjs gate",
+    "career:local:otp": "node scripts/career/local-sandbox.mjs otp",
+    "career:local:destroy": "node scripts/career/local-sandbox.mjs destroy"
   },
   "dependencies": {
     "@pdf-lib/fontkit": "^1.1.1",
