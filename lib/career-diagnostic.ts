@@ -253,4 +253,4 @@ export function generateSyntheticAnalysis(answers: CareerAnswers) {
     plan,
   };
 }
-export type CareerResult = ReturnType<typeof generateSyntheticAnalysis>;
+export type CareerResult = ReturnType<typeof generateSyntheticAnalysis> & { engine?: "rules" | "openai" };
