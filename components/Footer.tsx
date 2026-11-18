@@ -3,7 +3,7 @@ import FitDisplay from "./FitDisplay";
 import ConsentSettingsButton from "./ConsentSettingsButton";
 import ContactLink from "./ContactLink";
 import { contactList } from "@/config/contacts";
-import { navLinks, solutionLinks, site } from "@/config/site";
+import { navLinks, secondaryLinks, solutionLinks, site } from "@/config/site";
 import { tools } from "@/config/tools";
 
 const linkClass = "inline-flex min-h-[32px] items-center text-stone transition-colors hover:text-cream";
@@ -40,6 +40,9 @@ export default function Footer() {
               <li><Link href="/solutions" className={linkClass}>Все решения</Link></li>
               <li><Link href="/products" className={linkClass}>Цифровые продукты</Link></li>
               {navLinks.map((l) => (
+                <li key={l.href}><Link href={l.href} className={linkClass}>{l.label}</Link></li>
+              ))}
+              {secondaryLinks.map((l) => (
                 <li key={l.href}><Link href={l.href} className={linkClass}>{l.label}</Link></li>
               ))}
               {tools.filter((tool) => tool.status === "available").map((tool) => (

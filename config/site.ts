@@ -34,14 +34,23 @@ export type { NavLink } from "./routes.ts";
 export const serviceLinks: NavLink[] = services.map((s) => ({ href: s.href, label: s.label }));
 export const solutionLinks: NavLink[] = directions.filter(d => d.solution).map(d => ({ href: d.href, label: d.title }));
 
-/** Top-level links after the «Услуги» group. */
+/**
+ * Primary navigation is an audience choice, not a catalog.
+ * Portfolio, tools, blog and detailed services remain accessible on their
+ * existing pages and through the global footer.
+ */
 export const navLinks: NavLink[] = [
+  { href: "/solutions", label: "Бизнесу" },
   { href: "/products/ai-career", label: "Сотрудникам" },
+  { href: "/about", label: "Кто я" },
+];
+
+/** Discovery links moved out of the header, retained in the footer. */
+export const secondaryLinks: NavLink[] = [
   ...(projectsPublished ? [{ href: "/projects", label: "Кейсы" }] : []),
   ...(toolsNavigation.enabled ? [{ href: toolsNavigation.href, label: toolsNavigation.label }] : []),
   { href: "/services/cto", label: "Внешний CTO" },
   { href: "/blog", label: "Блог" },
-  { href: "/about", label: "Обо мне" },
 ];
 
 /** Where «Обсудить задачу» leads from pages without their own form section. */

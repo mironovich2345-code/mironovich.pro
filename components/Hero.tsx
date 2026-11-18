@@ -88,7 +88,7 @@ export default function Hero() {
               {career.title}
             </h2>
             <p className="mb-4 mt-3 text-[14px] leading-relaxed text-stone">
-              Задачи, навыки и план на 30 дней.
+              Задачи, навыки и план из 30 шагов.
             </p>
             <CtaLink
               href="/products/ai-career"
