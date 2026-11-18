@@ -32,6 +32,7 @@ test("each work task has an explicit role, decision boundary, business value, me
     assert.ok(t.valueDrivers.length >= 1, t.id + ": missing company impact");
     assert.ok(has(role.metrics, t.metricId), t.id + ": metric reference");
     assert.ok(has(role.scenarios, t.scenarioId), t.id + ": scenario reference");
+    assert.ok(role.scenarios.find(s => s.id === t.scenarioId).taskIds.includes(t.id), t.id + ": reverse scenario reference");
     assert.ok(has(role.skills, t.skillId), t.id + ": skill reference");
     assert.equal(t.exampleType, "synthetic_only", t.id + ": production data must be prohibited");
     assert.match(doc, new RegExp("\\| " + t.id + " \\|"), t.id + " absent from human-readable matrix");
@@ -43,6 +44,8 @@ test("each work task has an explicit role, decision boundary, business value, me
   }
   for (const mode of modes)
     assert.ok(role.tasks.some(t=>t.mode===mode), "missing automation category " + mode);
+  for (const skill of role.skills)
+    assert.ok(role.tasks.some(t => t.skillId === skill.id), "orphaned skill " + skill.id);
 });
 
 test("seven teaching scenarios are grounded in canonical tasks and assessable artefacts", () => {
