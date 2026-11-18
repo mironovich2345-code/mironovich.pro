@@ -52,5 +52,11 @@ export const products: DigitalProduct[] = [
     ],
   },
 ];
+/** Only the employee digital course is in the website payment application.
+ * The company product remains an internal concept until a separate launch.
+ */
+export const publicStorefrontProducts: DigitalProduct[] = products.filter(
+  (p) => p.slug === "ai-career",
+);
 export const productBySlug = (slug: string) =>
   products.find((p) => p.slug === slug);
