@@ -68,7 +68,7 @@ function intro(){
       ["07—14","Попробуйте ИИ","Экспериментируйте только на разрешённых учебных примерах."],
       ["15—23","Проверьте качество","Сравните результат с эталоном и отметьте ошибки."],
       ["24—30","Оформите результат","Подготовьте рабочий кейс и следующие шаги развития."]]
-      .map(([n,t,s])=>h("article",{class:"feature"},p(n,"index"),heading("h3",t),p(s)))));
+      .map(([n,t,s])=>h("article",{class:"feature"},p(n,"index"),heading("h3",t),p(s))))));
 }
 function checkout(){
  const choice=h("label",{class:"choice"+(st.accepted?" selected":"")},
