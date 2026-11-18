@@ -3,7 +3,6 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
-const root = fileURLToPath(new URL("../../", import.meta.url));
 const json = (p) => JSON.parse(readFileSync(new URL(p, import.meta.url), "utf8"));
 const errors = [];
 const assert = (condition, message) => { if (!condition) errors.push(message); };
