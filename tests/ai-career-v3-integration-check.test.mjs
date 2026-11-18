@@ -1,4 +1,4 @@
-// Integration check for PR #57 + #59 + #60 + #61 (temporary integration branch only).
+// Integration check for PR #57 + #59 + #60 + #61 + wave 1 (temporary integration branch only).
 // Real lessons are read from content/; "approval" below is simulated IN MEMORY to probe the engine
 // and is never written anywhere.
 import test from "node:test";
@@ -20,9 +20,10 @@ const ctx = bundle.engine;
 const lessonSchema = load("content/career/v3/schemas/lesson.schema.json");
 const stepSchema = load("content/career/v3/schemas/plan-step.schema.json");
 const profiles = load("tests/fixtures/career-v3/pilot-profiles.json").profiles;
-const REAL = ["SAF-01", "SAF-02", "SAF-03", "SAF-04", "SAL-02", "SAL-05"];
+const SAFETY = ["SAF-01", "SAF-02", "SAF-03", "SAF-04"];
+const REAL = [...SAFETY, "SAL-02", "SAL-05", "VAL-01", "TRD-01", "MAP-01", "SAL-01"];
 const lessonFiles = REAL.map((id) => ({ path: `content/career/v3/lessons/${id}.json`, document: load(`content/career/v3/lessons/${id}.json`) }));
-const candidateFiles = ["safety.json", "sales-practice.json"].map((f) => ({ path: "content/career/v3/plan-candidates/" + f, document: load("content/career/v3/plan-candidates/" + f) }));
+const candidateFiles = ["safety.json", "sales-practice.json", "wave1.json"].map((f) => ({ path: "content/career/v3/plan-candidates/" + f, document: load("content/career/v3/plan-candidates/" + f) }));
 const exists = (p) => !p.includes("..") && spawnSync("test", ["-f", p]).status === 0;
 
 /** In-memory what-if: the six real lessons approved and their slots published. Nothing is written. */
@@ -53,13 +54,13 @@ test("IDs are unique across PRs: lessons, exercises, templates, worked examples,
   ]) { const ids = all(pick); assert.equal(new Set(ids).size, ids.length, name); }
   const steps = candidateFiles.flatMap((f) => f.document.steps.map((s) => `${s.lessonId}/${s.stepId}`));
   assert.equal(new Set(steps).size, steps.length);
-  assert.equal(steps.length, 16);
+  assert.equal(steps.length, 31);
 });
 
-test("all 16 step candidates resolve to existing lessons, exercises, templates, tasks and metrics", () => {
+test("all 31 step candidates resolve to existing lessons, exercises, templates, tasks and metrics", () => {
   const lib = simulatedApproval();
   assert.deepEqual(lib.issues.filter((i) => i.severity === "error"), []);
-  assert.equal(lib.planCandidates.length, 16, "every candidate is accepted once its lesson is delivered");
+  assert.equal(lib.planCandidates.length, 31, "every candidate is accepted once its lesson is delivered");
 });
 
 test("real library: review material is not published; honest unavailable status everywhere", () => {
@@ -84,16 +85,16 @@ test("real library: review material is not published; honest unavailable status 
   assert.equal(buildTaskMap(ctx, { result: r, answers: profiles[0].answers, library: lib, today: TODAY }).learningRoute.status, "unavailable");
 });
 
-test("what-if approval of the six real lessons: safety is mandatory, practice differs by profile, plan still refuses honestly", () => {
+test("what-if approval of the ten real lessons: safety is mandatory, practice differs by profile, plan still refuses honestly", () => {
   const lib = simulatedApproval();
-  assert.equal(lib.published.length, 6);
+  assert.equal(lib.published.length, 10);
   const out = {};
   for (const p of profiles) {
     const r = evaluateDiagnostic(bundle.diagnostic, p.answers, TODAY);
     const sel = selectLessons(ctx, r, lib);
     const plan = buildPlan(ctx, { result: r, selection: sel, library: lib, today: TODAY });
     out[p.id] = { sel, plan };
-    if (sel.status === "ready") assert.deepEqual(sel.items.filter((i) => i.mandatory).map((i) => i.lessonId).sort(), REAL.slice(0, 4));
+    if (sel.status === "ready") assert.deepEqual(sel.items.filter((i) => i.mandatory).map((i) => i.lessonId).sort(), SAFETY);
     assert.equal(plan.status, "unavailable", p.id);
     assert.deepEqual(plan.steps, []);
   }
@@ -102,10 +103,14 @@ test("what-if approval of the six real lessons: safety is mandatory, practice di
   assert.equal(out["FX-no-policy"].sel.variant, "synthetic_practice");
   const practice = (id) => out[id].sel.items.filter((i) => i.moduleId === "practice").map((i) => i.lessonId).sort();
   assert.deepEqual(practice("FX-inbound-starter"), ["SAL-02", "SAL-05"]);
-  assert.ok(practice("FX-account-ai-prohibited").includes("SAL-05"));
-  const gaps = out["FX-inbound-starter"].plan.gaps;
-  for (const phase of ["value", "next_level"]) assert.ok(gaps.some((g) => g.phase === phase && g.available === 0), phase);
-  assert.ok(gaps.some((g) => g.phase === "total" && g.available < 30));
+  assert.ok(practice("FX-b2b-experienced-public-tools").includes("SAL-01"), "SAL-01 makes B2B profiles selectable");
+  assert.ok(!practice("FX-inbound-starter").includes("SAL-01"), "SAL-01 is not offered to inbound");
+  assert.equal(out["FX-high-error-cost"].sel.unavailableReason, "nothing_fits_profile", "proposal-only B2B still waits for SAL-03");
+  for (const [id, r] of Object.entries(out)) {
+    if (r.sel.status !== "ready") continue;
+    assert.ok(r.plan.gaps.every((g) => g.phase === "total"), id + ": all six stages now have material");
+    assert.ok(r.plan.gaps.find((g) => g.phase === "total").available < 30, id);
+  }
 });
 
 test("the same engine builds a full route on the isolated approved test fixture", () => {
