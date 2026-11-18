@@ -48,7 +48,7 @@ jobs:
 
   integration:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     services:
       postgres:
         image: postgres:16
@@ -122,3 +122,24 @@ jobs:
           if [ "$ready" -ne 1 ]; then echo "Synthetic fixture not ready"; exit 1; fi
           npm run career:test:integration
           npm run career:cleanup
+          # Browser checks remain isolated to loopback, fake messages and payments.
+          npm install --no-save --no-package-lock playwright
+          npx playwright install chromium
+          sudo ln -sf "$(node -p 'require("playwright").chromium.executablePath()')" /usr/bin/chromium
+          npm run career:build >/tmp/career-synthetic-build.log 2>&1
+          npm run career:start >/tmp/career-synthetic-next.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" "$fixture_pid" 2>/dev/null || true' EXIT
+          web_ready=0
+          for i in {1..60}; do
+            if curl -fsS "http://127.0.0.1:3300/career/sandbox" >/dev/null 2>&1; then
+              web_ready=1
+              break
+            fi
+            sleep 1
+          done
+          if [ "$web_ready" -ne 1 ]; then
+            echo "Synthetic website did not start"; tail -n 60 /tmp/career-synthetic-next.log; exit 1
+          fi
+          echo "Career sandbox browser QA"
+          npm run career:test:browser
