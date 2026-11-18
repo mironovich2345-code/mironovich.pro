@@ -8,7 +8,7 @@ import type {
   ProfessionId, RoleMatrix, RoleTask, SafetyEffect,
 } from "./types.ts";
 
-export const DIAGNOSTIC_RESULT_MODEL = "career-v3-diagnostic-result/1";
+export const DIAGNOSTIC_RESULT_MODEL = "career-v3-diagnostic-result/2";
 
 export class DiagnosticConfigError extends Error {}
 
@@ -78,6 +78,7 @@ export interface DiagnosticResultV3 {
     toolsAvailable: boolean;
     policy: string;
     policyApproved: boolean;
+    aiProhibited: boolean;
     policyContact: string | null;
     dataTypes: string[];
     errorCost: string;
@@ -148,6 +149,8 @@ export function validateDiagnosticConfig(ctx: DiagnosticContext): string[] {
   needQ(c.policyContactQuestion, "company.policyContactQuestion");
   needV(c.toolsQuestion, c.toolsUnavailable, "company.toolsUnavailable");
   needV(c.policyQuestion, c.policyApproved, "company.policyApproved");
+  needV(c.policyQuestion, c.policyProhibited ?? [], "company.policyProhibited");
+  if (!c.policyProhibited?.length) e.push("binding company.policyProhibited must name the prohibition answers");
   if (b.mixedSubtypeValue !== null) needV(b.subtypeQuestion, [b.mixedSubtypeValue], "mixedSubtypeValue");
   for (const v of values(b.subtypeQuestion)) {
     if (v !== b.mixedSubtypeValue && !role.subtypes.some((s) => s.id === v)) e.push(`subtype option ${v} is not a role subtype`);
@@ -332,6 +335,7 @@ export function evaluateDiagnostic(ctx: DiagnosticContext, input: unknown, today
     },
     company: {
       aiTools: many(c.toolsQuestion), toolsAvailable, policy: one(c.policyQuestion), policyApproved,
+      aiProhibited: c.policyProhibited.includes(one(c.policyQuestion)),
       policyContact: c.policyContactQuestion && a[c.policyContactQuestion] !== undefined ? one(c.policyContactQuestion) : null,
       dataTypes: many(c.dataQuestion), errorCost: one(c.errorCostQuestion), reviewPractice: one(c.reviewQuestion), approvalRights: one(c.approvalQuestion),
     },

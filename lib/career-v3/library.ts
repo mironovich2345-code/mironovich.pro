@@ -177,6 +177,8 @@ export function buildLibrary(src: LibrarySources): LibraryIndex {
   return {
     professionId: src.professionId,
     programVersion: `${curriculum.schemaVersion}+role-${role.schemaVersion}`,
+    librarySignature: `${curriculum.schemaVersion}+role-${role.schemaVersion}|` +
+      (globalBroken ? "" : published.map((l) => `${l.id}@${l.version}`).sort().join(",")),
     entries, published: globalBroken ? [] : published, planCandidates: globalBroken ? [] : planCandidates,
     issues, slots, availability,
   };

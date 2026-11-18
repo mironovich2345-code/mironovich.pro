@@ -59,29 +59,63 @@ try {
     assert.deepEqual(read.result, saved.result);
     assert.equal(read.stale, false);
     const row = (await sql("SELECT model_version, content_hash, synthetic, answers FROM career_v3_diagnostics WHERE account_id=$1", [account])).rows[0];
-    assert.equal(row.model_version, "career-v3-diagnostic-result/1");
+    assert.equal(row.model_version, "career-v3-diagnostic-result/2");
     assert.match(row.content_hash, /^[a-f0-9]{64}$/);
     assert.equal(row.synthetic, true);
     assert.deepEqual(Object.keys(row.answers).sort(), Object.keys(p.answers).sort());
     results.push(saved.result);
   }
-  assert.deepEqual(results.map((r) => r.safety.mode), ["approved_tools_public_data", "synthetic_only", "synthetic_only"]);
-  pass("three synthetic profiles persist versioned, differing v3 results");
+  assert.deepEqual(results.slice(0, 3).map((r) => r.safety.mode), ["approved_tools_public_data", "synthetic_only", "synthetic_only"]);
+  assert.equal(results.length, 10);
+  pass("ten synthetic profiles persist versioned, differing v3 results");
 
   const again = await store.saveV3Diagnostic(id, "sales_manager", fixtures.profiles[0].answers);
   assert.ok(again.savedAt);
   assert.equal((await sql("SELECT count(*)::int AS n FROM career_v3_diagnostics WHERE account_id=$1", [id])).rows[0].n, 1);
   pass("re-submission updates one row per account and profession");
 
+  // Task map: built from the matrix even without approved lessons; learning route stays unavailable.
+  const { taskMap } = await store.saveV3TaskMap(id, "sales_manager");
+  assert.equal(taskMap.status, "ready");
+  assert.equal(taskMap.learningRoute.status, "unavailable");
+  assert.ok(taskMap.tasks.every((t) => t.lessonRefs.length === 0));
+  assert.equal((await store.readV3TaskMap(id, "sales_manager")).stale, false);
+  pass("task map is stored; route stays unavailable without approved lessons");
+
+  const selection = await store.v3LessonSelection(id, "sales_manager");
+  assert.equal(selection.status, "unavailable");
+  assert.equal(selection.unavailableReason, "no_approved_lessons");
+  const planned = await store.saveV3Plan(id, "sales_manager");
+  assert.equal(planned.plan.status, "unavailable");
+  assert.deepEqual(planned.plan.steps, []);
+  assert.equal(planned.savedAt, null);
+  assert.equal((await sql("SELECT count(*)::int AS n FROM career_v3_artifacts WHERE account_id=$1 AND kind='plan'", [id])).rows[0].n, 0);
+  pass("real library: selection and 30-step plan are unavailable and nothing is stored as a plan");
+
+  await store.saveV3Diagnostic(id, "sales_manager", fixtures.profiles[0].answers);
+  assert.deepEqual((await store.readV3TaskMap(id, "sales_manager")).staleReasons, ["diagnostic_resubmitted"]);
+  pass("re-submitting the diagnostic marks the stored task map stale");
+
   await sql("UPDATE career_v3_diagnostics SET content_hash=$2 WHERE account_id=$1", [id, "0".repeat(64)]);
-  assert.equal((await store.readV3Diagnostic(id, "sales_manager")).stale, true);
-  pass("results computed on older content are flagged stale");
+  const changed = await store.readV3Diagnostic(id, "sales_manager");
+  assert.equal(changed.contentChanged, true);
+  assert.equal(changed.stale, false, "a content change alone does not invalidate the answers");
+  await sql("UPDATE career_v3_diagnostics SET result=jsonb_set(result,'{diagnosticVersion}','\"old-version\"') WHERE account_id=$1", [id]);
+  const old = await store.readV3Diagnostic(id, "sales_manager");
+  assert.equal(old.stale, true);
+  assert.deepEqual(old.staleReasons, ["diagnostic_version_changed"]);
+  await assert.rejects(store.saveV3TaskMap(id, "sales_manager"), (e) => e.status === 409);
+  await assert.rejects(store.saveV3Plan(id, "sales_manager"), (e) => e.status === 409);
+  assert.ok((await store.readV3TaskMap(id, "sales_manager")).staleReasons.includes("diagnostic_resubmitted"));
+  pass("an outdated diagnostic version is stale and blocks new maps and plans");
 
   assert.equal((await sql("SELECT count(*)::int AS n FROM career_diagnostics")).rows[0].n, v2Before);
   pass("v2 career_diagnostics table is untouched by v3");
 
-  await assert.rejects(sql("INSERT INTO career_v3_diagnostics(account_id,profession_id,model_version,diagnostic_version,content_hash,answers,result,synthetic) VALUES($1,'sales_manager','career-v3-diagnostic-result/1','x',$2,'{}','{}',false)", [id, "a".repeat(64)]));
-  pass("database refuses non-synthetic v3 rows");
+  await assert.rejects(sql("INSERT INTO career_v3_diagnostics(account_id,profession_id,model_version,diagnostic_version,content_hash,answers,result,synthetic) VALUES($1,'sales_manager','career-v3-diagnostic-result/2','x',$2,'{}','{}',false)", [id, "a".repeat(64)]));
+  await assert.rejects(sql("INSERT INTO career_v3_artifacts(account_id,profession_id,kind,model_version,diagnostic_saved_at,payload,synthetic) VALUES($1,'sales_manager','plan','career-v3-plan/1',now(),'{}',false)", [id]));
+  await assert.rejects(sql("INSERT INTO career_v3_artifacts(account_id,profession_id,kind,model_version,diagnostic_saved_at,payload) VALUES($1,'accountant','plan','career-v3-plan/1',now(),'{}')", [id]));
+  pass("database refuses non-synthetic v3 rows and artifacts without a diagnostic");
   console.log(`v3 integration: ${checks} checks passed`);
 } finally {
   await db.end();

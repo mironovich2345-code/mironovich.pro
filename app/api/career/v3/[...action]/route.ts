@@ -1,11 +1,15 @@
 // AI Career 3.0 server API. Sandbox-only: careerConfig() returns 404 outside the synthetic
 // sandbox (and always on Railway production), the tester gate and a synthetic session are required.
-// Routes: /api/career/v3/{professionId}/{library|diagnostic|diagnostic/questions|diagnostic/task-options|plan/readiness}
+// Routes: /api/career/v3/{professionId}/{library|diagnostic|diagnostic/questions|diagnostic/task-options|
+//   plan/readiness|task-map|lessons/selection|plan}
 import { NextRequest, NextResponse } from "next/server";
 import { careerConfig, CareerError, GATE_COOKIE, SESSION_COOKIE } from "@/lib/server/career/config";
 import { limit, sessionAccount, validGate } from "@/lib/server/career/auth";
 import { loadProfessionBundle, ProfessionUnavailableError } from "@/lib/server/career-v3/content";
-import { readV3Diagnostic, requireV3Access, saveV3Diagnostic, taskOptionsFor } from "@/lib/server/career-v3/store";
+import {
+  readV3Diagnostic, readV3Plan, readV3TaskMap, requireV3Access, saveV3Diagnostic, saveV3Plan, saveV3TaskMap,
+  taskOptionsFor, v3LessonSelection,
+} from "@/lib/server/career-v3/store";
 import { learnerCatalog } from "@/lib/career-v3/library";
 import { questionnaire } from "@/lib/career-v3/diagnostic";
 import { assessPlanReadiness } from "@/lib/career-v3/contracts";
@@ -67,6 +71,11 @@ async function handle(req: NextRequest, ctx: { params: Promise<{ action: string[
       if (!saved.result) throw new CareerError(409, "Сначала пройдите диагностику");
       return json(assessPlanReadiness(loadProfessionBundle(professionId).library, saved.result));
     }
+    if (action === "task-map" && req.method === "POST") { onlyFields(body, []); return json(await saveV3TaskMap(accountId, professionId)); }
+    if (action === "task-map" && req.method === "GET") return json(await readV3TaskMap(accountId, professionId));
+    if (action === "lessons/selection" && req.method === "GET") return json(await v3LessonSelection(accountId, professionId));
+    if (action === "plan" && req.method === "POST") { onlyFields(body, []); return json(await saveV3Plan(accountId, professionId)); }
+    if (action === "plan" && req.method === "GET") return json(await readV3Plan(accountId, professionId));
     throw new CareerError(404, "Маршрут не найден");
   } catch (e) {
     if (e instanceof ProfessionUnavailableError) return json({ error: e.message }, 404);

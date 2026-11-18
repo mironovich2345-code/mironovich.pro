@@ -6,6 +6,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { buildLibrary } from "../../career-v3/library.ts";
 import { validateDiagnosticConfig, type DiagnosticContext } from "../../career-v3/diagnostic.ts";
+import { validateEngineConfig, type EngineContext } from "../../career-v3/engine.ts";
 import type {
   Curriculum, DiagnosticDefinition, LibraryIndex, ProfessionConfig, ProfessionRegistry, RoleMatrix,
 } from "../../career-v3/types.ts";
@@ -56,6 +57,7 @@ export interface ProfessionBundle {
   config: ProfessionConfig;
   library: LibraryIndex;
   diagnostic: DiagnosticContext;
+  engine: EngineContext;
   contentHash: string;
   configIssues: string[];
 }
@@ -85,5 +87,10 @@ export function loadProfessionBundle(professionId: string, today = new Date().to
     fileExists: (rel) => rel.startsWith(CONTENT_PREFIX) && !rel.includes("..") && existsSync(path.join(repoRoot(), rel)),
   });
   const diagnostic: DiagnosticContext = { professionId, definition, role, curriculum, binding: config.diagnosticBinding };
-  return { config, library, diagnostic, contentHash: hash.digest("hex"), configIssues: validateDiagnosticConfig(diagnostic) };
+  const engine: EngineContext = {
+    professionId, role, curriculum, definition, binding: config.diagnosticBinding, engine: config.engine,
+    modulePhases: registry.shared.modulePhases, templateKindPhases: registry.shared.templateKindPhases,
+  };
+  return { config, library, diagnostic, engine, contentHash: hash.digest("hex"),
+    configIssues: [...validateDiagnosticConfig(diagnostic), ...validateEngineConfig(engine)] };
 }
