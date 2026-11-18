@@ -37,10 +37,18 @@ test("services list starts with the choice; the legal note stays under it", () =
   assert.ok(s.indexOf("не товары интернет-магазина") > s.indexOf("</ol>"));
 });
 
-test("/services uses the same solution names as home and /solutions, no internal wording", () => {
-  const page = read("app/services/page.tsx");
-  assert.match(page, /directions\.filter\(\(d\) => d\.solution\)/);
-  assert.doesNotMatch(page, /Прежние специализации|Каталог прежних услуг/);
+test("/solutions lists five business tasks; /services keeps CTO and one compact services list", () => {
+  const solutions = read("app/solutions/page.tsx");
+  const list = read("components/Services.tsx");
+  const services = read("app/services/page.tsx");
+  assert.match(list, /directions\.filter\(\(d\) => d\.solution\)/);
+  assert.match(list, /label="Пять решений"/);
+  assert.doesNotMatch(solutions, /<CtoOffer\s*\/>|<OtherServices\s*\/>/);
+  assert.match(solutions, /Посмотреть услуги и внешний CTO/);
+  assert.match(services, /<CtoOffer\s*\/>/);
+  assert.match(services, /allServices\.filter\(\(s\) => s\.slug !== "cto"\)/);
+  assert.doesNotMatch(services, /<OtherServices\s*\/>|Решения для компании/);
+  assert.doesNotMatch(services, /Прежние специализации|Каталог прежних услуг/);
 });
 
 test("calculator pages show a visible title on phones", () => {
@@ -73,6 +81,15 @@ test("commercial flags stay off", () => {
   assert.match(commerce, /legalApproved:\s*false/);
 });
 
-test("metadata is rendered in <head> for every client, also on dynamic calculator pages", () => {
-  assert.match(read("next.config.mjs"), /htmlLimitedBots: \/\.\*\//);
+test("crawler metadata is rendered in head without disabling streaming for all clients", () => {
+  const cfg = read("next.config.mjs");
+  assert.match(cfg, /htmlLimitedBots: \/Googlebot\|/);
+  assert.match(cfg, /Lighthouse\|Bingbot/);
+  assert.doesNotMatch(cfg, /htmlLimitedBots: \/\.\*\//);
+});
+
+test("home hero does not promise an all-in-one deployed platform", () => {
+  const hero = read("components/Hero.tsx");
+  assert.match(hero, /помогаю автоматизировать обучение/);
+  assert.doesNotMatch(hero, /заявки клиентов в одной системе/);
 });
