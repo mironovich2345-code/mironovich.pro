@@ -1,0 +1,102 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "DL-MAP01-DATA",
+  "lessonId": "MAP-01",
+  "status": "review",
+  "syntheticOnly": true,
+  "notice": "Все компании, люди, сайты, цифры и события вымышлены; домены — зарезервированный .example. Данные предназначены только для учебной практики и не являются показателями реальных компаний.",
+  "exercises": [
+    {
+      "exerciseId": "MAP01-TASK-1",
+      "materialIds": [
+        "TPL-MAP01-MAP",
+        "TPL-MAP01-RULES",
+        "TPL-MAP01-OPS"
+      ],
+      "operations": {
+        "О1": "ai_assists",
+        "О2": "ai_assists",
+        "О3": "not_allowed",
+        "О4": "ai_assists",
+        "О5": "human_decides",
+        "О6": "ai_assists",
+        "О7": "human_decides",
+        "О8": "ai_assists_downgraded"
+      },
+      "answerKey": {
+        "findings": [
+          {
+            "quote": "найти имя и личный телефон закупщика в соцсетях",
+            "cue": "О3 — недопустима",
+            "type": "personal_data",
+            "why": "Персональные данные без основания."
+          },
+          {
+            "quote": "предложить скидку 10% за встречу на этой неделе",
+            "cue": "О7 — решение о скидке",
+            "type": "decision",
+            "why": "Скидку согласует руководитель."
+          },
+          {
+            "quote": "интеграции ИИ с CRM и почтой запрещены",
+            "cue": "понижено",
+            "type": "downgrade_by_rule",
+            "why": "Частичная автоматизация О8 невозможна без интеграции."
+          },
+          {
+            "quote": "отправить письмо",
+            "cue": "О5 — решение об отправке",
+            "type": "decision",
+            "why": "Основание отправки подтверждается правилами."
+          }
+        ]
+      }
+    },
+    {
+      "exerciseId": "MAP01-TASK-2",
+      "materialIds": [
+        "TPL-MAP01-MAP",
+        "TPL-MAP01-EXPERIMENT"
+      ],
+      "operations": {
+        "В1": "human",
+        "В2": "human",
+        "В3": "human_downgraded",
+        "В4": "ai_assists_training_only",
+        "В5": "human_decides",
+        "В6": "human_decides",
+        "В7": "template_with_review",
+        "В8": "human"
+      },
+      "experiment": "В4",
+      "answerKey": {
+        "findings": [
+          {
+            "quote": "данные клиентов в ИИ не передаются",
+            "cue": "в ИИ не передаётся",
+            "type": "data_rule",
+            "why": "В2, В5, В8 работают с данными клиентов."
+          },
+          {
+            "quote": "назвать цену и срок подключения",
+            "cue": "решение о цене и сроке",
+            "type": "decision",
+            "why": "Цена — по прайсу, решает человек."
+          },
+          {
+            "quote": "подготовить первый ответ на типовой вопрос о тарифе",
+            "cue": "Эксперимент: В4",
+            "type": "experiment_choice",
+            "why": "Частая, однотипная, ошибку ловит сверка с прайсом."
+          },
+          {
+            "quote": "цены — только по утверждённому прайсу",
+            "cue": "дважды подряд назвал цену не из прайса",
+            "type": "stop_condition",
+            "why": "Условие остановки связано с ценой."
+          }
+        ]
+      }
+    }
+  ]
+}
