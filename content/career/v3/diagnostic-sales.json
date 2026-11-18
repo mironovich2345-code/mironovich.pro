@@ -714,12 +714,41 @@
       "rankBy": [
         "selected_work_area",
         "role_subtype",
-        "common_usefulness"
+        "stable_task_id"
       ],
       "showMax": 10,
       "selectedMax": 3,
       "fallback": "При отсутствии подходящего выбора предложить один безопасный учебный пример и уточнить задачу позже; не делать выводы о реальной работе человека",
-      "invalidatedAnswers": "Если пользователь меняет Q01/Q03, перепроверить выбранные ID задач; прежние невалидные выборы снять с понятным уведомлением"
+      "invalidatedAnswers": "Если пользователь меняет Q01/Q03, перепроверить выбранные ID задач; прежние невалидные выборы снять с понятным уведомлением",
+      "areaStageAliases": {
+        "research": [
+          "research"
+        ],
+        "outreach": [
+          "outreach"
+        ],
+        "qualification": [
+          "qualification"
+        ],
+        "crm": [
+          "crm",
+          "handover"
+        ],
+        "proposal": [
+          "proposal"
+        ],
+        "negotiation": [
+          "negotiation"
+        ],
+        "analytics": [
+          "analytics",
+          "reporting"
+        ],
+        "account": [
+          "account",
+          "support"
+        ]
+      }
     }
   },
   "safetyRules": [
