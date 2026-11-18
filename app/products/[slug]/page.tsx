@@ -4,14 +4,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import AiCareerProductPage from "@/components/AiCareerProductPage";
-import { productBySlug, products } from "@/content/products";
+import { productBySlug, publicStorefrontProducts } from "@/content/products";
 import { rub } from "@/config/solutions";
 import { pageMetadata, breadcrumbList } from "@/lib/seo";
 import { jsonLd } from "@/lib/jsonld";
 type Props = { params: Promise<{ slug: string }> };
 export const dynamicParams = false;
 export function generateStaticParams() {
-  return products.map((p) => ({ slug: p.slug }));
+  return publicStorefrontProducts.map((p) => ({ slug: p.slug }));
 }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = productBySlug((await params).slug);
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 export default async function Product({ params }: Props) {
   const p = productBySlug((await params).slug);
-  if (!p) notFound();
+  if (!p || !publicStorefrontProducts.some((item) => item.slug === p.slug)) notFound();
   if (p.slug === "ai-career") return <AiCareerProductPage product={p} />;
   const crumbs = [
     { name: "Главная", href: "/" },
