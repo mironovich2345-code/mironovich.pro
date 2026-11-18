@@ -206,3 +206,17 @@ test("the one-page memo has exactly ten rules and the same disclaimer", () => {
   assert.match(body, /не юридическая консультация/i);
   for (const l of lessons) assert.ok(l.downloads.some(d => d.id === "DL-SAF-RULES-MEMO"), l.id);
 });
+
+test("Russian quotes are balanced in every source: «…» outside, „…“ inside", () => {
+  const sources = [...MD_FILES.map(f => [f, md(f)]), ...lessons.map(l => [l.id, JSON.stringify(l)])];
+  for (const [name, text] of sources) {
+    for (const [open, close] of [["«", "»"], ["„", "“"]]) {
+      let depth = 0;
+      for (const ch of text) {
+        if (ch === open) { depth++; assert.ok(depth <= 1, `${name}: nested ${open} without closing ${close}`); }
+        else if (ch === close) { depth--; assert.ok(depth >= 0, `${name}: ${close} without opening ${open}`); }
+      }
+      assert.equal(depth, 0, `${name}: unbalanced ${open}…${close}`);
+    }
+  }
+});
