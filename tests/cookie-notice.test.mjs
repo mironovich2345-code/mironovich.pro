@@ -75,3 +75,12 @@ test("footer allows visitors to change consent choice at any time", () => {
   assert.match(settings, /Настройки cookies/);
   assert.match(settings, /onClick=\{openConsentSettings\}/);
 });
+
+test("small-screen cookie choices are in normal page flow, never over the hero CTA", () => {
+  const banner = read("components/ConsentBanner.tsx");
+  const layout = read("app/layout.tsx");
+  assert.match(banner, /className="relative z-\\[55\\] w-full/);
+  assert.match(banner, /min-\\[760px\\]:fixed/);
+  assert.match(banner, /max-width: 759px/);
+  assert.ok(layout.indexOf("<Analytics />") < layout.indexOf("<SiteHeader />"));
+});
