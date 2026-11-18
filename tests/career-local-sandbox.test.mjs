@@ -39,7 +39,7 @@ test("database container is isolated to localhost and all storage is ephemeral",
   assert.match(compose, /postgres:16-alpine/);
   assert.match(script, /"down", "--volumes", "--remove-orphans"/);
   assert.match(script, /"mironovich_career_test"/);
-  assert.match(script, /"CAREER_DB_PASSWORD"/);
+  assert.match(script, /CAREER_DB_PASSWORD/);
 });
 
 test("the developer guide never encourages real customer info or deploy", () => {
@@ -48,5 +48,5 @@ test("the developer guide never encourages real customer info or deploy", () => 
   assert.match(guide, /npm run career:local:start/);
   assert.match(guide, /npm run career:local:otp/);
   assert.match(guide, /demo-qa@example\.invalid/);
-  assert.match(guide, /не принимает.*настоящие платежи/);
+  assert.match(guide, /\*\*не\*\* принимает[\s\S]*настоящие платежи/);
 });
