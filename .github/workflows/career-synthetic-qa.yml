@@ -1,0 +1,47 @@
+name: Career synthetic QA
+
+on:
+  push:
+    branches:
+      - feature/career-integrated-synthetic-20261118
+  pull_request:
+    paths:
+      - "app/career/**"
+      - "app/api/career/**"
+      - "components/CareerSandbox.tsx"
+      - "lib/career-diagnostic.ts"
+      - "lib/server/career/**"
+      - "lib/server/commerce/**"
+      - "migrations/career/**"
+      - "tests/career-*.mjs"
+      - "tests/yookassa-sandbox.test.mjs"
+      - "package*.json"
+      - ".github/workflows/career-synthetic-qa.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_PUBLIC_SITE_URL: https://mironovich.pro
+      NEXT_PUBLIC_YANDEX_METRICA_ID: ""
+      CAREER_SANDBOX_ENABLED: "0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Unit and public regression tests
+        run: npm test
+      - name: Build with all sales and sandbox routes closed
+        run: npm run build
