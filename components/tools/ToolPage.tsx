@@ -15,11 +15,12 @@ export default function ToolPage({ path, title, description, faq, children }: { 
     { "@type": "FAQPage", mainEntity: faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) },
   ] };
   return <main id="main">
-    <section id="hero" className={(calculator ? "max-[900px]:sr-only bg-graphite px-[22px] pb-6 pt-6" : "bg-graphite px-[22px] pb-12 pt-7 min-[560px]:pb-16 min-[560px]:pt-10")}>
+    <section id="hero" className={(calculator ? "bg-graphite px-[22px] pb-4 pt-5 min-[901px]:pb-6 min-[901px]:pt-6" : "bg-graphite px-[22px] pb-12 pt-7 min-[560px]:pb-16 min-[560px]:pt-10")}>
       <div className="mx-auto max-w-[1080px]">
-        <Breadcrumbs items={crumbs} />
-        <p className={(calculator ? "sr-only" : "mb-5 mt-8") + " text-[11px] uppercase tracking-[0.18em] text-signal"}>MIRONOVICH / Бесплатные инструменты</p>
-        <h1 className={(calculator ? "mt-4 max-w-none text-[32px]" : "m-0 max-w-[24ch] text-[clamp(32px,5.5vw,72px)]") + " text-balance font-display font-extrabold uppercase leading-[1.02] tracking-[-0.02em] text-cream"}>{title}{!/[?!…]$/.test(title) && <span className="text-signal">.</span>}</h1>
+        {/* phones: the calculator starts right away, but the visitor still sees what it is */}
+        <div className={calculator ? "max-[900px]:hidden" : ""}><Breadcrumbs items={crumbs} /></div>
+        <p className={(calculator ? "sr-only" : "mb-5 mt-8") + " text-[12px] uppercase tracking-[0.18em] text-signal"}>MIRONOVICH / Бесплатные инструменты</p>
+        <h1 className={(calculator ? "m-0 max-w-none text-[22px] min-[901px]:mt-4 min-[901px]:text-[32px]" : "m-0 max-w-[24ch] text-[clamp(32px,5.5vw,72px)]") + " text-balance font-display font-extrabold uppercase leading-[1.02] tracking-[-0.02em] text-cream"}>{title}{!/[?!…]$/.test(title) && <span className="text-signal">.</span>}</h1>
         <p className={(calculator ? "sr-only" : "mb-0 mt-6 max-w-[65ch]") + " text-pretty text-[17px] leading-[1.65] text-cream/80"}>{description}</p>
       </div>
     </section>

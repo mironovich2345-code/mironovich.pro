@@ -30,7 +30,7 @@ export default function About({ index = "05" }: { index?: string }) {
             </p>
 
             <div className="flex flex-wrap items-center justify-between gap-4 border-t border-cream/15 pt-6">
-              <p className="m-0 text-[11px] uppercase tracking-[0.14em] text-stone">
+              <p className="m-0 text-[12px] uppercase tracking-[0.14em] text-stone">
                 Операционное управление <span className="text-signal">→</span> процессы{" "}
                 <span className="text-signal">→</span> разработка <span className="text-signal">→</span> ИИ
               </p>

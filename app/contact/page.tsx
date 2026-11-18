@@ -87,7 +87,7 @@ export default function ContactPage() {
 
         <section className="bg-cream px-[22px] py-16 min-[560px]:py-24">
           <div className="mx-auto max-w-[1080px]">
-            <p className="m-0 mb-10 text-[11px] uppercase tracking-[0.22em] text-maroon min-[560px]:mb-14">
+            <p className="m-0 mb-10 text-[12px] uppercase tracking-[0.22em] text-maroon min-[560px]:mb-14">
               01 <span className="text-signal">/</span> Что дальше
             </p>
             <h2 className="m-0 mb-12 max-w-[18ch] text-balance font-display text-[clamp(30px,5.4vw,52px)] font-extrabold uppercase leading-[1.03] tracking-[-0.02em] text-graphite min-[560px]:mb-14">

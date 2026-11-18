@@ -35,7 +35,7 @@ export default function SolutionPage({ solution: s }: { solution: Solution }) {
                 { name: s.title, href: solutionHref(s) },
               ]}
             />
-            <p className="mb-4 mt-7 text-[11px] uppercase tracking-[0.18em] text-stone">
+            <p className="mb-4 mt-7 text-[12px] uppercase tracking-[0.18em] text-stone">
               Разработка и внедрение / {s.short}
             </p>
             <h1 className="m-0 max-w-[25ch] font-display text-[clamp(34px,6.5vw,76px)] font-extrabold uppercase leading-[0.99] text-cream">

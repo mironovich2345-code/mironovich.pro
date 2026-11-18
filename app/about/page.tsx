@@ -166,7 +166,7 @@ export default function AboutPage() {
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <div className="pt-1">
-                      <p className="m-0 mb-2 text-[11px] uppercase tracking-[0.18em] text-maroon">{p.stage}</p>
+                      <p className="m-0 mb-2 text-[12px] uppercase tracking-[0.18em] text-maroon">{p.stage}</p>
                       <h3 className="m-0 mb-3 text-balance font-display text-[clamp(21px,2.6vw,27px)] font-extrabold uppercase leading-[1.1] tracking-[-0.01em] text-graphite">
                         {p.title}
                       </h3>

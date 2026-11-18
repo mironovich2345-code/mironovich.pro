@@ -21,10 +21,10 @@ export default function SectionLabel({
   const t = tones[tone];
   return (
     <div className="mb-10 flex items-end justify-between gap-6 min-[560px]:mb-14">
-      <p className={"m-0 text-[11px] uppercase tracking-[0.22em] " + t.label}>
+      <p className={"m-0 text-[12px] uppercase tracking-[0.22em] " + t.label}>
         {index} <span className="text-signal">/</span> {label}
       </p>
-      {note && <p className={"m-0 hidden text-[11px] uppercase tracking-[0.22em] min-[560px]:block " + t.note}>{note}</p>}
+      {note && <p className={"m-0 hidden text-[12px] uppercase tracking-[0.22em] min-[560px]:block " + t.note}>{note}</p>}
     </div>
   );
 }

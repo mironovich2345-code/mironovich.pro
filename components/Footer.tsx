@@ -6,8 +6,8 @@ import { contactList } from "@/config/contacts";
 import { navLinks, secondaryLinks, solutionLinks, site } from "@/config/site";
 import { tools } from "@/config/tools";
 
-const linkClass = "inline-flex min-h-[32px] items-center text-stone transition-colors hover:text-cream";
-const headClass = "m-0 mb-3 text-[11px] uppercase tracking-[0.18em] text-cream/60";
+const linkClass = "inline-flex min-h-[32px] items-center py-1 leading-snug text-stone transition-colors hover:text-cream";
+const headClass = "m-0 mb-3 text-[12px] uppercase tracking-[0.18em] text-cream/60";
 
 export default function Footer() {
   const year = new Date().getFullYear();

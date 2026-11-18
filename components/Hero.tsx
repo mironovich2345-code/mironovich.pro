@@ -14,17 +14,17 @@ export default function Hero() {
     >
       <div className="mx-auto grid max-w-[1080px] gap-6 min-[960px]:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] min-[960px]:items-center min-[960px]:gap-12">
         <div>
-          <p className="m-0 mb-4 text-[11px] uppercase tracking-[0.18em] text-stone">
-            MIRONOVICH.PRO <span className="text-signal">/</span> Технологии и
-            ИИ
+          <p className="m-0 mb-4 text-[12px] uppercase tracking-[0.18em] text-stone">
+            Данил Миронович <span className="text-signal">/</span> технический
+            директор для бизнеса
           </p>
           <h1 className="m-0 max-w-[16ch] text-balance font-display text-[clamp(36px,5vw,62px)] font-extrabold uppercase leading-[1.02] tracking-[-0.02em] text-cream">
             Технологии для бизнеса.{" "}
             <span className="text-signal">ИИ для сотрудников.</span>
           </h1>
           <p className="mb-0 mt-5 max-w-[46ch] text-pretty text-[16px] leading-[1.6] text-cream/80">
-            Автоматизация, ИИ и внешний CTO для компаний. Практика работы с ИИ
-            для сотрудников.
+            Компаниям — меньше ручной работы: обучение, отчёты, контроль филиалов
+            и заявки клиентов в одной системе. Сотрудникам — практика работы с ИИ.
           </p>
         </div>
 
@@ -36,7 +36,7 @@ export default function Hero() {
             data-audience="company"
             className={cardClass + " border-l-2 border-l-signal"}
           >
-            <div className="mb-3 flex flex-wrap items-center justify-between gap-2 text-[11px] uppercase tracking-[0.1em] text-stone">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2 text-[12px] uppercase tracking-[0.1em] text-stone">
               <span>Для компаний</span>
               <span className="text-cream">Бесплатно</span>
             </div>
@@ -69,7 +69,7 @@ export default function Hero() {
           >
             <div className="mb-3 flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="m-0 text-[11px] uppercase tracking-[0.1em] text-stone">
+                <p className="m-0 text-[12px] uppercase tracking-[0.1em] text-stone">
                   Для сотрудников
                 </p>
                 <p className="mb-0 mt-1 text-[12px] text-stone">

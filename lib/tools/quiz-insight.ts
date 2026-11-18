@@ -20,7 +20,9 @@ export function laborInsight(d: LaborDraft, step: QuizStep): QuizInsight {
   if (step.kind === "frequency" && Number.isFinite(operations)) return { label: `Операций ${unit} у группы`, value: fmt(operations), note: "Участники × повторы на одного сотрудника. Другие периоды пока не подставляем." };
   if (step.kind === "duration" && Number.isFinite(periodHours)) return { label: `Ручная работа ${unit}`, value: `${fmt(periodHours)} ч`, note: "Время всей группы на выбранный процесс. Это ещё не денежная оценка." };
   if (["schedule", "actual_shifts"].includes(step.kind) && shifts !== null) return { label: Number.isFinite(monthHours) ? "Ручная работа за месяц" : "Смен в месяце", value: Number.isFinite(monthHours) ? `${fmt(monthHours)} ч` : fmt(shifts), note: `${fmt(shifts)} смен — ${g.useActual || g.schedule === "other" ? "указано фактически" : "календарная оценка, не точный график"}. ${m.frequency === "week" ? "Недельные повторы учитываются по календарным дням / 7." : m.frequency === "month" ? "Месячные повторы на смены не умножаем." : "График определяет число повторений за месяц."}` };
-  if (step.kind === "shift_hours" && Number.isFinite(paidHours)) return { label: "Рабочих часов на сотрудника / месяц", value: `${fmt(paidHours)} ч`, note: "Смены × часы в смену. Этот фонд используем для стоимости часа." };
+  // same 0.25–24 h range as the step validation: no preview for a value the step rejects
+  const shiftHours = parseDecimal(g.shiftHours);
+  if (step.kind === "shift_hours" && Number.isFinite(paidHours) && shiftHours >= 0.25 && shiftHours <= 24) return { label: "Рабочих часов на сотрудника / месяц", value: `${fmt(paidHours)} ч`, note: "Смены × часы в смену. Этот фонд используем для стоимости часа." };
   if (step.kind === "pay") {
     if (g.payKind === "unknown") return { label: "Без вымышленной суммы", value: Number.isFinite(monthHours) ? `${fmt(monthHours)} ч/мес` : "Стоимость неизвестна", note: "Часы остаются доступны. Зарплату и ставку часа не подставляем." };
     const amount = parseDecimal(g.amount);

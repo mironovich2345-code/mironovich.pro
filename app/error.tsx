@@ -11,7 +11,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
   return (
     <main id="main" className="bg-graphite px-[22px] py-20 min-[560px]:py-28">
       <div className="mx-auto max-w-[1080px]">
-        <p className="m-0 mb-8 text-[11px] uppercase tracking-[0.22em] text-signal">Ошибка</p>
+        <p className="m-0 mb-8 text-[12px] uppercase tracking-[0.22em] text-signal">Ошибка</p>
         <h1 className="m-0 mb-6 max-w-[16ch] font-display text-[clamp(36px,8vw,80px)] font-extrabold uppercase leading-[0.98] tracking-[-0.02em] text-cream">
           Что-то пошло не так<span className="text-signal">.</span>
         </h1>

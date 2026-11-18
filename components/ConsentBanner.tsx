@@ -84,7 +84,7 @@ export default function ConsentBanner() {
       data-reopened={reopened ? "" : undefined}
       role="region"
       aria-labelledby="consent-title"
-      className="fixed inset-x-3 bottom-[calc(12px+env(safe-area-inset-bottom))] z-[55] rounded-[6px] border border-cream/15 bg-graphite p-4 shadow-[0_12px_32px_rgba(0,0,0,0.5)] min-[560px]:inset-x-4 min-[560px]:bottom-[calc(16px+env(safe-area-inset-bottom))] min-[760px]:left-auto min-[760px]:right-6 min-[760px]:bottom-[calc(24px+env(safe-area-inset-bottom))] min-[760px]:w-[440px] min-[760px]:p-5"
+      className="fixed inset-x-0 bottom-0 z-[55] rounded-t-[6px] border border-cream/15 bg-graphite px-4 pb-[calc(12px+env(safe-area-inset-bottom))] pt-3 shadow-[0_12px_32px_rgba(0,0,0,0.5)] min-[560px]:inset-x-4 min-[560px]:rounded-[6px] min-[560px]:p-4 min-[560px]:bottom-[calc(16px+env(safe-area-inset-bottom))] min-[760px]:left-auto min-[760px]:right-6 min-[760px]:bottom-[calc(24px+env(safe-area-inset-bottom))] min-[760px]:w-[440px] min-[760px]:p-5"
     >
       <div className="mb-2 flex items-center gap-2.5">
         {/* cookie mark — decorative */}
@@ -104,7 +104,7 @@ export default function ConsentBanner() {
         </h2>
       </div>
 
-      <p className="m-0 text-pretty text-[13.5px] leading-[1.5] text-cream/80">
+      <p className="m-0 text-pretty text-[13px] leading-[1.45] text-cream/80 min-[560px]:text-[13.5px] min-[560px]:leading-[1.5]">
         {metricaId
           ? "Только с вашего согласия мы используем необязательные cookies и данные о посещениях для Яндекс Метрики и аналитики сайта. До согласия аналитика не загружается. Отказ не мешает пользоваться сайтом."
           : "Только с вашего согласия мы сохраняем необязательные данные об источниках посещений. Яндекс Метрика пока не подключена. Без согласия необязательные cookies и отслеживание отключены."}
@@ -121,7 +121,7 @@ export default function ConsentBanner() {
         </p>
       )}
 
-      <div className="mt-3.5 grid grid-cols-2 gap-2">
+      <div className="mt-3 grid grid-cols-2 gap-2 min-[560px]:mt-3.5">
         <button
           ref={firstButtonRef}
           type="button"

@@ -261,12 +261,12 @@ function Unique({ block, tone, index }: { block: UniqueBlock; tone: Tone; index:
         {block.rows.map(([now, after]) => (
           <div key={now} className={"grid grid-cols-1 items-start gap-3 border-b py-7 min-[760px]:grid-cols-[1fr_44px_1fr] min-[760px]:gap-6 " + rule[tone]}>
             <div>
-              <p className={"m-0 mb-2 text-[11px] uppercase tracking-[0.18em] " + muted[tone]}>Сейчас</p>
+              <p className={"m-0 mb-2 text-[12px] uppercase tracking-[0.18em] " + muted[tone]}>Сейчас</p>
               <p className={"m-0 max-w-[42ch] text-pretty text-[15px] leading-[1.6] " + body[tone]}>{now}</p>
             </div>
             <div aria-hidden className="hidden justify-center pt-6 text-lg text-signal min-[760px]:flex">→</div>
             <div>
-              <p className="m-0 mb-2 text-[11px] uppercase tracking-[0.18em] text-signal">Система</p>
+              <p className="m-0 mb-2 text-[12px] uppercase tracking-[0.18em] text-signal">Система</p>
               <p className={"m-0 max-w-[42ch] text-pretty text-[16px] font-medium leading-[1.6] " + heading[tone]}>{after}</p>
             </div>
           </div>

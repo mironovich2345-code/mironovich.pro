@@ -5,7 +5,7 @@ import CtoOffer from "@/components/CtoOffer";
 import OtherServices from "@/components/OtherServices";
 import ContactSection from "@/components/ContactSection";
 import { allServices } from "@/config/services";
-import { solutions, solutionHref } from "@/config/solutions";
+import { directions } from "@/config/directions";
 import { siteUrl } from "@/config/site";
 import { pageMetadata, breadcrumbList } from "@/lib/seo";
 import { jsonLd } from "@/lib/jsonld";
@@ -73,10 +73,11 @@ export default function Page() {
               Решения для компании
             </h2>
             <ul className="m-0 grid list-none gap-3 p-0 min-[760px]:grid-cols-2">
-              {solutions.map((s) => (
-                <li key={s.slug}>
+              {/* the same client-language titles as on the home page and /solutions */}
+              {directions.filter((d) => d.solution).map((s) => (
+                <li key={s.id}>
                   <Link
-                    href={solutionHref(s)}
+                    href={s.href}
                     className="flex min-h-[56px] items-center justify-between gap-4 border-b border-graphite/20 py-4 text-[17px] text-graphite hover:text-maroon"
                   >
                     {s.title}
@@ -92,13 +93,14 @@ export default function Page() {
         <section className="bg-cream px-[22px] pb-14">
           <div className="mx-auto max-w-[1080px]">
             <h2 className="m-0 mb-5 font-display text-[28px] font-extrabold uppercase text-graphite">
-              Все страницы услуг
+              Отдельные услуги
             </h2>
             <p className="text-[15px] leading-relaxed text-graphite/75">
-              Прежние специализации остаются доступны по своим адресам.
+              Если нужна одна конкретная работа: разработка, доработка, сопровождение,
+              обучение команды или независимая экспертиза.
             </p>
             <nav
-              aria-label="Каталог прежних услуг"
+              aria-label="Отдельные услуги"
               className="flex flex-wrap gap-x-8 gap-y-2"
             >
               {allServices.map((s) => (

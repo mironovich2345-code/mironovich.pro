@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { products } from "@/content/products";
+import { publicStorefrontProducts } from "@/content/products";
 import { tools } from "@/config/tools";
 import { allServices } from "@/config/services";
 import { solutions, solutionHref } from "@/config/solutions";
@@ -19,7 +19,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: siteUrl + "/solutions", changeFrequency: "monthly", priority: 0.9 },
     ...solutions.map(s => ({ url: siteUrl + solutionHref(s), changeFrequency: "monthly" as const, priority: 0.9 })),
     { url: siteUrl + "/products", changeFrequency: "monthly", priority: 0.7 },
-    ...products.map(p => ({ url: siteUrl + "/products/" + p.slug, changeFrequency: "monthly" as const, priority: 0.6 })),
+    // only pages that exist: unpublished products return 404 and must not be listed
+    ...publicStorefrontProducts.map(p => ({ url: siteUrl + "/products/" + p.slug, changeFrequency: "monthly" as const, priority: 0.6 })),
     { url: siteUrl + "/tools", changeFrequency: "monthly", priority: 0.8 },
     ...tools.filter((t) => t.status === "available").map((t) => ({ url: siteUrl + t.href, changeFrequency: "monthly" as const, priority: 0.8 })),
     { url: siteUrl + "/services", changeFrequency: "monthly", priority: 0.8 },

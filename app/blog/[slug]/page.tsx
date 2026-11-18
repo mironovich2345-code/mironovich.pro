@@ -118,7 +118,7 @@ export default async function PostPage({ params }: Props) {
             </div>
 
             {post.status === "draft" && (
-              <p className="mb-5 inline-block border border-signal/50 px-2.5 py-1 text-[11px] uppercase tracking-[0.14em] text-signal">
+              <p className="mb-5 inline-block border border-signal/50 px-2.5 py-1 text-[12px] uppercase tracking-[0.14em] text-signal">
                 Черновик — виден только в режиме разработки
               </p>
             )}
@@ -190,7 +190,7 @@ export default async function PostPage({ params }: Props) {
 
           <div className="mx-auto mt-14 flex max-w-[760px] flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-t border-graphite/15 pt-6">
             <div>
-              <p className="m-0 text-[11px] uppercase tracking-[0.18em] text-maroon">Автор</p>
+              <p className="m-0 text-[12px] uppercase tracking-[0.18em] text-maroon">Автор</p>
               <p className="m-0 mt-2 text-[15px] text-graphite">{site.person}</p>
               <p className="m-0 mt-1 text-[12px] uppercase tracking-[0.12em] text-graphite/65">{site.tagline}</p>
             </div>
@@ -205,7 +205,7 @@ export default async function PostPage({ params }: Props) {
           <div className="mx-auto max-w-[780px]">
             {service && (
               <div className="mb-10 border-b border-cream/15 pb-10">
-                <p className="m-0 mb-3 text-[11px] uppercase tracking-[0.22em] text-stone">Связанная услуга</p>
+                <p className="m-0 mb-3 text-[12px] uppercase tracking-[0.22em] text-stone">Связанная услуга</p>
                 <h2 className="m-0 mb-3 font-display text-[clamp(24px,4vw,36px)] font-extrabold uppercase leading-[1.08] text-cream">
                   <Link href={service.href} className="transition-colors hover:text-signal">
                     {service.title} →
@@ -237,7 +237,7 @@ export default async function PostPage({ params }: Props) {
           <section className="bg-cream px-[22px] py-16 min-[560px]:py-20">
             <div className="mx-auto max-w-[780px]">
               <div className="mb-8 flex flex-wrap items-baseline justify-between gap-3">
-                <h2 className="m-0 text-[11px] font-normal uppercase tracking-[0.22em] text-maroon">Читать по теме</h2>
+                <h2 className="m-0 text-[12px] font-normal uppercase tracking-[0.22em] text-maroon">Читать по теме</h2>
                 <Link href={categoryHref(post.category)} className="inline-flex min-h-[44px] items-center text-[13px] uppercase tracking-[0.08em] text-maroon underline underline-offset-4 hover:text-signal">
                   Все статьи раздела →
                 </Link>
@@ -245,7 +245,7 @@ export default async function PostPage({ params }: Props) {
               <div className="flex flex-col border-t border-graphite/15">
                 {readNext.map((p) => (
                   <Link key={p.slug} href={"/blog/" + p.slug} className="group flex flex-col gap-1.5 border-b border-graphite/15 py-6">
-                    <span className="text-[11px] uppercase tracking-[0.18em] text-graphite/65">{categoryBySlug(p.category).name}</span>
+                    <span className="text-[12px] uppercase tracking-[0.18em] text-graphite/65">{categoryBySlug(p.category).name}</span>
                     <span className="max-w-[48ch] text-balance font-display text-[clamp(19px,3.4vw,24px)] font-extrabold uppercase leading-[1.15] tracking-[-0.01em] text-graphite transition-colors group-hover:text-maroon">
                       {p.title}
                     </span>

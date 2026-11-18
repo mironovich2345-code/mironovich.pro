@@ -7,7 +7,7 @@ export default function CtoOffer() {
     <section id="cto" className="bg-graphite px-[22px] py-14 min-[560px]:py-20">
       <div className="mx-auto grid max-w-[1080px] gap-8 min-[860px]:grid-cols-[1.2fr_1fr] min-[860px]:gap-16">
         <div>
-          <p className="m-0 mb-5 text-[11px] uppercase tracking-[0.18em] text-stone">
+          <p className="m-0 mb-5 text-[12px] uppercase tracking-[0.18em] text-stone">
             Отдельный формат · техническое управление
           </p>
           <h2 className="m-0 font-display text-[clamp(32px,5vw,54px)] font-extrabold uppercase leading-[1.03] text-cream">
