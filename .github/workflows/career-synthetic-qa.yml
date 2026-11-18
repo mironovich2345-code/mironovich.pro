@@ -3,7 +3,7 @@ name: Career synthetic QA
 on:
   push:
     branches:
-      - feature/career-integrated-synthetic-20261118
+      - feature/career-20261118-integrate-on-main
   pull_request:
     paths:
       - "app/career/**"
@@ -16,6 +16,10 @@ on:
       - "tests/career-*.mjs"
       - "tests/yookassa-sandbox.test.mjs"
       - "package*.json"
+      - "components/Analytics.tsx"
+      - "tests/yookassa-site-review.test.mjs"
+      - "app/products/**"
+      - "app/solutions/**"
       - ".github/workflows/career-synthetic-qa.yml"
 
 permissions:
