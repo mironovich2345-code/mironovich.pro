@@ -5,7 +5,8 @@
  */
 export const aiCareerCommerce = {
   title: "Как стать ценнее для компании с помощью ИИ",
-  priceRub: 1990,
+  priceRub: 1993,
+  referencePriceRub: 3990,
   extensionPriceRub: 1490,
   accessDays: 90,
   retentionDaysAfterExpiry: 30,
@@ -13,7 +14,7 @@ export const aiCareerCommerce = {
   analysesIncluded: 1,
   diagnosticQuestions: 18,
   minimumBuyerAge: 18,
-  planDays: 30,
+  planSteps: 30,
   refundWindowDays: 7,
   refundProcessingDays: 10,
   supportEmail: "damironovich@mail.ru",
@@ -23,7 +24,7 @@ export const aiCareerCommerce = {
 
 /** Shared proposed terms, never a statement that checkout or hosting is live. */
 export const commerceCopy = {
-  initialPurchase: "1 990 ₽: одна диагностика из 18 основных вопросов, один персональный анализ, план на 30 дней, PDF и 90 дней доступа с момента фактической выдачи.",
+  initialPurchase: "1 993 ₽: одна диагностика из 18 основных вопросов, один персональный анализ, план из 30 шагов, PDF и 90 дней доступа с момента фактической выдачи.",
   refundWindow: "Полный возврат при отказе в течение семи дней, не считая дня оплаты; прохождение анализа и скачивание PDF не уменьшают сумму возврата.",
   age: "Покупатели продукта — только совершеннолетние лица 18+.",
   edition: "Проект к утверждению от 17 ноября 2026 года; дата начала действия не назначена.",
