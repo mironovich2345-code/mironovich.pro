@@ -18,6 +18,7 @@ import type { ServiceSlug } from "../config/services.ts";
 import { additionalServices, type ServiceTopicId } from "../config/commercial.ts";
 import { SOLUTION_SLUGS, type SolutionSlug } from "../config/solutions.ts";
 import { REDACTED, looksPersonal, normalizePagePath } from "./lead.ts";
+import { hasTrackingConsent } from "./tracking-consent";
 
 export type AnalyticsEvent =
   | "tool_start" | "tool_step" | "tool_abandon" | "tool_complete" | "tool_consultation"
@@ -88,7 +89,7 @@ function clean(params: EventParams): Record<string, string> {
 const currentPage = () => normalizePagePath(window.location.pathname);
 
 export function track(event: AnalyticsEvent, params: EventParams = {}) {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined" || !hasTrackingConsent(metricaId)) return;
   const w = window as unknown as AnalyticsWindow;
   const payload = { ...clean(params), page: currentPage() };
 
@@ -100,7 +101,7 @@ export function track(event: AnalyticsEvent, params: EventParams = {}) {
 
 /** One Metrica hit per page view (see the note at the top). */
 export function trackPageView(path: string, referrer: string) {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined" || !hasTrackingConsent(metricaId)) return;
   const w = window as unknown as AnalyticsWindow;
   const url = window.location.origin + path;
   (w.mrnvEvents = w.mrnvEvents || []).push({ event: "page_view", page: normalizePagePath(path) });
@@ -113,7 +114,7 @@ export function trackPageView(path: string, referrer: string) {
 const FORM_START_KEY = "mrnv_form_start_v1";
 
 export function trackFormStartOnce() {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined" || !hasTrackingConsent(metricaId)) return;
   try {
     if (window.sessionStorage.getItem(FORM_START_KEY)) return;
     window.sessionStorage.setItem(FORM_START_KEY, "1");
