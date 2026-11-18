@@ -7,6 +7,7 @@ import {
   UUID_PATTERN,
 } from "./config.ts";
 import { addCalendarMonths } from "../../career-diagnostic.ts";
+import { aiCareerCommerce } from "../../../config/ai-career-commerce.ts";
 import {
   createSandboxPayment,
   verifySandboxPayment,
@@ -104,7 +105,7 @@ export async function createOrder(
         randomUUID(),
         accountId,
         k,
-        k === "initial" ? 199000 : 149000,
+        (k === "initial" ? aiCareerCommerce.priceRub : aiCareerCommerce.extensionPriceRub) * 100,
         randomUUID(),
         randomUUID(),
       ],

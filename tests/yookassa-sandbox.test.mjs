@@ -19,7 +19,7 @@ const provider = (o, extra = {}) => ({
   paid: false,
   test: true,
   captured_at: new Date().toISOString(),
-  amount: { value: "1990.00", currency: "RUB" },
+  amount: { value: "1993.00", currency: "RUB" },
   metadata: { order_id: o.orderId },
   confirmation: {
     confirmation_url: "https://yoomoney.ru/api-pages/v2/payment-confirm/xxx",
@@ -31,7 +31,7 @@ const fakeFetch = (response, onRequest) => async (url, init) => {
   return { ok: true, status: 200, json: async () => response };
 };
 
-test("creates test payment at fixed RUB 1990 without PII and returns redirect", async () => {
+test("creates test payment at fixed RUB 1993 without PII and returns redirect", async () => {
   const o = order();
   const payment = provider(o);
   const result = await createSandboxPayment(
@@ -42,7 +42,7 @@ test("creates test payment at fixed RUB 1990 without PII and returns redirect", 
       assert.equal(init.method, "POST");
       assert.equal(init.headers["Idempotence-Key"], o.idempotenceKey);
       const payload = JSON.parse(init.body);
-      assert.equal(payload.amount.value, "1990.00");
+      assert.equal(payload.amount.value, "1993.00");
       assert.equal(payload.amount.currency, "RUB");
       assert.deepEqual(payload.metadata, { order_id: o.orderId });
       assert.equal(
@@ -228,7 +228,7 @@ test("refund verification rejects a foreign payment and partial or foreign curre
   for (const extra of [
     { payment_id: randomUUID() },
     { amount: { value: "1.00", currency: "RUB" } },
-    { amount: { value: "1990.00", currency: "USD" } },
+    { amount: { value: "1993.00", currency: "USD" } },
   ]) {
     const fetcher = async (url) => ({
       ok: true,
@@ -240,7 +240,7 @@ test("refund verification rejects a foreign payment and partial or foreign curre
               id: refundId,
               payment_id: paymentId,
               status: "succeeded",
-              amount: { value: "1990.00", currency: "RUB" },
+              amount: { value: "1993.00", currency: "RUB" },
               ...extra,
             },
     });

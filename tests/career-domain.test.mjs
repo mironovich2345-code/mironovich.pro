@@ -98,6 +98,12 @@ test("high risk or forbidden data never recommended for unattended automation", 
   const high = generateSyntheticAnalysis(a);
   assert(high.tasks.every((t) => /человеком/.test(t.recommendation)));
   assert.equal(high.plan.length, 30);
+  assert.deepEqual(high.plan.map((step) => step.day), Array.from({length:30},(_,i)=>i+1));
+  assert.equal(new Set(high.plan.map((step)=>step.action)).size,30,"each step has its own action");
+  assert.ok(high.plan.every((step)=>step.evidence && step.evidence.length>10),"each step has evidence");
+  assert.deepEqual([high.plan[0].theme,high.plan[6].theme,high.plan[14].theme,high.plan[23].theme],[
+    "Разберите задачу","Попробуйте ИИ","Проверьте качество","Оформите результат",
+  ]);
   assert.equal(new Set(high.plan.map((d) => d.day)).size, 30);
   assert.equal(high.directions.length, 3);
   assert.equal(high.synthetic, true);
@@ -113,7 +119,7 @@ test("12 calendar months clamp leap day and preserve time; access is not extende
     "2027-11-17T00:00:00.000Z",
   );
 });
-test("Unicode PDF contains real pages from the generated 30-day report", async () => {
+test("Unicode PDF contains real pages from the generated 30-step report", async () => {
   const { PDFDocument } = await import("pdf-lib");
   const b = await careerPdf(generateSyntheticAnalysis(syntheticAnswers()));
   assert.match(b.subarray(0, 8).toString(), /^%PDF-/);
@@ -142,4 +148,17 @@ test("publication guards and commerce flags remain off; dedicated DB migration i
   assert.match(sql, /mironovich_career_test/);
   assert.match(sql, /CHECK\(synthetic\)/);
   assert.match(sql, /CHECK\(test\)/);
+});
+
+test("sandbox progress UI and PDF both describe 30 steps, not 30 calendar days",()=>{
+  const ui=fs.readFileSync("components/CareerSandbox.tsx","utf8");
+  const pdf=fs.readFileSync("lib/server/career/pdf.ts","utf8");
+  const generator=fs.readFileSync("lib/career-diagnostic.ts","utf8");
+  assert.match(ui,/План из 30 шагов/);
+  assert.match(ui,/Шаг \{d\.day\}/);
+  assert.match(ui,/Результат: \{d\.evidence\}/);
+  assert.match(pdf,/План из 30 шагов/);
+  assert.match(pdf,/Результат: \$\{d\.evidence\}/);
+  assert.match(generator,/The 30-step plan must be consecutive/);
+  for (const src of [ui,pdf]) assert.doesNotMatch(src,/План на 30 дней|День \{d\.day\}/);
 });

@@ -185,7 +185,7 @@ export async function updateProgress(
     Number(day) > 30 ||
     typeof done !== "boolean"
   )
-    throw new CareerError(400, "Неверный день плана");
+    throw new CareerError(400, "Неверный номер шага");
   if (
     !(
       await careerPool().query(

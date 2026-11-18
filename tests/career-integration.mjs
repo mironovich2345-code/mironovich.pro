@@ -142,7 +142,7 @@ try {
   const orderId = created[0].id;
   let o = (await sql("SELECT * FROM career_orders WHERE id=$1", [orderId]))
     .rows[0];
-  assert.equal(o.amount_kopeks, 199000);
+  assert.equal(o.amount_kopeks, 199300);
   assert.equal(o.test, true);
   assert.equal(
     await count(

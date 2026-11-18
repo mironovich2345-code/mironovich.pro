@@ -46,8 +46,11 @@ export async function careerPdf(result: CareerResult): Promise<Buffer> {
   }
   line("Три направления развития", 14);
   result.directions.forEach((x) => line(x));
-  line("План на 30 дней", 14);
-  result.plan.forEach((d) => line(`День ${d.day}. ${d.theme}: ${d.action}.`));
+  line("План из 30 шагов", 14);
+  result.plan.forEach((d) => {
+    line(`Шаг ${d.day}. ${d.theme}: ${d.action}`);
+    line(`Результат: ${d.evidence}`);
+  });
   for (const p of pdf.getPages())
     p.drawText("Синтетический тест · Не настоящий ИИ-анализ", {
       x: 50,
