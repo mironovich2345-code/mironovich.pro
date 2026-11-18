@@ -49,6 +49,9 @@ switch (process.argv[2]) {
         "DELETE FROM career_progress USING career_accounts a WHERE career_progress.account_id=a.id AND a.access_until < now()-interval '30 days'",
       );
       await tx.query(
+        "DELETE FROM career_ai_requests WHERE created_at < now()-interval '90 days'",
+      );
+      await tx.query(
         "DELETE FROM career_otp WHERE expires_at < now()-interval '1 day'",
       );
       await tx.query(
