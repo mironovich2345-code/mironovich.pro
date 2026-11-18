@@ -11,9 +11,9 @@ import { CONSENT_OPEN_EVENT, purgeOptionalTracking, readConsent, revokeConsent, 
  * until "Согласен"; a rejection must be equally easy and leave the form working.
  * If Metrica is configured later, a different consent key requires a NEW choice.
  *
- * Layout: a bottom panel 12px from the screen edges on phones, a 440px card in
- * the bottom-right corner on desktop. While open, the page gets matching bottom
- * padding so nothing underneath becomes unreachable.
+ * Layout: on small screens this panel is placed in normal document flow,
+ * ahead of the sticky header; it cannot cover calls to action or sale status.
+ * From 760px it becomes a bottom-right overlay with matching body padding.
  *
  * Rendered open on the server so it paints with the page (it is often the LCP
  * element — waiting for hydration cost ~1.5 s). Returning visitors never see it:
@@ -52,6 +52,11 @@ export default function ConsentBanner() {
     const body = document.body;
     const prev = body.style.paddingBottom;
     const apply = () => {
+      // Mobile banner is in normal flow, ahead of the site header: no overlay.
+      if (window.matchMedia("(max-width: 759px)").matches) {
+        body.style.paddingBottom = prev;
+        return;
+      }
       const gap = window.innerHeight - panel.getBoundingClientRect().top;
       body.style.paddingBottom = Math.ceil(gap + 8) + "px";
     };
@@ -84,7 +89,7 @@ export default function ConsentBanner() {
       data-reopened={reopened ? "" : undefined}
       role="region"
       aria-labelledby="consent-title"
-      className="fixed inset-x-0 bottom-0 z-[55] rounded-t-[6px] border border-cream/15 bg-graphite px-4 pb-[calc(12px+env(safe-area-inset-bottom))] pt-3 shadow-[0_12px_32px_rgba(0,0,0,0.5)] min-[560px]:inset-x-4 min-[560px]:rounded-[6px] min-[560px]:p-4 min-[560px]:bottom-[calc(16px+env(safe-area-inset-bottom))] min-[760px]:left-auto min-[760px]:right-6 min-[760px]:bottom-[calc(24px+env(safe-area-inset-bottom))] min-[760px]:w-[440px] min-[760px]:p-5"
+      className="relative z-[55] w-full border-y border-cream/15 bg-graphite px-4 py-3 min-[760px]:fixed min-[760px]:inset-x-auto min-[760px]:bottom-[calc(24px+env(safe-area-inset-bottom))] min-[760px]:right-6 min-[760px]:w-[440px] min-[760px]:rounded-[6px] min-[760px]:border min-[760px]:p-5 min-[760px]:shadow-[0_12px_32px_rgba(0,0,0,0.5)]"
     >
       <div className="mb-2 flex items-center gap-2.5">
         {/* cookie mark — decorative */}
