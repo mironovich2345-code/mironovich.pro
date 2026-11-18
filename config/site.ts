@@ -1,6 +1,7 @@
 import { contactList, contacts, sameAs } from "./contacts.ts";
 import { services } from "./services.ts";
 import { directions } from "./directions.ts";
+import { toolsNavigation } from "./tools.ts";
 import { projects } from "../content/projects.ts";
 import type { NavLink } from "./routes.ts";
 export { contactHref } from "./routes.ts";
@@ -42,6 +43,14 @@ export const navLinks: NavLink[] = [
   { href: "/solutions", label: "Бизнесу" },
   { href: "/products/ai-career", label: "Сотрудникам" },
   { href: "/about", label: "Кто я" },
+];
+
+/** Discovery links moved out of the header, retained in the footer. */
+export const secondaryLinks: NavLink[] = [
+  ...(projectsPublished ? [{ href: "/projects", label: "Кейсы" }] : []),
+  ...(toolsNavigation.enabled ? [{ href: toolsNavigation.href, label: toolsNavigation.label }] : []),
+  { href: "/services/cto", label: "Внешний CTO" },
+  { href: "/blog", label: "Блог" },
 ];
 
 /** Where «Обсудить задачу» leads from pages without their own form section. */
