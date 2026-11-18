@@ -25,9 +25,10 @@ test("each work task has an explicit role, decision boundary, business value, me
   const modes = ["conditional", "assist", "human"];
   for (const t of role.tasks) {
     assert.match(t.id, /^T\d{2}$/);
-    for (const value of ["title", "stage", "prerequisites", "humanResponsibility", "modeMeaning"])
+    for (const value of ["title", "prerequisites", "humanResponsibility", "modeMeaning"])
       assert.ok(typeof t[value] === "string" && t[value].trim().length >= 9, t.id + ": " + value);
     assert.ok(modes.includes(t.mode), t.id + ": unknown mode");
+    assert.ok(typeof t.stage === "string" && t.stage.length >= 3, t.id + ": missing sales stage");
     assert.ok(t.subtypeIds.length >= 1 && t.subtypeIds.every(id => has(role.subtypes, id)), t.id + ": subtype");
     assert.ok(t.valueDrivers.length >= 1, t.id + ": missing company impact");
     assert.ok(has(role.metrics, t.metricId), t.id + ": metric reference");
