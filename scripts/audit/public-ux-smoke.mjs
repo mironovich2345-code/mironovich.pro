@@ -26,7 +26,7 @@ try {
       const page = await context.newPage();
       const tracked = [];
       page.on("request", req => {
-        if (/mc\\.yandex\\.(ru|com)|google-analytics|googletagmanager/i.test(req.url())) tracked.push(req.url());
+        if (/mc\.yandex\.(ru|com)|google-analytics|googletagmanager/i.test(req.url())) tracked.push(req.url());
       });
       await page.goto(BASE + path, { waitUntil: "networkidle" });
       const banner = page.locator("[data-consent-banner]");
