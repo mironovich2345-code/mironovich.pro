@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import Link from "next/link";
+import CtaLink from "@/components/CtaLink";
 import Services from "@/components/Services";
 import CtoOffer from "@/components/CtoOffer";
 import OtherServices from "@/components/OtherServices";
@@ -51,6 +53,28 @@ export default function Page() {
             <h1 className="mb-5 mt-7 font-display text-[clamp(38px,7vw,76px)] font-extrabold uppercase leading-tight text-cream">
               Цифровые системы для бизнеса<span className="text-signal">.</span>
             </h1>
+            <div className="mt-8 grid gap-6 border-l-2 border-signal bg-[#15151a] p-6 min-[760px]:grid-cols-[minmax(0,1fr)_auto] min-[760px]:items-center min-[760px]:p-8">
+              <div>
+                <h2 className="m-0 max-w-[24ch] font-display text-[clamp(25px,3vw,34px)] font-extrabold uppercase leading-[1.1] text-cream">
+                  Хотите, чтобы бизнес работал проще и быстрее?
+                </h2>
+                <p className="mb-0 mt-3 max-w-[56ch] text-[15px] leading-relaxed text-cream/75">
+                  Не знаете, что автоматизировать и с чего начать? На бесплатном разборе обсудим вашу задачу и выберем разумный первый шаг — без обязательства заказывать разработку.
+                </p>
+              </div>
+              <div className="flex flex-col gap-3 min-[760px]:min-w-[220px]">
+                <CtaLink
+                  href="/contact"
+                  location="solutions_index"
+                  className="inline-flex min-h-[48px] items-center justify-center bg-signal px-5 text-center text-[13px] font-medium uppercase tracking-[0.035em] text-white hover:bg-[#b82323]"
+                >
+                  Получить бесплатный разбор →
+                </CtaLink>
+                <Link href="/tools/labor-cost" className="inline-flex min-h-[40px] items-center justify-center text-center text-[13px] text-cream underline decoration-cream/35 underline-offset-4 hover:text-signal">
+                  Рассчитать ручной труд →
+                </Link>
+              </div>
+            </div>
           </div>
         </section>
         <Services />
