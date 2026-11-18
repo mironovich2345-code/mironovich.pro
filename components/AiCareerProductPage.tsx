@@ -7,7 +7,7 @@ import type { DigitalProduct } from "@/content/products";
 const features = [
   { title: "Диагностика рабочих задач", body: "18 основных вопросов: профессия, задачи, повторяемость, ограничения, использование ИИ. До пяти карточек задач." },
   { title: "Персональный анализ", body: "Один анализ задач по критериям пригодности для безопасных экспериментов. Это не прогноз увольнения." },
-  { title: "План на 30 дней", body: "Практические упражнения, замеры времени и качества, проверка результатов, подготовка примера профессионального вклада." },
+  { title: "План из 30 шагов", body: "Практические упражнения, замеры времени и качества, проверка результатов, подготовка примера профессионального вклада." },
   { title: "PDF-отчёт", body: "Карта задач, три направления развития, план эксперимента и материалы для самостоятельного использования." },
 ];
 
@@ -34,7 +34,7 @@ export default function AiCareerProductPage({ product }: { product: DigitalProdu
             <p className="mb-4 text-sm uppercase tracking-wider text-stone">Сотрудникам и специалистам · 18+</p>
             <h1 className="font-display text-[clamp(34px,5vw,62px)] font-extrabold uppercase leading-[1.04]">{product.title}</h1>
             <p className="mt-6 text-[18px] leading-relaxed text-cream/85">
-              Разберите свои рабочие задачи, выясните, где ИИ действительно может помочь, и получите личный план практики на 30 дней.
+              Разберите свои рабочие задачи, выясните, где ИИ действительно может помочь, и получите личный план практики из 30 шагов.
             </p>
             <div className="mt-7 border-t border-cream/20 pt-5">
               <p className="m-0 text-4xl font-bold">{aiCareerCommerce.priceRub.toLocaleString("ru-RU")} ₽</p>
@@ -66,7 +66,7 @@ export default function AiCareerProductPage({ product }: { product: DigitalProdu
           </div>
         </section>
         <section className="mt-16 max-w-[800px]">
-          <h2 className="font-display text-3xl font-extrabold uppercase">30 дней — один рабочий эксперимент</h2>
+          <h2 className="font-display text-3xl font-extrabold uppercase">30 шагов — один рабочий эксперимент</h2>
           <ol className="mt-6 list-decimal space-y-3 pl-6 text-[16px] leading-relaxed text-cream/85">
             <li>Неделя 1: выбрать задачу, описать её этапы и замерить текущий результат.</li>
             <li>Неделя 2: протестировать ИИ на разрешённых или учебных данных.</li>
