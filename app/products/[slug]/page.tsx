@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import AiCareerProductPage from "@/components/AiCareerProductPage";
 import { productBySlug, products } from "@/content/products";
 import { rub } from "@/config/solutions";
 import { pageMetadata, breadcrumbList } from "@/lib/seo";
@@ -36,6 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Product({ params }: Props) {
   const p = productBySlug((await params).slug);
   if (!p) notFound();
+  if (p.slug === "ai-career") return <AiCareerProductPage product={p} />;
   const crumbs = [
     { name: "Главная", href: "/" },
     { name: "Продукты", href: "/products" },

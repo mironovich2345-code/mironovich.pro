@@ -55,6 +55,12 @@ export default function Footer() {
               {contactList.map((c) => (
                 <li key={c.channel}><ContactLink contact={c} location="footer" className={linkClass} /></li>
               ))}
+              <li><a href="tel:+79527541498" className={linkClass}>+7 952 754-14-98</a></li>
+              <li><a href="mailto:damironovich@mail.ru" className={linkClass}>damironovich@mail.ru</a></li>
+              <li><Link href="/offer/ai-career" className={linkClass}>Условия будущей покупки</Link></li>
+              <li><Link href="/delivery" className={linkClass}>Получение доступа</Link></li>
+              <li><Link href="/refund" className={linkClass}>Условия возврата</Link></li>
+              <li><Link href="/requisites" className={linkClass}>Реквизиты продавца</Link></li>
               <li><Link href="/privacy" className={linkClass}>Политика конфиденциальности</Link></li>
               <li><Link href="/consent" className={linkClass}>Согласие на обработку ПД</Link></li>
               <ConsentSettingsButton className={linkClass} />
