@@ -1,0 +1,848 @@
+{
+  "schemaVersion": "ai-career-role-matrix-v1",
+  "lastReviewed": "2026-11-18",
+  "roleId": "sales_manager",
+  "roleName": "Менеджер по продажам",
+  "scope": "Обучающий контент, не оценка вероятности увольнения и не аудит конкретной компании",
+  "levels": [
+    {
+      "id": "starter",
+      "label": "Новичок",
+      "learning": "Сначала понимание ИИ, безопасности и проверки; затем простые сценарии"
+    },
+    {
+      "id": "experienced",
+      "label": "Опытный",
+      "learning": "Аналитика, качество процессов, переговорные гипотезы, предложение пилота"
+    }
+  ],
+  "subtypes": [
+    {
+      "id": "outbound_b2b",
+      "label": "Исходящие B2B-продажи",
+      "description": "Поиск компаний, первичный контакт, квалификация и сложные сделки; не обязательно «холодный обзвон»",
+      "context": "Мало ответов на исходящие обращения; нужна работа с источниками, проверка фактов и согласованная коммуникация",
+      "primaryMetrics": [
+        "research_time",
+        "reply_rate",
+        "qualification_quality",
+        "proposal_quality"
+      ]
+    },
+    {
+      "id": "inbound",
+      "label": "Входящие заявки",
+      "description": "Скорость первого ответа, выявление потребности, подбор решения и корректная передача сделки",
+      "context": "Много заявок и повторяющихся вопросов; важно быстро реагировать, не обещая непроверенные условия",
+      "primaryMetrics": [
+        "first_response_time",
+        "qualification_quality",
+        "proposal_quality",
+        "reply_rate"
+      ]
+    },
+    {
+      "id": "account",
+      "label": "Работа с действующими клиентами",
+      "description": "Сопровождение клиентов, продление договоров, решение проблем, развитие отношений и повторные продажи",
+      "context": "Длинный цикл и контекст отношений; важно сохранять договорённости и не подменять человеческое решение автоматикой",
+      "primaryMetrics": [
+        "renewal_rate",
+        "case_resolution_time",
+        "crm_completeness",
+        "report_quality"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "source_verification",
+      "name": "Проверка фактов и источников",
+      "why": "отличать подтверждённое от гипотез, фиксировать источник/дату"
+    },
+    {
+      "id": "task_decomposition",
+      "name": "Разложение процесса на шаги",
+      "why": "выбирать пригодные ИИ-этапы и границы ответственности"
+    },
+    {
+      "id": "prompt_workflow",
+      "name": "Постановка задачи ИИ",
+      "why": "задавать контекст, формат, критерии и цикл исправлений"
+    },
+    {
+      "id": "crm_data_quality",
+      "name": "Качество и безопасность CRM-данных",
+      "why": "соблюдать доступ, сроки, корректность полей и передачу данных"
+    },
+    {
+      "id": "human_negotiation",
+      "name": "Переговоры и проверка договорённостей",
+      "why": "отделять шаблонный совет от реального интереса клиента"
+    },
+    {
+      "id": "sales_diagnostics",
+      "name": "Анализ воронки и причин результата",
+      "why": "проверять гипотезы на данных и избегать ложных причинных выводов"
+    },
+    {
+      "id": "impact_storytelling",
+      "name": "Доказательство пользы компании",
+      "why": "измерять «было/стало», учитывать ошибки и показывать результат руководителю"
+    },
+    {
+      "id": "responsible_automation",
+      "name": "Разрешения, безопасность и человеческий контроль",
+      "why": "останавливать неподходящие сценарии и выбирать безопасный учебный путь"
+    }
+  ],
+  "metrics": [
+    {
+      "id": "research_time",
+      "label": "Время подготовки к звонку",
+      "method": "Медиана/диапазон минут на пять сопоставимых учебных кейсов до и после",
+      "caveat": "Качество и полнота справки не ухудшились"
+    },
+    {
+      "id": "reply_rate",
+      "label": "Доля ответов на обращения",
+      "method": "Число ответов / число доставленных обращений за сравнимый период",
+      "caveat": "Учитывать каналы, выборку, согласие на контакт и сезонность"
+    },
+    {
+      "id": "qualification_quality",
+      "label": "Полнота квалификации",
+      "method": "Доля учебных карточек с согласованными обязательными полями",
+      "caveat": "Критерии утверждает команда, данные клиента не выносить"
+    },
+    {
+      "id": "first_response_time",
+      "label": "Время первого ответа",
+      "method": "Медиана времени от поступления до первого содержательного ответа",
+      "caveat": "Сравнивать одинаковые часы, каналы и нагрузку"
+    },
+    {
+      "id": "crm_completeness",
+      "label": "Актуальность CRM",
+      "method": "Доля карточек с корректными стадией, следующим действием, датой",
+      "caveat": "Точность важнее количества заполненных полей"
+    },
+    {
+      "id": "proposal_quality",
+      "label": "Качество и время КП",
+      "method": "Минуты + доля предложений без ошибок в ценах, сроках и обязательствах",
+      "caveat": "Сравнивать сопоставимые задачи; фиксировать время проверки человеком"
+    },
+    {
+      "id": "error_rate",
+      "label": "Доля ошибок в результате",
+      "method": "Число значимых ошибок / число проверенных учебных артефактов",
+      "caveat": "Фиксировать критические ошибки отдельно"
+    },
+    {
+      "id": "funnel_hypotheses",
+      "label": "Проверенные гипотезы воронки",
+      "method": "Сколько гипотез подтверждено/отклонено после проверки данных",
+      "caveat": "Нельзя приписывать ИИ рост продаж без проверки других факторов"
+    },
+    {
+      "id": "renewal_rate",
+      "label": "Продления и удержание",
+      "method": "Продления / число наступивших продлений за сопоставимый период",
+      "caveat": "Сильная внешняя зависимость; не объявлять эффектом ИИ"
+    },
+    {
+      "id": "case_resolution_time",
+      "label": "Скорость решения вопросов клиентов",
+      "method": "Медиана времени до согласованного решения + доля повторных обращений",
+      "caveat": "Проверять качество решения и отсутствие повторных проблем"
+    },
+    {
+      "id": "report_quality",
+      "label": "Полезность отчёта руководителю",
+      "method": "Отчёт содержит исходный замер, изменения, риски, дальнейшие действия",
+      "caveat": "Сначала проверять факт и значимость, а не красоту отчёта"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "S01",
+      "title": "Справка о клиенте перед звонком",
+      "goal": "Быстро собрать достоверные факты и 5 уместных вопросов для встречи",
+      "input": "Вымышленная компания «СеверПро» с открытым учебным описанием и 2 проверяемыми фактами",
+      "artifact": "Одностраничная справка: факты / гипотезы / источники / вопросы",
+      "metricId": "research_time",
+      "review": "Проверить компанию, дату, первоисточники, не выдавать допущения за факты",
+      "taskIds": [
+        "T01",
+        "T04"
+      ],
+      "difficulty": [
+        "starter",
+        "experienced"
+      ]
+    },
+    {
+      "id": "S02",
+      "title": "Первое обращение и follow-up",
+      "goal": "Составить содержательное письмо без лести, ложных обещаний и навязчивости",
+      "input": "Вымышленный адресат «Закупщик А» и разрешённое учебное предложение продукта",
+      "artifact": "Три темы письма, 2 коротких варианта сообщения и один следующий шаг",
+      "metricId": "reply_rate",
+      "review": "Не выдумывать имя, интересы, отношения, скидки; проверить законность и правила коммуникаций",
+      "taskIds": [
+        "T03",
+        "T15"
+      ],
+      "difficulty": [
+        "starter",
+        "experienced"
+      ]
+    },
+    {
+      "id": "S03",
+      "title": "Коммерческое предложение",
+      "goal": "Собрать КП из согласованных входных условий и проверить все обязательства",
+      "input": "Учебный бриф, фиксированная учебная стоимость, сроки и требования",
+      "artifact": "КП + таблица сверки цифр и обязательств",
+      "metricId": "proposal_quality",
+      "review": "Цены, сроки, обещания и договорные пункты утверждает человек по согласованному источнику",
+      "taskIds": [
+        "T11",
+        "T12"
+      ],
+      "difficulty": [
+        "starter",
+        "experienced"
+      ]
+    },
+    {
+      "id": "S04",
+      "title": "Возражения без манипуляций",
+      "goal": "Подготовить варианты ответа и уточняющий вопрос, а не подменить диалог скриптом",
+      "input": "Синтетическое возражение «дорого» и учебный контекст закупки",
+      "artifact": "Три версии ответа, границы применения и сценарий тренировки",
+      "metricId": "error_rate",
+      "review": "Не придумывать мотивацию клиента, проверить тон, не обещать скидку без согласования",
+      "taskIds": [
+        "T13",
+        "T14"
+      ],
+      "difficulty": [
+        "starter",
+        "experienced"
+      ]
+    },
+    {
+      "id": "S05",
+      "title": "Итог звонка и CRM",
+      "goal": "Получить структурированное резюме договорённостей без утечки записи/переписки",
+      "input": "Вымышленный транскрипт со сроком и списком учебных задач",
+      "artifact": "Итог в 5 полях, список задач, контроль точности",
+      "metricId": "crm_completeness",
+      "review": "Записи и клиентские данные только в разрешённой среде; сверить даты, участников и обещания",
+      "taskIds": [
+        "T09",
+        "T10"
+      ],
+      "difficulty": [
+        "starter",
+        "experienced"
+      ]
+    },
+    {
+      "id": "S06",
+      "title": "Разбор потерянных сделок и воронки",
+      "goal": "Найти закономерности в учебной выборке и проверить минимум три гипотезы",
+      "input": "Искусственная таблица 12 сделок со стадиями и причинами отказа",
+      "artifact": "Сводная таблица, 3 гипотезы, ограничения выборки и план проверки",
+      "metricId": "funnel_hypotheses",
+      "review": "Не строить причинные выводы из малой выборки, проверить пропуски, смещения и знаменатели",
+      "taskIds": [
+        "T16",
+        "T17"
+      ],
+      "difficulty": [
+        "starter",
+        "experienced"
+      ]
+    },
+    {
+      "id": "S07",
+      "title": "Подготовка к переговорам",
+      "goal": "Продумать варианты без передачи модели права устанавливать условия",
+      "input": "Вымышленный клиент, учебные интересы и явно зафиксированные пределы уступок",
+      "artifact": "Карта интересов, 3 вопроса, пределы уступок, альтернативные предложения",
+      "metricId": "proposal_quality",
+      "review": "Все уступки, цена и итоговое решение остаются за уполномоченным человеком",
+      "taskIds": [
+        "T14",
+        "T20"
+      ],
+      "difficulty": [
+        "experienced"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "T01",
+      "title": "Исследовать компанию перед первым контактом",
+      "subtypeIds": [
+        "outbound_b2b",
+        "account"
+      ],
+      "stage": "research",
+      "mode": "assist",
+      "modeMeaning": "ИИ готовит черновик/варианты; сотрудник выбирает и проверяет",
+      "valueDrivers": [
+        "speed",
+        "quality"
+      ],
+      "prerequisites": "Есть открытые подтверждаемые сведения о компании; использовать только учебные либо разрешённые данные",
+      "humanResponsibility": "Достоверность фактов, релевантность встречи",
+      "metricId": "research_time",
+      "scenarioId": "S01",
+      "skillId": "source_verification",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T02",
+      "title": "Разбить лиды на группы по публичным признакам",
+      "subtypeIds": [
+        "outbound_b2b",
+        "inbound"
+      ],
+      "stage": "qualification",
+      "mode": "conditional",
+      "modeMeaning": "Возможна автоматизация части процесса при разрешённых интеграциях, безопасных данных и контрольных проверках",
+      "valueDrivers": [
+        "conversion",
+        "risk"
+      ],
+      "prerequisites": "Правила сегментации согласованы, источник данных законный, нет скрытой классификации по чувствительным признакам",
+      "humanResponsibility": "Критерии сегментации, контроль смещения и решение о контакте",
+      "metricId": "qualification_quality",
+      "scenarioId": "S01",
+      "skillId": "sales_diagnostics",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T03",
+      "title": "Подготовить первое исходящее письмо",
+      "subtypeIds": [
+        "outbound_b2b"
+      ],
+      "stage": "outreach",
+      "mode": "assist",
+      "modeMeaning": "ИИ готовит черновик/варианты; сотрудник выбирает и проверяет",
+      "valueDrivers": [
+        "speed",
+        "conversion"
+      ],
+      "prerequisites": "Разрешён канал коммуникации, факты о клиенте подтверждены; учебный контакт вымышленный",
+      "humanResponsibility": "Финальное письмо, соответствие требованиям рассылок",
+      "metricId": "reply_rate",
+      "scenarioId": "S02",
+      "skillId": "prompt_workflow",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T04",
+      "title": "Составить сценарий первого звонка и вопросы",
+      "subtypeIds": [
+        "outbound_b2b"
+      ],
+      "stage": "outreach",
+      "mode": "assist",
+      "modeMeaning": "ИИ готовит черновик/варианты; сотрудник выбирает и проверяет",
+      "valueDrivers": [
+        "speed",
+        "conversion"
+      ],
+      "prerequisites": "Известны только проверенные открытые факты и утверждённое описание продукта",
+      "humanResponsibility": "Цель звонка, выбор вопросов, живой диалог",
+      "metricId": "research_time",
+      "scenarioId": "S01",
+      "skillId": "human_negotiation",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T05",
+      "title": "Квалифицировать потребность и критерии выбора",
+      "subtypeIds": [
+        "outbound_b2b",
+        "inbound"
+      ],
+      "stage": "qualification",
+      "mode": "assist",
+      "modeMeaning": "ИИ готовит черновик/варианты; сотрудник выбирает и проверяет",
+      "valueDrivers": [
+        "conversion",
+        "risk"
+      ],
+      "prerequisites": "Сводка на основе разрешённых учебных заметок, не реальные записи без согласования",
+      "humanResponsibility": "Выявление интересов, окончательная квалификация",
+      "metricId": "qualification_quality",
+      "scenarioId": "S04",
+      "skillId": "human_negotiation",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T06",
+      "title": "Распределить входящие заявки по очередям",
+      "subtypeIds": [
+        "inbound"
+      ],
+      "stage": "qualification",
+      "mode": "conditional",
+      "modeMeaning": "Возможна автоматизация части процесса при разрешённых интеграциях, безопасных данных и контрольных проверках",
+      "valueDrivers": [
+        "conversion",
+        "risk"
+      ],
+      "prerequisites": "Утверждённые правила маршрутизации и проверка исключений, без чувствительной дискриминации",
+      "humanResponsibility": "Решение по спорной/приоритетной заявке",
+      "metricId": "first_response_time",
+      "scenarioId": "S05",
+      "skillId": "responsible_automation",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T07",
+      "title": "Подготовить первый ответ по входящей заявке",
+      "subtypeIds": [
+        "inbound"
+      ],
+      "stage": "outreach",
+      "mode": "conditional",
+      "modeMeaning": "Возможна автоматизация части процесса при разрешённых интеграциях, безопасных данных и контрольных проверках",
+      "valueDrivers": [
+        "speed",
+        "conversion"
+      ],
+      "prerequisites": "Только разрешённые шаблоны и актуальная база продукта; человек контролирует нештатные случаи",
+      "humanResponsibility": "Корректность ответа, сложные вопросы и обещания",
+      "metricId": "first_response_time",
+      "scenarioId": "S02",
+      "skillId": "prompt_workflow",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T08",
+      "title": "Подготовить ответ на типовой вопрос о продукте",
+      "subtypeIds": [
+        "inbound",
+        "account"
+      ],
+      "stage": "support",
+      "mode": "assist",
+      "modeMeaning": "ИИ готовит черновик/варианты; сотрудник выбирает и проверяет",
+      "valueDrivers": [
+        "quality",
+        "retention"
+      ],
+      "prerequisites": "Имеется актуальная проверенная база знаний и разрешённый канал",
+      "humanResponsibility": "Точность условий и эскалация нестандартного вопроса",
+      "metricId": "error_rate",
+      "scenarioId": "S04",
+      "skillId": "source_verification",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T09",
+      "title": "Составить итог звонка и задачи",
+      "subtypeIds": [
+        "outbound_b2b",
+        "inbound",
+        "account"
+      ],
+      "stage": "crm",
+      "mode": "assist",
+      "modeMeaning": "ИИ готовит черновик/варианты; сотрудник выбирает и проверяет",
+      "valueDrivers": [
+        "quality",
+        "speed"
+      ],
+      "prerequisites": "Только синтетический транскрипт или официально разрешённая запись/интеграция",
+      "humanResponsibility": "Проверить имена, договорённости, даты и следующего ответственного",
+      "metricId": "crm_completeness",
+      "scenarioId": "S05",
+      "skillId": "crm_data_quality",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T10",
+      "title": "Обновить рутинные поля CRM",
+      "subtypeIds": [
+        "outbound_b2b",
+        "inbound",
+        "account"
+      ],
+      "stage": "crm",
+      "mode": "conditional",
+      "modeMeaning": "Возможна автоматизация части процесса при разрешённых интеграциях, безопасных данных и контрольных проверках",
+      "valueDrivers": [
+        "quality",
+        "speed"
+      ],
+      "prerequisites": "Разрешённый CRM-доступ, схемы полей и журнал изменений; подтверждение для критичных полей",
+      "humanResponsibility": "Правильность стадии, причины отказа и дальнейшего шага",
+      "metricId": "crm_completeness",
+      "scenarioId": "S05",
+      "skillId": "crm_data_quality",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T11",
+      "title": "Собрать черновик коммерческого предложения",
+      "subtypeIds": [
+        "outbound_b2b",
+        "inbound",
+        "account"
+      ],
+      "stage": "proposal",
+      "mode": "assist",
+      "modeMeaning": "ИИ готовит черновик/варианты; сотрудник выбирает и проверяет",
+      "valueDrivers": [
+        "quality",
+        "conversion"
+      ],
+      "prerequisites": "Только проверенный учебный каталог/условия; без передачи тайных прайсов публичному сервису",
+      "humanResponsibility": "Подтвердить спецификацию, цену, сроки и обязательства",
+      "metricId": "proposal_quality",
+      "scenarioId": "S03",
+      "skillId": "prompt_workflow",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T12",
+      "title": "Утвердить цену, скидку и договорные условия",
+      "subtypeIds": [
+        "outbound_b2b",
+        "inbound",
+        "account"
+      ],
+      "stage": "proposal",
+      "mode": "human",
+      "modeMeaning": "Решение остаётся за уполномоченным человеком, ИИ может помогать подготовкой",
+      "valueDrivers": [
+        "quality",
+        "conversion"
+      ],
+      "prerequisites": "ИИ может сравнить учебные варианты; лимиты и полномочия задаёт компания",
+      "humanResponsibility": "Уполномоченный сотрудник утверждает условия, никогда не модель",
+      "metricId": "proposal_quality",
+      "scenarioId": "S03",
+      "skillId": "human_negotiation",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T13",
+      "title": "Подготовить варианты обработки возражения",
+      "subtypeIds": [
+        "outbound_b2b",
+        "inbound",
+        "account"
+      ],
+      "stage": "negotiation",
+      "mode": "assist",
+      "modeMeaning": "ИИ готовит черновик/варианты; сотрудник выбирает и проверяет",
+      "valueDrivers": [
+        "revenue",
+        "retention"
+      ],
+      "prerequisites": "Рассматриваются вымышленные ситуации; запрещены ложные утверждения и манипуляции",
+      "humanResponsibility": "Выбор ответа, уточняющий вопрос и оценка реакции",
+      "metricId": "error_rate",
+      "scenarioId": "S04",
+      "skillId": "human_negotiation",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T14",
+      "title": "Провести переговоры и принять решение об уступке",
+      "subtypeIds": [
+        "outbound_b2b",
+        "account"
+      ],
+      "stage": "negotiation",
+      "mode": "human",
+      "modeMeaning": "Решение остаётся за уполномоченным человеком, ИИ может помогать подготовкой",
+      "valueDrivers": [
+        "revenue",
+        "retention"
+      ],
+      "prerequisites": "ИИ готовит безопасную репетицию, но не имеет полномочий торговаться",
+      "humanResponsibility": "Доверие, предел уступок и окончательная договорённость",
+      "metricId": "proposal_quality",
+      "scenarioId": "S07",
+      "skillId": "human_negotiation",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T15",
+      "title": "Подготовить follow-up после контакта",
+      "subtypeIds": [
+        "outbound_b2b",
+        "inbound",
+        "account"
+      ],
+      "stage": "outreach",
+      "mode": "assist",
+      "modeMeaning": "ИИ готовит черновик/варианты; сотрудник выбирает и проверяет",
+      "valueDrivers": [
+        "speed",
+        "conversion"
+      ],
+      "prerequisites": "Условия и следующий шаг согласованы; не использовать данные клиента без разрешения",
+      "humanResponsibility": "Точность обещаний и уместность времени контакта",
+      "metricId": "reply_rate",
+      "scenarioId": "S02",
+      "skillId": "prompt_workflow",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T16",
+      "title": "Разобрать потерянные сделки по причинам",
+      "subtypeIds": [
+        "outbound_b2b",
+        "inbound"
+      ],
+      "stage": "analytics",
+      "mode": "assist",
+      "modeMeaning": "ИИ готовит черновик/варианты; сотрудник выбирает и проверяет",
+      "valueDrivers": [
+        "quality",
+        "risk"
+      ],
+      "prerequisites": "Только обезличенный/вымышленный набор; проверены качество, пропуски и контекст",
+      "humanResponsibility": "Интерпретация причин, проверка гипотез",
+      "metricId": "funnel_hypotheses",
+      "scenarioId": "S06",
+      "skillId": "sales_diagnostics",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T17",
+      "title": "Найти узкие места в воронке продаж",
+      "subtypeIds": [
+        "outbound_b2b",
+        "inbound"
+      ],
+      "stage": "analytics",
+      "mode": "assist",
+      "modeMeaning": "ИИ готовит черновик/варианты; сотрудник выбирает и проверяет",
+      "valueDrivers": [
+        "quality",
+        "risk"
+      ],
+      "prerequisites": "Проверены определения этапов, базы сравнения и период",
+      "humanResponsibility": "Выводы о причинах и выбор эксперимента",
+      "metricId": "funnel_hypotheses",
+      "scenarioId": "S06",
+      "skillId": "sales_diagnostics",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T18",
+      "title": "Подготовить прогноз и выявить неопределённость",
+      "subtypeIds": [
+        "outbound_b2b",
+        "inbound",
+        "account"
+      ],
+      "stage": "analytics",
+      "mode": "human",
+      "modeMeaning": "Решение остаётся за уполномоченным человеком, ИИ может помогать подготовкой",
+      "valueDrivers": [
+        "quality",
+        "risk"
+      ],
+      "prerequisites": "Модель может построить черновой сценарий, но не подписывает прогноз",
+      "humanResponsibility": "Финальные допущения и решение руководителя",
+      "metricId": "report_quality",
+      "scenarioId": "S06",
+      "skillId": "sales_diagnostics",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T19",
+      "title": "Собрать краткую историю работы с клиентом",
+      "subtypeIds": [
+        "account"
+      ],
+      "stage": "account",
+      "mode": "assist",
+      "modeMeaning": "ИИ готовит черновик/варианты; сотрудник выбирает и проверяет",
+      "valueDrivers": [
+        "retention",
+        "revenue"
+      ],
+      "prerequisites": "Только разрешённый доступ к CRM; в демо — синтетическая история",
+      "humanResponsibility": "Нюансы отношений, пропущенные обязательства и риски",
+      "metricId": "crm_completeness",
+      "scenarioId": "S05",
+      "skillId": "crm_data_quality",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T20",
+      "title": "Подготовить встречу о продлении договора",
+      "subtypeIds": [
+        "account"
+      ],
+      "stage": "account",
+      "mode": "assist",
+      "modeMeaning": "ИИ готовит черновик/варианты; сотрудник выбирает и проверяет",
+      "valueDrivers": [
+        "retention",
+        "revenue"
+      ],
+      "prerequisites": "Доступ к актуальным публичным или разрешённым данным; условия согласованы",
+      "humanResponsibility": "Переговорная стратегия и решение о продлении",
+      "metricId": "renewal_rate",
+      "scenarioId": "S07",
+      "skillId": "human_negotiation",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T21",
+      "title": "Предложить гипотезы расширения сотрудничества",
+      "subtypeIds": [
+        "account"
+      ],
+      "stage": "account",
+      "mode": "assist",
+      "modeMeaning": "ИИ готовит черновик/варианты; сотрудник выбирает и проверяет",
+      "valueDrivers": [
+        "retention",
+        "revenue"
+      ],
+      "prerequisites": "Только вымышленные показатели и разрешённая информация о продукте",
+      "humanResponsibility": "Проверить реальную потребность и отсутствие навязывания",
+      "metricId": "renewal_rate",
+      "scenarioId": "S07",
+      "skillId": "sales_diagnostics",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T22",
+      "title": "Разрешить конфликт и согласовать исключение",
+      "subtypeIds": [
+        "inbound",
+        "account"
+      ],
+      "stage": "support",
+      "mode": "human",
+      "modeMeaning": "Решение остаётся за уполномоченным человеком, ИИ может помогать подготовкой",
+      "valueDrivers": [
+        "quality",
+        "retention"
+      ],
+      "prerequisites": "ИИ готовит варианты ответа на синтетическом примере; не принимает решений за компанию",
+      "humanResponsibility": "Эскалация, компенсация, обязательства и сохранение доверия",
+      "metricId": "case_resolution_time",
+      "scenarioId": "S04",
+      "skillId": "human_negotiation",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T23",
+      "title": "Передать сделку в выполнение без потери контекста",
+      "subtypeIds": [
+        "outbound_b2b",
+        "inbound",
+        "account"
+      ],
+      "stage": "handover",
+      "mode": "assist",
+      "modeMeaning": "ИИ готовит черновик/варианты; сотрудник выбирает и проверяет",
+      "valueDrivers": [
+        "quality",
+        "risk"
+      ],
+      "prerequisites": "Использовать только утверждённые поля и роли доступа",
+      "humanResponsibility": "Подтвердить содержание, ответственность и срок передачи",
+      "metricId": "crm_completeness",
+      "scenarioId": "S05",
+      "skillId": "crm_data_quality",
+      "exampleType": "synthetic_only"
+    },
+    {
+      "id": "T24",
+      "title": "Подготовить отчёт руководителю о работе и улучшениях",
+      "subtypeIds": [
+        "outbound_b2b",
+        "inbound",
+        "account"
+      ],
+      "stage": "reporting",
+      "mode": "assist",
+      "modeMeaning": "ИИ готовит черновик/варианты; сотрудник выбирает и проверяет",
+      "valueDrivers": [
+        "quality",
+        "risk"
+      ],
+      "prerequisites": "Только проверенные свои показатели с подтверждёнными исходными замерами",
+      "humanResponsibility": "Достоверность эффекта, признание ограничений и предложение пилота",
+      "metricId": "report_quality",
+      "scenarioId": "S06",
+      "skillId": "impact_storytelling",
+      "exampleType": "synthetic_only"
+    }
+  ],
+  "constraints": {
+    "general": "В продукте не утверждаем, что профессия или конкретная задача полностью заменяется/не заменяется ИИ.",
+    "neverUpload": [
+      "Реальные контактные данные и записи клиентов",
+      "Коммерческая тайна, неутверждённые условия и внутренние цены",
+      "Пароли, токены доступа, персональные данные сотрудников"
+    ],
+    "whenNotApproved": "Симуляция на вымышленных данных; изучение безопасных материалов; подготовка запроса на разрешение у работодателя.",
+    "whenHighRisk": "Только учебная репетиция, обязательная проверка человеком, без автоматических решений для клиента."
+  },
+  "diagnosticSignals": [
+    "subtype",
+    "seniority",
+    "top_tasks",
+    "repetitive_work",
+    "primary_kpi",
+    "ai_experience",
+    "allowed_tools",
+    "data_policy",
+    "source_quality",
+    "customer_channel",
+    "approval_rights",
+    "quality_check",
+    "time_constraint",
+    "growth_goal"
+  ],
+  "methodologicalSources": [
+    {
+      "id": "SALESFORCE_2026",
+      "url": "https://www.salesforce.com/news/stories/state-of-sales-report-announcement-2026/",
+      "note": "Опрос 4050 продавцов в 22 странах, 2025; контекст распространения инструментов, а не причинного эффекта"
+    },
+    {
+      "id": "MCKINSEY_2026",
+      "url": "https://www.mckinsey.com/capabilities/growth-marketing-and-sales/our-insights/the-future-of-b2b-sales-how-growth-champions-rewire-their-playbooks-with-ai",
+      "note": "Сценарии применения и опрос коммерческих руководителей, не оценка конкретной профессии"
+    },
+    {
+      "id": "HUBSPOT_2026",
+      "url": "https://knowledge.hubspot.com/sales-tools/use-ai-to-close-deals-faster",
+      "note": "Документация реальных функций CRM; функциональность зависит от тарифа/настроек"
+    },
+    {
+      "id": "MS_2026",
+      "url": "https://learn.microsoft.com/en-us/dynamics365/sales/faqs-data-enrichment-agent",
+      "note": "Важность человеческого контроля, качества и корректности CRM данных"
+    },
+    {
+      "id": "NIST_2024",
+      "url": "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence",
+      "note": "Риски фактических ошибок, приватности и неправильного распределения ответственности"
+    }
+  ]
+}
