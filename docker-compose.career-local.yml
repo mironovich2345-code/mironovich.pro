@@ -1,0 +1,23 @@
+# Dedicated synthetic-only PostgreSQL. Never run against the site's Railway DB.
+# The database is held in RAM and is discarded when the local stack stops.
+name: mironovich_career_synthetic
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: "no"
+    environment:
+      POSTGRES_USER: career_sandbox
+      POSTGRES_PASSWORD: ${CAREER_DB_PASSWORD:?Generate local synthetic config first}
+      POSTGRES_DB: mironovich_career_test
+    ports:
+      - "127.0.0.1:55433:5432"
+    tmpfs:
+      - /var/lib/postgresql/data:rw,nosuid,size=256m
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U career_sandbox -d mironovich_career_test"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
