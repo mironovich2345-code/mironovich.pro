@@ -37,7 +37,6 @@ export const seller = {
   taxStatusConfirmedOn: "2026-11-17",
   postalAddress: "г. Нижний Новгород, ул. Минеева, д. 25, кв. 3",
   email: "damironovich@mail.ru",
-  phone: "+7 952 754-14-98",
-  phoneHref: "tel:+79527541498",
+
   telegram: "https://t.me/mironovich_pro",
 } as const;
