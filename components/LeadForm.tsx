@@ -6,8 +6,9 @@ import ConsentDialog from "./ConsentDialog";
 import { consentLabel, legal } from "@/config/legal";
 import ContactLink from "./ContactLink";
 import { contacts } from "@/config/contacts";
-import { track, trackFormStartOnce } from "@/lib/analytics";
+import { metricaId, track, trackFormStartOnce } from "@/lib/analytics";
 import { getAttribution } from "@/lib/attribution";
+import { hasTrackingConsent } from "@/lib/tracking-consent";
 import type { ToolContext } from "@/lib/tools/context";
 import {
   HONEYPOT_FIELD, LEAD_DIRECTIONS, LEAD_LIMITS, leadFormExtended, validContact, type LeadDirection,
@@ -87,7 +88,8 @@ export default function LeadForm({ defaultDirection, toolContext, defaultTask = 
           [HONEYPOT_FIELD]: trap,
           // normalised against known routes on the server
           page: window.location.pathname,
-          attribution: getAttribution(),
+          // Optional attribution is omitted altogether if visitor did not opt in.
+          ...(hasTrackingConsent(metricaId) ? { attribution: getAttribution() } : {}),
         }),
       });
       const data: { ok?: boolean; delivered?: boolean } = await res.json().catch(() => ({}));
