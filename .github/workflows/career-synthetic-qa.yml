@@ -1,0 +1,149 @@
+name: Career synthetic QA
+
+on:
+  push:
+    branches:
+      - feature/career-20261118-integrate-on-main
+  pull_request:
+    paths:
+      - "app/career/**"
+      - "app/api/career/**"
+      - "components/CareerSandbox.tsx"
+      - "lib/career-diagnostic.ts"
+      - "lib/server/career/**"
+      - "lib/server/commerce/**"
+      - "migrations/career/**"
+      - "tests/career-*.mjs"
+      - "tests/yookassa-sandbox.test.mjs"
+      - "package*.json"
+      - "components/Analytics.tsx"
+      - "tests/yookassa-site-review.test.mjs"
+      - "app/products/**"
+      - "app/solutions/**"
+      - ".github/workflows/career-synthetic-qa.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_PUBLIC_SITE_URL: https://mironovich.pro
+      NEXT_PUBLIC_YANDEX_METRICA_ID: ""
+      CAREER_SANDBOX_ENABLED: "0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Unit and public regression tests
+        run: npm test
+      - name: Build with all sales and sandbox routes closed
+        run: npm run build
+
+  integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: synthetic_only
+          POSTGRES_DB: mironovich_career_test
+        ports:
+          - 55433:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d mironovich_career_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Create local-only synthetic configuration
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import secrets
+          values = {
+            "CAREER_SANDBOX_ENABLED": "1",
+            "CAREER_ENVIRONMENT": "synthetic-sandbox",
+            "CAREER_ONLY_SYNTHETIC": "true",
+            "CAREER_APP_ORIGIN": "http://127.0.0.1:3300",
+            "CAREER_DATABASE_URL": "postgresql://postgres:synthetic_only@127.0.0.1:55433/mironovich_career_test",
+            "CAREER_DATABASE_NAME": "mironovich_career_test",
+            "CAREER_DATABASE_HOST": "127.0.0.1:55433",
+            "CAREER_SESSION_SECRET": secrets.token_hex(40),
+            "CAREER_TESTER_SECRET": secrets.token_hex(30),
+            "CAREER_PAYMENT_MODE": "fixture",
+            "YOOKASSA_SHOP_ID": "1534248",
+            "YOOKASSA_TEST_SECRET_KEY": "test_" + secrets.token_hex(24),
+            "YOOKASSA_TEST_KEY_ROTATED": "false",
+            "CAREER_PROVIDER_FIXTURE_URL": "http://127.0.0.1:3305",
+            "CAREER_FIXTURE_CONTROL_SECRET": secrets.token_hex(32),
+            "CAREER_SMTP_READY": "true",
+            "CAREER_SMTP_HOST": "127.0.0.1",
+            "CAREER_SMTP_PORT": "2526",
+          }
+          p = Path(".env.career.local")
+          p.write_text("".join(f"{key}={value}\n" for key, value in values.items()))
+          p.chmod(0o600)
+          PY
+      - name: PostgreSQL migration, fake SMTP and payment integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          set -a
+          source .env.career.local
+          set +a
+          npm run career:migrate
+          npm run career:fixtures >/tmp/career-synthetic-fixtures.log 2>&1 &
+          fixture_pid=$!
+          trap 'kill "$fixture_pid" 2>/dev/null || true' EXIT
+          ready=0
+          for i in {1..40}; do
+            if curl -fsS -H "x-fixture-key: $CAREER_FIXTURE_CONTROL_SECRET" \
+              "http://127.0.0.1:3305/fixture/mail/demo-probe@example.invalid" >/dev/null; then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+          if [ "$ready" -ne 1 ]; then echo "Synthetic fixture not ready"; exit 1; fi
+          npm run career:test:integration
+          npm run career:cleanup
+          # Browser checks remain isolated to loopback, fake messages and payments.
+          npm install --no-save --no-package-lock playwright
+          npx playwright install chromium
+          sudo ln -sf "$(node -p 'require("playwright").chromium.executablePath()')" /usr/bin/chromium
+          npm run career:build >/tmp/career-synthetic-build.log 2>&1
+          npm run career:start >/tmp/career-synthetic-next.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" "$fixture_pid" 2>/dev/null || true' EXIT
+          web_ready=0
+          for i in {1..60}; do
+            if curl -fsS "http://127.0.0.1:3300/career/sandbox" >/dev/null 2>&1; then
+              web_ready=1
+              break
+            fi
+            sleep 1
+          done
+          if [ "$web_ready" -ne 1 ]; then
+            echo "Synthetic website did not start"; tail -n 60 /tmp/career-synthetic-next.log; exit 1
+          fi
+          echo "Career sandbox browser QA"
+          npm run career:test:browser
