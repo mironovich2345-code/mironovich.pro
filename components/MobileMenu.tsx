@@ -10,7 +10,7 @@ import { contactHref, type NavLink } from "@/config/routes";
 const FOCUSABLE = 'a[href], button:not([disabled])';
 
 /**
- * Full-screen menu below 860px: closes on link tap, route change and Escape,
+ * Full-screen menu below 860px: three audience choices and one CTA,
  * keeps Tab inside while open, locks page scroll and returns focus to the toggle.
  *
  * The panel is portalled into <body>: the sticky header uses backdrop-filter,
@@ -18,7 +18,7 @@ const FOCUSABLE = 'a[href], button:not([disabled])';
  * clip the panel to the header's height. Its top edge follows the header's
  * actual bottom.
  */
-export default function MobileMenu({ services, links }: { services: NavLink[]; links: NavLink[] }) {
+export default function MobileMenu({ links }: { links: NavLink[] }) {
   const [open, setOpen] = useState(false);
   const [top, setTop] = useState(65);
   const pathname = usePathname();
@@ -58,7 +58,7 @@ export default function MobileMenu({ services, links }: { services: NavLink[]; l
     "flex min-h-[52px] items-center justify-between border-b border-cream/10 text-[16px] uppercase tracking-[0.04em] text-cream hover:text-signal";
 
   return (
-    <div className="min-[1150px]:hidden">
+    <div className="min-[860px]:hidden">
       <button
         ref={toggleRef}
         type="button"
@@ -82,22 +82,6 @@ export default function MobileMenu({ services, links }: { services: NavLink[]; l
           className="fixed inset-x-0 bottom-0 z-40 overflow-y-auto border-t border-cream/10 bg-graphite px-[22px] pb-[calc(24px+env(safe-area-inset-bottom))] pt-4"
         >
           <nav aria-label="Основная навигация">
-            <Link
-              href="/solutions"
-              onClick={close}
-              className="mb-1 mt-1 inline-flex min-h-[44px] items-center text-[11px] uppercase tracking-[0.22em] text-signal"
-            >
-              Решения — все направления →
-            </Link>
-            <ul className="m-0 mb-6 flex list-none flex-col border-t border-cream/10 p-0">
-              {services.map((l) => (
-                <li key={l.href}>
-                  <Link href={l.href} onClick={close} className={itemClass}>
-                    {l.label} <span aria-hidden className="text-stone">→</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
             <ul className="m-0 flex list-none flex-col border-t border-cream/10 p-0">
               {links.map((l) => (
                 <li key={l.href}>
@@ -112,9 +96,9 @@ export default function MobileMenu({ services, links }: { services: NavLink[]; l
             href={contactHref}
             location="header"
             onClick={close}
-            className="mt-8 flex min-h-[56px] items-center justify-center bg-signal text-[15px] font-medium uppercase tracking-[0.06em] text-white"
+            className="mt-8 flex min-h-[56px] items-center justify-center bg-signal px-5 text-center text-[15px] font-medium uppercase tracking-[0.04em] text-white"
           >
-            Запросить консультацию
+            Обсудить задачу
           </CtaLink>
         </div>,
         document.body,
