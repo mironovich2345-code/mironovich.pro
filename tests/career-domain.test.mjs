@@ -128,9 +128,11 @@ test("Unicode PDF contains real pages from the generated 30-step report", async 
   assert(b.length > 10000);
 });
 test("publication guards and commerce flags remain off; dedicated DB migration is fail-closed", () => {
+  // The live site publishes its current privacy and consent documents.
+  // This standalone synthetic sandbox must never flip that setting.
   assert.equal(
     JSON.parse(fs.readFileSync("config/legal.json")).published,
-    false,
+    true,
   );
   assert.match(
     fs.readFileSync("config/ai-career-commerce.ts", "utf8"),
