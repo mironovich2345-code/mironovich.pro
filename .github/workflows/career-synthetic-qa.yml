@@ -4,11 +4,22 @@ on:
   push:
     branches:
       - feature/career-integrated-synthetic-20261118
+      - feature/career-yookassa-site-review-20261118
   pull_request:
     paths:
       - "app/career/**"
       - "app/api/career/**"
       - "components/CareerSandbox.tsx"
+      - "components/AiCareerProductPage.tsx"
+      - "components/ProductCard.tsx"
+      - "components/Services.tsx"
+      - "app/products/**"
+      - "app/solutions/page.tsx"
+      - "app/delivery/**"
+      - "app/requisites/**"
+      - "content/products.ts"
+      - "config/ai-career-commerce.ts"
+      - "tests/yookassa-site-review.test.mjs"
       - "lib/career-diagnostic.ts"
       - "lib/server/career/**"
       - "lib/server/commerce/**"
