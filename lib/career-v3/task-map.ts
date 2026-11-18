@@ -10,9 +10,14 @@ import { currentVersions, metricRef, resultOutdatedReasons, type EngineContext }
 export const TASK_MAP_MODEL = "career-v3-task-map/1";
 
 const DECISION_LABEL: Record<TaskMapItem["decision"], string> = {
-  ai_can_take_part: "ИИ может выполнять часть работы при разрешённых условиях",
-  ai_assists: "ИИ помогает подготовить черновик, человек проверяет и решает",
-  human_decides: "Решение принимает человек; ИИ — только справочная подготовка",
+  ai_can_take_part: "По матрице профессии: ИИ может выполнять часть работы при разрешённых условиях",
+  ai_assists: "По матрице профессии: ИИ помогает подготовить черновик, человек проверяет и решает",
+  human_decides: "По матрице профессии: решение принимает человек; ИИ — только справочная подготовка",
+};
+const WORK_USE_LABEL: Record<TaskMapItem["workUse"], string> = {
+  allowed_with_review: "На работе: только разрешёнными компанией инструментами, на общедоступных или учебных данных и с проверкой человеком.",
+  not_until_rules_confirmed: "На работе ИИ для этой задачи пока не применяется: сначала подтвердите правила компании. Сейчас — только учебная практика на вымышленных данных.",
+  not_allowed: "В вашей компании ИИ запрещён: для рабочих задач его не используйте. Навык отрабатывается вручную на учебных примерах.",
 };
 const DRIVER_LABEL: Record<string, string> = {
   speed: "скорость", quality: "качество", conversion: "конверсия", revenue: "выручка",
@@ -61,10 +66,13 @@ export function buildTaskMap(ctx: EngineContext, input: { result: DiagnosticResu
     if (focus.commitmentsNeedApproval) checks.push("Цены, скидки и обязательства — только после подтверждения уполномоченным сотрудником.");
     if (effects.has("no_real_data_upload") || result.safety.mode === "synthetic_only") checks.push("Перед любым запросом к ИИ убедиться, что в нём нет данных работодателя и клиентов.");
     const skill = ctx.role.skills.find((s) => s.id === t.skillId);
+    const workUse: TaskMapItem["workUse"] = result.company.aiProhibited ? "not_allowed"
+      : result.safety.mode === "approved_tools_public_data" ? "allowed_with_review" : "not_until_rules_confirmed";
     return {
       taskId: t.id, title: t.title,
       explanation: `${t.title}. Ценность для компании: ${drivers}. Условия применения ИИ: ${t.prerequisites}.`,
       decision: focus.decision, decisionLabel: DECISION_LABEL[focus.decision],
+      workUse, workUseLabel: WORK_USE_LABEL[workUse],
       basis: { roleMode: t.mode, modeMeaning: t.modeMeaning, humanResponsibility: t.humanResponsibility,
         tightenedBySafety: t.mode === "conditional" && focus.decision !== "ai_can_take_part", safetyRules: ruleIds },
       companyRestrictions: [...new Set(company)], risks, mandatoryChecks: checks,
@@ -74,9 +82,9 @@ export function buildTaskMap(ctx: EngineContext, input: { result: DiagnosticResu
     };
   });
 
-  const strengths = ctx.engine.strengthSignals
-    .filter((s) => { const a = answers[s.questionId]; return (Array.isArray(a) ? a : [a]).some((x) => typeof x === "string" && s.values.includes(x)); })
-    .map((s) => ({ id: s.id, label: s.label, skillId: s.skillId, evidence: `ответ ${s.questionId}: ${String(answers[s.questionId])}` }));
+  const basis = ctx.engine.developmentBasisSignals
+    .filter((b) => { const a = answers[b.questionId]; return (Array.isArray(a) ? a : [a]).some((x) => typeof x === "string" && b.values.includes(x)); })
+    .map((b) => ({ id: b.id, label: b.label, skillId: b.skillId, source: "self_reported_answer" as const, answer: `${b.questionId}: ${String(answers[b.questionId])}` }));
 
   const growth = new Map<string, string[]>();
   const add = (skillId: string, reason: string) => growth.set(skillId, [...(growth.get(skillId) ?? []), reason]);
@@ -102,9 +110,12 @@ export function buildTaskMap(ctx: EngineContext, input: { result: DiagnosticResu
     unavailableReason: tasks.length ? null : "no_tasks_selected",
     tasks,
     fallback: result.tasks.fallback,
-    strengths: strengths.length
-      ? { status: "evidenced", items: strengths, note: "Сильные стороны указаны только там, где их подтверждают ваши ответы." }
-      : { status: "insufficient_evidence", items: [], note: "По ответам недостаточно оснований, чтобы назвать сильные стороны. Они появятся после выполненных заданий и собственных замеров." },
+    developmentBasis: basis.length
+      ? { status: "answer_based", items: basis,
+        note: "Это опоры для развития по вашим собственным ответам анкеты, а не подтверждённая оценка профессиональных сильных сторон. Подтверждение появится только в выполненных заданиях и ваших замерах." }
+      : { status: "no_basis", items: [],
+        note: "По ответам анкеты пока нет оснований выделить опоры для развития. Они могут появиться после выполненных заданий и собственных замеров." },
+    level: { id: result.profile.level, ...ctx.engine.levelProfiles[result.profile.level] },
     growthSkills,
     learningRoute: library.availability.status === "available"
       ? { status: "available", reason: null, message: null }

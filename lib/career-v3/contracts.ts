@@ -26,6 +26,9 @@ export interface TaskMapItem {
   explanation: string;
   decision: "ai_can_take_part" | "ai_assists" | "human_decides";
   decisionLabel: string;
+  /** Whether AI may be used for the real work task now (separate from the matrix decision). */
+  workUse: "allowed_with_review" | "not_until_rules_confirmed" | "not_allowed";
+  workUseLabel: string;
   /** Basis comes from the role matrix (mode, modeMeaning, humanResponsibility) — never generated. */
   basis: { roleMode: string; modeMeaning: string; humanResponsibility: string; tightenedBySafety: boolean; safetyRules: string[] };
   companyRestrictions: string[];
@@ -45,7 +48,13 @@ export interface TaskMapV3 {
   unavailableReason: null | "no_tasks_selected";
   tasks: TaskMapItem[];
   fallback: null | { kind: "training_example"; message: string };
-  strengths: { status: "evidenced" | "insufficient_evidence"; items: { id: string; label: string; skillId: string; evidence: string }[]; note: string };
+  /** Bases for development taken from the person's own answers. Not a proven assessment of strengths. */
+  developmentBasis: {
+    status: "answer_based" | "no_basis";
+    items: { id: string; label: string; skillId: string; source: "self_reported_answer"; answer: string }[];
+    note: string;
+  };
+  level: { id: string; label: string; description: string };
   growthSkills: { skillId: string; name: string; why: string; reasons: string[]; lessonRefs: LessonRef[] }[];
   learningRoute: { status: "available" | "unavailable"; reason: string | null; message: string | null };
 }

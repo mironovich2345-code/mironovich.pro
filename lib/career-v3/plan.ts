@@ -23,11 +23,17 @@ const REASON_TEXT: Record<SelectionReason, string> = {
   baseline_first: "сначала нужен исходный замер «было»",
   safe_variant: "безопасный вариант практики",
 };
-const VARIANT_RULE: Record<LessonSelectionItem["variant"], string> = {
-  manual_without_ai: "ИИ не используется: выполните задание вручную по шаблону урока на вымышленных данных.",
-  synthetic_practice: "Только вымышленные учебные данные; рабочие инструменты и данные работодателя не используются до подтверждения правил.",
+const VARIANT_RULE: Record<LessonSelectionItem["variant"] | "manual_prohibited", string> = {
+  manual_prohibited: "ИИ не используется: в вашей компании он запрещён, поэтому не применяйте его и для рабочих задач. Выполните задание вручную по шаблону урока на вымышленных данных.",
+  manual_without_ai: "ИИ не используется: какие инструменты доступны, неизвестно. Выполните задание вручную по шаблону урока на вымышленных данных.",
+  synthetic_practice: "Только самостоятельная учебная практика на вымышленных данных и только в инструменте, который вам доступен и допустим; для рабочих задач ИИ не применяется, пока правила компании не подтверждены.",
   approved_tools_public_data: "Только разрешённые компанией инструменты и общедоступные или учебные данные; данные клиентов и внутренние условия не вводятся.",
 };
+
+const norm = (t: string) => t.toLowerCase().replace(/[^a-zа-яё0-9]+/gi, " ").trim();
+function sameCriteria(a: string[], b: string[]) {
+  return a.length === b.length && a.map(norm).sort().join("|") === b.map(norm).sort().join("|");
+}
 
 interface PoolEntry { c: PlanStepCandidate; lesson: PublishedLesson; item: LessonSelectionItem; phase: PlanPhase; kind: string }
 
@@ -81,6 +87,9 @@ export function buildPlan(ctx: EngineContext, input: { result: DiagnosticResultV
       // same exercise are alternatives, not two steps (candidates are in the lesson's own order).
       const exercisePhase = `${c.lessonId}|${c.exerciseId}|${phase}`;
       if (seenKey.has(exercisePhase)) continue;
+      // Two steps of one exercise must produce a different artifact or be checked differently.
+      const sameExercise = pool.filter((x) => x.lesson.id === c.lessonId && x.c.exerciseId === c.exerciseId);
+      if (sameExercise.some((x) => norm(x.c.expectedArtifact) === norm(c.expectedArtifact) && sameCriteria(x.c.completionCriteria, c.completionCriteria))) continue;
       seenKey.add(key); seenKey.add(exercisePhase); seenAction.add(action);
       pool.push({ c, lesson, item, phase, kind });
     }
@@ -152,7 +161,8 @@ export function buildPlan(ctx: EngineContext, input: { result: DiagnosticResultV
     const reasons = [...p.item.reasons] as SelectionReason[];
     if (result.measurement.baselineRequired && p.phase === "measure" && !reasons.includes("baseline_first")) reasons.push("baseline_first");
     const metric = metricRef(ctx, p.c.metricId);
-    const restrictions = [VARIANT_RULE[selection.variant], p.c.safetyNote];
+    const rule = selection.variant === "manual_without_ai" && result.company.aiProhibited ? "manual_prohibited" : selection.variant;
+    const restrictions = [VARIANT_RULE[rule], p.c.safetyNote];
     for (const t of selectedTasks.filter((x) => p.lesson.taskIds.includes(x.taskId))) restrictions.push(...t.restrictions);
     if (metric?.kind === "workplace_outcome") restrictions.push("Рабочий показатель только наблюдается: изменение не приписывается обучению или ИИ.");
     return {

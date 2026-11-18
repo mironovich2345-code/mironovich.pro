@@ -76,8 +76,10 @@ export interface EngineConfig {
   metricKinds: Record<string, MetricKind>;
   /** KPI→metric links from diagnosticBinding.kpiMetricMap that need methodological acceptance. */
   disputedKpiMappings: { kpi: string; metricId: string; issue: string }[];
-  /** A strength is reported only when the listed answers are present; otherwise "insufficient_evidence". */
-  strengthSignals: { id: string; label: string; questionId: string; values: string[]; skillId: string }[];
+  /** Self-reported answers that give a basis for development — never presented as proven strengths. */
+  developmentBasisSignals: { id: string; label: string; questionId: string; values: string[]; skillId: string }[];
+  /** Human description of each canonical level, including the middle one (independent). */
+  levelProfiles: Record<"starter" | "independent" | "experienced", { label: string; description: string }>;
   /** Development goal answer → curriculum modules that get priority. */
   goalModuleMap: Record<string, string[]>;
 }

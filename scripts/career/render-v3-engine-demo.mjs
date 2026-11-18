@@ -35,11 +35,12 @@ out.push("<!-- Сгенерировано scripts/career/render-v3-engine-demo.m
 
 function mapSection(r, title) {
   out.push(`## Карта задач: ${title}`, "", `Профиль: ${r.p.story}. Режим безопасности: \`${r.result.safety.mode}\`, правила: ${r.result.safety.appliedRules.map((x) => x.id).join(", ")}.`, "");
-  out.push("| Задача | Решение | Обоснование (матрица) | Ограничения и проверки | Навык | Метрика | Уроки |", "| --- | --- | --- | --- | --- | --- | --- |");
+  out.push("| Задача | Решение по матрице и применение на работе | Обоснование (матрица) | Ограничения и проверки | Навык | Метрика | Уроки |", "| --- | --- | --- | --- | --- | --- | --- |");
   for (const t of r.map.tasks) {
-    out.push(`| ${esc(t.taskId + " " + t.title)} | ${DEC[t.decision]}${t.basis.tightenedBySafety ? " (ужесточено правилами безопасности)" : ""} | ${esc(t.basis.modeMeaning)} | ${esc([...t.companyRestrictions, ...t.mandatoryChecks].join(" • "))} | ${esc(t.skill?.name ?? "—")} | ${esc(t.metric ? `${t.metric.label} (${t.metric.kind === "exercise" ? "упражнение" : "рабочий показатель, не приписывается"})` : "—")} | ${t.lessonRefs.map((l) => l.lessonId).join(", ")} |`);
+    out.push(`| ${esc(t.taskId + " " + t.title)} | ${DEC[t.decision]}${t.basis.tightenedBySafety ? " (ужесточено правилами безопасности)" : ""}. ${esc(t.workUseLabel)} | ${esc(t.basis.modeMeaning)} | ${esc([...t.companyRestrictions, ...t.mandatoryChecks].join(" • "))} | ${esc(t.skill?.name ?? "—")} | ${esc(t.metric ? `${t.metric.label} (${t.metric.kind === "exercise" ? "упражнение" : "рабочий показатель, не приписывается"})` : "—")} | ${t.lessonRefs.map((l) => l.lessonId).join(", ")} |`);
   }
-  out.push("", `**Сильные стороны** (${r.map.strengths.status}): ${r.map.strengths.items.length ? r.map.strengths.items.map((s) => `${s.label} — ${s.evidence}`).join("; ") : r.map.strengths.note}`, "");
+  out.push("", `**Уровень:** ${r.map.level.label}. ${r.map.level.description}`, "");
+  out.push(`**Опоры для развития по ответам анкеты** (${r.map.developmentBasis.status}): ${r.map.developmentBasis.items.length ? r.map.developmentBasis.items.map((s) => `${s.label} (ответ ${s.answer})`).join("; ") + ". " + r.map.developmentBasis.note : r.map.developmentBasis.note}`, "");
   out.push(`**Навыки роста:** ${r.map.growthSkills.map((g) => `${g.name} (${g.reasons.join(", ")})`).join("; ")}`, "");
 }
 const b2b = run("FX-b2b-experienced-public-tools"), starter = run("FX-inbound-starter"), banned = run("FX-account-ai-prohibited");

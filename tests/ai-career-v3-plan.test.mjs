@@ -9,7 +9,7 @@ import { evaluateDiagnostic } from "../lib/career-v3/diagnostic.ts";
 import { buildTaskMap, taskMapStaleReasons, OutdatedResultError } from "../lib/career-v3/task-map.ts";
 import { selectLessons, practiceVariant } from "../lib/career-v3/selection.ts";
 import { buildPlan, planStaleReasons, phaseTargets, MAX_STEPS_PER_EXERCISE, MAX_STEPS_PER_LESSON } from "../lib/career-v3/plan.ts";
-import { PHASES, validateEngineConfig, metricRef } from "../lib/career-v3/engine.ts";
+import { PHASES, validateEngineConfig, metricRef, outcomePromiseIssues } from "../lib/career-v3/engine.ts";
 import { PLAN_STEPS_REQUIRED } from "../lib/career-v3/contracts.ts";
 import { schemaIssues } from "../lib/career-v3/json-schema.ts";
 import { loadProfessionBundle } from "../lib/server/career-v3/content.ts";
@@ -88,15 +88,82 @@ test("task map item: decision, matrix basis, company limits, risks, checks, skil
   assert.ok(map.tasks.find((t) => t.taskId === "T11").mandatoryChecks.some((c) => /уполномоченным/.test(c)), "SAFE-04: commitments need approval");
 });
 
-test("strengths are reported only with evidence from answers; otherwise insufficient_evidence", () => {
-  const exp = ALL["FX-b2b-experienced-public-tools"].map.strengths;
-  assert.equal(exp.status, "evidenced");
-  assert.deepEqual(exp.items.map((s) => s.id).sort(), ["STR-AI-PRACTICE", "STR-BASELINE", "STR-KNOWN-RULES", "STR-OWN-DEALS", "STR-REVIEW-HABIT"]);
-  assert.ok(exp.items.every((s) => /^ответ Q\d\d: /.test(s.evidence)));
-  const starter = ALL["FX-inbound-starter"].map.strengths;
-  assert.equal(starter.status, "insufficient_evidence");
+test("answers give bases for development, never proven strengths; no basis is stated explicitly", () => {
+  const exp = ALL["FX-b2b-experienced-public-tools"].map.developmentBasis;
+  assert.equal(exp.status, "answer_based");
+  assert.deepEqual(exp.items.map((s) => s.id).sort(), ["BASIS-AI-PRACTICE", "BASIS-BASELINE", "BASIS-KNOWN-RULES", "BASIS-OWN-DEALS", "BASIS-REVIEW-HABIT"]);
+  assert.ok(exp.items.every((s) => s.source === "self_reported_answer" && /^Q\d\d: /.test(s.answer) && s.label.startsWith("Вы указали")));
+  assert.match(exp.note, /не подтверждённая оценка/);
+  const starter = ALL["FX-inbound-starter"].map.developmentBasis;
+  assert.equal(starter.status, "no_basis");
   assert.deepEqual(starter.items, []);
-  assert.match(starter.note, /недостаточно оснований/);
+  for (const r of Object.values(ALL)) {
+    assert.ok(!("strengths" in r.map));
+    assert.doesNotMatch(JSON.stringify(r.map), /ваш\S* сильн\S* сторон/i, "no claim of proven strengths");
+  }
+});
+
+test("three levels with an explicitly described middle level", () => {
+  assert.deepEqual(Object.keys(ctx.engine.levelProfiles).sort(), ["experienced", "independent", "starter"]);
+  assert.match(ctx.engine.levelProfiles.independent.description, /Самостоятельно веду обычные сделки/);
+  const mid = ALL["FX-account-approved"].map.level;
+  assert.equal(mid.id, "independent");
+  assert.match(mid.label, /средний уровень/);
+  const targets = (id) => phaseTargets(ALL[id].result);
+  const base = { safety: 4, apply: 6, verify: 4, measure: 3, value: 3, next_level: 2 };
+  const mid2 = phaseTargets({ ...ALL["FX-account-approved"].result, learning: { ...ALL["FX-account-approved"].result.learning, goals: [] }, safety: { ...ALL["FX-account-approved"].result.safety, effects: [] }, measurement: { ...ALL["FX-account-approved"].result.measurement, baselineRequired: false } });
+  assert.deepEqual(mid2, base, "independent level uses the base phase distribution");
+  assert.ok(targets("FX-inbound-starter").safety > mid2.safety && targets("FX-b2b-experienced-public-tools").next_level > mid2.next_level);
+});
+
+test("unknown AI policy: only self-study on fictional data; unknown tools: manual; prohibited: no AI for work tasks", () => {
+  const noPolicy = ALL["FX-no-policy"]; // chat available, rules not approved
+  assert.equal(noPolicy.selection.variant, "synthetic_practice");
+  assert.ok(noPolicy.plan.steps.every((s) => /самостоятельная учебная практика на вымышленных данных/.test(s.restrictions[0])));
+  assert.ok(noPolicy.map.tasks.every((t) => t.workUse === "not_until_rules_confirmed"));
+  const unknownTools = ALL["FX-inbound-starter"]; // Q11 = unknown
+  assert.equal(unknownTools.selection.variant, "manual_without_ai");
+  assert.ok(unknownTools.plan.steps.every((s) => s.templateKind !== "prompt" && /инструменты доступны, неизвестно/.test(s.restrictions[0])));
+  const banned = ALL["FX-account-ai-prohibited"];
+  assert.ok(banned.map.tasks.every((t) => t.workUse === "not_allowed" && /не используйте/.test(t.workUseLabel)));
+  assert.ok(banned.plan.steps.every((s) => /запрещён, поэтому не применяйте его и для рабочих задач/.test(s.restrictions[0])));
+  assert.ok(ALL["FX-b2b-experienced-public-tools"].map.tasks.every((t) => t.workUse === "allowed_with_review"));
+});
+
+test("no outcome promises anywhere: income, conversion, job protection, guarantees, savings", () => {
+  assert.ok(outcomePromiseIssues("Увеличение выручки на 20%").length && outcomePromiseIssues("защита от увольнения").length);
+  for (const [id, r] of Object.entries(ALL)) {
+    for (const part of [r.map, r.selection, r.plan]) assert.deepEqual(outcomePromiseIssues(JSON.stringify(part)), [], id);
+  }
+  const bad = { ...ctx, engine: { ...ctx.engine, developmentBasisSignals: [{ ...ctx.engine.developmentBasisSignals[0], label: "Вы указали опыт — это гарантирует рост дохода" }] } };
+  assert.ok(validateEngineConfig(bad).some((x) => /guarantee|income/.test(x)));
+});
+
+test("two steps of one exercise always require a different artifact or a different check", () => {
+  for (const [id, { plan }] of Object.entries(ALL)) {
+    const byExercise = {};
+    for (const s of plan.steps) (byExercise[s.lessonId + "|" + s.exerciseId] ??= []).push(s);
+    for (const group of Object.values(byExercise).filter((g) => g.length > 1)) {
+      for (let i = 0; i < group.length; i++) for (let j = i + 1; j < group.length; j++) {
+        const a = group[i], b = group[j];
+        const sameArtifact = a.expectedArtifact === b.expectedArtifact;
+        const sameChecks = [...a.completionCriteria].sort().join("|") === [...b.completionCriteria].sort().join("|");
+        assert.ok(!(sameArtifact && sameChecks), `${id}: ${a.stableId} and ${b.stableId} repeat one exercise`);
+      }
+    }
+  }
+  // A candidate that only rephrases the action of an existing step (same artifact and checks) is dropped.
+  const src = fixtureLibrarySources();
+  const steps = src.planCandidates[0].document.steps;
+  const original = steps.find((s) => s.lessonId === "SAL-02" && s.templateId === "TPL-SAL02-3");
+  const verify = steps.find((s) => s.lessonId === "SAL-02" && s.templateId === "TPL-SAL02-4");
+  verify.exerciseId = original.exerciseId;
+  verify.expectedArtifact = original.expectedArtifact;
+  verify.completionCriteria = [...original.completionCriteria];
+  const lib = buildLibrary({ professionId: "sales_manager", today: TODAY, role: ctx.role, lessonSchema, stepSchema, ...src });
+  const result = resultOf("FX-inbound-starter");
+  const plan = buildPlan(ctx, { result, selection: selectLessons(ctx, result, lib), library: lib, today: TODAY });
+  if (plan.status === "ready") assert.ok(!(plan.steps.some((s) => s.stableId.endsWith(original.stepId) && s.lessonId === "SAL-02") && plan.steps.some((s) => s.stableId.endsWith(verify.stepId) && s.lessonId === "SAL-02")));
 });
 
 test("growth skills follow selected tasks and safety context", () => {
@@ -189,7 +256,7 @@ test("AI ban: manual variant, no prompt templates, no real tools anywhere in the
     assert.ok(plan.steps.every((s) => s.restrictions[0].startsWith("ИИ не используется")), id);
   }
   assert.equal(practiceVariant(ALL["FX-no-policy"].result), "synthetic_practice");
-  assert.ok(ALL["FX-no-policy"].plan.steps.every((s) => /вымышленные учебные данные/.test(s.restrictions[0])));
+  assert.ok(ALL["FX-no-policy"].plan.steps.every((s) => /на вымышленных данных/.test(s.restrictions[0])));
   assert.equal(practiceVariant(ALL["FX-b2b-experienced-public-tools"].result), "approved_tools_public_data");
 });
 

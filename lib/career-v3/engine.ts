@@ -43,6 +43,18 @@ export function metricRef(ctx: EngineContext, metricId: string | null): MetricRe
   };
 }
 
+/** Outcome promises the product never makes (income, conversion, job protection, guaranteed savings). */
+const W = "[а-яё]*";
+const PROMISE_PATTERNS: [RegExp, string][] = [
+  [new RegExp(`(рост|увеличени${W}|повыш${W})\\s+(вашего\\s+|вашей\\s+)?(доход${W}|зарплат${W}|выручк${W}|продаж${W}|конверси${W})`, "i"), "promises income, revenue or conversion growth"],
+  [new RegExp(`(защит${W}|гарант${W}|сохран${W})\\s+(от\\s+)?(увольнени${W}|рабоч${W}\\s+мест${W}|должност${W})`, "i"), "promises job protection"],
+  [new RegExp(`гарантир${W}`, "i"), "uses a guarantee"],
+  [new RegExp(`сэконом${W}\\s+\\d`, "i"), "states concrete savings"],
+];
+export function outcomePromiseIssues(text: string): string[] {
+  return PROMISE_PATTERNS.filter(([re]) => re.test(text)).map(([, m]) => m);
+}
+
 export function validateEngineConfig(ctx: EngineContext): string[] {
   const e: string[] = [];
   const { engine, role, curriculum, definition } = ctx;
@@ -64,11 +76,16 @@ export function validateEngineConfig(ctx: EngineContext): string[] {
   }
   const questions = new Map([...definition.primaryQuestions, ...definition.followUps].map((q) => [q.id, q]));
   const skills = new Set(role.skills.map((s) => s.id));
-  for (const s of engine.strengthSignals) {
+  for (const s of engine.developmentBasisSignals) {
     const q = questions.get(s.questionId);
-    if (!q) { e.push(`strength ${s.id}: unknown question ${s.questionId}`); continue; }
-    for (const v of s.values) if (!q.options.some((o) => o.value === v)) e.push(`strength ${s.id}: ${s.questionId} has no option ${v}`);
-    if (!skills.has(s.skillId)) e.push(`strength ${s.id}: unknown skill ${s.skillId}`);
+    if (!q) { e.push(`basis ${s.id}: unknown question ${s.questionId}`); continue; }
+    for (const v of s.values) if (!q.options.some((o) => o.value === v)) e.push(`basis ${s.id}: ${s.questionId} has no option ${v}`);
+    if (!skills.has(s.skillId)) e.push(`basis ${s.id}: unknown skill ${s.skillId}`);
+    if (!/^Вы указали/.test(s.label)) e.push(`basis ${s.id}: label must present the answer as self-reported`);
+    e.push(...outcomePromiseIssues(s.label).map((x) => `basis ${s.id}: ${x}`));
+  }
+  for (const lvl of new Set(Object.values(ctx.binding.levelMap))) {
+    if (!engine.levelProfiles?.[lvl]?.description) e.push(`level ${lvl} has no description`);
   }
   const goalQ = questions.get(ctx.binding.goalQuestion);
   const modules = new Set(curriculum.modules.map((m) => m.id));
