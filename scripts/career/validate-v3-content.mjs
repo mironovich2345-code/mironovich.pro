@@ -5,7 +5,6 @@ import { fileURLToPath } from "node:url";
 
 const json = (p) => JSON.parse(readFileSync(new URL(p, import.meta.url), "utf8"));
 const errors = [];
-const assert = (condition, message) => { if (!condition) errors.push(message); };
 const isObject = v => v !== null && typeof v === "object" && !Array.isArray(v);
 
 function schemaCheck(rule, value, loc, issues=[]) {
