@@ -10,7 +10,7 @@ test("checkout stays disabled during payment onboarding preparation", () => {
   const cfg = read("config/ai-career-commerce.ts");
   assert.match(cfg, /salesEnabled:\s*false/);
   assert.match(cfg, /legalApproved:\s*false/);
-  assert.match(cfg, /priceRub:\s*1990/);
+  assert.match(cfg, /priceRub:\s*1993/);
   assert.match(cfg, /extensionPriceRub:\s*1490/);
   assert.match(cfg, /phoneHref:\s*"tel:\+79527541498"/);
 });
@@ -46,14 +46,14 @@ test("existing personal data publication is unchanged", () => {
 test("one canonical offer is shared by commerce pages and product, including buyer age", async () => {
   const { aiCareerCommerce: c, commerceCopy } = await import("../config/ai-career-commerce.ts");
   const { productBySlug } = await import("../content/products.ts");
-  assert.equal(c.priceRub, 1990);
+  assert.equal(c.priceRub, 1993);
   assert.equal(c.minimumBuyerAge, 18);
   assert.equal(c.analysesIncluded, 1);
-  assert.equal(c.planDays, 30);
+  assert.equal(c.planSteps, 30);
   assert.equal(c.accessDays, 90);
   assert.equal(c.refundWindowDays, 7);
   assert.equal(productBySlug("ai-career").plannedPrice, c.priceRub);
-  for (const part of ["1 990 ₽", "один персональный анализ", "30 дней", "PDF", "90 дней"]) assert.ok(commerceCopy.initialPurchase.includes(part), part);
+  for (const part of ["1 993 ₽", "один персональный анализ", "30 шагов", "PDF", "90 дней"]) assert.ok(commerceCopy.initialPurchase.includes(part), part);
   for (const file of ["app/offer/ai-career/page.tsx", "app/delivery/page.tsx", "app/refund/page.tsx", "app/requisites/page.tsx", "components/AiCareerProductPage.tsx"]) assert.ok(read(file).includes("commerceCopy.initialPurchase"), file);
   assert.match(read("components/CommerceDocument.tsx"), /commerceCopy\.age/);
 });
