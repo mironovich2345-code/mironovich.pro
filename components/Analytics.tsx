@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import ConsentBanner from "./ConsentBanner";
 import { metricaId, trackPageView } from "@/lib/analytics";
 import { initAttribution } from "@/lib/attribution";
-import { CONSENT_EVENT, analyticsAllowed, clearLegacyGaCookies, consentRequired, purgeOptionalTracking, readConsent, type ConsentChoice } from "@/lib/consent";
+import { CONSENT_EVENT, analyticsAllowed, clearLegacyGaCookies, consentRequired, purgeOptionalTracking, readConsent } from "@/lib/consent";
 
 /**
  * Captures attribution ONLY after explicit opt-in and loads Yandex Metrica
@@ -26,8 +26,9 @@ export default function Analytics() {
     if (initial) initAttribution();
     else purgeOptionalTracking(); // clear optional state left by older versions
     setAllowed(initial);
-    const onChange = (e: Event) => {
-      const next = analyticsAllowed((e as CustomEvent<ConsentChoice>).detail);
+    const onChange = () => {
+      // Fail closed if browser storage rejects the choice; never trust an event payload.
+      const next = analyticsAllowed(readConsent());
       if (next) initAttribution();
       else purgeOptionalTracking();
       setAllowed(next);
