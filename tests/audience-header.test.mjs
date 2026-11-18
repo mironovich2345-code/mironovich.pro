@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { navLinks } from "../config/site.ts";
+import { navLinks, secondaryLinks } from "../config/site.ts";
 
 const read = path => fs.readFileSync(path,"utf8");
 
@@ -35,9 +35,13 @@ test("mobile menu shares the same three destinations and closes on navigation",(
 
 test("existing business and editorial links remain accessible through footer",()=>{
   const footer=read("components/Footer.tsx");
-  for(const href of ['/solutions','/services','/projects','/blog','/tools','/about']){
-    assert.ok(footer.includes(href),'missing footer link '+href);
+  assert.match(footer,/navLinks\.map/);
+  assert.match(footer,/secondaryLinks\.map/);
+  for(const href of ["/projects","/blog","/services/cto"]){
+    assert.ok(secondaryLinks.some(x=>x.href===href),"missing secondary link "+href);
   }
+  assert.ok(secondaryLinks.some(x=>x.href.startsWith("/tools")),"missing tools link");
+  assert.ok(navLinks.some(x=>x.href==="/about"),"about must remain linked");
 });
 
 test("hero matches the 30-step offer, not the old 30-day plan",()=>{
