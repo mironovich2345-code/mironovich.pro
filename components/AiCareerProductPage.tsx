@@ -5,16 +5,23 @@ import { aiCareerCommerce, commerceCopy } from "@/config/ai-career-commerce";
 import type { DigitalProduct } from "@/content/products";
 
 const features = [
-  { title: "Диагностика рабочих задач", body: "18 основных вопросов: профессия, задачи, повторяемость, ограничения, использование ИИ. До пяти карточек задач." },
-  { title: "Персональный анализ", body: "Один анализ задач по критериям пригодности для безопасных экспериментов. Это не прогноз увольнения." },
-  { title: "План на 30 дней", body: "Практические упражнения, замеры времени и качества, проверка результатов, подготовка примера профессионального вклада." },
-  { title: "PDF-отчёт", body: "Карта задач, три направления развития, план эксперимента и материалы для самостоятельного использования." },
+  { number: "01", metric: "18 вопросов", title: "Разобраться в своих задачах", body: "Опишете свою работу, повторяющиеся действия и ограничения. Получите карту до пяти рабочих задач." },
+  { number: "02", metric: "1 анализ", title: "Понять, где поможет ИИ", body: "Получите персональный разбор возможностей и ограничений. Это не прогноз увольнения." },
+  { number: "03", metric: "30 шагов", title: "Перейти от идей к действиям", body: "Последовательно проверите одну задачу, оцените качество результата и соберёте пример своей работы." },
+  { number: "04", metric: "PDF-отчёт", title: "Сохранить результат", body: "Карта задач, направления развития и план действий в одном документе для скачивания." },
+];
+
+const stages = [
+  { steps: "01–06", title: "Разберите задачу", body: "Выберите рабочую задачу, опишите процесс и зафиксируйте исходный результат." },
+  { steps: "07–14", title: "Попробуйте ИИ", body: "Подготовьте разрешённые или учебные данные и сравните несколько подходов." },
+  { steps: "15–23", title: "Проверьте качество", body: "Повторите эксперимент, оцените ошибки и сравните показатели до и после." },
+  { steps: "24–30", title: "Оформите результат", body: "Подготовьте пример своего вклада и определите следующие действия." },
 ];
 
 const legalLinks = [
   { href: "/offer/ai-career", label: "Условия использования и оферта" },
   { href: "/delivery", label: "Получение доступа" },
-  { href: "/refund", label: "Возврат средств" },
+  { href: "/refund", label: "Порядок разрешения разногласий" },
   { href: "/requisites", label: "Реквизиты и контакты" },
   { href: "/privacy", label: "Персональные данные" },
   { href: "/consent", label: "Согласие для обращения" },
@@ -34,7 +41,7 @@ export default function AiCareerProductPage({ product }: { product: DigitalProdu
             <p className="mb-4 text-sm uppercase tracking-wider text-stone">Сотрудникам и специалистам · 18+</p>
             <h1 className="font-display text-[clamp(34px,5vw,62px)] font-extrabold uppercase leading-[1.04]">{product.title}</h1>
             <p className="mt-6 text-[18px] leading-relaxed text-cream/85">
-              Разберите свои рабочие задачи, выясните, где ИИ действительно может помочь, и получите личный план практики на 30 дней.
+              Разберите свои рабочие задачи, выясните, где ИИ действительно поможет, и получите персональный план из 30 последовательных шагов.
             </p>
             <div className="mt-7 border-t border-cream/20 pt-5">
               <p className="m-0 text-4xl font-bold">{aiCareerCommerce.priceRub.toLocaleString("ru-RU")} ₽</p>
@@ -54,26 +61,41 @@ export default function AiCareerProductPage({ product }: { product: DigitalProdu
             className="h-auto w-full" priority
           />
         </section>
-        <section className="mt-20">
-          <h2 className="font-display text-3xl font-extrabold uppercase">Что входит в доступ</h2>
-          <div className="mt-8 grid gap-5 min-[650px]:grid-cols-2">
-            {features.map(({ title, body }) => (
-              <article key={title} className="border-t border-cream/25 pt-5">
-                <h3 className="text-lg font-semibold">{title}</h3>
-                <p className="mt-3 text-[15px] leading-relaxed text-stone">{body}</p>
+        <section className="mt-20" aria-labelledby="product-contents-title">
+          <div className="max-w-[690px]">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-signal">Одна покупка — четыре результата</p>
+            <h2 id="product-contents-title" className="font-display text-[clamp(28px,4vw,38px)] font-extrabold uppercase leading-tight">Что входит</h2>
+            <p className="mt-3 text-[15px] leading-relaxed text-stone">От разбора своей работы до конкретных действий. Каждый результат помогает перейти к следующему.</p>
+          </div>
+          <div className="mt-8 grid gap-4 min-[700px]:grid-cols-2">
+            {features.map(({ number, metric, title, body }) => (
+              <article key={number} className="flex h-full flex-col border border-cream/20 bg-cream/[0.035] p-5 min-[700px]:min-h-[220px] min-[700px]:p-7">
+                <div className="flex items-center justify-between gap-4 border-b border-cream/15 pb-4">
+                  <span className="font-display text-[31px] font-extrabold leading-none text-signal" aria-hidden="true">{number}</span>
+                  <span className="text-[13px] font-medium text-cream/85">{metric}</span>
+                </div>
+                <h3 className="mt-5 text-[19px] font-semibold leading-snug text-cream">{title}</h3>
+                <p className="mt-3 text-[15px] leading-[1.7] text-stone">{body}</p>
               </article>
             ))}
           </div>
         </section>
-        <section className="mt-16 max-w-[800px]">
-          <h2 className="font-display text-3xl font-extrabold uppercase">30 дней — один рабочий эксперимент</h2>
-          <ol className="mt-6 list-decimal space-y-3 pl-6 text-[16px] leading-relaxed text-cream/85">
-            <li>Неделя 1: выбрать задачу, описать её этапы и замерить текущий результат.</li>
-            <li>Неделя 2: протестировать ИИ на разрешённых или учебных данных.</li>
-            <li>Неделя 3: повторить тесты, проверить качество и учесть ошибки.</li>
-            <li>Дни 22–30: подготовить проверяемый пример «до и после» и следующие шаги.</li>
+        <section className="mt-16 border-t border-cream/20 pt-10" aria-labelledby="product-steps-title">
+          <div className="max-w-[740px]">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-signal">Пошаговая практика</p>
+            <h2 id="product-steps-title" className="font-display text-[clamp(28px,4vw,38px)] font-extrabold uppercase leading-tight">30 шагов — от задачи до результата</h2>
+            <p className="mt-4 text-[15px] leading-relaxed text-stone">Не календарь на 30 дней: проходите шаги в собственном темпе в течение оплаченного доступа.</p>
+          </div>
+          <ol className="mt-8 grid gap-4 min-[700px]:grid-cols-2">
+            {stages.map(({ steps, title, body }) => (
+              <li key={steps} className="list-none border-l-2 border-signal bg-cream/[0.035] px-5 py-5">
+                <p className="m-0 text-[13px] font-semibold uppercase tracking-[0.08em] text-signal">Шаги {steps}</p>
+                <h3 className="mt-2 text-[18px] font-semibold text-cream">{title}</h3>
+                <p className="mt-2 text-[15px] leading-relaxed text-stone">{body}</p>
+              </li>
+            ))}
           </ol>
-          <p className="mt-4 text-sm text-stone">Рекомендации не гарантируют сохранение работы, повышение зарплаты или конкретную экономию времени.</p>
+          <p className="mt-5 text-sm leading-relaxed text-stone">Рекомендации не гарантируют сохранение работы, повышение зарплаты или конкретную экономию времени.</p>
         </section>
         <section className="mt-16 grid gap-6 border-t border-cream/25 pt-8 min-[700px]:grid-cols-2">
           <div>
@@ -91,15 +113,18 @@ export default function AiCareerProductPage({ product }: { product: DigitalProdu
             <p className="mt-2 text-xs text-stone">Приобрести дополнительный доступ пока нельзя.</p>
           </div>
         </section>
-        <section className="mt-12 border-t border-cream/25 pt-7">
-          <h2 className="text-xl font-semibold">Возврат и документы</h2>
-          <p className="mt-3 max-w-[78ch] text-[15px] leading-relaxed text-cream/85">
-            При покупке качественного цифрового продукта можно отказаться в течение семи дней, не считая дня оплаты, с полным возвратом цены без удержания расходов на ИИ. При недостатках действуют дополнительные права по закону.
+        <section className="mt-12 border-t border-cream/25 pt-9" aria-labelledby="product-documents-title">
+          <h2 id="product-documents-title" className="text-[24px] font-semibold">Документы</h2>
+          <p className="mt-3 max-w-[72ch] text-[15px] leading-relaxed text-stone">
+            Условия будущей покупки, доступ к продукту, порядок разрешения разногласий, реквизиты и обработка персональных данных — в отдельных документах. Условия возврата денежных средств сохраняются.
           </p>
-          <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-3 text-sm">
+          <ul className="mt-6 grid gap-3 min-[600px]:grid-cols-2">
             {legalLinks.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="underline underline-offset-4 hover:text-signal">{item.label}</Link>
+                <Link href={item.href} className="flex min-h-[56px] items-center justify-between gap-4 border border-cream/20 px-4 py-3 text-[14px] leading-snug text-cream transition-colors hover:border-signal focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal">
+                  <span>{item.label}</span>
+                  <span className="text-signal" aria-hidden="true">↗</span>
+                </Link>
               </li>
             ))}
           </ul>
