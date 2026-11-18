@@ -178,7 +178,7 @@ export default function CareerSandbox() {
         Учебный кабинет продукта сотрудников
       </h1>
       <p className="mt-3 text-sm text-stone">
-        18 вопросов · один успешный анализ · план на 30 дней · PDF · 90 дней
+        18 вопросов · один успешный анализ · план из 30 шагов · PDF · 90 дней
         тестового доступа
       </p>
       {error && (
@@ -361,7 +361,7 @@ export default function CareerSandbox() {
                   }
                 >
                   <option value="initial" disabled={alreadyPurchased}>
-                    1 990 ₽ · 90 дней · один анализ
+                    1 993 ₽ · 90 дней · один анализ
                   </option>
                   <option value="extension" disabled={!canExtend}>
                     1 490 ₽ · 12 месяцев · без нового анализа
@@ -621,7 +621,8 @@ export default function CareerSandbox() {
               <a href="/api/career/report" className={button} download>
                 Скачать учебный PDF
               </a>
-              <h3 className="mb-4 mt-7 text-lg font-bold">План на 30 дней</h3>
+              <h3 className="mb-4 mt-7 text-lg font-bold">План из 30 шагов</h3>
+              <p className="mb-4 text-sm text-stone">Идите в собственном темпе. Каждый шаг содержит действие и результат для самопроверки.</p>
               <ol className="grid gap-3 sm:grid-cols-2">
                 {state.result.plan.map((d) => (
                   <li
@@ -659,11 +660,12 @@ export default function CareerSandbox() {
                       />
                       <span>
                         <strong>
-                          День {d.day}. {d.theme}
+                          Шаг {d.day}. {d.theme}
                         </strong>
                         <span className="mt-1 block text-sm text-stone">
                           {d.action}
                         </span>
+                        <span className="mt-2 block text-xs text-cream/75">Результат: {d.evidence}</span>
                       </span>
                     </label>
                   </li>
