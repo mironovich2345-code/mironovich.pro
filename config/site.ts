@@ -1,7 +1,6 @@
 import { contactList, contacts, sameAs } from "./contacts.ts";
 import { services } from "./services.ts";
 import { directions } from "./directions.ts";
-import { toolsNavigation } from "./tools.ts";
 import { projects } from "../content/projects.ts";
 import type { NavLink } from "./routes.ts";
 export { contactHref } from "./routes.ts";
@@ -34,14 +33,15 @@ export type { NavLink } from "./routes.ts";
 export const serviceLinks: NavLink[] = services.map((s) => ({ href: s.href, label: s.label }));
 export const solutionLinks: NavLink[] = directions.filter(d => d.solution).map(d => ({ href: d.href, label: d.title }));
 
-/** Top-level links after the «Услуги» group. */
+/**
+ * Primary navigation is an audience choice, not a catalog.
+ * Portfolio, tools, blog and detailed services remain accessible on their
+ * existing pages and through the global footer.
+ */
 export const navLinks: NavLink[] = [
+  { href: "/solutions", label: "Бизнесу" },
   { href: "/products/ai-career", label: "Сотрудникам" },
-  ...(projectsPublished ? [{ href: "/projects", label: "Кейсы" }] : []),
-  ...(toolsNavigation.enabled ? [{ href: toolsNavigation.href, label: toolsNavigation.label }] : []),
-  { href: "/services/cto", label: "Внешний CTO" },
-  { href: "/blog", label: "Блог" },
-  { href: "/about", label: "Обо мне" },
+  { href: "/about", label: "Кто я" },
 ];
 
 /** Where «Обсудить задачу» leads from pages without their own form section. */
