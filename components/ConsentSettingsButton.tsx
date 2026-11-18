@@ -1,7 +1,6 @@
 "use client";
 
 import { consentRequired, openConsentSettings } from "@/lib/consent";
-import { metricaId } from "@/lib/analytics";
 
 /** Footer entry to change or withdraw analytics consent; only in the consent-required mode. */
 export default function ConsentSettingsButton({ className }: { className?: string }) {
@@ -9,7 +8,7 @@ export default function ConsentSettingsButton({ className }: { className?: strin
   return (
     <li>
       <button type="button" onClick={openConsentSettings} className={className + " text-left"}>
-        {metricaId ? "Настройки аналитики" : "Информация о cookies"}
+        Настройки cookies
       </button>
     </li>
   );
