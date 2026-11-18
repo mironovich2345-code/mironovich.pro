@@ -82,9 +82,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Перейти к содержанию
         </a>
-        {/* early in the DOM: the consent panel (fixed) is reached right after the skip link */}
-        <Analytics />
         <SiteHeader />
+        {/* On mobile, consent is an inline panel between the header and page content. */}
+        <Analytics />
         {children}
         <Footer />
       </body>
