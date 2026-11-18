@@ -20,7 +20,7 @@ try{
  assert.equal(await page.locator(".task").count(),5);
  await page.getByRole("button",{name:"Сформировать учебный план →"}).click();
  await page.getByRole("button",{name:"Открыть 30 шагов"}).click();
- assert.equal(await page.locator(".plan-list .plan-item").count(),30);
+ assert.equal(await page.locator(".no-print .plan-list .plan-item").count(),30);
  await page.locator('.plan-item[data-action="done"]').first().click();
  assert.match(await page.locator(".progress-big").innerText(),/1\s*\/\s*30/);
  await page.evaluate(()=>{window.__printCalled=false;window.print=()=>{window.__printCalled=true;};});
