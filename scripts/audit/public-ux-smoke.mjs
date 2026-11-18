@@ -35,8 +35,11 @@ try {
         path + " / " + viewport.width + ": consent must not overlay content");
       const bannerBox = await banner.boundingBox();
       const headerBox = await page.locator("header").first().boundingBox();
-      assert.ok(bannerBox && headerBox && bannerBox.y + bannerBox.height <= headerBox.y + 1,
-        path + " / " + viewport.width + ": banner must precede the site header");
+      const mainBox = await page.locator("main").first().boundingBox();
+      assert.ok(bannerBox && headerBox && mainBox &&
+        headerBox.y + headerBox.height <= bannerBox.y + 1 &&
+        bannerBox.y + bannerBox.height <= mainBox.y + 1,
+        path + " / " + viewport.width + ": banner must be inline between header and content");
 
       const controls = page.locator("main a, main button, main [role='status']");
       const positions = await controls.evaluateAll(els => els.map(el => {
