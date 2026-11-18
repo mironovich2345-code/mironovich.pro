@@ -3,10 +3,10 @@ import { careerPool, transaction, event } from "./db.ts";
 import { CareerError } from "./config.ts";
 import {
   validateCareerAnswers,
-  generateSyntheticAnalysis,
   type CareerResult,
 } from "../../career-diagnostic.ts";
 import { careerPdf } from "./pdf.ts";
+import { generateCareerAnalysis, selectedCareerAnalysisMode } from "./ai-provider.ts";
 export async function requireAccess(accountId: string, db = careerPool()) {
   const r = await db.query("SELECT * FROM career_accounts WHERE id=$1", [
     accountId,
@@ -76,17 +76,37 @@ export async function createAnalysis(
     );
     const answers = validateCareerAnswers(d.rows[0]?.answers);
     if (!answers) throw new CareerError(400, "Сначала сохраните 18 ответов");
+    const mode = selectedCareerAnalysisMode();
+    if (mode === "openai" && answers.questions.dataSensitivity !== "restricted" &&
+        answers.questions.accessRules === "approved") {
+      // A durable conservative budget; both counters are serialized across
+      // concurrent requests using a transaction-scoped advisory lock.
+      await tx.query("SELECT pg_advisory_xact_lock($1::bigint)", [480623]);
+      const daily = await tx.query(
+        "SELECT count(*)::int AS n FROM career_ai_requests WHERE created_at >= date_trunc('day',now() AT TIME ZONE 'UTC') AT TIME ZONE 'UTC'",
+      );
+      const lifetime = await tx.query(
+        "SELECT count(*)::int AS n FROM career_ai_requests WHERE account_id=$1",
+        [accountId],
+      );
+      if (daily.rows[0].n >= 25 || lifetime.rows[0].n >= 3)
+        throw new CareerError(429, "Дневной или личный лимит учебных запросов ИИ достигнут");
+      await tx.query(
+        "INSERT INTO career_ai_requests(id,account_id) VALUES($1,$2)",
+        [randomUUID(), accountId],
+      );
+    }
     await tx.query(
       "UPDATE career_accounts SET analysis_state='running',analysis_token=$2,analysis_lease_until=$3 WHERE id=$1",
       [accountId, token, new Date(Date.now() + 120000)],
     );
-    return { answers };
+    return { answers, mode };
   });
   if ("existing" in claim)
     return { status: "completed", result: claim.existing, reused: true };
   if ("pending" in claim) return { status: "running" };
   try {
-    const result = generateSyntheticAnalysis(claim.answers!),
+    const result = await generateCareerAnalysis(claim.answers!, claim.mode),
       pdf = await render(result);
     await transaction(async (tx) => {
       const a = (
