@@ -52,8 +52,8 @@ export default function SolutionCard({
         </p>
         <p className="mb-1 mt-2 text-[13px] text-stone">
           {s.slug === "management-analytics"
-            ? "Кейс CLUB OPS: разрешённый интерфейс, live demo готовится."
-            : "Публичное live demo готовится."}
+            ? "Кейс CLUB OPS: экран интерфейса, интерактивная демоверсия готовится."
+            : "Публичная демоверсия готовится."}
         </p>
         <CtaLink
           href={solutionHref(s)}

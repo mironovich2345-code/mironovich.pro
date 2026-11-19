@@ -76,7 +76,7 @@ export default function ProjectsPage() {
                 У каждой работы указан статус: что уже используется, что в разработке, а что сделано как демонстрация.
               </p>
               <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
-                {PROJECT_STATUSES.map((s) => (
+                {PROJECT_STATUSES.filter((s) => projects.some((p) => p.status === s.value)).map((s) => (
                   <li key={s.value} className="border border-cream/25 px-3 py-1.5 text-[12px] uppercase tracking-[0.12em] text-cream/80">
                     {s.label}
                   </li>

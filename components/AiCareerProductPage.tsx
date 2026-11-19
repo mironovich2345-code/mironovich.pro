@@ -112,7 +112,7 @@ export default async function AiCareerProductPage({ product }: { product: Digita
                 type="button"
                 disabled
                 aria-describedby="ai-career-payment-status"
-                className="inline-flex min-h-[52px] w-full cursor-not-allowed items-center justify-center bg-signal/65 px-5 text-center text-[14px] font-bold uppercase tracking-[0.03em] text-white/90"
+                className="inline-flex min-h-[52px] w-full cursor-not-allowed items-center justify-center border border-dashed border-cream/35 bg-transparent px-5 text-center text-[14px] font-bold uppercase tracking-[0.03em] text-cream/70"
               >
                 {price.known ? <>Купить за {rubles(price.priceRub)}</> : "Купить"}
               </button>
