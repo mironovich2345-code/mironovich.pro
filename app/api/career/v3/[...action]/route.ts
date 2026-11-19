@@ -1,4 +1,4 @@
-// AI Career 3.0 server API. Sandbox-only: careerConfig() returns 404 outside the synthetic
+// AI Career 3.0 server API. Closed cloud demo (demo session) or sandbox-only: careerConfig() returns 404 outside the synthetic
 // sandbox (and always on Railway production), the tester gate and a synthetic session are required.
 // Routes: /api/career/v3/{professionId}/{state|library|diagnostic|diagnostic/questions|diagnostic/task-options|
 //   plan/readiness|task-map|lessons/selection|plan|lessons/{id}|lessons/{id}/downloads/{dl}|
@@ -8,6 +8,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { careerConfig, CareerError, GATE_COOKIE, SESSION_COOKIE } from "@/lib/server/career/config";
 import { limit, sessionAccount, validGate } from "@/lib/server/career/auth";
+import { demoConfig } from "@/lib/server/career-demo/config";
+import { demoLimit, demoSessionUser } from "@/lib/server/career-demo/auth";
+import { guardDemoRequest } from "@/lib/server/career-demo/http";
 import { loadProfessionBundle, ProfessionUnavailableError } from "@/lib/server/career-v3/content";
 import {
   completeV3Step, readV3Diagnostic, readV3Plan, readV3Progress, readV3TaskMap, requireV3Access, saveV3Diagnostic, saveV3Plan,
@@ -49,13 +52,23 @@ function onlyFields(body: Record<string, unknown>, allowed: string[]) {
 
 async function handle(req: NextRequest, ctx: { params: Promise<{ action: string[] }> }) {
   try {
-    const config = careerConfig();
-    if (req.headers.get("host") !== new URL(config.origin).host) throw new CareerError(403, "Неверный host");
-    if (req.method === "POST" && req.headers.get("origin") !== config.origin) throw new CareerError(403, "Неверный источник запроса");
-    if (!validGate(req.cookies.get(GATE_COOKIE)?.value)) throw new CareerError(403, "Требуется допуск тестировщика; реальные данные запрещены");
-    const accountId = await sessionAccount(req.cookies.get(SESSION_COOKIE)?.value);
-    if (!accountId) throw new CareerError(401, "Требуется вход по учебному email-коду");
-    await limit("v3:" + accountId, 120, 60);
+    let accountId: string | null;
+    const demo = demoConfig();
+    if (demo) {
+      // Closed cloud demo: the invite-registered demo session replaces the tester gate + OTP session.
+      guardDemoRequest(req);
+      accountId = (await demoSessionUser(req.cookies.get(demo.cookieName)?.value))?.accountId ?? null;
+      if (!accountId) throw new CareerError(401, "Войдите в демо-кабинет");
+      await demoLimit(demo, "v3:" + accountId, 240, 60);
+    } else {
+      const config = careerConfig();
+      if (req.headers.get("host") !== new URL(config.origin).host) throw new CareerError(403, "Неверный host");
+      if (req.method === "POST" && req.headers.get("origin") !== config.origin) throw new CareerError(403, "Неверный источник запроса");
+      if (!validGate(req.cookies.get(GATE_COOKIE)?.value)) throw new CareerError(403, "Требуется допуск тестировщика; реальные данные запрещены");
+      accountId = await sessionAccount(req.cookies.get(SESSION_COOKIE)?.value);
+      if (!accountId) throw new CareerError(401, "Требуется вход по учебному email-коду");
+      await limit("v3:" + accountId, 120, 60);
+    }
 
     const [professionId, ...rest] = (await ctx.params).action;
     const action = rest.join("/");

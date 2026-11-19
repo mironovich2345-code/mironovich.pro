@@ -22,6 +22,8 @@ export interface ReportSnapshot {
   professionTitle: string;
   variantLabel: string;
   syntheticLibrary: boolean;
+  /** Closed cloud demo: lessons are in editorial review (shown as a notice in every report). */
+  demoPreview?: boolean;
   generatedOn: string;
   completedSteps: number;
   totalSteps: number;
@@ -41,6 +43,7 @@ export function buildReport(kind: ReportKind, s: ReportSnapshot): Report {
     "Учебные данные: результаты получены на вымышленных задачах в учебном контуре, а не на рабочих данных.",
     dates.length ? `Даты замеров: ${ru(dates[0])}${dates.length > 1 && dates.at(-1) !== dates[0] ? `–${ru(dates.at(-1)!)}` : ""}.` : "Замеров пока нет.",
     "Связь с выручкой, конверсией, продлениями и другими бизнес-результатами не доказана и не утверждается.",
+    ...(s.demoPreview ? ["Демонстрационная версия: учебные материалы находятся на проверке и не опубликованы."] : []),
     ...(s.syntheticLibrary ? ["Сформировано на тестовой библиотеке-заглушке для проверки интерфейса — это не учебные материалы."] : []),
   ];
   const studied = s.lessons.filter((l) => l.stepsDone > 0);

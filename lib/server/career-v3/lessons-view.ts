@@ -25,12 +25,14 @@ export function cabinetState(professionId: string) {
   };
 }
 
-export function learnerLesson(professionId: string, lessonId: string): { lesson: LessonDocument; mode: "published" | "synthetic_fixture" } {
+export function learnerLesson(professionId: string, lessonId: string): { lesson: LessonDocument; mode: "published" | "synthetic_fixture" | "demo_review_preview" } {
   if (!LESSON_ID.test(lessonId)) throw new CareerError(404, "Урок не найден");
   const b = loadProfessionBundle(professionId);
-  const doc = b.library.published.find((l) => l.id === lessonId)?.document;
-  if (!doc) throw new CareerError(404, "Урок пока недоступен");
-  return { lesson: doc, mode: b.libraryMode === "synthetic_fixture" ? "synthetic_fixture" : "published" };
+  const published = b.library.published.find((l) => l.id === lessonId)?.document;
+  if (!published) throw new CareerError(404, "Урок пока недоступен");
+  // Demo preview: show the original document (status review), never the in-memory route-building copy.
+  if (b.libraryMode === "demo_review_preview") return { lesson: b.lessonDocuments.get(lessonId)!.document, mode: "demo_review_preview" };
+  return { lesson: published, mode: b.libraryMode === "synthetic_fixture" ? "synthetic_fixture" : "published" };
 }
 
 export function previewList(professionId: string) {

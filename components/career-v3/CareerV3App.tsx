@@ -11,9 +11,11 @@ import ResultsView from "./ResultsView";
 import { ApiError, Badge, Button, Notice, card, field, muted, v2, v3 } from "./primitives";
 
 type Session = { authenticated?: boolean; active?: boolean; paymentMode?: string; account?: { email: string; access_until: string | null } };
-type CabinetState = { libraryMode: "content" | "synthetic_fixture"; previewEnabled: boolean; publishedLessons: number };
-type View = "diagnostic" | "map" | "route" | "results" | "lessons" | "lesson" | "step";
-const VIEWS: { id: Exclude<View, "lesson" | "step">; label: string }[] = [
+type CabinetState = { libraryMode: "content" | "synthetic_fixture" | "demo_review_preview"; previewEnabled: boolean; publishedLessons: number };
+/** Closed cloud demo: the demo shell (components/career-demo) owns sign-in, sign-out and the account screen. */
+export type DemoHooks = { onLogout: () => Promise<void>; onSessionLost: () => void; account: ReactNode };
+type View = "diagnostic" | "map" | "route" | "results" | "lessons" | "lesson" | "step" | "account";
+const VIEWS: { id: Exclude<View, "lesson" | "step" | "account">; label: string }[] = [
   { id: "diagnostic", label: "Диагностика" }, { id: "map", label: "Моя карта" }, { id: "route", label: "Мой маршрут" }, { id: "results", label: "Мои результаты" }, { id: "lessons", label: "Уроки" },
 ];
 
@@ -25,11 +27,11 @@ function readHash(): Route {
   if (m) return { view: "lesson", lesson: m[2], preview: m[1] === "preview" };
   const st = /^step=([0-9]{1,2})$/.exec(h);
   if (st && Number(st[1]) >= 1 && Number(st[1]) <= 30) return { view: "step", step: Number(st[1]) };
-  if (VIEWS.some((v) => v.id === h)) return { view: h as View };
+  if (VIEWS.some((v) => v.id === h) || h === "account") return { view: h as View };
   return { view: "diagnostic", implicit: true };
 }
 
-export default function CareerV3App() {
+export default function CareerV3App({ demo }: { demo?: DemoHooks } = {}) {
   const [phase, setPhase] = useState<"loading" | "gate" | "login" | "access" | "cabinet">("loading");
   const [session, setSession] = useState<Session>({});
   const [state, setState] = useState<CabinetState | null>(null);
@@ -39,6 +41,15 @@ export default function CareerV3App() {
   const load = useCallback(async () => {
     setError(null);
     try {
+      if (demo) {
+        setState(await v3<CabinetState>("state"));
+        if (readHash().implicit) {
+          const p = await v3<{ plan: unknown }>("progress").catch(() => ({ plan: null }));
+          if (p.plan) { window.location.hash = "route"; setRoute({ view: "route" }); }
+        }
+        setPhase("cabinet");
+        return;
+      }
       const s = await v2<Session>("session");
       setSession(s);
       // v2 returns { authenticated: false } without a session and the dashboard (with account) with one.
@@ -52,10 +63,11 @@ export default function CareerV3App() {
       }
       setPhase("cabinet");
     } catch (e) {
-      if (e instanceof ApiError && e.status === 403) setPhase("gate");
+      if (demo && e instanceof ApiError && e.status === 401) demo.onSessionLost();
+      else if (!demo && e instanceof ApiError && e.status === 403) setPhase("gate");
       else setError(e instanceof Error ? e.message : "Тестовый контур недоступен");
     }
-  }, []);
+  }, [demo]);
   useEffect(() => { void load(); }, [load]);
   useEffect(() => {
     const on = () => setRoute(readHash());
@@ -68,6 +80,7 @@ export default function CareerV3App() {
     window.scrollTo({ top: 0 });
   };
   const logout = async () => {
+    if (demo) { window.location.hash = ""; await demo.onLogout(); return; }
     await v2("auth/logout", {}).catch(() => undefined);
     window.location.hash = "";
     setRoute({ view: "diagnostic", implicit: true });
@@ -80,10 +93,12 @@ export default function CareerV3App() {
     // unchecked checkbox renders as a dark filled square that looks almost checked.
     <div className="bg-cream text-graphite [color-scheme:light]">
       <main id="main" className="mx-auto min-h-[70vh] max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
-        <p className="mb-5 flex flex-wrap items-center gap-2 text-sm font-semibold">
-          <Badge>Тестовый контур</Badge>
-          <span className={muted}>Пилот «Менеджер по продажам». Только вымышленные данные, без реальных оплат.</span>
-        </p>
+        {!demo && (
+          <p className="mb-5 flex flex-wrap items-center gap-2 text-sm font-semibold">
+            <Badge>Тестовый контур</Badge>
+            <span className={muted}>Пилот «Менеджер по продажам». Только вымышленные данные, без реальных оплат.</span>
+          </p>
+        )}
         {error && <Notice tone="error">{error}</Notice>}
         {phase === "loading" && <p role="status">Загрузка…</p>}
         {phase === "gate" && <Gate onDone={load} />}
@@ -104,6 +119,14 @@ export default function CareerV3App() {
                     </li>
                   );
                 })}
+                {demo && (
+                  <li>
+                    <a href="#account" aria-current={route.view === "account" ? "page" : undefined} onClick={(e) => { e.preventDefault(); go("account"); }}
+                      className={`inline-flex min-h-11 items-center rounded-md border px-4 text-[15px] font-semibold ${route.view === "account" ? "border-graphite bg-graphite text-cream" : "border-graphite/30 bg-white/60 hover:border-signal"}`}>
+                      Аккаунт
+                    </a>
+                  </li>
+                )}
                 <li className="sm:ml-auto">
                   <button type="button" onClick={() => void logout()} className="inline-flex min-h-11 items-center rounded-md border border-graphite/30 bg-white/60 px-4 text-[15px] font-semibold hover:border-signal">Выйти</button>
                 </li>
@@ -123,6 +146,7 @@ export default function CareerV3App() {
             {route.view === "results" && <ResultsView onRoute={() => go("route")} />}
             {route.view === "step" && route.step && <StepView key={route.step} position={route.step} onBack={() => go("route")} onOpenLesson={(id) => go("lesson", id)} onOpenStep={(n) => go("step", undefined, false, n)} />}
             {route.view === "lessons" && <Lessons state={state} open={(id, preview) => go("lesson", id, preview)} />}
+            {route.view === "account" && demo && demo.account}
             {route.view === "lesson" && route.lesson && <LessonView lessonId={route.lesson} preview={!!route.preview} onBack={() => go("lessons")} />}
           </>
         )}
@@ -222,6 +246,7 @@ function Lessons({ state, open }: { state: CabinetState; open: (id: string, prev
             <li key={l.id}><button type="button" onClick={() => open(l.id, false)} className={`${card} w-full text-left hover:border-signal`}>
               <span className="block font-bold">{l.title.replace("[SYNTHETIC FIXTURE] ", "")}</span>
               {state.libraryMode === "synthetic_fixture" && <span className="mt-2 inline-block"><Badge>Тестовая заглушка</Badge></span>}
+              {state.libraryMode === "demo_review_preview" && <span className="mt-2 inline-block"><Badge>На проверке</Badge></span>}
             </button></li>
           ))}
         </ul>

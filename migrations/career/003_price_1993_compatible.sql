@@ -2,7 +2,7 @@
 -- while all newly created initial orders use the canonical 1,993 RUB amount.
 -- No live payment/order schema is modified by this migration.
 DO $$ BEGIN
-  IF current_database() !~ '^mironovich_career_test(_[a-z0-9]+)*$' THEN
+  IF current_database() !~ '^mironovich_career_test(_[a-z0-9]+)*$' AND NOT (current_database() = 'mironovich_career_demo_v3' AND coalesce(current_setting('mironovich.career_demo', true), '') = 'closed-demo-v3') THEN
     RAISE EXCEPTION 'CAREER_TEST_DATABASE_REQUIRED';
   END IF;
 END $$;

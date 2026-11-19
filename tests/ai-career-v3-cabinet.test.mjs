@@ -44,7 +44,9 @@ test("lesson access: learners only get delivered lessons; preview needs the loca
   const route = readFileSync("app/api/career/v3/[...action]/route.ts", "utf8");
   for (const guard of ["careerConfig()", "validGate(", "sessionAccount(", "limit(", "requireV3Access(accountId)"]) assert.ok(route.includes(guard), guard);
   const page = readFileSync("app/career/v3/page.tsx", "utf8");
-  assert.match(page, /if \(!sandboxVisible\(\)\) notFound\(\)/);
+  // Sandbox cabinet only in the sandbox; the closed demo only with a fully valid demo configuration, and a
+  // requested-but-invalid demo stays closed instead of falling back to the sandbox.
+  assert.match(page, /if \(demoConfig\(\)\) return <DemoApp \/>;\s*if \(demoRequested\(\) \|\| !sandboxVisible\(\)\) notFound\(\)/);
   assert.match(page, /index: false/);
 });
 

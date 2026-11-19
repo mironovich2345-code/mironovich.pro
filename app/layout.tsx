@@ -62,6 +62,7 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const demoDeploy = process.env.CAREER_V3_DEMO === "1";
   return (
     <html lang="ru" className={inter.variable + " " + displayFont.variable} suppressHydrationWarning>
       {consentRequired && (
@@ -82,11 +83,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Перейти к содержанию
         </a>
-        <SiteHeader />
+        {/* Closed AI Career demo deploy: no site chrome, navigation or analytics — only the demo itself. */}
+        {!demoDeploy && <SiteHeader />}
         {/* On mobile, consent is an inline panel between the header and page content. */}
-        <Analytics />
+        {!demoDeploy && <Analytics />}
         {children}
-        <Footer />
+        {!demoDeploy && <Footer />}
       </body>
     </html>
   );
