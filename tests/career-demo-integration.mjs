@@ -304,6 +304,11 @@ try {
     assert.deepEqual([upd.position, upd.restarted], [Math.min(15, prefix), 15 > prefix], "carry-over to the stable prefix");
     await db.query("UPDATE career_v3_player_positions SET script_version='1', screens=screens+1, screen=5 WHERE lesson_id='SAF-01' AND account_id=(SELECT account_id FROM career_demo_users WHERE email=$1)", [u.email]);
     assert.deepEqual([ok(await u.c.v3("player/lessons/SAF-01")).position, ok(await u.c.v3("player/lessons/SAF-01")).restarted], [5, false], "theory position survives a script update");
+    // Regression (found live after deploy): a row saved by the previous version has choices = {} (column default).
+    await db.query("UPDATE career_v3_player_positions SET choices='{}'::jsonb, seq=0 WHERE lesson_id='SAF-01' AND account_id=(SELECT account_id FROM career_demo_users WHERE email=$1)", [u.email]);
+    const legacy = ok(await u.c.v3("player/lessons/SAF-01"));
+    assert.deepEqual([legacy.choices.q, legacy.choices.checked, legacy.choices.c], [{}, [], []], "legacy row opens with empty choices");
+    ok(await u.c.v3(`player/lessons/SAF-01?step=${safStep.position}`));
     assert.equal(ok(await B.c.v3("player/lessons/SAF-01")).position, 0, "another account has its own position");
     assert.deepEqual(ok(await u.c.v3("progress")).summary, before, "screens are not route steps; progress unchanged");
     assert.doesNotMatch(JSON.stringify(pl.screens.filter((x) => x.type === "text")), /SAF01-|TPL-|STEP-/, "no internal ids in text screens");

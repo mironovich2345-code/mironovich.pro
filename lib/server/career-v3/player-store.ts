@@ -113,7 +113,13 @@ export async function readPlayer(accountId: string, professionId: string, lesson
       nextStep = { position: n.position, lessonId: n.lessonId, player };
     }
   }
-  const choices: Choices = sameLesson && saved.choices ? saved.choices : { q: {}, checked: [], c: [] };
+  // Rows saved before choices existed carry the column default {}: normalise every field.
+  const raw = (sameLesson && saved.choices && typeof saved.choices === "object" ? saved.choices : {}) as Partial<Choices>;
+  const choices: Choices = {
+    q: raw.q && typeof raw.q === "object" && !Array.isArray(raw.q) ? { ...raw.q } : {},
+    checked: Array.isArray(raw.checked) ? [...raw.checked] : [],
+    c: Array.isArray(raw.c) ? [...raw.c] : [],
+  };
   // Answers already counted in the route are shown as answered: the learner is not asked to redo them.
   if (inRoute && routeQuiz?.passed) {
     choices.q = { ...routeQuiz.answers, ...choices.q };
