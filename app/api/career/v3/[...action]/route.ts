@@ -2,15 +2,21 @@
 // sandbox (and always on Railway production), the tester gate and a synthetic session are required.
 // Routes: /api/career/v3/{professionId}/{state|library|diagnostic|diagnostic/questions|diagnostic/task-options|
 //   plan/readiness|task-map|lessons/selection|plan|lessons/{id}|lessons/{id}/downloads/{dl}|
-//   preview/lessons|preview/lessons/{id}|preview/lessons/{id}/downloads/{dl}}
+//   preview/lessons|preview/lessons/{id}|preview/lessons/{id}/downloads/{dl}|
+//   progress|progress/steps/{position}/{start|self-check|complete}|progress/lessons/{id}/quiz|
+//   results|results/measurements/{position}|results/report?kind=|results/report.pdf?kind=}
 import { NextRequest, NextResponse } from "next/server";
 import { careerConfig, CareerError, GATE_COOKIE, SESSION_COOKIE } from "@/lib/server/career/config";
 import { limit, sessionAccount, validGate } from "@/lib/server/career/auth";
 import { loadProfessionBundle, ProfessionUnavailableError } from "@/lib/server/career-v3/content";
 import {
-  readV3Diagnostic, readV3Plan, readV3TaskMap, requireV3Access, saveV3Diagnostic, saveV3Plan, saveV3TaskMap,
-  taskOptionsFor, v3LessonSelection,
+  completeV3Step, readV3Diagnostic, readV3Plan, readV3Progress, readV3TaskMap, requireV3Access, saveV3Diagnostic, saveV3Plan,
+  saveV3SelfCheck, saveV3TaskMap, startV3Step, submitV3Quiz, taskOptionsFor, v3LessonSelection,
+  readV3Results, saveV3Measurement, v3Report, v3ReportPdf,
 } from "@/lib/server/career-v3/store";
+import { ResultsInputError } from "@/lib/career-v3/results";
+import { REPORT_KINDS, type ReportKind } from "@/lib/career-v3/report";
+import { ProgressInputError } from "@/lib/career-v3/progress";
 import { learnerCatalog } from "@/lib/career-v3/library";
 import { cabinetState, learnerLesson, lessonDownload, previewLesson, previewList } from "@/lib/server/career-v3/lessons-view";
 import { questionnaire } from "@/lib/career-v3/diagnostic";
@@ -90,11 +96,42 @@ async function handle(req: NextRequest, ctx: { params: Promise<{ action: string[
     if (action === "task-map" && req.method === "POST") { onlyFields(body, []); return json(await saveV3TaskMap(accountId, professionId)); }
     if (action === "task-map" && req.method === "GET") return json(await readV3TaskMap(accountId, professionId));
     if (action === "lessons/selection" && req.method === "GET") return json(await v3LessonSelection(accountId, professionId));
-    if (action === "plan" && req.method === "POST") { onlyFields(body, []); return json(await saveV3Plan(accountId, professionId)); }
+    if (action === "plan" && req.method === "POST") {
+      onlyFields(body, ["rebuild"]);
+      if (body.rebuild !== undefined && typeof body.rebuild !== "boolean") throw new CareerError(400, "Неверный запрос");
+      return json(await saveV3Plan(accountId, professionId, undefined, { rebuild: body.rebuild === true }));
+    }
+    if (action === "progress" && req.method === "GET") return json(await readV3Progress(accountId, professionId));
+    const stepRoute = /^progress\/steps\/([0-9]{1,2})\/(start|self-check|complete)$/.exec(action);
+    if (stepRoute && req.method === "POST") {
+      const position = Number(stepRoute[1]);
+      if (stepRoute[2] === "start") { onlyFields(body, ["stableId"]); return json(await startV3Step(accountId, professionId, position, body.stableId)); }
+      if (stepRoute[2] === "self-check") { onlyFields(body, ["stableId", "criteriaMet"]); return json(await saveV3SelfCheck(accountId, professionId, position, body.stableId, body.criteriaMet)); }
+      onlyFields(body, ["stableId", "completionMet"]);
+      return json(await completeV3Step(accountId, professionId, position, body.stableId, body.completionMet));
+    }
+    if (action === "results" && req.method === "GET") return json(await readV3Results(accountId, professionId));
+    const measureRoute = /^results\/measurements\/([0-9]{1,2})$/.exec(action);
+    if (measureRoute && req.method === "POST") {
+      onlyFields(body, ["stableId", "metricId", "measurement"]);
+      return json(await saveV3Measurement(accountId, professionId, Number(measureRoute[1]), body.stableId, body.metricId, body.measurement));
+    }
+    if ((action === "results/report" || action === "results/report.pdf") && req.method === "GET") {
+      const kind = req.nextUrl.searchParams.get("kind") ?? "results";
+      if (!REPORT_KINDS.some((k) => k.id === kind)) throw new CareerError(400, "Неизвестный вид отчёта");
+      if (action === "results/report") return json(await v3Report(accountId, professionId, kind as ReportKind));
+      const pdf = await v3ReportPdf(accountId, professionId, kind as ReportKind);
+      return new NextResponse(new Uint8Array(pdf), { headers: {
+        "Content-Type": "application/pdf", "Content-Disposition": `attachment; filename="uchebnyj-otchet-${kind}.pdf"`,
+        "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff", "X-Robots-Tag": "noindex, nofollow" } });
+    }
+    const quizRoute = /^progress\/lessons\/([A-Z0-9-]{4,20})\/quiz$/.exec(action);
+    if (quizRoute && req.method === "POST") { onlyFields(body, ["answers"]); return json(await submitV3Quiz(accountId, professionId, quizRoute[1], body.answers)); }
     if (action === "plan" && req.method === "GET") return json(await readV3Plan(accountId, professionId));
     throw new CareerError(404, "Маршрут не найден");
   } catch (e) {
     if (e instanceof ProfessionUnavailableError) return json({ error: e.message }, 404);
+    if (e instanceof ProgressInputError || e instanceof ResultsInputError) return json({ error: e.message, code: e.code }, 400);
     if (e instanceof CareerError) {
       const errors = (e as CareerError & { errors?: unknown }).errors;
       return json(errors ? { error: e.message, errors } : { error: e.message }, e.status);

@@ -10,6 +10,12 @@ import { selectLessons } from "../../career-v3/selection.ts";
 import { buildPlan, planStaleReasons } from "../../career-v3/plan.ts";
 import type { PlanV3, TaskMapV3 } from "../../career-v3/contracts.ts";
 import type { DiagnosticAnswers } from "../../career-v3/types.ts";
+import { transaction } from "../career/db.ts";
+import {
+  activePlanRow, completeStep, ensurePlanVersion, readProgress, saveSelfCheck, startStep, submitQuiz, versionStaleReasons,
+} from "./progress-store.ts";
+import { readResults, reportPdf, resultsReport, saveMeasurement } from "./results-store.ts";
+import type { ReportKind } from "../../career-v3/report.ts";
 
 type Queryable = { query: (q: string, args?: unknown[]) => Promise<{ rows: Record<string, unknown>[] }> };
 
@@ -148,14 +154,60 @@ export async function v3LessonSelection(accountId: string, professionId: string,
   return selectLessons(bundle.engine, d.result, bundle.library);
 }
 
-export async function saveV3Plan(accountId: string, professionId: string, db: Queryable = careerPool()) {
+/**
+ * Builds the plan the learner works on. An active, current plan version is reused (rebuilding never resets
+ * progress). A stale version is replaced only on an explicit rebuild: its progress stays as history.
+ */
+export async function saveV3Plan(accountId: string, professionId: string, db: Queryable = careerPool(), opts: { rebuild?: boolean } = {}) {
   const d = await usableDiagnostic(accountId, professionId, db);
   const bundle = bundleOrFail(professionId);
+  const active = await activePlanRow(db, accountId, professionId);
+  const reasons = active ? versionStaleReasons(active, bundle, d) : [];
+  if (active && !reasons.length && !opts.rebuild) {
+    return { plan: active.payload as PlanV3, savedAt: new Date(active.created_at as string).toISOString(), planVersionId: active.id as string, reused: true };
+  }
+  if (active && reasons.length && !opts.rebuild) {
+    throw Object.assign(new CareerError(409, "Маршрут устарел: подтвердите сборку нового маршрута, прежний прогресс останется в истории"), { errors: reasons });
+  }
   const selection = selectLessons(bundle.engine, d.result, bundle.library);
   const plan = buildPlan(bundle.engine, { result: d.result, selection, library: bundle.library, today: today() });
   // An unavailable plan is returned but never stored as if it were a plan.
-  const savedAt = plan.status === "ready" ? await saveArtifact(db, accountId, professionId, "plan", plan.modelVersion, d.savedAt, plan) : null;
-  return { plan, savedAt };
+  if (plan.status !== "ready") return { plan, savedAt: null, planVersionId: null, reused: false };
+  const savedAt = await saveArtifact(db, accountId, professionId, "plan", plan.modelVersion, d.savedAt, plan);
+  const version = await transaction((tx) => ensurePlanVersion(tx, accountId, professionId, plan, d.savedAt, bundle, reasons.length ? reasons : ["rebuilt_by_learner"]));
+  return { plan, savedAt, planVersionId: version.id, reused: !version.created };
+}
+
+// ---------- Progress (migration 007) ----------
+
+async function diagnosticForProgress(accountId: string, professionId: string, db: Queryable) {
+  await requireV3Access(accountId, db);
+  const d = await loadDiagnostic(accountId, professionId, db);
+  return d ? { savedAt: d.savedAt, stale: d.stale, staleReasons: d.staleReasons } : null;
+}
+
+export async function readV3Progress(accountId: string, professionId: string, db: Queryable = careerPool()) {
+  const d = await diagnosticForProgress(accountId, professionId, db);
+  return readProgress(db, accountId, professionId, d);
+}
+
+async function progressDiagnostic(accountId: string, professionId: string, db: Queryable) {
+  const d = await diagnosticForProgress(accountId, professionId, db);
+  if (!d) throw new CareerError(409, "Сначала пройдите диагностику");
+  return d;
+}
+
+export async function startV3Step(accountId: string, professionId: string, position: number, stableId: unknown, db: Queryable = careerPool()) {
+  return startStep(accountId, professionId, position, stableId, await progressDiagnostic(accountId, professionId, db));
+}
+export async function saveV3SelfCheck(accountId: string, professionId: string, position: number, stableId: unknown, criteriaMet: unknown, db: Queryable = careerPool()) {
+  return saveSelfCheck(accountId, professionId, position, stableId, criteriaMet, await progressDiagnostic(accountId, professionId, db));
+}
+export async function submitV3Quiz(accountId: string, professionId: string, lessonId: string, answers: unknown, db: Queryable = careerPool()) {
+  return submitQuiz(accountId, professionId, lessonId, answers, await progressDiagnostic(accountId, professionId, db));
+}
+export async function completeV3Step(accountId: string, professionId: string, position: number, stableId: unknown, completionMet: unknown, db: Queryable = careerPool()) {
+  return completeStep(accountId, professionId, position, stableId, completionMet, await progressDiagnostic(accountId, professionId, db));
 }
 
 export async function readV3Plan(accountId: string, professionId: string, db: Queryable = careerPool()) {
@@ -167,4 +219,20 @@ export async function readV3Plan(accountId: string, professionId: string, db: Qu
   const reasons = planStaleReasons(a.payload as PlanV3, bundle.engine, bundle.library);
   if (!d || d.savedAt !== a.diagnosticSavedAt) reasons.push("diagnostic_resubmitted");
   return { plan: a.payload as PlanV3, stale: reasons.length > 0, staleReasons: reasons };
+}
+
+// ---------- Results (#47, migration 008) ----------
+
+export async function readV3Results(accountId: string, professionId: string, db: Queryable = careerPool()) {
+  const d = await diagnosticForProgress(accountId, professionId, db);
+  return readResults(db, accountId, professionId, d);
+}
+export async function saveV3Measurement(accountId: string, professionId: string, position: number, stableId: unknown, metricId: unknown, measurement: unknown, db: Queryable = careerPool()) {
+  return saveMeasurement(accountId, professionId, position, stableId, metricId, measurement, await progressDiagnostic(accountId, professionId, db));
+}
+export async function v3Report(accountId: string, professionId: string, kind: ReportKind, db: Queryable = careerPool()) {
+  return resultsReport(await readV3Results(accountId, professionId, db), kind);
+}
+export async function v3ReportPdf(accountId: string, professionId: string, kind: ReportKind, db: Queryable = careerPool()) {
+  return reportPdf(await v3Report(accountId, professionId, kind, db));
 }

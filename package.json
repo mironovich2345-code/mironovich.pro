@@ -21,6 +21,8 @@
     "career:mail": "node --experimental-strip-types scripts/career/runtime.mjs mail",
     "career:test:integration": "node --experimental-strip-types tests/career-integration.mjs",
     "career:test:v3-integration": "node --experimental-strip-types tests/career-v3-integration.mjs",
+    "career:test:v3-progress": "node --experimental-strip-types tests/career-v3-progress-integration.mjs",
+    "career:test:v3-results": "node --experimental-strip-types tests/career-v3-results-integration.mjs",
     "career:test:browser": "node tests/career-browser.mjs",
     "career:local:init": "node scripts/career/local-sandbox.mjs init",
     "career:local:verify": "node scripts/career/local-sandbox.mjs verify",

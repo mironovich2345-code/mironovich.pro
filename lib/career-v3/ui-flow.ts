@@ -136,3 +136,21 @@ export function lessonNames(lesson: { content: { templates: { id: string; title:
 export function hasTechnicalId(text: string): boolean {
   return /\b(T\d{2}|SAFE-\d{2}|TPL-[A-Z0-9-]+|[A-Z]{3}\d{2}-TASK-\d+|STEP-\d{2}|(SAF|SAL|MAP|TRD|VAL)-\d{2}(-EX)?)\b/.test(text);
 }
+
+/** Learner-facing text for why a plan version can no longer be worked on (no technical IDs). */
+export function staleReasonText(reason: string, lessonTitles: Record<string, string> = {}): string {
+  const [code, id] = reason.split(":");
+  const title = id && lessonTitles[id] ? `«${lessonTitles[id].replace("[SYNTHETIC FIXTURE] ", "")}»` : "одного из уроков";
+  const map: Record<string, string> = {
+    lesson_version_changed: `обновилась версия урока ${title}`,
+    lesson_withdrawn: `урок ${title} снят с выдачи`,
+    diagnostic_resubmitted: "вы заново прошли диагностику",
+    diagnostic_version_changed: "изменилась анкета диагностики",
+    role_matrix_version_changed: "обновилась матрица профессии",
+    result_model_changed: "изменилась модель результатов диагностики",
+    program_version_changed: "обновилась учебная программа",
+    plan_model_changed: "изменился конструктор маршрута",
+    rebuilt_by_learner: "маршрут собран заново по вашему запросу",
+  };
+  return map[code] ?? "изменились материалы программы";
+}
