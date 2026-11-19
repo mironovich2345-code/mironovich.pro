@@ -130,3 +130,9 @@ test("validator and worksheet CLIs pass; existing v3 content validator still pas
     assert.equal(r.status, 0, args[0] + "\n" + r.stderr);
   }
 });
+
+test("learner-facing text never shows internal task codes", () => {
+  const ctx = fresh();
+  ctx.lessons["TRD-01"].content.exercises[1].syntheticInput += " Задача T07.";
+  assert.match(issues(ctx), /internal task code in learner text/);
+});

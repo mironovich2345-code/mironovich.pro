@@ -170,6 +170,8 @@ export function validateWave1(ctx) {
       if (p.endsWith(".url")) continue;
       const field = p.split(".").pop().replace(/\[\d+\]$/, "");
       for (const i of hygieneIssues(s, field)) e.push(`${id}: ${p}: ${i}`);
+      // Learner-facing text must not show internal task codes (the cabinet shows task names).
+      if (p.startsWith("lesson.") && !p.startsWith("lesson.audience") && /\bT\d{2}\b/.test(s)) e.push(`${id}: ${p}: internal task code in learner text`);
     }
   }
   for (const s of registry.sources) good(s.usedBy.every((id) => lessons[id]?.sources.some((x) => x.id === s.id)), `registry ${s.id}: stale usage`);

@@ -1,0 +1,197 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "DL-SAL04-DATA",
+  "lessonId": "SAL-04",
+  "status": "review",
+  "syntheticOnly": true,
+  "notice": "Все компании, люди, цены, реплики и черновики вымышлены. Учебный прайс и лимит скидки 5% — правила вымышленной компании «Норд-Софт», общие с уроком SAL-03.",
+  "priceList": {
+    "seller": "Норд-Софт (вымышленная)",
+    "product": "Полка, тариф «Склад»",
+    "pricePerSeatMonth": 2400,
+    "implementation": 45000,
+    "includedTrainingSessions": 2,
+    "managerDiscountLimitPercent": 5,
+    "managerDiscountLimitSource": "правило вымышленной учебной компании «Норд-Софт», не рыночная норма",
+    "allowedCaseStudies": [],
+    "allowedCustomerResults": [],
+    "allowedCompetitorFacts": []
+  },
+  "exercises": [
+    {
+      "exerciseId": "SAL04-TASK-1",
+      "materialIds": [
+        "TPL-SAL04-CLASSIFY",
+        "TPL-SAL04-CHECK",
+        "TPL-SAL04-PROMPT-CHECK"
+      ],
+      "answerKey": {
+        "types": [
+          {
+            "reply": "Р1",
+            "type": "question",
+            "label": "вопрос",
+            "reaction": "ответить фактом: внедрение — 10 рабочих дней после получения справочников"
+          },
+          {
+            "reply": "Р2",
+            "type": "objection",
+            "label": "возражение",
+            "reaction": "уточнить, с чем сравнивают и какой бюджет"
+          },
+          {
+            "reply": "Р3",
+            "type": "doubt",
+            "label": "сомнение",
+            "reaction": "уточнить, что вызывает сомнение, и рассказать о двух включённых сессиях обучения"
+          },
+          {
+            "reply": "Р4",
+            "type": "objection",
+            "label": "возражение",
+            "reaction": "уточнить, что именно сравнивают: состав, число мест, внедрение"
+          },
+          {
+            "reply": "Р5",
+            "type": "question",
+            "label": "вопрос",
+            "reaction": "отправить описание обучения"
+          },
+          {
+            "reply": "Р6",
+            "type": "refusal",
+            "label": "отказ",
+            "reaction": "принять решение, поблагодарить, договориться о марте 2027 года и не писать до этого срока"
+          }
+        ],
+        "findings": [
+          {
+            "quote": "предложите скидку 15%",
+            "cue": "скидку 15% не предлагаем",
+            "type": "invented_discount",
+            "why": "ИИ назначил скидку, которой нет в правилах учебной компании; сверх 5% решает только руководитель."
+          },
+          {
+            "quote": "закрыть сделку до конца недели",
+            "cue": "искусственная срочность",
+            "type": "manipulation",
+            "why": "Срок «до конца недели» ничем не обоснован и давит на клиента."
+          },
+          {
+            "quote": "боится, что её уволят",
+            "cue": "мотив клиента не выдумываем",
+            "type": "invented_motive",
+            "why": "ИИ не знает мотивов закупщицы; причину сомнения нужно уточнить вопросом."
+          },
+          {
+            "quote": "скажите, что у них плохая поддержка",
+            "cue": "о конкуренте ничего не утверждаем",
+            "type": "unverified_claim",
+            "why": "Сведений о конкуренте нет; такое утверждение недостоверно и некорректно."
+          },
+          {
+            "quote": "это не отказ, а проверка",
+            "cue": "Р6 — отказ",
+            "type": "ignored_refusal",
+            "why": "Клиент прямо попросил не писать до марта 2027 года; повторное письмо через три дня нарушает его просьбу."
+          },
+          {
+            "quote": "с ограниченным предложением",
+            "cue": "без давления",
+            "type": "manipulation",
+            "why": "«Ограниченное предложение» — давление вместо уважения к решению клиента."
+          }
+        ]
+      }
+    },
+    {
+      "exerciseId": "SAL04-TASK-2",
+      "materialIds": [
+        "TPL-SAL04-FACTS",
+        "TPL-SAL04-CHECK",
+        "TPL-SAL04-CHOICE",
+        "TPL-SAL04-SHEET",
+        "TPL-SAL04-REPLY",
+        "TPL-SAL04-PROMPT-OPTIONS"
+      ],
+      "inputs": {
+        "offerSeats": 10,
+        "proposedSeats": 8,
+        "months": 12,
+        "discountPercent": 5,
+        "clientBudget": 300000,
+        "reviewMinutes": 14
+      },
+      "drafts": [
+        {
+          "id": "А",
+          "errors": 3,
+          "chosen": false
+        },
+        {
+          "id": "Б",
+          "errors": 3,
+          "chosen": false
+        },
+        {
+          "id": "В",
+          "errors": 1,
+          "chosen": true
+        }
+      ],
+      "answerKey": {
+        "findings": [
+          {
+            "quote": "Только до пятницы",
+            "cue": "искусственная срочность",
+            "type": "manipulation",
+            "why": "Срок ничем не обоснован и давит на клиента."
+          },
+          {
+            "quote": "дадим ещё 10%",
+            "cue": "скидку сверх 5% не обещаем",
+            "type": "invented_discount",
+            "why": "Скидку сверх учебного лимита 5% решает только руководитель."
+          },
+          {
+            "quote": "сокращают излишки на 30% за квартал",
+            "cue": "результатов клиентов нет",
+            "type": "invented_result",
+            "why": "В разрешённых материалах нет данных об экономии клиентов."
+          },
+          {
+            "quote": "Все ваши конкуренты уже перешли на автоматизацию",
+            "cue": "социальное доказательство без источника",
+            "type": "manipulation",
+            "why": "Утверждение о конкурентах клиента не подтверждено и давит страхом отстать."
+          },
+          {
+            "quote": "Мы гарантируем, что ошибок в остатках не будет",
+            "cue": "гарантий результата не даём",
+            "type": "invented_guarantee",
+            "why": "Такого обязательства нет ни в прайсе, ни в КП."
+          },
+          {
+            "quote": "внедрение для 8 мест — 30 000 ₽",
+            "cue": "внедрение — 45 000 ₽",
+            "type": "invented_price",
+            "why": "Внедрение стоит 45 000 ₽ независимо от числа мест."
+          }
+        ],
+        "numbers": {
+          "offerTotal": 318600,
+          "seats8Gross": 230400,
+          "seats8Discount": 11520,
+          "seats8Net": 218880,
+          "seats8Total": 263880,
+          "withinBudget": true,
+          "draftsChecked": 3,
+          "errorsBefore": 7,
+          "criticalErrors": 6,
+          "errorsAfter": 0
+        },
+        "chosenDraft": "В"
+      }
+    }
+  ]
+}
