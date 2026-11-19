@@ -1,84 +1,72 @@
-// AI Career 3.0 price tiers: one source of terms, honest seat counter, consistent public wording.
+// AI Career 3.0 price: three allowed prices, set by the owner at run time; honest page; consistent documents.
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 
 const pricing = await import("../config/ai-career-pricing.ts");
 const { aiCareerCommerce, commerceCopy } = await import("../config/ai-career-commerce.ts");
 const read = (p) => readFileSync(p, "utf8");
-const { PRICE_TIERS, tierForSeat, priceView, seatsWord, rubles } = pricing;
+const { ALLOWED_PRICES_RUB, DEFAULT_PRICE_RUB, isAllowedPrice, periodText, rubles, moscowDateTime } = pricing;
 
-test("tiers: 1–10 → 1 993 ₽, 11–20 → 3 990 ₽, 21+ → 5 900 ₽, contiguous and increasing", () => {
-  assert.deepEqual(PRICE_TIERS.map((t) => [t.from, t.to, t.priceRub]), [[1, 10, 1993], [11, 20, 3990], [21, null, 5900]]);
-  for (const [seat, price] of [[1, 1993], [10, 1993], [11, 3990], [20, 3990], [21, 5900], [500, 5900]]) assert.equal(tierForSeat(seat).priceRub, price, String(seat));
-  assert.throws(() => tierForSeat(0));
-  assert.throws(() => tierForSeat(1.5));
-  assert.equal(aiCareerCommerce.priceRub, PRICE_TIERS[0].priceRub, "first-tier price is the same everywhere");
+test("three allowed prices; launch price is the same everywhere; sales stay off", () => {
+  assert.deepEqual([...ALLOWED_PRICES_RUB], [1993, 3990, 5900]);
+  assert.equal(DEFAULT_PRICE_RUB, 1993);
+  assert.equal(aiCareerCommerce.priceRub, DEFAULT_PRICE_RUB);
+  for (const bad of [0, 1990, 4990, "1993", null, 1993.5]) assert.equal(isAllowedPrice(bad), false, String(bad));
   assert.equal(aiCareerCommerce.salesEnabled, false);
   assert.equal(aiCareerCommerce.legalApproved, false);
+  const sql = read("migrations/commerce/001_price_periods.sql");
+  assert.equal((sql.match(/price_kopeks IN \(199300, 399000, 590000\)/g) || []).length, 2, "DB accepts only the three prices");
 });
 
-test("without confirmed server data: launch tier, no seat count", () => {
-  const v = priceView({ confirmed: false });
-  assert.equal(v.current.id, "first");
-  assert.equal(v.remaining, null);
-});
-
-test("with confirmed ledger data: counter follows paid seats plus active holds, never negative", () => {
-  assert.deepEqual(priceView({ confirmed: true, paidSeats: 3, activeHolds: 0 }).remaining, { left: 7, of: 10 });
-  assert.deepEqual(priceView({ confirmed: true, paidSeats: 3, activeHolds: 2 }).remaining, { left: 5, of: 10 });
-  const ten = priceView({ confirmed: true, paidSeats: 10, activeHolds: 0 });
-  assert.equal(ten.current.id, "second");
-  assert.deepEqual(ten.remaining, { left: 10, of: 10 });
-  const std = priceView({ confirmed: true, paidSeats: 25, activeHolds: 1 });
-  assert.equal(std.current.id, "standard");
-  assert.equal(std.remaining, null, "the open-ended tier has no counter");
-});
-
-test("Russian plural and ruble formatting", () => {
-  assert.deepEqual([1, 2, 5, 10, 11, 21, 22].map(seatsWord), ["место", "места", "мест", "мест", "мест", "место", "места"]);
-  assert.equal(rubles(1993), "1 993 ₽");
+test("promotion end is shown in Moscow time as the last included minute; base price has no period text", () => {
+  const promo = { known: true, kind: "promo", priceRub: 1993, startsAt: "2026-11-30T21:00:00.000Z", endsAt: "2026-12-07T21:00:00.000Z", afterPriceRub: 3990 };
+  assert.equal(periodText(promo), "Цена действует до 7 декабря 2026 г., 23:59 МСК включительно.");
+  assert.equal(periodText({ ...promo, kind: "base", endsAt: null }), null);
+  assert.equal(periodText({ known: false }), null);
+  assert.equal(moscowDateTime("2026-12-01T00:00:00Z"), "1 декабря 2026 г., 03:00 МСК");
   assert.equal(rubles(5900), "5 900 ₽");
 });
 
-test("page: server data only — no random, localStorage, timers or hard-coded remaining count", () => {
-  const block = read("components/AiCareerPriceTiers.tsx");
+test("no seat limits, counters or invented discounts anywhere", () => {
+  assert.ok(!existsSync("lib/server/commerce/price-seats.ts") && !existsSync("components/AiCareerPriceTiers.tsx"), "seat reservation removed");
+  const ui = ["components/AiCareerPrice.tsx", "components/AiCareerProductPage.tsx", "components/ProductCard.tsx"].map(read).join("\n");
+  assert.doesNotMatch(ui, /осталось|мест\b|первых 10|<del\b|скидк|Math\.random|localStorage|setInterval|setTimeout|"use client"/);
+  const code = read("config/ai-career-pricing.ts").replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, "");
+  assert.doesNotMatch(code, /seat|capacity/i, "no seat logic in the price config");
+});
+
+test("page: price read on the server at request time, refreshed within a minute, unknown price never guessed", () => {
   const page = read("components/AiCareerProductPage.tsx");
-  const avail = read("lib/server/commerce/price-availability.ts");
-  for (const src of [block, page]) {
-    assert.doesNotMatch(src, /Math\.random|localStorage|sessionStorage|setInterval|setTimeout|useState|"use client"/);
-    assert.doesNotMatch(src, /осталось 7|left:\s*7/);
-  }
-  assert.match(page, /priceView\(await readPriceAvailability\(\)\)/);
-  assert.match(avail, /return \{ confirmed: false \}/);
-  assert.doesNotMatch(avail, /confirmed: true/, "nothing is claimed while sales are off");
-  assert.match(block, /remaining \?/, "the counter renders only with confirmed data");
-  assert.doesNotMatch(block, /30 дней/);
-  assert.doesNotMatch(page, /(программ\S*|курс\S*|маршрут\S*) (на|за|из) 30 дней|30-дневн/i, "the program is 30 steps, not 30 days");
+  assert.match(page, /const price = await readCurrentPrice\(\)/);
+  assert.match(read("app/products/[slug]/page.tsx"), /export const revalidate = 60;/);
+  const current = read("lib/server/commerce/price-current.ts");
+  assert.match(current, /if \(!url\) return LAUNCH;/);
+  assert.match(current, /return \{ known: false \};/);
+  const block = read("components/AiCareerPrice.tsx");
+  assert.match(block, /будет показана при оформлении заказа до подтверждения оплаты/);
+  assert.doesNotMatch(page, /(программ\S*|курс\S*|маршрут\S*) (на|за|из) 30 дней|30-дневн/i, "30 steps, not 30 days");
   assert.match(page, /30 шагов/);
 });
 
-test("public wording: tiers agree everywhere, no 'fixed 1 993' and no old discount", () => {
-  assert.match(commerceCopy.priceTiers, /1 993 ₽ для первых 10 покупателей, 3 990 ₽ для покупателей с 11-го по 20-го, 5 900 ₽ начиная с 21-го/);
-  for (const p of ["app/offer/ai-career/page.tsx", "app/delivery/page.tsx", "app/requisites/page.tsx", "app/products/page.tsx"]) {
+test("documents: price may change by period; order amount fixed at creation; refund = amount in the order", () => {
+  const offer = read("app/offer/ai-career/page.tsx");
+  assert.match(offer, /может изменяться в разные периоды; она составляет 1 993 ₽, 3 990 ₽ или 5 900 ₽/);
+  assert.match(offer, /фиксируется в заказе в момент его оформления, сообщается покупателю до подтверждения оплаты и после оформления заказа не изменяется/);
+  assert.match(read("app/refund/page.tsx"), /полная уплаченная сумма, указанная в заказе/);
+  for (const p of ["app/delivery/page.tsx", "app/requisites/page.tsx", "app/products/page.tsx"]) {
     const s = read(p);
-    assert.match(s, /1 993 ₽/, p);
-    assert.match(s, /3 990 ₽/, p);
-    assert.match(s, /5 900 ₽/, p);
-    assert.doesNotMatch(s, /фиксированн\S* цен\S* 1 993|стоимость фиксирована/, p);
+    for (const x of ["1 993 ₽", "3 990 ₽", "5 900 ₽"]) assert.ok(s.includes(x), `${p}: ${x}`);
+    assert.doesNotMatch(s, /первых 10|ценового этапа|фиксированн\S* цен|стоимость фиксирована/, p);
   }
-  assert.match(read("app/refund/page.tsx"), /полная уплаченная сумма — 1 993 ₽, 3 990 ₽ или 5 900 ₽/);
-  assert.match(read("app/offer/ai-career/page.tsx"), /фиксируется в заказе при его оформлении и сообщается до подтверждения оплаты/);
-  const all = ["components/AiCareerProductPage.tsx", "components/AiCareerPriceTiers.tsx", "config/ai-career-commerce.ts"].map(read).join("\n");
-  assert.doesNotMatch(all, /referencePriceRub|плановая стандартная стоимость/);
+  assert.match(commerceCopy.pricePeriods, /фиксируется в заказе при его оформлении/);
 });
 
-test("seat ledger schema: tier/price/seat bound by CHECKs; paid seats are never released", () => {
-  const sql = read("migrations/commerce/001_price_seats.sql");
-  assert.match(sql, /tier = 'first' AND seat BETWEEN 1 AND 10 AND price_kopeks = 199300/);
-  assert.match(sql, /CAREER_TEST_DATABASE_REQUIRED/);
-  const ledger = read("lib/server/commerce/price-seats.ts");
-  assert.match(ledger, /pg_advisory_xact_lock/);
-  assert.match(ledger, /state IN \('held','capturing'\)/);
-  assert.doesNotMatch(ledger, /DELETE FROM commerce_price_seats WHERE[^"]*state='paid'/);
+test("price changes are validated and kept as history; orders keep their price", () => {
+  const lib = read("lib/server/commerce/price-periods.ts");
+  assert.match(lib, /pg_advisory_xact_lock/);
+  assert.match(lib, /не может быть в прошлом: история цен не переписывается/);
+  assert.doesNotMatch(lib, /DELETE FROM commerce_price_periods/, "history is never deleted");
+  assert.doesNotMatch(lib, /UPDATE commerce_order_prices SET[^"]*price_kopeks/, "an order's price is never recalculated");
+  assert.match(read("scripts/commerce/price-admin.mjs"), /set <1993\|3990\|5900>/);
 });
