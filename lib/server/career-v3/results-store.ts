@@ -12,7 +12,7 @@ import { metricRef } from "../../career-v3/engine.ts";
 import type { PlanStepV3, PlanV3 } from "../../career-v3/contracts.ts";
 import { VARIANT_LABEL } from "../../career-v3/ui-flow.ts";
 import {
-  COMPARABILITY_KEYS, compareMeasurement, parseMeasurement, unitsFor, type Comparison, type LimitationKey, type MeasurementInput, type Unit,
+  compareMeasurement, parseMeasurement, unitsFor, type Comparison, type LimitationKey, type MeasurementInput, type Unit,
 } from "../../career-v3/results.ts";
 import { buildReport, type ReportKind, type ReportSnapshot } from "../../career-v3/report.ts";
 import { activePlanRow, readProgress, versionStaleReasons } from "./progress-store.ts";
@@ -24,6 +24,8 @@ interface Diagnostic { savedAt: string; stale: boolean; staleReasons: string[] }
 const MEASURE_PHASES = new Set(["measure", "value"]);
 const iso = (v: unknown) => (v ? new Date(v as string).toISOString().slice(0, 10) : null);
 const today = () => new Date().toISOString().slice(0, 10);
+/** Latest acceptable measurement date: the next UTC day (a learner in UTC+3 may already be on that date). */
+const latestMeasurementDate = () => new Date(Date.now() + 864e5).toISOString().slice(0, 10);
 
 /** Steps where a measurement can be entered: measurement/value phase with an exercise metric of the role. */
 export function measurementSlots(plan: ReadyPlan, bundle: ProfessionBundle) {
@@ -56,10 +58,17 @@ function rowToInput(r: Record<string, unknown>): MeasurementInput {
 export async function readResults(db: Queryable, accountId: string, professionId: string, d: Diagnostic | null) {
   const bundle = loadProfessionBundle(professionId);
   const progress = await readProgress(db, accountId, professionId, d);
-  const historyMeasurements = (await db.query(
-    `SELECT v.created_at, count(m.*)::int AS n FROM career_v3_plan_versions v JOIN career_v3_measurements m ON m.plan_version_id=v.id AND m.account_id=v.account_id
-      WHERE v.account_id=$1 AND v.profession_id=$2 AND v.status='superseded' GROUP BY v.id ORDER BY v.created_at DESC`, [accountId, professionId])).rows;
-  const history = progress.history.map((h) => ({ ...h, measurements: (historyMeasurements.find((x) => new Date(x.created_at as string).toISOString() === h.createdAt)?.n as number) ?? 0 }));
+  // History is keyed by the plan-version UUID (never by timestamps); the UUID itself is not sent to the client.
+  const history = (await db.query(
+    `SELECT v.created_at, v.superseded_at, v.superseded_reasons,
+            (SELECT count(*)::int FROM career_v3_step_progress p WHERE p.plan_version_id=v.id AND p.account_id=v.account_id AND p.state='done') AS done,
+            (SELECT count(*)::int FROM career_v3_measurements m WHERE m.plan_version_id=v.id AND m.account_id=v.account_id) AS measurements
+       FROM career_v3_plan_versions v
+      WHERE v.account_id=$1 AND v.profession_id=$2 AND v.status='superseded'
+      ORDER BY v.created_at DESC, v.id LIMIT 10`, [accountId, professionId])).rows.map((h) => ({
+    createdAt: new Date(h.created_at as string).toISOString(), supersededAt: new Date(h.superseded_at as string).toISOString(),
+    reasons: (h.superseded_reasons as string[]) ?? [], done: h.done as number, total: 30, measurements: h.measurements as number,
+  }));
   if (!progress.plan) return { plan: null, history, professionTitle: bundle.config.title };
   const p = progress as Extract<typeof progress, { planVersionId: string }>;
   const published = new Map(bundle.library.published.map((l) => [l.id, l.version]));
@@ -104,7 +113,7 @@ export async function saveMeasurement(accountId: string, professionId: string, p
     if (!slot) throw new CareerError(409, "Для этого шага замер не предусмотрен");
     if (!slot.metric || slot.metric.id !== metricId) throw new CareerError(409, "Показатель не совпадает с показателем шага");
     if (!slot.eligible) throw new CareerError(409, slot.note!);
-    const m = parseMeasurement(body, metricId, today());
+    const m = parseMeasurement(body, metricId, latestMeasurementDate());
     const r = await tx.query(
       `INSERT INTO career_v3_measurements(plan_version_id,account_id,position,step_stable_id,metric_id,metric_kind,variant,unit,
          baseline_value,baseline_sample,baseline_on,after_value,after_sample,after_on,review_minutes,fix_minutes,errors_found,conditions,limitations)
@@ -117,7 +126,7 @@ export async function saveMeasurement(accountId: string, professionId: string, p
       [version.id, accountId, position, stableId, metricId, plan.variant, m.unit,
         m.baseline?.value ?? null, m.baseline?.sampleSize ?? null, m.baseline?.measuredOn ?? null,
         m.after?.value ?? null, m.after?.sampleSize ?? null, m.after?.measuredOn ?? null,
-        m.reviewMinutes, m.fixMinutes, m.errorsFound, JSON.stringify(Object.fromEntries(COMPARABILITY_KEYS.map((k) => [k, m.conditions[k]]))), m.limitations],
+        m.reviewMinutes, m.fixMinutes, m.errorsFound, JSON.stringify(m.conditions), m.limitations],
     );
     await event("v3_measurement_saved", accountId, null, tx);
     return { position, revision: r.rows[0].revision as number, comparison: compareMeasurement(m, slot.metric.kind) };

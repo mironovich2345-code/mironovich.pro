@@ -22,7 +22,7 @@ const auth = await import("../lib/server/career/auth.ts");
 const orders = await import("../lib/server/career/orders.ts");
 const { completeLocalFixture } = await import("../lib/server/career/payments.ts");
 const store = await import("../lib/server/career-v3/store.ts");
-const { COMPARABILITY_KEYS } = await import("../lib/career-v3/results.ts");
+const { conditionsFor } = await import("../lib/career-v3/results.ts");
 const db = careerPool();
 const P = "sales_manager";
 const profiles = JSON.parse(readFileSync("tests/fixtures/career-v3/pilot-profiles.json", "utf8")).profiles;
@@ -30,7 +30,7 @@ let checks = 0;
 const pass = (n) => { checks++; console.log("PASS", n); };
 const sql = (q, a = []) => db.query(q, a);
 const rejects = (p, status, re) => assert.rejects(p, (e) => e.status === status && (!re || re.test(e.message)), `expected ${status} ${re ?? ""}`);
-const allTrue = Object.fromEntries(COMPARABILITY_KEYS.map((k) => [k, true]));
+const forUnit = (unit) => Object.fromEntries(conditionsFor(unit).map((k) => [k, true]));
 const TODAY = new Date().toISOString().slice(0, 10);
 const daysAgo = (n) => new Date(Date.now() - n * 864e5).toISOString().slice(0, 10);
 
@@ -53,7 +53,7 @@ const measurement = (unit, o = {}) => ({
   baseline: { value: unit === "minutes" ? 19 : 50, sampleSize: 4, measuredOn: daysAgo(9) },
   after: { value: unit === "minutes" ? 2.5 : 75, sampleSize: 4, measuredOn: daysAgo(2) },
   reviewMinutes: unit === "minutes" ? 7 : null, fixMinutes: unit === "minutes" ? 3.5 : null, errorsFound: 3,
-  conditions: allTrue, limitations: ["learning_effect"], ...o,
+  conditions: forUnit(unit), limitations: ["learning_effect"], ...o,
 });
 
 try {
@@ -129,8 +129,19 @@ try {
   const noBase = await store.saveV3Measurement(a.id, P, slot.position, slot.stableId, slot.metric.id, measurement(unit, { baseline: null }));
   assert.equal(noBase.comparison.status, "insufficient");
   assert.match(noBase.comparison.reasons.join(" "), /Нет исходного замера/);
-  const nonComp = await store.saveV3Measurement(a.id, P, slot.position, slot.stableId, slot.metric.id, measurement(unit, { conditions: { ...allTrue, sameMethod: false } }));
+  const nonComp = await store.saveV3Measurement(a.id, P, slot.position, slot.stableId, slot.metric.id, measurement(unit, { conditions: { ...forUnit(unit), sameMethod: false } }));
   assert.equal(nonComp.comparison.conclusion, "Недостаточно оснований для вывода");
+  if (unit === "minutes") {
+    const noFix = await store.saveV3Measurement(a.id, P, slot.position, slot.stableId, slot.metric.id, measurement(unit, { fixMinutes: null }));
+    assert.equal(noFix.comparison.status, "insufficient", "audit #49: an empty fix time is not treated as zero");
+  }
+  const pctSlot = eligible.find((x) => x.units.some((u) => u !== "minutes"));
+  if (pctSlot) {
+    const u2 = pctSlot.units.find((u) => u !== "minutes");
+    const pc = await store.saveV3Measurement(a.id, P, pctSlot.position, pctSlot.stableId, pctSlot.metric.id, measurement(u2));
+    assert.equal(pc.comparison.status, "ok", `audit #49: a ${u2} measurement is comparable without the time-only condition`);
+    await sql("DELETE FROM career_v3_measurements WHERE account_id=$1 AND position=$2", [a.id, pctSlot.position]);
+  }
   await store.saveV3Measurement(a.id, P, slot.position, slot.stableId, slot.metric.id, measurement(unit));
   pass("division by zero explained instead of a percent; missing baseline and non-comparable conditions → «Недостаточно оснований для вывода»");
 
@@ -182,6 +193,13 @@ try {
   });
   r = await store.readV3Results(a.id, P);
   assert.equal(r.lessons.find((l) => l.lessonId === withdrawn).status, "withdrawn");
+  // audit #49: history is keyed by plan-version UUID — two superseded versions with the same timestamp keep their own counts.
+  await store.saveV3Plan(a.id, P, undefined, { rebuild: true });
+  await sql("UPDATE career_v3_plan_versions SET created_at=(SELECT min(created_at) FROM career_v3_plan_versions WHERE account_id=$1) WHERE account_id=$1 AND status='superseded'", [a.id]);
+  const hist = (await store.readV3Results(a.id, P)).history;
+  assert.equal(hist.length, 2);
+  assert.deepEqual(hist.map((h) => h.measurements).sort(), [0, 1], "each superseded version keeps its own measurement count");
+  assert.ok(hist.every((h) => !("planVersionId" in h) && !JSON.stringify(h).match(/[0-9a-f]{8}-[0-9a-f]{4}-/)), "no plan-version UUID is sent to the client");
   pass(`lesson change (${target}) → results stale and read-only, rebuilt route starts without measurements, history keeps 1; withdrawal (${withdrawn}) is marked`);
   writeFixture();
 

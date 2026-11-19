@@ -209,7 +209,7 @@ try {
   await page.getByText("Завершено 2 из 30 шагов · ≈7%").waitFor();
   await page.getByRole("button", { name: "Продолжить: шаг 3" }).waitFor();
   await shot("route-progress");
-  pass("route: 2 of 30 completed (6%), resume button points to step 3");
+  pass("route: 2 of 30 completed (≈7%), resume button points to step 3");
 
   // 6. Sign out, sign in again with the same synthetic email, resume.
   await page.getByRole("button", { name: "Выйти" }).click();
