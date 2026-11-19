@@ -70,3 +70,14 @@ test("price changes are validated and kept as history; orders keep their price",
   assert.doesNotMatch(lib, /UPDATE commerce_order_prices SET[^"]*price_kopeks/, "an order's price is never recalculated");
   assert.match(read("scripts/commerce/price-admin.mjs"), /set <1993\|3990\|5900>/);
 });
+
+test("product catalog and detail use one server-side current price, not an outdated card price", () => {
+  const catalog = read("app/products/page.tsx");
+  const card = read("components/ProductCard.tsx");
+  assert.match(catalog, /await readCurrentPrice\(\)/);
+  assert.match(catalog, /export const revalidate = 60/);
+  assert.match(catalog, /currentPrice=\{p\.slug === "ai-career" \? price : undefined\}/);
+  assert.match(card, /currentPrice\.known \? rubles\(currentPrice\.priceRub\)/);
+  assert.match(card, /Действующая цена уточняется/);
+  assert.match(read("components/AiCareerProductPage.tsx"), /await readCurrentPrice\(\)/);
+});
