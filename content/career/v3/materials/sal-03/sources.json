@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "1.0.0",
+  "lastChecked": "2026-11-19",
+  "status": "review",
+  "nextReviewOn": "2027-05-19",
+  "note": "Реестр источников урока SAL-03. Идентификаторы совпадают с реестрами PR #57, #59 и #62, если совпадает адрес. Исследования проверены по сайтам издателей 19.11.2026; нормы ГК РФ сверены по КонсультантПлюс без сверки с официальным опубликованием.",
+  "sources": [
+    {
+      "id": "SRC-GK-435",
+      "kind": "law",
+      "edition": "ред. от 10.06.2026, с изм. от 22.10.2026",
+      "publisher": "КонсультантПлюс",
+      "title": "Гражданский кодекс РФ, статья 435. Оферта",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_5142/892c4b89172aef07157d5d6c0e5dcde6e37b3a83/",
+      "checkedOn": "2026-11-19",
+      "verificationStatus": "checked_secondary_publisher_official_publication_not_compared",
+      "methodologicalLimits": null,
+      "usedBy": [
+        "SAL-03"
+      ],
+      "supportsClaimByLesson": {
+        "SAL-03": "Офертой признаётся адресованное конкретным лицам достаточно определённое предложение с существенными условиями, выражающее намерение заключить договор; оферта связывает отправителя с момента получения адресатом."
+      }
+    },
+    {
+      "id": "SRC-GK-432",
+      "kind": "law",
+      "edition": "ред. от 10.06.2026, с изм. от 22.10.2026",
+      "publisher": "КонсультантПлюс",
+      "title": "Гражданский кодекс РФ, статья 432. Основные положения о заключении договора",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_5142/adbefccc8d538d42038164bb81d886c76e719d63/",
+      "checkedOn": "2026-11-19",
+      "verificationStatus": "checked_secondary_publisher_official_publication_not_compared",
+      "methodologicalLimits": null,
+      "usedBy": [
+        "SAL-03"
+      ],
+      "supportsClaimByLesson": {
+        "SAL-03": "Договор считается заключённым, если стороны достигли соглашения по всем существенным условиям; существенными являются условия о предмете договора и иные условия, названные в законе или заявленные стороной."
+      }
+    },
+    {
+      "id": "SRC-NIST-600-1",
+      "kind": "standard",
+      "edition": "July 2024",
+      "publisher": "National Institute of Standards and Technology",
+      "title": "NIST AI 600-1. Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile (July 2024)",
+      "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf",
+      "checkedOn": "2026-11-19",
+      "verificationStatus": "checked_primary_publisher",
+      "methodologicalLimits": null,
+      "usedBy": [
+        "SAL-03"
+      ],
+      "supportsClaimByLesson": {
+        "SAL-03": "Конфабуляция — генерация уверенно поданного ошибочного или ложного содержания; модели могут добавлять правдоподобные детали, которых нет во входных данных, поэтому результат требует проверки человеком."
+      }
+    },
+    {
+      "id": "SRC-ARXIV-HALLUCINATE",
+      "kind": "research",
+      "edition": "arXiv, 04.09.2025",
+      "publisher": "arXiv",
+      "title": "Kalai A. T., Nachum O., Vempala S. S., Zhang E. Why Language Models Hallucinate. arXiv:2509.04664, 04.09.2025",
+      "url": "https://arxiv.org/abs/2509.04664",
+      "checkedOn": "2026-11-19",
+      "verificationStatus": "checked_primary_publisher",
+      "methodologicalLimits": null,
+      "usedBy": [
+        "SAL-03"
+      ],
+      "supportsClaimByLesson": {
+        "SAL-03": "Языковые модели при неуверенности склонны угадывать и выдавать правдоподобные, но неверные утверждения, потому что процедуры обучения и оценки поощряют догадку больше, чем признание неуверенности."
+      }
+    },
+    {
+      "id": "SRC-ARXIV-GENAI-AT-WORK",
+      "kind": "research",
+      "edition": "arXiv, версия 2 от 06.11.2024",
+      "publisher": "arXiv",
+      "title": "Brynjolfsson E., Li D., Raymond L. Generative AI at Work. arXiv:2304.11771, версия 2 от 06.11.2024",
+      "url": "https://arxiv.org/abs/2304.11771",
+      "checkedOn": "2026-11-19",
+      "verificationStatus": "checked_primary_publisher",
+      "methodologicalLimits": "Одна компания, клиентская поддержка; цифры отличаются между версиями работы; продажи и КП не изучались.",
+      "usedBy": [
+        "SAL-03"
+      ],
+      "supportsClaimByLesson": {
+        "SAL-03": "На данных 5 172 операторов поддержки ИИ-ассистент увеличил число решённых обращений в час в среднем на 15% с большой разницей между сотрудниками: самые опытные получили небольшой прирост скорости и небольшое снижение качества."
+      }
+    }
+  ]
+}
