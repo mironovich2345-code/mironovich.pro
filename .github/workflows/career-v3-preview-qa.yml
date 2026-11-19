@@ -1,0 +1,49 @@
+name: AI Career v3 materials preview QA
+on:
+  push:
+    branches:
+      - demo/career-v3-review-preview-20261118
+  pull_request:
+    paths:
+      - "demos/career-cloud/v3-*"
+      - "demos/career-cloud/server.mjs"
+      - ".github/workflows/career-v3-preview-qa.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate preview syntax and real GitHub content snapshot
+        run: |
+          node --check demos/career-cloud/server.mjs
+          node --check demos/career-cloud/v3-preview.js
+          node --check demos/career-cloud/v3-preview.browser.mjs
+          node -e 'const fs=require("fs");const p="demos/career-cloud/"; const [d,c,l,r]=["v3-diagnostic.json","v3-curriculum.json","v3-safety-prototype.json","v3-sales-role.json"].map(x=>JSON.parse(fs.readFileSync(p+x))); if(d.primaryQuestions.length!==18||c.modules.length!==5||c.slots.length!==23||l.status!=="prototype"||r.tasks.length!==24||c.usableForPaidUser!==false)process.exit(1)'
+      - name: Install Playwright without changes to locked dependencies
+        run: |
+          npm install --no-save --no-package-lock playwright
+          npx playwright install --with-deps chromium
+      - name: Test standalone preview browser and no unsafe routes
+        shell: bash
+        env:
+          PORT: "3207"
+        run: |
+          set -euo pipefail
+          node demos/career-cloud/server.mjs >/tmp/career-v3-preview.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid" 2>/dev/null || true' EXIT
+          for i in {1..40}; do
+            if curl --max-time 3 -fsS http://127.0.0.1:3207/health >/dev/null; then break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:3207/v3-preview >/dev/null
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3207/api/payment/create)" = 404
+          node demos/career-cloud/v3-preview.browser.mjs
