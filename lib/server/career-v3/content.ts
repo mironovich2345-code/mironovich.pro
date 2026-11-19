@@ -8,8 +8,9 @@ import { buildLibrary } from "../../career-v3/library.ts";
 import { validateDiagnosticConfig, type DiagnosticContext } from "../../career-v3/diagnostic.ts";
 import { validateEngineConfig, type EngineContext } from "../../career-v3/engine.ts";
 import type {
-  Curriculum, DiagnosticDefinition, LibraryIndex, ProfessionConfig, ProfessionRegistry, RoleMatrix,
+  Curriculum, DiagnosticDefinition, LessonDocument, LibraryIndex, ProfessionConfig, ProfessionRegistry, RoleMatrix,
 } from "../../career-v3/types.ts";
+import { fixtureLibraryEnabled, loadFixtureSources } from "./dev-modes.ts";
 
 export const REGISTRY_PATH = "content/career/v3/professions.json";
 const CONTENT_PREFIX = "content/career/v3/";
@@ -55,7 +56,13 @@ export function professionConfig(professionId: string, registry = loadRegistry()
 
 export interface ProfessionBundle {
   config: ProfessionConfig;
+  /** Library used for selection and plans: the real content, or the local synthetic fixture. */
   library: LibraryIndex;
+  libraryMode: "content" | "synthetic_fixture";
+  /** Always the real repository content (used for review preview). */
+  contentLibrary: LibraryIndex;
+  /** Raw documents of all lessons by ID, for the learner view and the review preview. */
+  lessonDocuments: Map<string, { path: string; document: LessonDocument; source: "content" | "synthetic_fixture" }>;
   diagnostic: DiagnosticContext;
   engine: EngineContext;
   contentHash: string;
@@ -82,15 +89,36 @@ export function loadProfessionBundle(professionId: string, today = new Date().to
     .filter((p) => !p.endsWith("plan-step.prototype.json"));
   const lessons = lessonPaths.map((p) => ({ path: p, document: read<unknown>(p) }));
   const planCandidates = config.planCandidateDirs.flatMap(jsonFiles).map((p) => ({ path: p, document: read<unknown>(p) }));
-  const library = buildLibrary({
+  const contentLibrary = buildLibrary({
     professionId, today, curriculum, role, lessonSchema, stepSchema, lessons, planCandidates,
     fileExists: (rel) => rel.startsWith(CONTENT_PREFIX) && !rel.includes("..") && existsSync(path.join(repoRoot(), rel)),
   });
+  const lessonDocuments: ProfessionBundle["lessonDocuments"] = new Map();
+  for (const l of lessons) {
+    const id = (l.document as { id?: unknown })?.id;
+    if (typeof id === "string") lessonDocuments.set(id, { path: l.path, document: l.document as LessonDocument, source: "content" });
+  }
+  let library = contentLibrary;
+  let libraryMode: ProfessionBundle["libraryMode"] = "content";
+  const fixture = fixtureLibraryEnabled() ? loadFixtureSources(repoRoot()) : null;
+  if (fixture) {
+    library = buildLibrary({
+      professionId, today, curriculum: fixture.curriculum, role, lessonSchema, stepSchema,
+      lessons: fixture.lessons, planCandidates: fixture.planCandidates,
+      fileExists: (rel) => fixture.downloadPaths.includes(rel) && existsSync(path.join(repoRoot(), rel)),
+    });
+    libraryMode = "synthetic_fixture";
+    for (const l of fixture.lessons) {
+      const id = (l.document as { id?: unknown })?.id;
+      if (typeof id === "string") lessonDocuments.set(id, { path: l.path, document: l.document as LessonDocument, source: "synthetic_fixture" });
+    }
+    hash.update("synthetic-fixture").update(JSON.stringify(fixture.lessons.map((l) => l.path)));
+  }
   const diagnostic: DiagnosticContext = { professionId, definition, role, curriculum, binding: config.diagnosticBinding };
   const engine: EngineContext = {
     professionId, role, curriculum, definition, binding: config.diagnosticBinding, engine: config.engine,
     modulePhases: registry.shared.modulePhases, templateKindPhases: registry.shared.templateKindPhases,
   };
-  return { config, library, diagnostic, engine, contentHash: hash.digest("hex"),
+  return { config, library, libraryMode, contentLibrary, lessonDocuments, diagnostic, engine, contentHash: hash.digest("hex"),
     configIssues: [...validateDiagnosticConfig(diagnostic), ...validateEngineConfig(engine)] };
 }

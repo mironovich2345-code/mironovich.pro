@@ -1,7 +1,8 @@
 // AI Career 3.0 server API. Sandbox-only: careerConfig() returns 404 outside the synthetic
 // sandbox (and always on Railway production), the tester gate and a synthetic session are required.
-// Routes: /api/career/v3/{professionId}/{library|diagnostic|diagnostic/questions|diagnostic/task-options|
-//   plan/readiness|task-map|lessons/selection|plan}
+// Routes: /api/career/v3/{professionId}/{state|library|diagnostic|diagnostic/questions|diagnostic/task-options|
+//   plan/readiness|task-map|lessons/selection|plan|lessons/{id}|lessons/{id}/downloads/{dl}|
+//   preview/lessons|preview/lessons/{id}|preview/lessons/{id}/downloads/{dl}}
 import { NextRequest, NextResponse } from "next/server";
 import { careerConfig, CareerError, GATE_COOKIE, SESSION_COOKIE } from "@/lib/server/career/config";
 import { limit, sessionAccount, validGate } from "@/lib/server/career/auth";
@@ -11,6 +12,7 @@ import {
   taskOptionsFor, v3LessonSelection,
 } from "@/lib/server/career-v3/store";
 import { learnerCatalog } from "@/lib/career-v3/library";
+import { cabinetState, learnerLesson, lessonDownload, previewLesson, previewList } from "@/lib/server/career-v3/lessons-view";
 import { questionnaire } from "@/lib/career-v3/diagnostic";
 import { assessPlanReadiness } from "@/lib/career-v3/contracts";
 
@@ -54,7 +56,21 @@ async function handle(req: NextRequest, ctx: { params: Promise<{ action: string[
     if (!/^[a-z][a-z0-9_]{2,40}$/.test(professionId ?? "")) throw new CareerError(404, "Маршрут не найден");
     const body = req.method === "POST" ? await readBody(req) : {};
 
+    if (req.method === "GET" && action === "state") return json(cabinetState(professionId));
     if (req.method === "GET" && action === "library") return json(learnerCatalog(loadProfessionBundle(professionId).library));
+    const lessonRoute = /^(preview\/)?lessons\/([A-Z0-9-]+)(?:\/downloads\/([A-Z0-9-]+))?$/.exec(action);
+    if (req.method === "GET" && action === "preview/lessons") return json(previewList(professionId));
+    if (req.method === "GET" && lessonRoute && !lessonRoute[3] && lessonRoute[2] !== "selection") {
+      if (!lessonRoute[1]) await requireV3Access(accountId);
+      return json(lessonRoute[1] ? previewLesson(professionId, lessonRoute[2]) : learnerLesson(professionId, lessonRoute[2]));
+    }
+    if (req.method === "GET" && lessonRoute?.[3]) {
+      if (!lessonRoute[1]) await requireV3Access(accountId);
+      const f = lessonDownload(professionId, lessonRoute[2], lessonRoute[3], !!lessonRoute[1]);
+      return new NextResponse(new Uint8Array(f.body), { headers: {
+        "Content-Type": f.type, "Content-Disposition": `attachment; filename="${f.filename}"`,
+        "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff", "X-Robots-Tag": "noindex, nofollow" } });
+    }
     if (req.method === "GET" && action === "diagnostic/questions") return json(questionnaire(loadProfessionBundle(professionId).diagnostic));
     if (req.method === "POST" && action === "diagnostic/task-options") {
       onlyFields(body, ["answers"]);
