@@ -155,8 +155,8 @@ export default function LessonPlayer({ lessonId, step, onExit, onMaterials, onOp
       if (quizScreens.some((q) => !answers[q.id])) { setNote("Ответьте на все вопросы теста."); return; }
       try {
         const r = await v3<QuizReply>(`player/lessons/${lessonId}/quiz`, { answers, exerciseId: data.exerciseId });
+        await load(i).catch(() => undefined); // refresh the server result first, then show the message
         setQuizReply(r);
-        await load(i);
       } catch (e) { setNote(e instanceof ApiError ? e.message : "Не удалось проверить тест на сервере"); }
     }
   };
@@ -334,7 +334,7 @@ export default function LessonPlayer({ lessonId, step, onExit, onMaterials, onOp
           <button type="button" onClick={onMaterials} className="inline-flex min-h-11 items-center px-2 text-[14px] font-semibold underline decoration-graphite/40 underline-offset-4">Материалы</button>
           {s.type === "quiz" && !answered ? (
             <Button disabled={!choices.q[s.id]} onClick={() => void checkQuiz()}>Проверить</Button>
-          ) : s.type === "quiz" && s.index === s.of - 1 && !data.result.quizPassed ? (
+          ) : s.type === "quiz" && s.index === s.of - 1 && !data.result.quizPassed && !quizReply?.passed ? (
             <Button disabled>Далее</Button>
           ) : i < total - 1 ? (
             <Button disabled={nextDisabled} onClick={() => void go(i + 1)}>Далее</Button>
