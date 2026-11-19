@@ -48,10 +48,11 @@ try {
   pass("amount and payment id must match the order");
 
   // 4. Canceled payment releases the seat; the next checkout takes the lowest free seat at its tier price.
-  const o3 = orders[2];
+  // Concurrent holds give seats in arbitrary order, so use the seat this order actually got.
+  const o3 = orders[2], h3 = holds[2];
   assert.equal(await L.releaseUnpaid(pool, o3), true);
   const late = await L.holdSeat(pool, randomUUID());
-  assert.deepEqual([late.seat, late.priceKopeks], [3, 199300]);
+  assert.deepEqual([late.seat, late.priceKopeks], [h3.seat, h3.priceKopeks], "the freed seat is reused at its own tier price");
   assert.equal(await L.releaseUnpaid(pool, o1), false, "a paid seat is never released by a cancel notification");
   pass("canceled/unpaid holds are released; paid seats are not");
 
