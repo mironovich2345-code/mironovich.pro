@@ -19,8 +19,8 @@ type Lesson = {
 };
 type QuizReply = { attempt: { correct: number; total: number; passed: boolean; results: { questionId: string; chosen: string; correct: boolean }[] }; passed: boolean; attempts: number };
 
-export default function StepView({ position, onBack, onOpenLesson, onOpenStep }:
-  { position: number; onBack: () => void; onOpenLesson: (id: string) => void; onOpenStep: (n: number) => void }) {
+export default function StepView({ position, onBack, onOpenLesson, onOpenStep, hasPlayer = () => false, onPlay }:
+  { position: number; onBack: () => void; onOpenLesson: (id: string) => void; onOpenStep: (n: number) => void; hasPlayer?: (id: string) => boolean; onPlay?: (lessonId: string, step: number) => void }) {
   const [progress, setProgress] = useState<ActiveProgress | null>(null);
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -103,7 +103,8 @@ export default function StepView({ position, onBack, onOpenLesson, onOpenStep }:
       <p className="mt-2"><strong>Результат шага:</strong> {h(step.expectedArtifact)}</p>
       <p className={`mt-2 text-[15px] ${muted}`}><strong>Безопасность:</strong> {h(step.safetyNote)}</p>
       <div className="mt-3 flex flex-wrap items-center gap-3">
-        <Button variant="secondary" onClick={() => onOpenLesson(step.lessonId)}>Теория урока: {cleanTitle(step.lessonTitle)}</Button>
+        {onPlay && hasPlayer(step.lessonId) && sp.state !== "done" && <Button onClick={() => onPlay(step.lessonId, position)}>{!quiz && !sp.criteriaMet ? "Пройти урок короткими экранами" : "Продолжить урок короткими экранами"}</Button>}
+        <Button variant="secondary" onClick={() => onOpenLesson(step.lessonId)}>{onPlay && hasPlayer(step.lessonId) ? "Полный текст урока" : <>Теория урока: {cleanTitle(step.lessonTitle)}</>}</Button>
         {step.lessonTitle.startsWith("[SYNTHETIC FIXTURE]") && <Badge>Тестовая заглушка</Badge>}
       </div>
 
@@ -123,7 +124,12 @@ export default function StepView({ position, onBack, onOpenLesson, onOpenStep }:
         </Section>
       )}
 
-      {exercise && (
+      {exercise && (sp.state === "self_checked" || sp.state === "done") && (
+        <Section title="1. Упражнение и самопроверка" id="exercise">
+          <p role="status" className="font-semibold">Самопроверка сохранена: отмечены все критерии ✓</p>
+        </Section>
+      )}
+      {exercise && sp.state !== "self_checked" && sp.state !== "done" && (
         <Section title="1. Упражнение и самопроверка" id="exercise">
           <Notice tone="warn">Используйте только вымышленные данные урока. Ответ остаётся у вас: сохраняются только отметки критериев. Не вставляйте: {lesson!.security.forbiddenInputs.join("; ").toLowerCase()}.</Notice>
           <div className={card}>
@@ -152,7 +158,13 @@ export default function StepView({ position, onBack, onOpenLesson, onOpenStep }:
         </Section>
       )}
 
-      {lesson && (
+      {lesson && quiz?.passed && (
+        <Section title="2. Мини-тест урока" id="quiz">
+          {quizReply?.attempt.passed ? <p role="status" className="font-semibold">Мини-тест пройден.</p>
+            : <p role="status" className="font-semibold">Мини-тест засчитан ✓ <span className={`font-normal ${muted}`}>(попыток: {quiz.attempts})</span></p>}
+        </Section>
+      )}
+      {lesson && !quiz?.passed && (
         <Section title="2. Мини-тест урока" id="quiz">
           <p className={muted}>{quiz?.passed ? `Мини-тест пройден (попыток: ${quiz.attempts}).` : quiz ? `Пока не пройден: верно ${quiz.correct} из ${quiz.total}, попыток: ${quiz.attempts}.` : "Ответьте на все вопросы — нужен полностью верный результат, попытки не ограничены."}</p>
           {lesson.content.quiz.map((q, n) => {

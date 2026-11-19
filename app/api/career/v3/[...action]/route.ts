@@ -1,13 +1,17 @@
-// AI Career 3.0 server API. Sandbox-only: careerConfig() returns 404 outside the synthetic
+// AI Career 3.0 server API. Closed cloud demo (demo session) or sandbox-only: careerConfig() returns 404 outside the synthetic
 // sandbox (and always on Railway production), the tester gate and a synthetic session are required.
 // Routes: /api/career/v3/{professionId}/{state|library|diagnostic|diagnostic/questions|diagnostic/task-options|
 //   plan/readiness|task-map|lessons/selection|plan|lessons/{id}|lessons/{id}/downloads/{dl}|
 //   preview/lessons|preview/lessons/{id}|preview/lessons/{id}/downloads/{dl}|
 //   progress|progress/steps/{position}/{start|self-check|complete}|progress/lessons/{id}/quiz|
-//   results|results/measurements/{position}|results/report?kind=|results/report.pdf?kind=}
+//   results|results/measurements/{position}|results/report?kind=|results/report.pdf?kind=|
+//   catalogue|player/lessons/{id}[?step=n]|player/lessons/{id}/position|player/lessons/{id}/quiz}
 import { NextRequest, NextResponse } from "next/server";
 import { careerConfig, CareerError, GATE_COOKIE, SESSION_COOKIE } from "@/lib/server/career/config";
 import { limit, sessionAccount, validGate } from "@/lib/server/career/auth";
+import { demoConfig } from "@/lib/server/career-demo/config";
+import { demoLimit, demoSessionUser } from "@/lib/server/career-demo/auth";
+import { guardDemoRequest } from "@/lib/server/career-demo/http";
 import { loadProfessionBundle, ProfessionUnavailableError } from "@/lib/server/career-v3/content";
 import {
   completeV3Step, readV3Diagnostic, readV3Plan, readV3Progress, readV3TaskMap, requireV3Access, saveV3Diagnostic, saveV3Plan,
@@ -17,6 +21,7 @@ import {
 import { ResultsInputError } from "@/lib/career-v3/results";
 import { REPORT_KINDS, type ReportKind } from "@/lib/career-v3/report";
 import { ProgressInputError } from "@/lib/career-v3/progress";
+import { lessonCatalogue, readPlayer, savePlayerPosition, submitPlayerQuiz } from "@/lib/server/career-v3/player-store";
 import { learnerCatalog } from "@/lib/career-v3/library";
 import { cabinetState, learnerLesson, lessonDownload, previewLesson, previewList } from "@/lib/server/career-v3/lessons-view";
 import { questionnaire } from "@/lib/career-v3/diagnostic";
@@ -49,13 +54,23 @@ function onlyFields(body: Record<string, unknown>, allowed: string[]) {
 
 async function handle(req: NextRequest, ctx: { params: Promise<{ action: string[] }> }) {
   try {
-    const config = careerConfig();
-    if (req.headers.get("host") !== new URL(config.origin).host) throw new CareerError(403, "Неверный host");
-    if (req.method === "POST" && req.headers.get("origin") !== config.origin) throw new CareerError(403, "Неверный источник запроса");
-    if (!validGate(req.cookies.get(GATE_COOKIE)?.value)) throw new CareerError(403, "Требуется допуск тестировщика; реальные данные запрещены");
-    const accountId = await sessionAccount(req.cookies.get(SESSION_COOKIE)?.value);
-    if (!accountId) throw new CareerError(401, "Требуется вход по учебному email-коду");
-    await limit("v3:" + accountId, 120, 60);
+    let accountId: string | null;
+    const demo = demoConfig();
+    if (demo) {
+      // Closed cloud demo: the invite-registered demo session replaces the tester gate + OTP session.
+      guardDemoRequest(req);
+      accountId = (await demoSessionUser(req.cookies.get(demo.cookieName)?.value))?.accountId ?? null;
+      if (!accountId) throw new CareerError(401, "Войдите в демо-кабинет");
+      await demoLimit(demo, "v3:" + accountId, 240, 60);
+    } else {
+      const config = careerConfig();
+      if (req.headers.get("host") !== new URL(config.origin).host) throw new CareerError(403, "Неверный host");
+      if (req.method === "POST" && req.headers.get("origin") !== config.origin) throw new CareerError(403, "Неверный источник запроса");
+      if (!validGate(req.cookies.get(GATE_COOKIE)?.value)) throw new CareerError(403, "Требуется допуск тестировщика; реальные данные запрещены");
+      accountId = await sessionAccount(req.cookies.get(SESSION_COOKIE)?.value);
+      if (!accountId) throw new CareerError(401, "Требуется вход по учебному email-коду");
+      await limit("v3:" + accountId, 120, 60);
+    }
 
     const [professionId, ...rest] = (await ctx.params).action;
     const action = rest.join("/");
@@ -128,6 +143,21 @@ async function handle(req: NextRequest, ctx: { params: Promise<{ action: string[
     const quizRoute = /^progress\/lessons\/([A-Z0-9-]{4,20})\/quiz$/.exec(action);
     if (quizRoute && req.method === "POST") { onlyFields(body, ["answers"]); return json(await submitV3Quiz(accountId, professionId, quizRoute[1], body.answers)); }
     if (action === "plan" && req.method === "GET") return json(await readV3Plan(accountId, professionId));
+    if (action === "catalogue" && req.method === "GET") { await requireV3Access(accountId); return json({ categories: lessonCatalogue(professionId) }); }
+    const playerRoute = /^player\/lessons\/([A-Z]{2,5}-[0-9]{2,3})(\/position|\/quiz)?$/.exec(action);
+    if (playerRoute && !playerRoute[2] && req.method === "GET") {
+      const raw = req.nextUrl.searchParams.get("step");
+      if (raw !== null && !/^([1-9]|[12][0-9]|30)$/.test(raw)) throw new CareerError(400, "Неверный шаг");
+      return json(await readPlayer(accountId, professionId, playerRoute[1], raw === null ? null : Number(raw)));
+    }
+    if (playerRoute?.[2] === "/position" && req.method === "POST") {
+      onlyFields(body, ["scriptVersion", "exerciseId", "screen", "seq", "choices"]);
+      return json(await savePlayerPosition(accountId, professionId, playerRoute[1], body));
+    }
+    if (playerRoute?.[2] === "/quiz" && req.method === "POST") {
+      onlyFields(body, ["answers", "exerciseId"]);
+      return json(await submitPlayerQuiz(accountId, professionId, playerRoute[1], body));
+    }
     throw new CareerError(404, "Маршрут не найден");
   } catch (e) {
     if (e instanceof ProfessionUnavailableError) return json({ error: e.message }, 404);

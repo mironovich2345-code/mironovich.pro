@@ -136,7 +136,7 @@ export async function saveMeasurement(accountId: string, professionId: string, p
 export function reportSnapshot(results: Awaited<ReturnType<typeof readResults>>): ReportSnapshot | null {
   if (!results.plan || !("summary" in results)) return null;
   return {
-    professionTitle: results.professionTitle, variantLabel: VARIANT_LABEL[results.plan.variant], syntheticLibrary: results.libraryMode === "synthetic_fixture",
+    professionTitle: results.professionTitle, variantLabel: VARIANT_LABEL[results.plan.variant], syntheticLibrary: results.libraryMode === "synthetic_fixture", demoPreview: results.libraryMode === "demo_review_preview",
     generatedOn: today(), completedSteps: results.summary.done, totalSteps: results.summary.total, stale: results.stale,
     lessons: results.lessons.map((l) => ({ title: l.title, stepsDone: l.stepsDone, stepsTotal: l.stepsTotal, quiz: l.quiz })),
     measurements: results.measurements.filter((m) => m.input && m.comparison && m.metric).map((m) => ({

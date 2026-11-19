@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature/career-20261118-integrate-on-main
+      - demo/ai-career-v3-cloud
   pull_request:
     paths:
       - "app/career/**"
@@ -24,6 +25,13 @@ on:
       - "app/products/**"
       - "app/solutions/**"
       - ".github/workflows/career-synthetic-qa.yml"
+      - "components/career-demo/**"
+      - "components/career-v3/**"
+      - "middleware.ts"
+      - "app/layout.tsx"
+      - "app/robots.ts"
+      - "scripts/career/demo-admin.mjs"
+      - "content/career/v3/player/**"
 
 permissions:
   contents: read
@@ -38,6 +46,8 @@ jobs:
       CAREER_SANDBOX_ENABLED: "0"
     steps:
       - uses: actions/checkout@v4
+      - name: Fetch main for the schema comparison test
+        run: git fetch --no-tags --depth=1 origin main:refs/remotes/origin/main
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
@@ -172,3 +182,72 @@ jobs:
           node tests/career-v3-progress-browser.mjs || { tail -n 80 /tmp/career-synthetic-next-v3.log; exit 1; }
           node tests/career-v3-results-browser.mjs || { tail -n 80 /tmp/career-synthetic-next-v3.log; exit 1; }
           node scripts/career/v3-fixture-library.mjs remove
+
+  closed-demo:
+    # Closed cloud demo of AI Career 3.0 on a LOCAL loopback copy: own PostgreSQL database with the exact demo
+    # name, generated throw-away secrets, no Railway variables, no payments, mail or external AI.
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: synthetic_only
+          POSTGRES_DB: mironovich_career_demo_v3
+        ports:
+          - 55434:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d mironovich_career_demo_v3"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Create local-only demo configuration
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import secrets
+          values = {
+            "CAREER_V3_DEMO": "1",
+            "CAREER_V3_DEMO_LOCAL": "1",
+            "CAREER_V3_DEMO_ORIGIN": "http://127.0.0.1:3400",
+            "CAREER_V3_DEMO_DATABASE_URL": "postgresql://postgres:synthetic_only@127.0.0.1:55434/mironovich_career_demo_v3",
+            "CAREER_V3_DEMO_SESSION_SECRET": secrets.token_hex(32),
+            "SITE_NOINDEX": "1",
+            "NEXT_PUBLIC_SITE_URL": "http://127.0.0.1:3400",
+          }
+          p = Path(".env.career-demo.local")
+          p.write_text("".join(f"{key}={value}\n" for key, value in values.items()))
+          p.chmod(0o600)
+          PY
+          PGPASSWORD=synthetic_only psql -h 127.0.0.1 -p 55434 -U postgres -d mironovich_career_demo_v3 -c "CREATE DATABASE mironovich_career_demo_other"
+      - name: Migrate, build, HTTP integration and browser E2E (phone and desktop profiles)
+        shell: bash
+        run: |
+          set -euo pipefail
+          set -a
+          source .env.career-demo.local
+          set +a
+          node --experimental-strip-types --no-warnings scripts/career/demo-admin.mjs migrate
+          npx next build >/tmp/career-demo-build.log 2>&1 || { tail -n 80 /tmp/career-demo-build.log; exit 1; }
+          node --no-warnings tests/career-demo-integration.mjs
+          npm install --no-save --no-package-lock playwright
+          npx playwright install chromium
+          sudo ln -sf "$(node -p 'require("playwright").chromium.executablePath()')" /usr/bin/chromium
+          CAREER_DEMO_SCREENSHOTS=/tmp/career-demo-shots node --no-warnings tests/career-demo-browser.mjs
+          CAREER_PLAYER_SCREENSHOTS=/tmp/career-demo-shots/player node --no-warnings tests/career-demo-player-browser.mjs
+      - name: Demo screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: career-demo-screenshots
+          path: /tmp/career-demo-shots
+          if-no-files-found: ignore
+          retention-days: 7

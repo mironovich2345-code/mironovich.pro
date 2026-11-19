@@ -2,6 +2,7 @@
 // Reuses the synthetic sandbox database pool and account model; never touches v2 tables.
 import { careerPool, event } from "../career/db.ts";
 import { CareerError } from "../career/config.ts";
+import { demoConfig } from "../career-demo/config.ts";
 import { evaluateDiagnostic, taskShortlist, validateAnswers, DIAGNOSTIC_RESULT_MODEL, type DiagnosticResultV3 } from "../../career-v3/diagnostic.ts";
 import { loadProfessionBundle } from "./content.ts";
 import { resultOutdatedReasons } from "../../career-v3/engine.ts";
@@ -20,7 +21,11 @@ import type { ReportKind } from "../../career-v3/report.ts";
 type Queryable = { query: (q: string, args?: unknown[]) => Promise<{ rows: Record<string, unknown>[] }> };
 
 export async function requireV3Access(accountId: string, db: Queryable = careerPool()) {
-  const r = await db.query("SELECT access_until FROM career_accounts WHERE id=$1", [accountId]);
+  // Closed cloud demo: access is the server-side tester grant of the invite-registered demo user — not a purchase.
+  // Outside a valid demo configuration this branch never runs and the paid/synthetic grant applies unchanged.
+  const r = demoConfig()
+    ? await db.query("SELECT access_until FROM career_demo_users WHERE account_id=$1 AND tester", [accountId])
+    : await db.query("SELECT access_until FROM career_accounts WHERE id=$1", [accountId]);
   const until = r.rows[0]?.access_until as string | Date | null | undefined;
   if (!until || new Date(until).getTime() <= Date.now()) throw new CareerError(403, "Учебный доступ отсутствует или истёк");
 }

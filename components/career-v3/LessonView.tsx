@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { humanize, lessonNames, MODULE_LABEL } from "@/lib/career-v3/ui-flow";
 import { Badge, Button, Notice, Section, card, muted, PROFESSION, v3 } from "./primitives";
 
-type Mode = "published" | "synthetic_fixture" | "review_preview";
+type Mode = "published" | "synthetic_fixture" | "review_preview" | "demo_review_preview";
 type Full = {
   id: string; title: string; summary: string; moduleId: string; durationMinutes: number; objectives: string[];
   content: {
@@ -42,6 +42,7 @@ export default function LessonView({ lessonId, preview, onBack }: { lessonId: st
     <article aria-labelledby="lesson-title">
       <Button variant="quiet" onClick={onBack}>← Все уроки</Button>
       {mode === "review_preview" && <div className="mt-3"><Notice tone="warn"><strong>Черновик на проверке.</strong> Материал ещё не прошёл редакционную и правовую приёмку и не опубликован. Предпросмотр доступен только тестировщику.</Notice></div>}
+      {mode === "demo_review_preview" && <div className="mt-3"><Notice tone="warn"><strong>Материал на проверке.</strong> Урок ещё не прошёл редакционную и правовую приёмку. В демонстрационной версии он показан для знакомства с форматом.</Notice></div>}
       {mode === "synthetic_fixture" && <div className="mt-3"><Notice tone="warn"><strong>Синтетическая тестовая заглушка.</strong> Используется только для проверки интерфейса и не является учебным материалом.</Notice></div>}
       <p className={`mt-4 text-sm font-semibold ${muted}`}>{MODULE_LABEL[l.moduleId] ?? "Урок"} · около {l.durationMinutes} минут</p>
       <h1 id="lesson-title" className="mt-1 font-display text-[clamp(26px,5.5vw,40px)] font-bold leading-tight">{l.title.replace("[SYNTHETIC FIXTURE] ", "")}</h1>
@@ -130,7 +131,7 @@ export default function LessonView({ lessonId, preview, onBack }: { lessonId: st
   );
 }
 
-function Template({ t }: { t: Full["content"]["templates"][number] }) {
+export function Template({ t }: { t: Full["content"]["templates"][number] }) {
   const [copied, setCopied] = useState(false);
   return (
     <div className={card}>

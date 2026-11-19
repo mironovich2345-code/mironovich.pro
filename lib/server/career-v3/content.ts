@@ -11,6 +11,8 @@ import type {
   Curriculum, DiagnosticDefinition, LessonDocument, LibraryIndex, ProfessionConfig, ProfessionRegistry, RoleMatrix,
 } from "../../career-v3/types.ts";
 import { fixtureLibraryEnabled, loadFixtureSources } from "./dev-modes.ts";
+import { demoConfig } from "../career-demo/config.ts";
+import { demoPreviewSources } from "../career-demo/preview-library.ts";
 
 export const REGISTRY_PATH = "content/career/v3/professions.json";
 const CONTENT_PREFIX = "content/career/v3/";
@@ -58,7 +60,7 @@ export interface ProfessionBundle {
   config: ProfessionConfig;
   /** Library used for selection and plans: the real content, or the local synthetic fixture. */
   library: LibraryIndex;
-  libraryMode: "content" | "synthetic_fixture";
+  libraryMode: "content" | "synthetic_fixture" | "demo_review_preview";
   /** Always the real repository content (used for review preview). */
   contentLibrary: LibraryIndex;
   /** Raw documents of all lessons by ID, for the learner view and the review preview. */
@@ -113,6 +115,16 @@ export function loadProfessionBundle(professionId: string, today = new Date().to
       if (typeof id === "string") lessonDocuments.set(id, { path: l.path, document: l.document as LessonDocument, source: "synthetic_fixture" });
     }
     hash.update("synthetic-fixture").update(JSON.stringify(fixture.lessons.map((l) => l.path)));
+  }
+  if (!fixture && demoConfig()) {
+    // Closed cloud demo: route building on an in-memory preview copy of the lessons in review (content untouched).
+    const preview = demoPreviewSources(curriculum, lessons, today);
+    library = buildLibrary({
+      professionId, today, curriculum: preview.curriculum, role, lessonSchema, stepSchema, lessons: preview.lessons, planCandidates,
+      fileExists: (rel) => rel.startsWith(CONTENT_PREFIX) && !rel.includes("..") && existsSync(path.join(repoRoot(), rel)),
+    });
+    libraryMode = "demo_review_preview";
+    hash.update("demo-review-preview");
   }
   const diagnostic: DiagnosticContext = { professionId, definition, role, curriculum, binding: config.diagnosticBinding };
   const engine: EngineContext = {

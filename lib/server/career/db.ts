@@ -1,11 +1,14 @@
 import { Pool, type PoolClient } from "pg";
 import { careerConfig } from "./config.ts";
+import { demoConfig } from "../career-demo/config.ts";
 let pool: Pool | undefined;
+// The closed cloud demo (lib/server/career-demo/config.ts) has its own fully validated database;
+// otherwise the synthetic sandbox configuration applies unchanged (and throws outside the sandbox).
 export function careerPool() {
-  const config = careerConfig();
+  const databaseUrl = demoConfig()?.databaseUrl ?? careerConfig().databaseUrl;
   if (!pool)
     pool = new Pool({
-      connectionString: config.databaseUrl,
+      connectionString: databaseUrl,
       max: 5,
       connectionTimeoutMillis: 5000,
       idleTimeoutMillis: 10000,
