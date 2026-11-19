@@ -136,9 +136,25 @@ npm test                                 # включает tests/career-demo-co
 
 В CI это делает задача `closed-demo` в `.github/workflows/career-synthetic-qa.yml`.
 
-## Развёртывание на Railway
+## Текущее развёртывание (2026-11-19)
 
-Нужен доступ, которого у агента нет. Не заменяйте работающие сервисы проекта `mironovich-career-cloud-demo`.
+- Адрес: **https://ai-career-v3-demo-ai-career-v3-closed-demo.up.railway.app/**
+- Railway: проект `mironovich-career-cloud-demo`, отдельная среда `ai-career-v3-closed-demo`. В ней два сервиса:
+  - `ai-career-v3-demo` — приложение из ветки `demo/ai-career-v3-cloud`, автодеплой при пуше;
+  - `ai-career-v3-demo-db` — `postgres:16-alpine` с томом. Публичного TCP-доступа нет, база доступна только по внутренней сети среды.
+- Старый сервис `career-browser-demo` в среде `demo` и основной сайт не изменялись.
+- Секреты заданы только в переменных Railway: пароль БД и секрет сессий сгенерированы случайно и нигде не публиковались.
+- Проверено снаружи по HTTPS:
+  - HSTS и `X-Robots-Tag: noindex` на всех ответах; `robots.txt` → `Disallow: /`;
+  - `/` показывает демо с плашкой; `/blog`, `/offer/ai-career` и API v2/платежей отвечают 404;
+  - неверное приглашение → 403, неизвестный вход → 401, чужой Origin → 403;
+  - API кабинета без сессии и с поддельной cookie → 401;
+  - ни одной cookie до входа, ни одного внешнего запроса;
+  - нет горизонтальной прокрутки на iPhone 13, Pixel 7 и десктопе (скриншоты `screenshots/live-*.png`).
+
+## Развёртывание на Railway (как воспроизвести)
+
+Не заменяйте работающие сервисы проекта `mironovich-career-cloud-demo`.
 
 1. **Среда.** В проекте `mironovich-career-cloud-demo` создайте новую среду (Environment) `ai-career-v3-closed-demo`. Сервисы среды `production` не трогайте.
 2. **База.** В этой среде добавьте отдельный сервис PostgreSQL. Создайте в нём базу `mironovich_career_demo_v3`:
@@ -179,7 +195,10 @@ npm test                                 # включает tests/career-demo-co
 Код создаёт оператор внутри сервиса, и выводится он только в его терминал:
 
 ```bash
+npm i -g @railway/cli        # один раз
+railway login                # вход в свой аккаунт Railway в браузере
 railway ssh --project mironovich-career-cloud-demo --environment ai-career-v3-closed-demo --service ai-career-v3-demo
+# внутри контейнера сервиса:
 node --experimental-strip-types --no-warnings scripts/career/demo-admin.mjs invite tester-1 14
 ```
 
