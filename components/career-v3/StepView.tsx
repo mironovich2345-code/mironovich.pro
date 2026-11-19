@@ -31,10 +31,10 @@ export default function StepView({ position, onBack, onOpenLesson, onOpenStep }:
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const refresh = useCallback(async () => {
+  const refresh = useCallback(async (show = true) => {
     const p = await v3<Progress>("progress");
     if (!p.plan) throw new Error("Маршрут ещё не собран");
-    setProgress(p as ActiveProgress);
+    if (show) setProgress(p as ActiveProgress);
     return p as ActiveProgress;
   }, []);
 
@@ -43,13 +43,14 @@ export default function StepView({ position, onBack, onOpenLesson, onOpenStep }:
     (async () => {
       setError(null); setMessage(null); setQuizReply(null); setLesson(null);
       try {
-        let p = await refresh();
+        // Audit #49: the step is shown only after "start" is applied, so the learner never sees a stale «Не начат».
+        let p = await refresh(false);
         const step = p.plan.steps.find((s) => s.position === position);
         if (!step) throw new Error("Шаг не найден");
         if (!p.stale && p.steps[position - 1]?.state !== "done") {
           await v3(`progress/steps/${position}/start`, { stableId: step.stableId });
-          p = await refresh();
         }
+        p = await refresh();
         const sp = p.steps.find((s) => s.position === position)!;
         const l = await v3<{ lesson: Lesson }>(`lessons/${step.lessonId}`).then((r) => r.lesson).catch(() => null);
         if (cancelled) return;
