@@ -1,6 +1,7 @@
 import Link from "next/link";
 import CtaLink from "./CtaLink";
 import MobileMenu from "./MobileMenu";
+import { careerLoginHref } from "@/config/career-access";
 import { aboutMenuLinks, contactHref, navLinks, site } from "@/config/site";
 
 /**
@@ -44,6 +45,13 @@ export default function SiteHeader() {
               </Link>
             ),
           )}
+          <a
+            href={careerLoginHref}
+            aria-label="Войти в обучение AI Career 3.0"
+            className="inline-flex min-h-[44px] items-center whitespace-nowrap border-b border-cream/40 text-[13.5px] uppercase tracking-[0.065em] text-cream transition-colors hover:border-signal hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-signal"
+          >
+            Войти
+          </a>
           <CtaLink
             href={contactHref}
             location="header"
