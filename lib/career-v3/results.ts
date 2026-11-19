@@ -32,6 +32,8 @@ export const COMPARABILITY = {
 } as const;
 export type ComparabilityKey = keyof typeof COMPARABILITY;
 export const COMPARABILITY_KEYS = Object.keys(COMPARABILITY) as ComparabilityKey[];
+/** Only conditions that apply to the unit: the review/fix-time condition concerns time measurements only. */
+export const conditionsFor = (unit: Unit): ComparabilityKey[] => COMPARABILITY_KEYS.filter((k) => k !== "reviewIncluded" || unit === "minutes");
 
 /** Predefined interpretation limits the learner can add; some are always added by the system. */
 export const LIMITATIONS = {
@@ -61,7 +63,7 @@ export interface MeasurementInput {
   reviewMinutes: number | null;
   fixMinutes: number | null;
   errorsFound: number | null;
-  conditions: Record<ComparabilityKey, boolean>;
+  conditions: Partial<Record<ComparabilityKey, boolean>>;
   limitations: LimitationKey[];
 }
 
@@ -73,8 +75,11 @@ const num = (v: unknown, max: number, what: string, integer = false) => {
   return Math.round(v * 10) / 10;
 };
 
-/** Strict parsing of a measurement body: exact keys, numbers in range, ISO dates not in the future. */
-export function parseMeasurement(body: unknown, metricId: string, today: string): MeasurementInput {
+/**
+ * Strict parsing of a measurement body: exact keys, numbers in range, ISO dates not after `latestDate`
+ * (the caller passes the next UTC day so that a learner east of UTC can enter today's local date).
+ */
+export function parseMeasurement(body: unknown, metricId: string, latestDate: string): MeasurementInput {
   if (!body || typeof body !== "object" || Array.isArray(body)) throw new ResultsInputError("invalid_body", "Замер не распознан");
   const b = body as Record<string, unknown>;
   const allowed = ["unit", "baseline", "after", "reviewMinutes", "fixMinutes", "errorsFound", "conditions", "limitations"];
@@ -86,7 +91,7 @@ export function parseMeasurement(body: unknown, metricId: string, today: string)
     if (typeof v !== "object" || Array.isArray(v)) throw new ResultsInputError("invalid_point", `${what}: неверный формат`);
     const p = v as Record<string, unknown>;
     if (Object.keys(p).some((k) => !["value", "sampleSize", "measuredOn"].includes(k))) throw new ResultsInputError("unexpected_field", `${what}: неожиданные поля`);
-    if (!isDate(p.measuredOn) || (p.measuredOn as string) > today) throw new ResultsInputError("invalid_date", `${what}: дата замера в формате ГГГГ-ММ-ДД, не позже сегодняшней`);
+    if (!isDate(p.measuredOn) || (p.measuredOn as string) > latestDate) throw new ResultsInputError("invalid_date", `${what}: дата замера в формате ГГГГ-ММ-ДД, не позже сегодняшней`);
     return { value: num(p.value, MAX[unit], `${what}, значение`), sampleSize: num(p.sampleSize, 100, `${what}, число задач`, true), measuredOn: p.measuredOn as string };
   };
   const baseline = point(b.baseline, "Было");
@@ -96,9 +101,10 @@ export function parseMeasurement(body: unknown, metricId: string, today: string)
   if (baseline && after && after.measuredOn < baseline.measuredOn) throw new ResultsInputError("invalid_date", "Повторный замер не может быть раньше исходного");
   const opt = (v: unknown, max: number, what: string, integer = false) => (v === null || v === undefined ? null : num(v, max, what, integer));
   const c = b.conditions;
-  if (!c || typeof c !== "object" || Array.isArray(c) || Object.keys(c).length !== COMPARABILITY_KEYS.length
-    || COMPARABILITY_KEYS.some((k) => typeof (c as Record<string, unknown>)[k] !== "boolean"))
-    throw new ResultsInputError("invalid_conditions", "Условия сопоставимости: отметьте каждое «да» или «нет»");
+  const keys = conditionsFor(unit);
+  if (!c || typeof c !== "object" || Array.isArray(c) || Object.keys(c).length !== keys.length
+    || keys.some((k) => typeof (c as Record<string, unknown>)[k] !== "boolean"))
+    throw new ResultsInputError("invalid_conditions", "Условия сопоставимости: отметьте каждое условие для выбранной единицы «да» или «нет»");
   const lim = b.limitations ?? [];
   if (!Array.isArray(lim) || lim.some((x) => !(x in LIMITATIONS)) || new Set(lim).size !== lim.length)
     throw new ResultsInputError("invalid_limitations", "Ограничения выбираются только из списка");
@@ -106,11 +112,13 @@ export function parseMeasurement(body: unknown, metricId: string, today: string)
     unit, baseline, after,
     reviewMinutes: opt(b.reviewMinutes, 600, "Время проверки"), fixMinutes: opt(b.fixMinutes, 600, "Время исправления"),
     errorsFound: opt(b.errorsFound, 1000, "Найдено ошибок", true),
-    conditions: c as Record<ComparabilityKey, boolean>, limitations: lim as LimitationKey[],
+    conditions: Object.fromEntries(keys.map((k) => [k, (c as Record<string, boolean>)[k]])), limitations: lim as LimitationKey[],
   };
 }
 
-const r1 = (x: number) => Math.round(x * 10) / 10;
+/** Half away from zero, symmetric for negative changes (−32.5% → −33%, like 32.5% → 33%). */
+const roundHalfAway = (x: number) => Math.sign(x) * Math.round(Math.abs(x));
+const r1 = (x: number) => Math.sign(x) * Math.round(Math.abs(x) * 10 + 1e-9) / 10;
 /** "1 задача", "3 задачи", "5 задач". */
 export const tasksWord = (n: number) => {
   const m10 = n % 10, m100 = n % 100;
@@ -133,21 +141,23 @@ export function compareMeasurement(m: MeasurementInput, kind: MetricKind | undef
   if (kind !== "exercise") reasons.push("Это рабочий показатель: он зависит от многих внешних факторов, поэтому в учебных результатах не сравнивается");
   if (!m.baseline) reasons.push("Нет исходного замера «было»");
   if (!m.after) reasons.push("Нет повторного замера «стало»");
-  const unmet = COMPARABILITY_KEYS.filter((k) => !m.conditions[k]).map((k) => COMPARABILITY[k].toLowerCase());
+  const unmet = conditionsFor(m.unit).filter((k) => m.conditions[k] !== true).map((k) => COMPARABILITY[k].toLowerCase());
   if (unmet.length) reasons.push(`Не подтверждены условия сопоставимости: ${unmet.join("; ")}`);
   if (m.baseline && m.baseline.sampleSize < MIN_SAMPLE) reasons.push(`В исходном замере меньше ${MIN_SAMPLE} задач`);
   if (m.after && m.after.sampleSize < MIN_SAMPLE) reasons.push(`В повторном замере меньше ${MIN_SAMPLE} задач`);
-  if (m.unit === "minutes" && m.after && m.reviewMinutes === null) reasons.push("Не указано время проверки результата");
+  if (m.unit === "minutes" && m.after && m.reviewMinutes === null) reasons.push("Не указано время проверки результата (укажите 0, если проверки не было)");
+  // An empty fix time is never treated as zero: the learner confirms 0 explicitly.
+  if (m.unit === "minutes" && m.after && m.fixMinutes === null) reasons.push("Не указано время исправления (укажите 0, если исправлений не было)");
   if (reasons.length || !m.baseline || !m.after) return { status: "insufficient", reasons, conclusion: INSUFFICIENT, caveats };
 
   if (m.baseline.sampleSize < 10 || m.after.sampleSize < 10) caveats.push(LIMITATIONS.small_sample);
-  const parts = m.unit === "minutes" ? { work: m.after.value, review: m.reviewMinutes ?? 0, fix: m.fixMinutes ?? 0 } : null;
+  const parts = m.unit === "minutes" ? { work: m.after.value, review: m.reviewMinutes!, fix: m.fixMinutes! } : null;
   const after = parts ? r1(parts.work + parts.review + parts.fix) : m.after.value;
   const baseline = m.baseline.value;
   const absDiff = r1(after - baseline);
   const relative = baseline === 0
     ? { value: null, explanation: "Процент изменения не считается: исходное значение равно нулю, делить на него нельзя. Используйте абсолютную разницу." }
-    : { value: Math.round((absDiff / baseline) * 100) };
+    : { value: roundHalfAway((absDiff / baseline) * 100) };
   const pp = m.unit === "percent" ? r1(after - baseline) : null;
   const u = UNIT_SHORT[m.unit];
   const sign = (x: number) => (x > 0 ? "+" : "") + fmtNum(x);

@@ -179,7 +179,10 @@ try {
   await fillPoint(card, "Было", -5, 4, daysAgo(9));
   await fillPoint(card, "Стало", minutes ? 2.5 : 75, 4, daysAgo(2));
   if (minutes) { await card.getByLabel("Время проверки, мин").fill("7"); await card.getByLabel("Время исправления, мин").fill("3.5"); }
-  for (const label of ["одного типа и объёма", "способ замера", "один и тот же человек", "Только вымышленные", "включает проверку"]) await card.getByLabel(new RegExp(label)).check();
+  assert.equal(await card.getByLabel(/включает проверку/).count(), minutes ? 1 : 0, "audit #49: the time-only condition is shown for time measurements only");
+  for (const label of ["одного типа и объёма", "способ замера", "один и тот же человек", "Только вымышленные", ...(minutes ? ["включает проверку"] : [])]) await card.getByLabel(new RegExp(label)).check();
+  const scheme = await card.locator('input[type="checkbox"]').first().evaluate((el) => getComputedStyle(el).colorScheme);
+  assert.equal(scheme, "light", "audit #49: native controls use the light scheme, so an unchecked box is not a dark square");
   await card.getByRole("button", { name: "Сохранить замер" }).click();
   await card.getByRole("alert").getByText(/число от 0 до/).waitFor();
   pass("a negative value is refused by the server with a readable message next to the form");
@@ -239,7 +242,7 @@ try {
   await a11y("results with forms and report");
 
   // 5. API guards from the browser session.
-  const m = { unit: first.units[0], baseline: null, after: null, reviewMinutes: null, fixMinutes: null, errorsFound: null, conditions: Object.fromEntries(["sameTaskType", "sameMethod", "samePerformer", "trainingDataOnly", "reviewIncluded"].map((k) => [k, true])), limitations: [] };
+  const m = { unit: first.units[0], baseline: null, after: null, reviewMinutes: null, fixMinutes: null, errorsFound: null, conditions: Object.fromEntries(["sameTaskType", "sameMethod", "samePerformer", "trainingDataOnly", ...(first.units[0] === "minutes" ? ["reviewIncluded"] : [])].map((k) => [k, true])), limitations: [] };
   assert.equal((await post(`results/measurements/${first.position}`, { stableId: first.stableId + "x", metricId: first.metric.id, measurement: m })).status(), 409);
   assert.equal((await post(`results/measurements/${first.position}`, { stableId: first.stableId, metricId: "renewal_rate", measurement: m })).status(), 409);
   assert.equal((await post(`results/measurements/${first.position}`, { stableId: first.stableId, metricId: first.metric.id, measurement: { ...m, note: "клиент" } })).status(), 400);

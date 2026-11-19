@@ -76,7 +76,9 @@ export default function CareerV3App() {
   };
 
   return (
-    <div className="bg-cream text-graphite">
+    // The site root uses color-scheme: dark; the cream cabinet needs light native controls, otherwise an
+    // unchecked checkbox renders as a dark filled square that looks almost checked.
+    <div className="bg-cream text-graphite [color-scheme:light]">
       <main id="main" className="mx-auto min-h-[70vh] max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
         <p className="mb-5 flex flex-wrap items-center gap-2 text-sm font-semibold">
           <Badge>Тестовый контур</Badge>
