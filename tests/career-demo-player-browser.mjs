@@ -295,6 +295,7 @@ try {
         if (name === "desktop" && [4, 9].includes(k)) await d.page.screenshot({ path: `${shots}/${lessonId.toLowerCase()}-${String(k).padStart(2, "0")}-desktop.png` });
         if (name === "iphone13" && [1, 9, 13].includes(k)) await d.page.screenshot({ path: `${shots}/${lessonId.toLowerCase()}-${String(k).padStart(2, "0")}-iphone13.png` });
         await d.page.getByRole("button", { name: "Далее" }).click();
+        await d.page.getByText(new RegExp(`^Экран ${k + 1} из ${t}$`)).waitFor(); // read the next screen only after it is shown
       }
       await d.page.getByRole("heading", { name: "Теперь я умею" }).waitFor();
       if (name === "iphone13") fit13[lessonId] = `${f.filter(Boolean).length}/${t - 1}`;
