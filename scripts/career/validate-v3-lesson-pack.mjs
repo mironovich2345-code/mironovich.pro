@@ -35,7 +35,7 @@ const PROMISES = [
 // Fields that quote deliberate errors for the learner to find.
 const QUOTED_ERROR_FIELDS = new Set(["syntheticInput", "unsafeAttempt", "quote", "situation"]);
 
-export function loadPack(pack = "sal-03") {
+export function loadPack(pack) {
   const cfg = PACKS[pack];
   if (!cfg) throw new Error("unknown lesson pack " + pack);
   return {
