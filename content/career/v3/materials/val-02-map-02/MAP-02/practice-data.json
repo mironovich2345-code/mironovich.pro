@@ -1,0 +1,247 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "DL-MAP02-DATA",
+  "lessonId": "MAP-02",
+  "status": "review",
+  "syntheticOnly": true,
+  "notice": "Все компании, правила, процессы и цифры вымышлены. Данные предназначены только для учебной практики.",
+  "exercises": [
+    {
+      "exerciseId": "MAP02-TASK-1",
+      "subtype": "outbound_b2b",
+      "materialIds": [
+        "TPL-MAP02-SPLIT",
+        "TPL-MAP02-RISK",
+        "TPL-MAP02-PROMPT-SPLIT"
+      ],
+      "rules": {
+        "aiTool": "approved_chat_anonymised_notes_only",
+        "integrations": [],
+        "sendBy": "employee",
+        "crmBy": "employee",
+        "termsBy": "manager",
+        "errorReversible": false
+      },
+      "answerKey": {
+        "scheme": [
+          {
+            "part": "Собрать итоги встречи из своих заметок и обезличить их",
+            "kind": "preparation",
+            "performer": "employee",
+            "controller": "employee",
+            "permission": "заметки менеджера"
+          },
+          {
+            "part": "Подготовить черновик письма",
+            "kind": "preparation",
+            "performer": "ai",
+            "controller": "employee",
+            "permission": "утверждённый ИИ-чат, обезличенные заметки"
+          },
+          {
+            "part": "Проверить факты, сроки и обещания",
+            "kind": "review",
+            "performer": "employee",
+            "controller": "employee",
+            "permission": "—"
+          },
+          {
+            "part": "Решить, какой следующий шаг предложить",
+            "kind": "decision",
+            "performer": "employee",
+            "controller": "employee",
+            "permission": "—"
+          },
+          {
+            "part": "Ответ о скидке",
+            "kind": "decision",
+            "performer": "manager",
+            "controller": "manager",
+            "permission": "полномочия руководителя отдела продаж"
+          },
+          {
+            "part": "Отправить письмо",
+            "kind": "action",
+            "performer": "employee",
+            "controller": "employee",
+            "permission": "почта менеджера"
+          },
+          {
+            "part": "Обновить этап сделки и задачу в CRM",
+            "kind": "action",
+            "performer": "employee",
+            "controller": "employee",
+            "permission": "права менеджера в CRM"
+          }
+        ],
+        "findings": [
+          {
+            "quote": "расшифровку встречи с именами и телефонами участников",
+            "cue": "только обезличенные заметки",
+            "type": "personal_data",
+            "why": "Утверждённый чат разрешён только для обезличенных заметок."
+          },
+          {
+            "quote": "отправляет его клиенту через час после встречи",
+            "cue": "отправляет менеджер",
+            "type": "auto_send",
+            "why": "Письмо отправляет только менеджер; ошибку в отправленном письме не отозвать."
+          },
+          {
+            "quote": "сам выбирает следующий шаг",
+            "cue": "решение о следующем шаге — за менеджером",
+            "type": "ai_decision",
+            "why": "Выбор следующего шага — решение человека; ИИ может предложить варианты."
+          },
+          {
+            "quote": "сам переводит сделку на этап",
+            "cue": "CRM обновляет менеджер",
+            "type": "crm_change",
+            "why": "Этап сделки меняет менеджер; интеграции ИИ с CRM нет и разрешения на неё нет."
+          },
+          {
+            "quote": "указывает скидку 10%",
+            "cue": "скидку решает руководитель",
+            "type": "commercial_terms",
+            "why": "Скидки утверждает руководитель отдела продаж, а не модель и не менеджер."
+          }
+        ]
+      }
+    },
+    {
+      "exerciseId": "MAP02-TASK-2",
+      "subtype": "inbound",
+      "materialIds": [
+        "TPL-MAP02-COMPARE",
+        "TPL-MAP02-RISK",
+        "TPL-MAP02-PROMPT-RISKS"
+      ],
+      "inputs": {
+        "perDay": 40,
+        "sampleSize": 10,
+        "integrationApproved": false
+      },
+      "variants": [
+        {
+          "id": "manual",
+          "label": "Вручную",
+          "minutesPerItem": 11,
+          "errorsAfterReviewPer10": 1,
+          "available": true,
+          "humanSends": true
+        },
+        {
+          "id": "assistant",
+          "label": "ИИ-помощник",
+          "minutesPerItem": 8,
+          "errorsAfterReviewPer10": 0,
+          "errorsBeforeReviewPer10": 4,
+          "available": true,
+          "humanSends": true
+        },
+        {
+          "id": "auto_send",
+          "label": "Автоотправка поставщика",
+          "minutesPerItem": 1,
+          "errorsAfterReviewPer10": null,
+          "available": false,
+          "humanSends": false
+        },
+        {
+          "id": "queue_draft",
+          "label": "Черновик в очереди",
+          "minutesPerItem": null,
+          "errorsAfterReviewPer10": null,
+          "available": false,
+          "humanSends": true
+        }
+      ],
+      "answerKey": {
+        "chosen": "assistant",
+        "numbers": {
+          "manualPerDay": 440,
+          "assistantPerDay": 320,
+          "autoPerDay": 40,
+          "savingPerDay": 120,
+          "savingPercent": 27
+        },
+        "findings": [
+          {
+            "quote": "отправляет ответ клиенту без участия менеджера",
+            "cue": "автоотправка недопустима",
+            "type": "auto_send",
+            "why": "Ответ без проверки: до проверки ошибки были в 4 черновиках из 10, ошибку в цене клиент видит сразу."
+          },
+          {
+            "quote": "интеграция каких-либо систем с почтой отделом ИТ не утверждена",
+            "cue": "нет разрешения ИТ",
+            "type": "no_permission",
+            "why": "Оба варианта поставщика требуют неутверждённой интеграции."
+          },
+          {
+            "quote": "до проверки ошибки в 4 черновиках из 10",
+            "cue": "проверка обязательна",
+            "type": "error_cost",
+            "why": "Без проверки 40% ответов содержали бы ошибки."
+          }
+        ]
+      }
+    },
+    {
+      "exerciseId": "MAP02-TASK-3",
+      "subtype": "account",
+      "materialIds": [
+        "TPL-MAP02-NOAUTO",
+        "TPL-MAP02-COMPARE"
+      ],
+      "inputs": {
+        "meetingsPerMonth": 6,
+        "prepMinutes": 40,
+        "claimedSavingPerMeeting": 15,
+        "dataTransferAllowed": false,
+        "approvedTool": false
+      },
+      "answerKey": {
+        "conclusion": "automation_not_justified",
+        "reasons": [
+          "low_frequency",
+          "high_variability",
+          "data_forbidden",
+          "no_approved_tool",
+          "high_error_cost",
+          "human_terms"
+        ],
+        "numbers": {
+          "prepPerMonth": 240,
+          "claimedSavingPerMonth": 90
+        },
+        "findings": [
+          {
+            "quote": "подключить ИИ к CRM",
+            "cue": "интеграции и разрешения нет",
+            "type": "no_permission",
+            "why": "Передавать данные клиентов во внешние сервисы запрещено, утверждённого инструмента нет."
+          },
+          {
+            "quote": "сам собирал историю клиента",
+            "cue": "историю собирает менеджер",
+            "type": "data_forbidden",
+            "why": "История клиента содержит данные клиента и договорённости."
+          },
+          {
+            "quote": "предложение о продлении со скидкой",
+            "cue": "условия продления утверждает руководитель",
+            "type": "commercial_terms",
+            "why": "Условия и скидки — решение уполномоченного человека."
+          },
+          {
+            "quote": "Встреч — 6 в месяц",
+            "cue": "редкая операция",
+            "type": "low_frequency",
+            "why": "При 6 встречах в месяц выигрыш мал: 6 × 15 = 90 минут в месяц до учёта проверки."
+          }
+        ]
+      }
+    }
+  ]
+}

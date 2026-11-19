@@ -116,7 +116,13 @@ export function validatePack(ctx) {
       const subtypes = new Set(l.audience.taskIds.flatMap((t) => tasks.get(t)?.subtypeIds ?? []));
       for (const s of l.audience.subtypeIds) good(subtypes.has(s), `${id}: subtype ${s} not served by its tasks`);
     }
-    for (const p of l.prerequisites) good(slots.has(p) && slots.get(p).moduleId === "safety", `${id}: prerequisite ${p} must be a safety slot`);
+    // A prerequisite is a safety slot or, in shared modules (not practice), an earlier slot of the same module
+    // (e.g. VAL-01 before VAL-02). Practice lessons serve different work and never require each other.
+    const order = catalog.slots.map((s) => s.id);
+    for (const p of l.prerequisites) {
+      const ps = slots.get(p);
+      good(!!ps && (ps.moduleId === "safety" || (l.moduleId !== "practice" && ps.moduleId === l.moduleId && order.indexOf(p) < order.indexOf(id))), `${id}: prerequisite ${p} must be a safety slot or an earlier slot of the same shared module`);
+    }
 
     const own = [...c.workedExamples, ...c.procedure, ...c.templates, ...c.exercises, ...c.quiz, ...l.downloads].map((x) => x.id);
     for (const x of own) {
