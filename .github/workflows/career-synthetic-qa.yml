@@ -45,6 +45,8 @@ jobs:
       CAREER_SANDBOX_ENABLED: "0"
     steps:
       - uses: actions/checkout@v4
+      - name: Fetch main for the schema comparison test
+        run: git fetch --no-tags --depth=1 origin main:refs/remotes/origin/main
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
