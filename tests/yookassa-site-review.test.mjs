@@ -20,17 +20,18 @@ test("the payment application storefront lists exactly one employee digital prod
   assert.match(route, /notFound\(\)/);
 });
 
-test("fixed 1 993 RUB price and buy button appear below the 30-step program, not in home hero", () => {
+test("tiered price and buy button appear below the 30-step program, not in home hero", () => {
   const page = productPage();
   const steps = page.indexOf('id="product-steps-title"');
   const price = page.indexOf('id="ai-career-price-heading"');
-  const buy = page.indexOf("Купить за {aiCareerCommerce.priceRub.toLocaleString");
+  const buy = page.indexOf("Купить за {rubles(view.current.priceRub)}");
   assert.ok(steps >= 0 && price > steps && buy > price);
-  assert.match(page, /Фиксированная стоимость цифрового продукта/);
+  assert.match(page, /Цена растёт по этапам/);
+  assert.match(page, /<AiCareerPriceTiers view=\{view\} \/>/);
   assert.match(page, /<button\s+type="button"\s+disabled/s);
   assert.match(page, /aria-describedby="ai-career-payment-status"/);
   assert.match(page, /Приём онлайн-платежей через ЮKassa ещё подключается/);
-  assert.match(page, /3 990 ₽ — плановая стандартная стоимость, а не цена прежних продаж/);
+  assert.doesNotMatch(page, /плановая стандартная стоимость|<del\b/, "old discount explanation removed");
   const hero = read("components/Hero.tsx");
   assert.doesNotMatch(hero, /career\.plannedPrice|rub\(career/);
   assert.equal(aiCareerCommerce.priceRub, 1993);
@@ -48,7 +49,7 @@ test("purchase instructions and delivery conditions cover price, email, age and 
     assert.ok(p.includes(x), "missing customer legal link " + x);
   }
   const delivery = read("app/delivery/page.tsx");
-  assert.match(delivery, /фиксированной цене 1 993 ₽/);
+  assert.match(delivery, /1 993 ₽ для первых 10 покупателей, 3 990 ₽ для следующих 10, затем 5 900 ₽/);
   assert.match(delivery, /учётную запись по email/);
   assert.match(delivery, /Оплата пока выключена|Онлайн-оплата пока выключена/);
 });

@@ -63,10 +63,10 @@ test("privacy document explains cookie consent without raw technical storage lab
 test("employee price is below the steps, and all public prelaunch prices agree",()=>{
   const product=read("components/AiCareerProductPage.tsx");
   assert.ok(product.indexOf('id="ai-career-price-heading"') > product.indexOf('id="product-steps-title"'));
-  assert.match(product, /<del className=/);
+  assert.doesNotMatch(product, /<del\b/, "no struck-through reference price");
   const commerce=read("config/ai-career-commerce.ts");
   assert.match(commerce, /priceRub: 1993/);
-  assert.match(commerce, /referencePriceRub: 3990/);
+  assert.doesNotMatch(commerce, /referencePriceRub/);
   assert.match(commerce, /salesEnabled: false/);
   assert.match(commerce, /legalApproved: false/);
   for (const p of ["config/ai-career-commerce.ts", "app/offer/ai-career/page.tsx", "app/refund/page.tsx"]) {
