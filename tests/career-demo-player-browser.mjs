@@ -278,7 +278,9 @@ try {
     await registerWithRoute(d.page, "player-" + name, false);
     for (const lessonId of ["SAF-01", "SAL-03", "VAL-02"]) {
       await d.page.goto(`/career/v3#play=${lessonId}`);
-      await counter(d.page).waitFor();
+      // Hash navigation re-mounts the player; wait for the NEW lesson (fresh account → screen 1), not the old result.
+      await d.page.getByText(/^Экран 1 из \d+$/).waitFor();
+      await d.page.getByRole("heading", { level: 1, name: { SAF: "Какие данные нельзя передавать ИИ", SAL: "Коммерческое предложение без выдуманных условий", VAL: "Было → стало: честное сравнение" }[lessonId.slice(0, 3)] }).waitFor();
       const t = Number((await counter(d.page).innerText()).match(/из (\d+)/)[1]);
       const f = [];
       for (let k = 1; k < t; k++) {
@@ -295,6 +297,7 @@ try {
         if (name === "desktop" && [4, 9].includes(k)) await d.page.screenshot({ path: `${shots}/${lessonId.toLowerCase()}-${String(k).padStart(2, "0")}-desktop.png` });
         if (name === "iphone13" && [1, 9, 13].includes(k)) await d.page.screenshot({ path: `${shots}/${lessonId.toLowerCase()}-${String(k).padStart(2, "0")}-iphone13.png` });
         await d.page.getByRole("button", { name: "Далее" }).click();
+        await d.page.getByText(new RegExp(`^Экран ${k + 1} из ${t}$`)).waitFor(); // read the next screen only after it is shown
       }
       await d.page.getByRole("heading", { name: "Теперь я умею" }).waitFor();
       if (name === "iphone13") fit13[lessonId] = `${f.filter(Boolean).length}/${t - 1}`;
