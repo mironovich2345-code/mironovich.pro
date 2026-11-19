@@ -19,8 +19,8 @@ type Lesson = {
 };
 type QuizReply = { attempt: { correct: number; total: number; passed: boolean; results: { questionId: string; chosen: string; correct: boolean }[] }; passed: boolean; attempts: number };
 
-export default function StepView({ position, onBack, onOpenLesson, onOpenStep }:
-  { position: number; onBack: () => void; onOpenLesson: (id: string) => void; onOpenStep: (n: number) => void }) {
+export default function StepView({ position, onBack, onOpenLesson, onOpenStep, hasPlayer = () => false, onPlay }:
+  { position: number; onBack: () => void; onOpenLesson: (id: string) => void; onOpenStep: (n: number) => void; hasPlayer?: (id: string) => boolean; onPlay?: (lessonId: string, step: number) => void }) {
   const [progress, setProgress] = useState<ActiveProgress | null>(null);
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -103,7 +103,8 @@ export default function StepView({ position, onBack, onOpenLesson, onOpenStep }:
       <p className="mt-2"><strong>Результат шага:</strong> {h(step.expectedArtifact)}</p>
       <p className={`mt-2 text-[15px] ${muted}`}><strong>Безопасность:</strong> {h(step.safetyNote)}</p>
       <div className="mt-3 flex flex-wrap items-center gap-3">
-        <Button variant="secondary" onClick={() => onOpenLesson(step.lessonId)}>Теория урока: {cleanTitle(step.lessonTitle)}</Button>
+        {onPlay && hasPlayer(step.lessonId) && <Button onClick={() => onPlay(step.lessonId, position)}>Пройти урок короткими экранами</Button>}
+        <Button variant="secondary" onClick={() => onOpenLesson(step.lessonId)}>{onPlay && hasPlayer(step.lessonId) ? "Полный текст урока" : <>Теория урока: {cleanTitle(step.lessonTitle)}</>}</Button>
         {step.lessonTitle.startsWith("[SYNTHETIC FIXTURE]") && <Badge>Тестовая заглушка</Badge>}
       </div>
 

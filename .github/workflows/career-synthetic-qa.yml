@@ -31,6 +31,7 @@ on:
       - "app/layout.tsx"
       - "app/robots.ts"
       - "scripts/career/demo-admin.mjs"
+      - "content/career/v3/player/**"
 
 permissions:
   contents: read
@@ -241,6 +242,7 @@ jobs:
           npx playwright install chromium
           sudo ln -sf "$(node -p 'require("playwright").chromium.executablePath()')" /usr/bin/chromium
           CAREER_DEMO_SCREENSHOTS=/tmp/career-demo-shots node --no-warnings tests/career-demo-browser.mjs
+          CAREER_PLAYER_SCREENSHOTS=/tmp/career-demo-shots/player node --no-warnings tests/career-demo-player-browser.mjs
       - name: Demo screenshots
         if: always()
         uses: actions/upload-artifact@v4

@@ -8,23 +8,28 @@ import RouteView from "./RouteView";
 import LessonView from "./LessonView";
 import StepView from "./StepView";
 import ResultsView from "./ResultsView";
+import LessonPlayer from "./LessonPlayer";
 import { ApiError, Badge, Button, Notice, card, field, muted, v2, v3 } from "./primitives";
 
 type Session = { authenticated?: boolean; active?: boolean; paymentMode?: string; account?: { email: string; access_until: string | null } };
 type CabinetState = { libraryMode: "content" | "synthetic_fixture" | "demo_review_preview"; previewEnabled: boolean; publishedLessons: number };
 /** Closed cloud demo: the demo shell (components/career-demo) owns sign-in, sign-out and the account screen. */
 export type DemoHooks = { onLogout: () => Promise<void>; onSessionLost: () => void; account: ReactNode };
-type View = "diagnostic" | "map" | "route" | "results" | "lessons" | "lesson" | "step" | "account";
-const VIEWS: { id: Exclude<View, "lesson" | "step" | "account">; label: string }[] = [
+type View = "diagnostic" | "map" | "route" | "results" | "lessons" | "lesson" | "step" | "account" | "play";
+type Category = { id: string; title: string; status: "ready" | "future"; lessons: { id: string; title: string; player: boolean }[] };
+const VIEWS: { id: Exclude<View, "lesson" | "step" | "account" | "play">; label: string }[] = [
   { id: "diagnostic", label: "Диагностика" }, { id: "map", label: "Моя карта" }, { id: "route", label: "Мой маршрут" }, { id: "results", label: "Мои результаты" }, { id: "lessons", label: "Уроки" },
 ];
 
 type Route = { view: View; lesson?: string; preview?: boolean; step?: number; implicit?: boolean };
+const playHash = (lesson: string, step?: number) => `play=${lesson}${step ? `&step=${step}` : ""}`;
 function readHash(): Route {
   if (typeof window === "undefined") return { view: "diagnostic", implicit: true };
   const h = window.location.hash.slice(1);
   const m = /^(lesson|preview)=([A-Z0-9-]+)$/.exec(h);
   if (m) return { view: "lesson", lesson: m[2], preview: m[1] === "preview" };
+  const pl = /^play=([A-Z]{2,5}-[0-9]{2,3})(?:&step=([0-9]{1,2}))?$/.exec(h);
+  if (pl) return { view: "play", lesson: pl[1], step: pl[2] ? Number(pl[2]) : undefined };
   const st = /^step=([0-9]{1,2})$/.exec(h);
   if (st && Number(st[1]) >= 1 && Number(st[1]) <= 30) return { view: "step", step: Number(st[1]) };
   if (VIEWS.some((v) => v.id === h) || h === "account") return { view: h as View };
@@ -74,8 +79,13 @@ export default function CareerV3App({ demo }: { demo?: DemoHooks } = {}) {
     window.addEventListener("hashchange", on);
     return () => window.removeEventListener("hashchange", on);
   }, []);
+  const [catalogue, setCatalogue] = useState<Category[] | null>(null);
+  useEffect(() => {
+    if (phase === "cabinet") void v3<{ categories: Category[] }>("catalogue").then((r) => setCatalogue(r.categories)).catch(() => setCatalogue([]));
+  }, [phase]);
+  const hasPlayer = (id: string) => !!catalogue?.some((c) => c.lessons.some((l) => l.id === id && l.player));
   const go = (view: View, lesson?: string, preview = false, step?: number) => {
-    window.location.hash = view === "lesson" && lesson ? `${preview ? "preview" : "lesson"}=${lesson}` : view === "step" && step ? `step=${step}` : view;
+    window.location.hash = view === "play" && lesson ? playHash(lesson, step) : view === "lesson" && lesson ? `${preview ? "preview" : "lesson"}=${lesson}` : view === "step" && step ? `step=${step}` : view;
     setRoute({ view, lesson, preview, step });
     window.scrollTo({ top: 0 });
   };
@@ -92,7 +102,7 @@ export default function CareerV3App({ demo }: { demo?: DemoHooks } = {}) {
     // The site root uses color-scheme: dark; the cream cabinet needs light native controls, otherwise an
     // unchecked checkbox renders as a dark filled square that looks almost checked.
     <div className="bg-cream text-graphite [color-scheme:light]">
-      <main id="main" className="mx-auto min-h-[70vh] max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+      <main id="main" className={`mx-auto min-h-[70vh] max-w-4xl px-4 sm:px-6 ${route.view === "play" ? "pb-0 pt-2 sm:pt-6" : "py-8 sm:py-12"}`}>
         {!demo && (
           <p className="mb-5 flex flex-wrap items-center gap-2 text-sm font-semibold">
             <Badge>Тестовый контур</Badge>
@@ -106,7 +116,7 @@ export default function CareerV3App({ demo }: { demo?: DemoHooks } = {}) {
         {phase === "access" && <Access paymentMode={session.paymentMode} onDone={load} />}
         {phase === "cabinet" && state && (
           <>
-            <nav aria-label="Разделы кабинета" className="mb-8 overflow-x-auto">
+            {route.view !== "play" && <nav aria-label="Разделы кабинета" className="mb-8 overflow-x-auto">
               <ul className="flex min-w-0 flex-wrap gap-2">
                 {VIEWS.map((v) => {
                   const active = route.view === v.id || (v.id === "lessons" && route.view === "lesson") || (v.id === "route" && route.view === "step");
@@ -131,7 +141,7 @@ export default function CareerV3App({ demo }: { demo?: DemoHooks } = {}) {
                   <button type="button" onClick={() => void logout()} className="inline-flex min-h-11 items-center rounded-md border border-graphite/30 bg-white/60 px-4 text-[15px] font-semibold hover:border-signal">Выйти</button>
                 </li>
               </ul>
-            </nav>
+            </nav>}
             {state.libraryMode === "synthetic_fixture" && route.view !== "lesson" && (
               <div className="mb-6"><Notice tone="warn">Включена синтетическая тестовая библиотека для проверки интерфейса. Её уроки — заглушки, а не учебные материалы.</Notice></div>
             )}
@@ -144,10 +154,21 @@ export default function CareerV3App({ demo }: { demo?: DemoHooks } = {}) {
             {route.view === "map" && <TaskMapView onRetake={() => go("diagnostic")} onRoute={() => go("route")} />}
             {route.view === "route" && <RouteView fixtureMode={state.libraryMode === "synthetic_fixture"} onRetake={() => go("diagnostic")} onOpenLesson={(id) => go("lesson", id)} onOpenStep={(n) => go("step", undefined, false, n)} />}
             {route.view === "results" && <ResultsView onRoute={() => go("route")} />}
-            {route.view === "step" && route.step && <StepView key={route.step} position={route.step} onBack={() => go("route")} onOpenLesson={(id) => go("lesson", id)} onOpenStep={(n) => go("step", undefined, false, n)} />}
-            {route.view === "lessons" && <Lessons state={state} open={(id, preview) => go("lesson", id, preview)} />}
+            {route.view === "step" && route.step && <StepView key={route.step} position={route.step} onBack={() => go("route")} onOpenLesson={(id) => go("lesson", id)} onOpenStep={(n) => go("step", undefined, false, n)} hasPlayer={hasPlayer} onPlay={(id, n) => go("play", id, false, n)} />}
+            {route.view === "lessons" && <Lessons state={state} catalogue={catalogue} open={(id, preview) => go(!preview && hasPlayer(id) ? "play" : "lesson", id, preview)} />}
+            {route.view === "play" && route.lesson && (
+              <LessonPlayer key={`${route.lesson}-${route.step ?? ""}`} lessonId={route.lesson} step={route.step}
+                onExit={() => (route.step ? go("step", undefined, false, route.step) : go("lessons"))}
+                onMaterials={() => go("lesson", route.lesson)} onOpenLesson={(id) => go(hasPlayer(id) ? "play" : "lesson", id)}
+                onBackToStep={(n) => go("step", undefined, false, n)} />
+            )}
             {route.view === "account" && demo && demo.account}
-            {route.view === "lesson" && route.lesson && <LessonView lessonId={route.lesson} preview={!!route.preview} onBack={() => go("lessons")} />}
+            {route.view === "lesson" && route.lesson && (
+              <>
+                {!route.preview && hasPlayer(route.lesson) && <div className="mb-5"><Button onClick={() => go("play", route.lesson)}>Пройти урок короткими экранами</Button></div>}
+                <LessonView lessonId={route.lesson} preview={!!route.preview} onBack={() => go("lessons")} />
+              </>
+            )}
           </>
         )}
       </main>
@@ -228,28 +249,45 @@ function Access({ paymentMode, onDone }: { paymentMode?: string; onDone: () => v
   );
 }
 
-function Lessons({ state, open }: { state: CabinetState; open: (id: string, preview: boolean) => void }) {
-  const [published, setPublished] = useState<{ id: string; title: string; moduleId: string }[] | null>(null);
+function Lessons({ state, catalogue, open }: { state: CabinetState; catalogue: Category[] | null; open: (id: string, preview: boolean) => void }) {
   const [drafts, setDrafts] = useState<{ id: string; title: string; moduleId: string }[]>([]);
   useEffect(() => {
-    void v3<{ lessons: { id: string; title: string; moduleId: string }[] }>("library").then((r) => setPublished(r.lessons)).catch(() => setPublished([]));
     if (state.previewEnabled) void v3<{ lessons: { id: string; title: string; moduleId: string }[] }>("preview/lessons").then((r) => setDrafts(r.lessons)).catch(() => setDrafts([]));
   }, [state.previewEnabled]);
+  const ready = catalogue?.filter((c) => c.status === "ready") ?? [];
+  const future = catalogue?.filter((c) => c.status === "future") ?? [];
   return (
     <article aria-labelledby="lessons-title">
       <h1 id="lessons-title" className="font-display text-[clamp(28px,6vw,44px)] font-bold leading-tight">Уроки</h1>
-      {published === null ? <p role="status">Загружаем…</p> : published.length === 0 ? (
+      {catalogue === null ? <p role="status">Загружаем…</p> : ready.length === 0 ? (
         <div className="mt-5"><Notice>Опубликованных уроков пока нет: материалы проходят редакционную и правовую проверку.</Notice></div>
       ) : (
-        <ul className="mt-5 grid gap-3 sm:grid-cols-2">
-          {published.map((l) => (
-            <li key={l.id}><button type="button" onClick={() => open(l.id, false)} className={`${card} w-full text-left hover:border-signal`}>
-              <span className="block font-bold">{l.title.replace("[SYNTHETIC FIXTURE] ", "")}</span>
-              {state.libraryMode === "synthetic_fixture" && <span className="mt-2 inline-block"><Badge>Тестовая заглушка</Badge></span>}
-              {state.libraryMode === "demo_review_preview" && <span className="mt-2 inline-block"><Badge>На проверке</Badge></span>}
-            </button></li>
+        <>
+          {ready.map((c) => (
+            <section key={c.id} aria-labelledby={`cat-${c.id}`} className="mt-8">
+              <h2 id={`cat-${c.id}`} className="text-xl font-bold">{c.title}</h2>
+              <ul className="mt-3 grid gap-3 sm:grid-cols-2">
+                {c.lessons.map((l) => (
+                  <li key={l.id}><button type="button" onClick={() => open(l.id, false)} className={`${card} w-full text-left hover:border-signal`}>
+                    <span className="block font-bold">{l.title.replace("[SYNTHETIC FIXTURE] ", "")}</span>
+                    <span className={`mt-2 block text-[14px] ${muted}`}>{l.player ? "Короткие экраны · практика · мини-тест" : "Полный текст урока"}</span>
+                    {state.libraryMode === "synthetic_fixture" && <span className="mt-2 inline-block"><Badge>Тестовая заглушка</Badge></span>}
+                    {state.libraryMode === "demo_review_preview" && <span className="mt-2 inline-block"><Badge>На проверке</Badge></span>}
+                  </button></li>
+                ))}
+              </ul>
+            </section>
           ))}
-        </ul>
+          {future.length > 0 && (
+            <section aria-labelledby="cat-future" className="mt-10">
+              <h2 id="cat-future" className="text-xl font-bold">Готовятся</h2>
+              <p className={`mt-1 ${muted}`}>Уроков в этих разделах пока нет — они появятся позже.</p>
+              <ul className="mt-3 flex flex-wrap gap-2">
+                {future.map((c) => <li key={c.id} className="rounded-md border border-dashed border-graphite/30 px-3 py-2 text-[15px]">{c.title}</li>)}
+              </ul>
+            </section>
+          )}
+        </>
       )}
       {state.previewEnabled && (
         <section aria-labelledby="drafts-title" className="mt-10">

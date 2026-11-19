@@ -4,7 +4,8 @@
 //   plan/readiness|task-map|lessons/selection|plan|lessons/{id}|lessons/{id}/downloads/{dl}|
 //   preview/lessons|preview/lessons/{id}|preview/lessons/{id}/downloads/{dl}|
 //   progress|progress/steps/{position}/{start|self-check|complete}|progress/lessons/{id}/quiz|
-//   results|results/measurements/{position}|results/report?kind=|results/report.pdf?kind=}
+//   results|results/measurements/{position}|results/report?kind=|results/report.pdf?kind=|
+//   catalogue|player/lessons/{id}[?step=n]|player/lessons/{id}/position}
 import { NextRequest, NextResponse } from "next/server";
 import { careerConfig, CareerError, GATE_COOKIE, SESSION_COOKIE } from "@/lib/server/career/config";
 import { limit, sessionAccount, validGate } from "@/lib/server/career/auth";
@@ -20,6 +21,7 @@ import {
 import { ResultsInputError } from "@/lib/career-v3/results";
 import { REPORT_KINDS, type ReportKind } from "@/lib/career-v3/report";
 import { ProgressInputError } from "@/lib/career-v3/progress";
+import { lessonCatalogue, readPlayer, savePlayerPosition } from "@/lib/server/career-v3/player-store";
 import { learnerCatalog } from "@/lib/career-v3/library";
 import { cabinetState, learnerLesson, lessonDownload, previewLesson, previewList } from "@/lib/server/career-v3/lessons-view";
 import { questionnaire } from "@/lib/career-v3/diagnostic";
@@ -141,6 +143,17 @@ async function handle(req: NextRequest, ctx: { params: Promise<{ action: string[
     const quizRoute = /^progress\/lessons\/([A-Z0-9-]{4,20})\/quiz$/.exec(action);
     if (quizRoute && req.method === "POST") { onlyFields(body, ["answers"]); return json(await submitV3Quiz(accountId, professionId, quizRoute[1], body.answers)); }
     if (action === "plan" && req.method === "GET") return json(await readV3Plan(accountId, professionId));
+    if (action === "catalogue" && req.method === "GET") { await requireV3Access(accountId); return json({ categories: lessonCatalogue(professionId) }); }
+    const playerRoute = /^player\/lessons\/([A-Z]{2,5}-[0-9]{2,3})(\/position)?$/.exec(action);
+    if (playerRoute && !playerRoute[2] && req.method === "GET") {
+      const raw = req.nextUrl.searchParams.get("step");
+      if (raw !== null && !/^([1-9]|[12][0-9]|30)$/.test(raw)) throw new CareerError(400, "Неверный шаг");
+      return json(await readPlayer(accountId, professionId, playerRoute[1], raw === null ? null : Number(raw)));
+    }
+    if (playerRoute?.[2] && req.method === "POST") {
+      onlyFields(body, ["scriptVersion", "exerciseId", "screen"]);
+      return json(await savePlayerPosition(accountId, professionId, playerRoute[1], body));
+    }
     throw new CareerError(404, "Маршрут не найден");
   } catch (e) {
     if (e instanceof ProfessionUnavailableError) return json({ error: e.message }, 404);

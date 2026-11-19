@@ -257,6 +257,49 @@ try {
     assert.equal((await B.c.v3("plan", { rebuild: "yes" })).status, 400);
   });
 
+  await check("lesson player: catalogue, saved screen across sign-in, version guard, step context, isolation; route progress untouched", async () => {
+    const u = await register("player");
+    ok(await u.c.v3("diagnostic", { answers: profiles[0].answers }));
+    ok(await u.c.v3("task-map", {}));
+    const plan = ok(await u.c.v3("plan", {})).plan;
+    const cats = ok(await u.c.v3("catalogue")).categories;
+    assert.equal(cats.find((c) => c.id === "safety").lessons.find((l) => l.id === "SAF-01").player, true);
+    assert.equal(cats.find((c) => c.id === "prompting").status, "future", "empty category is not shown as ready");
+    const pl = ok(await u.c.v3("player/lessons/SAF-01"));
+    assert.deepEqual([pl.position, pl.restarted, pl.step], [0, false, null]);
+    const n = pl.screens.length;
+    assert.ok(n >= 18 && n <= 26);
+    const before = ok(await u.c.v3("progress")).summary;
+    const pos = (screen, extra = {}) => u.c.v3("player/lessons/SAF-01/position", { scriptVersion: pl.scriptVersion, exerciseId: pl.exerciseId, screen, ...extra });
+    ok(await pos(7));
+    ok(await u.c.demo("logout", {}));
+    ok(await u.c.demo("login", { email: u.email, password: PASSWORD }));
+    assert.equal(ok(await u.c.v3("player/lessons/SAF-01")).position, 7, "screen restored after sign-in");
+    for (const [body, code] of [[{ screen: n }, 400], [{ screen: -1 }, 400], [{ screen: "7" }, 400], [{ scriptVersion: "999" }, 409], [{ exerciseId: "SAF01-TASK-9" }, 400]]) {
+      const b = { scriptVersion: pl.scriptVersion, exerciseId: pl.exerciseId, screen: 3, ...body };
+      assert.equal((await u.c.v3("player/lessons/SAF-01/position", b)).status, code, JSON.stringify(body));
+    }
+    assert.equal((await pos(3, { role: "admin" })).status, 400, "unexpected fields refused");
+    assert.equal((await u.c.v3("player/lessons/SAF-02")).status, 404, "lesson without a script → full lesson only");
+    assert.equal((await u.c.v3("player/lessons/ZZZ-99")).status, 404);
+    const safStep = plan.steps.find((x) => x.lessonId === "SAF-01");
+    const other = plan.steps.find((x) => x.lessonId !== "SAF-01");
+    const inStep = ok(await u.c.v3(`player/lessons/SAF-01?step=${safStep.position}`));
+    assert.equal(inStep.step.position, safStep.position);
+    assert.equal(inStep.inRoute, true);
+    assert.equal((await u.c.v3(`player/lessons/SAF-01?step=${other.position}`)).status, 404, "a step of another lesson");
+    assert.equal((await u.c.v3("player/lessons/SAF-01?step=99")).status, 400);
+    // A changed lesson/script version: the old position is not reused, the learner starts the new version from the top.
+    await db.query("UPDATE career_v3_player_positions SET script_version='0' WHERE lesson_id='SAF-01' AND account_id=(SELECT account_id FROM career_demo_users WHERE email=$1)", [u.email]);
+    const again = ok(await u.c.v3("player/lessons/SAF-01"));
+    assert.deepEqual([again.position, again.restarted], [0, true]);
+    const last = ok(await pos(n - 1));
+    assert.equal(last.completed, true);
+    assert.equal(ok(await B.c.v3("player/lessons/SAF-01")).position, 0, "another account has its own position");
+    assert.deepEqual(ok(await u.c.v3("progress")).summary, before, "screens are not route steps; progress unchanged");
+    assert.doesNotMatch(JSON.stringify(pl.screens.filter((x) => x.type === "text")), /SAF01-|TPL-|STEP-/, "no internal ids in text screens");
+  });
+
   await check("password recovery: recovery code, operator reset code, sessions revoked", async () => {
     const t = await register("recover");
     const NEW = PASSWORD + "-new";

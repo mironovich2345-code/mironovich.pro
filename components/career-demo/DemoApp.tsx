@@ -27,6 +27,14 @@ export default function DemoApp() {
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Lesson player = focus mode: the product line is hidden (the demo notice above always stays).
+  const [playing, setPlaying] = useState(false);
+  useEffect(() => {
+    const on = () => setPlaying(window.location.hash.startsWith("#play="));
+    on();
+    window.addEventListener("hashchange", on);
+    return () => window.removeEventListener("hashchange", on);
+  }, []);
   const load = useCallback(async () => {
     setError(null);
     try {
@@ -45,10 +53,10 @@ export default function DemoApp() {
 
   return (
     <div className="min-h-screen bg-cream text-graphite [color-scheme:light]">
-      <div role="note" className="border-b border-signal/40 bg-[#FBF6EC] px-4 py-2.5 text-center text-[14px] font-semibold leading-snug sm:text-[15px]">
+      <div role="note" className="border-b border-signal/40 bg-[#FBF6EC] px-3 py-2 text-center text-[13px] font-semibold leading-snug sm:px-4 sm:py-2.5 sm:text-[15px]">
         <span className="mr-1.5 inline-block h-2 w-2 rounded-full bg-signal align-middle" aria-hidden="true" />{BANNER}
       </div>
-      <header className="mx-auto flex max-w-4xl items-center justify-between gap-3 px-4 pt-5 sm:px-6">
+      <header className={`mx-auto max-w-4xl items-center justify-between gap-3 px-4 pt-5 sm:px-6 ${playing && screen === "cabinet" ? "hidden" : "flex"}`}>
         <p className="font-display text-lg font-bold tracking-tight">AI Career 3.0 <span className={`font-sans text-sm font-semibold ${muted}`}>· закрытая демоверсия</span></p>
         {account && <span className={`hidden truncate text-sm sm:inline ${muted}`}>{account.email}</span>}
       </header>
