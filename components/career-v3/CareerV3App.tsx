@@ -6,28 +6,33 @@ import Diagnostic from "./Diagnostic";
 import TaskMapView from "./TaskMapView";
 import RouteView from "./RouteView";
 import LessonView from "./LessonView";
+import StepView from "./StepView";
 import { ApiError, Badge, Button, Notice, card, field, muted, v2, v3 } from "./primitives";
 
 type Session = { authenticated?: boolean; active?: boolean; paymentMode?: string; account?: { email: string; access_until: string | null } };
 type CabinetState = { libraryMode: "content" | "synthetic_fixture"; previewEnabled: boolean; publishedLessons: number };
-type View = "diagnostic" | "map" | "route" | "lessons" | "lesson";
-const VIEWS: { id: Exclude<View, "lesson">; label: string }[] = [
+type View = "diagnostic" | "map" | "route" | "lessons" | "lesson" | "step";
+const VIEWS: { id: Exclude<View, "lesson" | "step">; label: string }[] = [
   { id: "diagnostic", label: "Диагностика" }, { id: "map", label: "Моя карта" }, { id: "route", label: "Мой маршрут" }, { id: "lessons", label: "Уроки" },
 ];
 
-function readHash(): { view: View; lesson?: string; preview?: boolean } {
-  if (typeof window === "undefined") return { view: "diagnostic" };
+type Route = { view: View; lesson?: string; preview?: boolean; step?: number; implicit?: boolean };
+function readHash(): Route {
+  if (typeof window === "undefined") return { view: "diagnostic", implicit: true };
   const h = window.location.hash.slice(1);
   const m = /^(lesson|preview)=([A-Z0-9-]+)$/.exec(h);
   if (m) return { view: "lesson", lesson: m[2], preview: m[1] === "preview" };
-  return { view: (VIEWS.some((v) => v.id === h) ? h : "diagnostic") as View };
+  const st = /^step=([0-9]{1,2})$/.exec(h);
+  if (st && Number(st[1]) >= 1 && Number(st[1]) <= 30) return { view: "step", step: Number(st[1]) };
+  if (VIEWS.some((v) => v.id === h)) return { view: h as View };
+  return { view: "diagnostic", implicit: true };
 }
 
 export default function CareerV3App() {
   const [phase, setPhase] = useState<"loading" | "gate" | "login" | "access" | "cabinet">("loading");
   const [session, setSession] = useState<Session>({});
   const [state, setState] = useState<CabinetState | null>(null);
-  const [route, setRoute] = useState(readHash());
+  const [route, setRoute] = useState<Route>(readHash());
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
@@ -39,6 +44,11 @@ export default function CareerV3App() {
       if (!s.account) { setPhase("login"); return; }
       if (!s.active) { setPhase("access"); return; }
       setState(await v3<CabinetState>("state"));
+      // Coming back without a specific address: resume the saved route instead of the questionnaire.
+      if (readHash().implicit) {
+        const p = await v3<{ plan: unknown }>("progress").catch(() => ({ plan: null }));
+        if (p.plan) { window.location.hash = "route"; setRoute({ view: "route" }); }
+      }
       setPhase("cabinet");
     } catch (e) {
       if (e instanceof ApiError && e.status === 403) setPhase("gate");
@@ -51,10 +61,17 @@ export default function CareerV3App() {
     window.addEventListener("hashchange", on);
     return () => window.removeEventListener("hashchange", on);
   }, []);
-  const go = (view: View, lesson?: string, preview = false) => {
-    window.location.hash = view === "lesson" && lesson ? `${preview ? "preview" : "lesson"}=${lesson}` : view;
-    setRoute({ view, lesson, preview });
+  const go = (view: View, lesson?: string, preview = false, step?: number) => {
+    window.location.hash = view === "lesson" && lesson ? `${preview ? "preview" : "lesson"}=${lesson}` : view === "step" && step ? `step=${step}` : view;
+    setRoute({ view, lesson, preview, step });
     window.scrollTo({ top: 0 });
+  };
+  const logout = async () => {
+    await v2("auth/logout", {}).catch(() => undefined);
+    window.location.hash = "";
+    setRoute({ view: "diagnostic", implicit: true });
+    setState(null);
+    await load();
   };
 
   return (
@@ -74,7 +91,7 @@ export default function CareerV3App() {
             <nav aria-label="Разделы кабинета" className="mb-8 overflow-x-auto">
               <ul className="flex min-w-0 flex-wrap gap-2">
                 {VIEWS.map((v) => {
-                  const active = route.view === v.id || (v.id === "lessons" && route.view === "lesson");
+                  const active = route.view === v.id || (v.id === "lessons" && route.view === "lesson") || (v.id === "route" && route.view === "step");
                   return (
                     <li key={v.id}>
                       <a href={`#${v.id}`} aria-current={active ? "page" : undefined} onClick={(e) => { e.preventDefault(); go(v.id); }}
@@ -84,6 +101,9 @@ export default function CareerV3App() {
                     </li>
                   );
                 })}
+                <li className="sm:ml-auto">
+                  <button type="button" onClick={() => void logout()} className="inline-flex min-h-11 items-center rounded-md border border-graphite/30 bg-white/60 px-4 text-[15px] font-semibold hover:border-signal">Выйти</button>
+                </li>
               </ul>
             </nav>
             {state.libraryMode === "synthetic_fixture" && route.view !== "lesson" && (
@@ -96,7 +116,8 @@ export default function CareerV3App() {
               </>
             )}
             {route.view === "map" && <TaskMapView onRetake={() => go("diagnostic")} onRoute={() => go("route")} />}
-            {route.view === "route" && <RouteView fixtureMode={state.libraryMode === "synthetic_fixture"} onRetake={() => go("diagnostic")} onOpenLesson={(id) => go("lesson", id)} />}
+            {route.view === "route" && <RouteView fixtureMode={state.libraryMode === "synthetic_fixture"} onRetake={() => go("diagnostic")} onOpenLesson={(id) => go("lesson", id)} onOpenStep={(n) => go("step", undefined, false, n)} />}
+            {route.view === "step" && route.step && <StepView key={route.step} position={route.step} onBack={() => go("route")} onOpenLesson={(id) => go("lesson", id)} onOpenStep={(n) => go("step", undefined, false, n)} />}
             {route.view === "lessons" && <Lessons state={state} open={(id, preview) => go("lesson", id, preview)} />}
             {route.view === "lesson" && route.lesson && <LessonView lessonId={route.lesson} preview={!!route.preview} onBack={() => go("lessons")} />}
           </>
