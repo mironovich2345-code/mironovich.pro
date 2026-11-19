@@ -22,7 +22,7 @@ test("three prototype scripts pass the editorial and safety checks against their
   }
 });
 
-test("structure: why → idea → how/examples → task → actions → review → quiz → «Теперь я умею»", () => {
+test("structure: why → idea → how/examples → task → actions → one criterion per screen → summary → quiz → result", () => {
   for (const id of PROTOTYPES) {
     const s = script(id), l = lesson(id);
     for (const exId of Object.keys(s.practice)) {
@@ -31,8 +31,10 @@ test("structure: why → idea → how/examples → task → actions → review �
       assert.equal(screens[0].kind, "why");
       assert.equal(screens[1].kind, "idea");
       assert.ok(screens.some((x) => x.kind === "example"), `${id}: has examples`);
-      const t = types.indexOf("task"), r = types.indexOf("review"), q = types.indexOf("quiz"), d = types.indexOf("done");
-      assert.ok(t > 1 && r > t && q > r && d === screens.length - 1, `${id}/${exId}: order`);
+      const t = types.indexOf("task"), c = types.indexOf("criterion"), r = types.indexOf("summary"), q = types.indexOf("quiz"), d = types.indexOf("result");
+      assert.ok(t > 1 && c > t && r > c && q > r && d === screens.length - 1, `${id}/${exId}: order`);
+      assert.equal(types.filter((x) => x === "criterion").length, l.content.exercises.find((e) => e.id === exId).successCriteria.length, "one criterion per screen");
+      assert.equal(P.stablePrefix(screens), c, "theory, task and actions form the stable prefix");
       assert.equal(types.filter((x) => x === "action").length, l.content.exercises.find((e) => e.id === exId).instructions.length, "one action per instruction");
       assert.equal(types.filter((x) => x === "quiz").length, l.content.quiz.length, "one question per screen");
     }
@@ -46,14 +48,20 @@ test("exercise data, success criteria, sample solutions and quiz answers come un
       const { screens, exerciseId } = P.assemblePlayer(s, l, { exerciseId: ex.id });
       assert.equal(exerciseId, ex.id);
       const task = screens.find((x) => x.type === "task");
-      const review = screens.find((x) => x.type === "review");
+      const review = screens.find((x) => x.type === "summary");
+      assert.deepEqual(screens.filter((x) => x.type === "criterion").map((x) => x.text), ex.successCriteria, "criteria unchanged");
       assert.equal(task.input, ex.syntheticInput);
       assert.deepEqual(review.criteria, ex.successCriteria);
       assert.equal(review.sample, ex.sampleSolution);
       assert.equal(review.feedback, ex.feedbackIfIncorrect);
     }
     const quiz = P.assemblePlayer(s, l).screens.filter((x) => x.type === "quiz");
-    assert.deepEqual(quiz.map((q) => [q.id, q.correctId, q.question]), l.content.quiz.map((q) => [q.id, q.correctId, q.question]));
+    assert.deepEqual(quiz.map((q) => [q.id, q.correctId, q.question, q.options.map((o) => o.id)]), l.content.quiz.map((q) => [q.id, q.correctId, q.question, q.options.map((o) => o.id)]));
+    // Short display wording keeps the original one tap away; options without an override are untouched.
+    for (const q of quiz) for (const o of q.options) {
+      const orig = l.content.quiz.find((x) => x.id === q.id).options.find((x) => x.id === o.id).text;
+      if (o.full) { assert.equal(o.full, orig); assert.ok(o.text.split(/\s+/).length < orig.split(/\s+/).length); } else assert.equal(o.text, orig);
+    }
   }
 });
 
@@ -68,7 +76,7 @@ test("a step's own exercise is used when scripted; otherwise the first scripted 
 test("no internal identifiers, career promises or fear wording in learner-visible script text", () => {
   for (const id of PROTOTYPES) {
     const { screens } = P.assemblePlayer(script(id), lesson(id), { nextLesson: { id: "X", title: "Следующий" } });
-    const visible = JSON.stringify(screens.filter((x) => x.type === "text" || x.type === "action" || x.type === "done").map((x) => ({ ...x, kind: undefined, type: undefined, nextLesson: undefined })));
+    const visible = JSON.stringify(screens.filter((x) => x.type === "text" || x.type === "action" || x.type === "result").map((x) => ({ ...x, kind: undefined, type: undefined, nextLesson: undefined })));
     assert.doesNotMatch(visible, P.TECH_ID, id);
     assert.doesNotMatch(JSON.stringify(script(id)), /гарантир|увольнен|повышени\S* (зарплат|доход)/i, id);
   }
@@ -112,4 +120,23 @@ test("compatibility: scripts live outside the lesson files, so lesson versions, 
   assert.match(sql, /CREATE TABLE IF NOT EXISTS career_v3_player_positions/);
   assert.doesNotMatch(sql, /ALTER TABLE|DROP |DELETE FROM|UPDATE \w+ SET/, "additive migration only");
   assert.match(sql, /mironovich_career_demo_v3/, "same database guard as the other migrations");
+});
+
+test("short answer wordings: only where clearly shorter; a non-shorter or unknown override is refused", () => {
+  const l = lesson("SAF-01"), sc = script("SAF-01");
+  assert.equal(Object.keys(sc.quizDisplay).length, 3, "all three SAF-01 questions shortened");
+  const longer = { ...sc, quizDisplay: { "SAF01-Q1": { a: l.content.quiz[0].options[0].text + " и ещё" } } };
+  assert.ok(P.validatePlayerScript(longer, l).some((x) => /shorter/.test(x)));
+  const unknown = { ...sc, quizDisplay: { "SAF01-Q9": { a: "x" } } };
+  assert.ok(P.validatePlayerScript(unknown, l).some((x) => /no such question/.test(x)));
+});
+
+test("the result screen never claims the skill by itself — the server decides (no «done» screen type)", () => {
+  const src = read("components/career-v3/LessonPlayer.tsx");
+  assert.match(src, /if \(!data\.result\.quizPassed\)/, "result screen gated on the server-confirmed test");
+  assert.match(src, /Урок ещё не завершён/);
+  const store = read("lib/server/career-v3/player-store.ts");
+  assert.match(store, /const completed = screen === total - 1 && quizPassed;/, "«completed» needs the server-counted test");
+  assert.match(store, /submitV3Quiz\(accountId, professionId, lessonId, body\.answers\)/, "in the route the existing endpoint counts the test");
+  assert.match(store, /WHERE EXCLUDED\.seq >= career_v3_player_positions\.seq/, "older saves cannot overwrite newer ones");
 });

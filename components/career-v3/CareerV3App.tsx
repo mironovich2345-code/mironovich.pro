@@ -9,27 +9,28 @@ import LessonView from "./LessonView";
 import StepView from "./StepView";
 import ResultsView from "./ResultsView";
 import LessonPlayer from "./LessonPlayer";
+import LessonMaterials from "./LessonMaterials";
 import { ApiError, Badge, Button, Notice, card, field, muted, v2, v3 } from "./primitives";
 
 type Session = { authenticated?: boolean; active?: boolean; paymentMode?: string; account?: { email: string; access_until: string | null } };
 type CabinetState = { libraryMode: "content" | "synthetic_fixture" | "demo_review_preview"; previewEnabled: boolean; publishedLessons: number };
 /** Closed cloud demo: the demo shell (components/career-demo) owns sign-in, sign-out and the account screen. */
 export type DemoHooks = { onLogout: () => Promise<void>; onSessionLost: () => void; account: ReactNode };
-type View = "diagnostic" | "map" | "route" | "results" | "lessons" | "lesson" | "step" | "account" | "play";
+type View = "diagnostic" | "map" | "route" | "results" | "lessons" | "lesson" | "step" | "account" | "play" | "materials";
 type Category = { id: string; title: string; status: "ready" | "future"; lessons: { id: string; title: string; player: boolean }[] };
-const VIEWS: { id: Exclude<View, "lesson" | "step" | "account" | "play">; label: string }[] = [
+const VIEWS: { id: Exclude<View, "lesson" | "step" | "account" | "play" | "materials">; label: string }[] = [
   { id: "diagnostic", label: "Диагностика" }, { id: "map", label: "Моя карта" }, { id: "route", label: "Мой маршрут" }, { id: "results", label: "Мои результаты" }, { id: "lessons", label: "Уроки" },
 ];
 
 type Route = { view: View; lesson?: string; preview?: boolean; step?: number; implicit?: boolean };
-const playHash = (lesson: string, step?: number) => `play=${lesson}${step ? `&step=${step}` : ""}`;
+const playHash = (lesson: string, step?: number, view = "play") => `${view}=${lesson}${step ? `&step=${step}` : ""}`;
 function readHash(): Route {
   if (typeof window === "undefined") return { view: "diagnostic", implicit: true };
   const h = window.location.hash.slice(1);
   const m = /^(lesson|preview)=([A-Z0-9-]+)$/.exec(h);
   if (m) return { view: "lesson", lesson: m[2], preview: m[1] === "preview" };
-  const pl = /^play=([A-Z]{2,5}-[0-9]{2,3})(?:&step=([0-9]{1,2}))?$/.exec(h);
-  if (pl) return { view: "play", lesson: pl[1], step: pl[2] ? Number(pl[2]) : undefined };
+  const pl = /^(play|materials)=([A-Z]{2,5}-[0-9]{2,3})(?:&step=([0-9]{1,2}))?$/.exec(h);
+  if (pl) return { view: pl[1] as View, lesson: pl[2], step: pl[3] ? Number(pl[3]) : undefined };
   const st = /^step=([0-9]{1,2})$/.exec(h);
   if (st && Number(st[1]) >= 1 && Number(st[1]) <= 30) return { view: "step", step: Number(st[1]) };
   if (VIEWS.some((v) => v.id === h) || h === "account") return { view: h as View };
@@ -85,7 +86,7 @@ export default function CareerV3App({ demo }: { demo?: DemoHooks } = {}) {
   }, [phase]);
   const hasPlayer = (id: string) => !!catalogue?.some((c) => c.lessons.some((l) => l.id === id && l.player));
   const go = (view: View, lesson?: string, preview = false, step?: number) => {
-    window.location.hash = view === "play" && lesson ? playHash(lesson, step) : view === "lesson" && lesson ? `${preview ? "preview" : "lesson"}=${lesson}` : view === "step" && step ? `step=${step}` : view;
+    window.location.hash = (view === "play" || view === "materials") && lesson ? playHash(lesson, step, view) : view === "lesson" && lesson ? `${preview ? "preview" : "lesson"}=${lesson}` : view === "step" && step ? `step=${step}` : view;
     setRoute({ view, lesson, preview, step });
     window.scrollTo({ top: 0 });
   };
@@ -159,8 +160,13 @@ export default function CareerV3App({ demo }: { demo?: DemoHooks } = {}) {
             {route.view === "play" && route.lesson && (
               <LessonPlayer key={`${route.lesson}-${route.step ?? ""}`} lessonId={route.lesson} step={route.step}
                 onExit={() => (route.step ? go("step", undefined, false, route.step) : go("lessons"))}
-                onMaterials={() => go("lesson", route.lesson)} onOpenLesson={(id) => go(hasPlayer(id) ? "play" : "lesson", id)}
-                onBackToStep={(n) => go("step", undefined, false, n)} />
+                onMaterials={() => go("materials", route.lesson, false, route.step)} onOpenLesson={(id) => go(hasPlayer(id) ? "play" : "lesson", id)}
+                onBackToStep={(n) => go("step", undefined, false, n)} onPlayStep={(id, n) => go("play", id, false, n)} />
+            )}
+            {route.view === "materials" && route.lesson && (
+              <LessonMaterials key={route.lesson} lessonId={route.lesson}
+                onBack={() => (hasPlayer(route.lesson!) ? go("play", route.lesson, false, route.step) : go("lesson", route.lesson))}
+                onFullLesson={() => go("lesson", route.lesson)} />
             )}
             {route.view === "account" && demo && demo.account}
             {route.view === "lesson" && route.lesson && (

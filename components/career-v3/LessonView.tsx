@@ -131,7 +131,7 @@ export default function LessonView({ lessonId, preview, onBack }: { lessonId: st
   );
 }
 
-function Template({ t }: { t: Full["content"]["templates"][number] }) {
+export function Template({ t }: { t: Full["content"]["templates"][number] }) {
   const [copied, setCopied] = useState(false);
   return (
     <div className={card}>

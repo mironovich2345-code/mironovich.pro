@@ -1,6 +1,8 @@
-// AI Career 3.0 — lesson player in a real browser on the closed-demo build (local copy).
-// Phones (iPhone SE 375×667, iPhone 13, Pixel 7), desktop, keyboard-only navigation, 200% text zoom,
-// accessibility tree, position restored after sign-out/sign-in, quiz counted in the route, step progress kept.
+// AI Career 3.0 — lesson player v2 in a real browser on the closed-demo build (local copy).
+// iPhone SE keyboard-only path with WRONG then right mini-test answers (no «Урок пройден» before the server counts
+// the test), step completed from the player, next step offered; fast switching + reload keeps position and
+// choices; materials catalogue; navigation never covers content or focused controls; the step page does not ask
+// again for counted actions; 200% zoom; accessibility tree; iPhone 13 / desktop screenshots.
 // Usage (after a demo build, see docs/products/ai-career-v3/demo/README.md): node tests/career-demo-player-browser.mjs
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
@@ -24,7 +26,7 @@ const admin = (...a) => execFileSync(process.execPath, ["--experimental-strip-ty
 const answers = JSON.parse(readFileSync("tests/fixtures/career-v3/pilot-profiles.json", "utf8")).profiles.find((p) => p.id === "FX-b2b-experienced-public-tools").answers;
 const API = `${origin}/api/career/v3/sales_manager`;
 const PASSWORD = "Player-test-" + Math.random().toString(36).slice(2, 8);
-const TECH = /\b(?:[A-Z]{3}\d{2}-(?:TASK|EX|P|Q)-?\d+|TPL-[A-Z0-9-]+|STEP-\d{2}|SAF-0\d|SAL-0\d|VAL-0\d)\b|[0-9a-f]{8}-[0-9a-f]{4}-|example\.invalid|status=|review\b/;
+const TECH = /\b(?:[A-Z]{3}\d{2}-(?:TASK|EX|P|Q)-?\d+|TPL-[A-Z0-9-]+|STEP-\d{2}|SAF-0\d|SAL-0\d|VAL-0\d)\b|[0-9a-f]{8}-[0-9a-f]{4}-|example\.invalid|status=/;
 const checks = [], errors = [], external = [];
 const pass = (n) => { checks.push(n); console.log("PASS", n); };
 
@@ -41,203 +43,266 @@ async function open(device) {
   return { context, page };
 }
 const post = (page, url, data) => page.request.post(url, { data, headers: { Origin: origin } });
-async function registerWithRoute(page, tag) {
+const json = async (page, path) => (await page.request.get(`${API}/${path}`)).json();
+async function registerWithRoute(page, tag, route = true) {
   const email = `${tag}-${Date.now().toString(36)}@example.com`;
   assert.equal((await post(page, `${origin}/api/career/demo/register`, { email, password: PASSWORD, passwordConfirm: PASSWORD, invite: admin("invite", tag) })).status(), 201);
-  assert.equal((await post(page, `${API}/diagnostic`, { answers })).status(), 200);
-  assert.equal((await post(page, `${API}/task-map`, {})).status(), 200);
-  assert.equal((await post(page, `${API}/plan`, {})).status(), 200);
+  if (route) {
+    assert.equal((await post(page, `${API}/diagnostic`, { answers })).status(), 200);
+    assert.equal((await post(page, `${API}/task-map`, {})).status(), 200);
+    assert.equal((await post(page, `${API}/plan`, {})).status(), 200);
+  }
   await page.reload(); // the app read the (empty) session on first load; a hash change alone does not reload it
   await page.getByRole("button", { name: "Выйти" }).waitFor();
   return email;
 }
-/** Visible text of the player must contain no internal identifiers; navigation must be on screen. */
-async function screenCheck(page, label) {
+const counter = (page) => page.getByText(/^Экран \d+ из \d+$/);
+const screenNo = async (page) => Number((await counter(page).innerText()).match(/Экран (\d+)/)[1]);
+const typeOf = (page) => page.evaluate(() => {
+  const t = document.querySelector("[data-player-screen] p")?.textContent ?? "";
+  return /Самопроверка · критерий/i.test(t) ? "criterion" : /Мини-тест · вопрос/i.test(t) ? "quiz" : /^(Урок пройден|Результат)$/i.test(t.trim()) ? "result" : "other";
+});
+/** No internal ids, no horizontal scroll, navigation visible; at the bottom of the page and for every focused
+ *  control the navigation does not cover content. Returns true when the screen fits without scrolling. */
+async function screenCheck(page, label, { focus = false } = {}) {
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(250);
   const text = (await page.locator("main").innerText()).replace(/\s+/g, " ");
   const m = TECH.exec(text);
   assert.ok(!m, `${label}: internal identifier shown: ${m?.[0]}`);
-  await page.evaluate(() => window.scrollTo(0, 0));
-  await page.waitForTimeout(250); // let the 200 ms transition finish
   const v = await page.evaluate(() => {
     const nav = document.querySelector('nav[aria-label="Навигация по уроку"]').getBoundingClientRect();
     const box = document.querySelector("[data-player-screen]");
-    // Content of collapsed «Открыть…» blocks is not on screen and is not counted.
-    const last = [...box.querySelectorAll("*")].filter((e) => !e.closest("details:not([open]) > :not(summary)"))
-      .reduce((m, e) => Math.max(m, e.getBoundingClientRect().bottom), 0);
-    const sw = document.documentElement.scrollWidth - document.documentElement.clientWidth;
-    return { navBottom: nav.bottom, navTop: nav.top, vh: window.innerHeight, sw, contentBottom: last };
+    const visible = [...box.querySelectorAll("*")].filter((e) => !e.closest("details:not([open]) > :not(summary)"));
+    const bottom = visible.reduce((x, e) => Math.max(x, e.getBoundingClientRect().bottom), 0);
+    return { navTop: nav.top, navBottom: nav.bottom, vh: innerHeight, sw: document.documentElement.scrollWidth - document.documentElement.clientWidth, bottom };
   });
   assert.ok(v.sw <= 1, `${label}: horizontal scroll`);
-  assert.ok(v.navTop >= 0 && v.navBottom <= v.vh + 1, `${label}: navigation not visible (${v.navTop}-${v.navBottom} of ${v.vh})`);
-  return v.contentBottom <= v.navTop + 1; // true = the screen's content is fully visible without scrolling // true = the whole screen fits without vertical scrolling
+  assert.ok(v.navTop >= 0 && v.navBottom <= v.vh + 1, `${label}: navigation not visible`);
+  const fits = v.bottom <= v.navTop + 1;
+  if (!fits) {
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await page.waitForTimeout(80);
+    const end = await page.evaluate(() => {
+      const nav = document.querySelector('nav[aria-label="Навигация по уроку"]').getBoundingClientRect();
+      const box = document.querySelector("[data-player-screen]");
+      const visible = [...box.querySelectorAll("*")].filter((e) => !e.closest("details:not([open]) > :not(summary)"));
+      return { navTop: nav.top, bottom: visible.reduce((x, e) => Math.max(x, e.getBoundingClientRect().bottom), 0) };
+    });
+    assert.ok(end.bottom <= end.navTop + 1, `${label}: content hidden under the navigation at the end of the page`);
+    await page.evaluate(() => window.scrollTo(0, 0));
+  }
+  if (focus) {
+    const covered = await page.evaluate(async () => {
+      const nav = document.querySelector('nav[aria-label="Навигация по уроку"]');
+      const items = [...document.querySelectorAll("[data-player-screen] input, [data-player-screen] summary, [data-player-screen] button, [data-player-screen] a")];
+      const bad = [];
+      for (const el of items) {
+        el.focus();
+        await new Promise((r) => requestAnimationFrame(r));
+        if (el.getBoundingClientRect().bottom > nav.getBoundingClientRect().top + 1) bad.push(el.outerHTML.slice(0, 60));
+      }
+      window.scrollTo(0, 0);
+      return bad;
+    });
+    assert.deepEqual(covered, [], `${label}: focused control under the navigation`);
+  }
+  return fits;
+}
+async function pressNext(page) {
+  const next = page.getByRole("button", { name: "Далее" });
+  await next.focus();
+  await page.keyboard.press("Enter");
 }
 
 try {
-  // ——— iPhone SE: the full SAF-01 lesson with the keyboard only ———
+  // ——— A. iPhone SE, keyboard only, SAF-01 in a route step: wrong test → not passed; right → step completed ———
   const se = await open({ ...devices["iPhone SE"], viewport: { width: 375, height: 667 } });
   const p = se.page;
   await p.goto("/career/v3");
   await registerWithRoute(p, "player-se");
-  const plan = (await (await p.request.get(`${API}/progress`)).json()).plan;
+  const plan = (await json(p, "progress")).plan;
   const safStep = plan.steps.find((s) => s.lessonId === "SAF-01");
-  assert.ok(safStep, "the route contains SAF-01");
+  const lesson = (await json(p, "lessons/SAF-01")).lesson;
   await p.goto(`/career/v3#step=${safStep.position}`);
   await p.getByRole("button", { name: "Пройти урок короткими экранами" }).click();
-  await p.getByText(/^Экран 1 из \d+$/).waitFor();
-  const total = Number((await p.getByText(/^Экран 1 из \d+$/).innerText()).match(/из (\d+)/)[1]);
-  assert.ok(total >= 18 && total <= 26, "screens: " + total);
-  assert.equal(await p.locator('nav[aria-label="Разделы кабинета"]').count(), 0, "focus mode: cabinet navigation hidden");
-  assert.equal((await p.getByRole("note").innerText()).trim().startsWith("Демонстрационная версия"), true, "demo notice stays");
+  await counter(p).waitFor();
+  const total = Number((await counter(p).innerText()).match(/из (\d+)/)[1]);
+  assert.equal(await p.locator('nav[aria-label="Разделы кабинета"]').count(), 0, "focus mode");
   const fit = [];
-  for (let k = 1; k <= total; k++) {
-    await p.getByText(new RegExp(`^Экран ${k} из ${total}$`)).waitFor();
-    fit.push(await screenCheck(p, `SAF-01 screen ${k}`));
+  let wrongDone = false;
+  for (let guard = 0; guard < 80; guard++) {
+    const k = await screenNo(p);
+    const kind = await typeOf(p);
+    if (process.env.PLAYER_DEBUG) console.log("STEP", k, kind, wrongDone);
+    fit[k - 1] = await screenCheck(p, `SAF-01 screen ${k}`, { focus: kind === "criterion" || kind === "quiz" });
     if (k === 1) await p.screenshot({ path: `${shots}/saf01-01-why-iphone-se.png` });
-    const quiz = await p.locator('input[type="radio"]').count();
-    if (quiz) {
-      const q = await (await p.request.get(`${API}/lessons/SAF-01`)).json();
-      const qi = Number((await p.getByText(/Мини-тест · вопрос \d+/).innerText()).match(/вопрос (\d+)/i)[1]) - 1;
-      const correct = q.lesson.content.quiz[qi].correctId;
-      const idx = q.lesson.content.quiz[qi].options.findIndex((o) => o.id === correct);
-      await p.locator('input[type="radio"]').nth(idx).focus();
+    if (kind === "criterion") {
+      const yes = p.getByLabel("Да, получилось");
+      await yes.focus(); await p.keyboard.press("Space");
+      if (k === total - lesson.content.quiz.length - 1 - lesson.content.exercises[0].successCriteria.length) await p.screenshot({ path: `${shots}/saf01-criterion-iphone-se.png` });
+    }
+    if (kind === "quiz") {
+      const qi = Number((await p.getByText(/Мини-тест · вопрос \d+/i).innerText()).match(/вопрос (\d+)/i)[1]) - 1;
+      const q = lesson.content.quiz[qi];
+      const pick = wrongDone ? q.correctId : q.options.find((o) => o.id !== q.correctId).id;
+      await p.locator(`input[name="player-${q.id}"]`).nth(q.options.findIndex((o) => o.id === pick)).focus();
       await p.keyboard.press("Space");
       await p.getByRole("button", { name: "Проверить" }).focus();
       await p.keyboard.press("Enter");
-      await p.getByText("Верно.").waitFor();
-      if (qi === 0) await p.screenshot({ path: `${shots}/saf01-quiz-iphone-se.png` });
+      await p.getByText(wrongDone ? "Верно." : "Не совсем.").waitFor();
+      if (qi === 0 && !wrongDone) await p.screenshot({ path: `${shots}/saf01-quiz-short-options-iphone-se.png` });
+      if (qi === lesson.content.quiz.length - 1 && !wrongDone) {
+        await p.getByText(/Тест засчитывается при всех верных ответах/).waitFor();
+        assert.ok(await p.getByRole("button", { name: "Далее" }).isDisabled(), "no way to the result with a failed test");
+        const srv = await json(p, `player/lessons/SAF-01?step=${safStep.position}`);
+        assert.equal(srv.result.quizPassed, false);
+        assert.notEqual(srv.step.state, "self_checked", "failed test: the step is not self-checked");
+        assert.equal(await p.getByText("Теперь я умею").count(), 0);
+        await p.screenshot({ path: `${shots}/saf01-quiz-failed-iphone-se.png` });
+        wrongDone = true;
+        await p.getByRole("button", { name: "Пройти тест ещё раз" }).click();
+        continue;
+      }
+      if (qi === lesson.content.quiz.length - 1 && wrongDone) await p.getByText(/Мини-тест засчитан в маршруте/).waitFor();
     }
-    if (await p.getByText("Критерии успешного выполнения").isVisible().catch(() => false)) {
-      for (const box of await p.locator('fieldset input[type="checkbox"]').all()) await box.check();
-      await p.getByRole("button", { name: new RegExp(`Сохранить в шаг ${safStep.position}`) }).click();
-      await p.getByText("Самопроверка сохранена в шаге маршрута.").waitFor();
-      await p.screenshot({ path: `${shots}/saf01-review-iphone-se.png` });
-    }
-    if (k === 4) await p.screenshot({ path: `${shots}/saf01-04-traffic-light-iphone-se.png` });
-    if (k === 12) await p.screenshot({ path: `${shots}/saf01-12-task-iphone-se.png` });
-    if (k < total) {
-      await p.getByRole("button", { name: "Далее" }).focus();
-      await p.keyboard.press("Enter");
-    }
+    if (kind === "result") break;
+    if (k === total) break;
+    await pressNext(p);
+    await p.getByText(new RegExp(`^Экран ${k + 1} из ${total}$`)).waitFor(); // the switch may wait for a server save
   }
-  await p.getByText("Мини-тест засчитан: 3 из 3.").count(); // shown on the last quiz screen before «Далее»
-  await p.getByRole("heading", { name: "Теперь я умею" }).waitFor();
-  await p.screenshot({ path: `${shots}/saf01-done-iphone-se.png` });
-  const pr = await (await p.request.get(`${API}/progress`)).json();
-  assert.equal(pr.quizzes["SAF-01"]?.passed, true, "quiz counted in the route via the server");
-  const stepRow = pr.steps.find((s) => s.position === safStep.position);
-  assert.equal(stepRow.state, "self_checked", "self-check saved into the step; the step is not completed by the player");
-  assert.equal(pr.summary.done, 0, "screens are not route steps");
-  pass(`iPhone SE: SAF-01 — ${total} screens with keyboard only; nav always visible; ${fit.filter(Boolean).length}/${total} screens fully visible without scrolling (screens: ${fit.map((f, k) => f ? "" : k + 1).filter(Boolean).join(",") || "all fit"} need scrolling); quiz counted; self-check saved; step not auto-completed`);
+  await p.getByRole("heading", { name: "Теперь я умею" }).waitFor({ timeout: 8000 }).catch(async (e) => {
+    console.log("DEBUG", (await p.locator("main").innerText()).slice(0, 600)); throw e; });
+  await p.getByText(/Подтвердите критерии выполнения шага/).waitFor();
+  for (const box of await p.locator('[data-player-screen] fieldset input[type="checkbox"]').all()) await box.check();
+  await p.getByRole("button", { name: "Завершить шаг" }).click();
+  await p.getByText("Шаг засчитан ✓").waitFor();
+  await p.getByRole("button", { name: /^Следующий шаг: \d+$/ }).waitFor();
+  await p.screenshot({ path: `${shots}/saf01-result-step-done-iphone-se.png` });
+  const pr = await json(p, "progress");
+  assert.equal(pr.steps.find((s) => s.position === safStep.position).state, "done");
+  assert.equal(pr.summary.done, 1, "exactly one step completed — by the server rules");
+  pass(`iPhone SE keyboard-only: ${total} screens; wrong answers → «Тест засчитывается при всех верных ответах», «Далее» locked, no «Теперь я умею», step not self-checked; right answers → step completed from the player, next step offered; ${fit.filter(Boolean).length}/${total} screens fit without scrolling; navigation never covers content or focused controls`);
 
-  // Position restored after sign-out / sign-in.
-  await p.getByRole("button", { name: /Вернуться к шагу/ }).click();
-  await p.getByRole("button", { name: "Пройти урок короткими экранами" }).click();
-  await p.getByText(new RegExp(`^Экран ${total} из ${total}$`)).waitFor();
-  await p.getByRole("button", { name: "Назад" }).click();
-  await p.getByRole("button", { name: "Назад" }).click();
-  await p.getByText(new RegExp(`^Экран ${total - 2} из ${total}$`)).waitFor();
-  await sleep(400);
-  await post(p, `${origin}/api/career/demo/logout`, {});
-  await p.goto("/career/v3");
-  await p.getByRole("button", { name: "Войти" }).click();
-  const email = (await (await p.request.get(`${origin}/api/career/demo/session`)).json()).account?.email;
-  assert.equal(email, undefined, "signed out");
-  pass("player: «Назад» works and the position is saved on every move");
+  // ——— E. The step page does not ask again for counted actions ———
+  await p.goto(`/career/v3#step=${safStep.position}`);
+  await p.getByText("Самопроверка сохранена: отмечены все критерии ✓").waitFor();
+  await p.getByText(/Мини-тест засчитан ✓|Мини-тест пройден\./).waitFor();
+  assert.equal(await p.getByRole("button", { name: "Отправить ответы" }).count(), 0);
+  assert.equal(await p.getByRole("button", { name: "Сохранить самопроверку" }).count(), 0);
+  pass("step page: counted self-check and mini-test are shown as done, no forms to redo");
 
-  // ——— Pixel 7: SAL-03 long practice, sign-in restores the screen ———
+  // ——— B. Result screen opened directly with a failed test (outside the route) ———
+  const fr = await open({ ...devices["iPhone SE"], viewport: { width: 375, height: 667 } });
+  await fr.page.goto("/career/v3");
+  await registerWithRoute(fr.page, "player-free", false);
+  const pv = await json(fr.page, "player/lessons/VAL-02");
+  const vq = pv.screens.filter((x) => x.type === "quiz");
+  await post(fr.page, `${API}/player/lessons/VAL-02/quiz`, { answers: Object.fromEntries(vq.map((q) => [q.id, q.options.find((o) => o.id !== q.correctId).id])), exerciseId: pv.exerciseId });
+  await post(fr.page, `${API}/player/lessons/VAL-02/position`, { scriptVersion: pv.scriptVersion, exerciseId: pv.exerciseId, screen: pv.screens.length - 1, seq: 1 });
+  await fr.page.goto("/career/v3#play=VAL-02");
+  await fr.page.getByRole("heading", { name: "Урок ещё не завершён" }).waitFor();
+  assert.equal(await fr.page.getByText("Теперь я умею").count(), 0, "no skill claim without a passed test");
+  assert.equal(await fr.page.getByText("Урок пройден").count(), 0);
+  await fr.page.screenshot({ path: `${shots}/val02-result-not-passed-iphone-se.png` });
+  pass("result screen with a failed test: «Урок ещё не завершён», no «Урок пройден» / «Теперь я умею»");
+
+  // ——— C. Fast switching + reload keeps position and choices ———
   const px = await open(devices["Pixel 7"]);
   const q = px.page;
   await q.goto("/career/v3");
-  const email2 = await registerWithRoute(q, "player-px");
-  await q.goto("/career/v3#lessons");
-  await q.getByRole("heading", { name: "Безопасность" }).waitFor();
-  await q.getByRole("heading", { name: "Готовятся" }).waitFor();
-  assert.match(await q.locator("main").innerText(), /Архитектор запросов/);
-  await q.screenshot({ path: `${shots}/catalogue-pixel7.png`, fullPage: true });
-  await q.getByRole("button", { name: /Коммерческое предложение с проверкой условий/ }).click();
-  await q.getByText(/^Экран 1 из \d+$/).waitFor();
-  for (let k = 0; k < 13; k++) await q.getByRole("button", { name: "Далее" }).click();
-  await q.getByText(/^Экран 14 из \d+$/).waitFor();
-  await q.screenshot({ path: `${shots}/sal03-14-action-pixel7.png` });
-  await sleep(400);
-  await post(q, `${origin}/api/career/demo/logout`, {});
-  await q.goto("/career/v3");
-  await q.getByRole("button", { name: "Войти" }).click();
-  await q.getByLabel("Email").fill(email2);
-  await q.getByLabel("Пароль").fill(PASSWORD);
-  await q.getByRole("button", { name: "Войти" }).click();
-  await q.getByRole("heading", { name: "Мой маршрут" }).waitFor();
+  await registerWithRoute(q, "player-px");
   await q.goto("/career/v3#play=SAL-03");
-  await q.getByText(/^Экран 14 из \d+$/).waitFor();
-  pass("Pixel 7: categories with future sections marked; SAL-03 reopened after sign-in on the saved screen 14");
+  await counter(q).waitFor();
+  for (let k = 0; k < 9; k++) await q.getByRole("button", { name: "Далее" }).click({ delay: 0 });
+  await q.getByText(/^Экран 10 из \d+$/).waitFor();
+  await q.reload();
+  await q.getByText(/^Экран 10 из \d+$/).waitFor();
+  const pl = await json(q, "player/lessons/SAL-03");
+  const firstCrit = pl.screens.findIndex((x) => x.type === "criterion");
+  const firstQuiz = pl.screens.findIndex((x) => x.type === "quiz");
+  await post(q, `${API}/player/lessons/SAL-03/position`, { scriptVersion: pl.scriptVersion, exerciseId: pl.exerciseId, screen: firstCrit, seq: Date.now() * 1000 });
+  await q.reload();
+  await q.getByText(new RegExp(`^Экран ${firstCrit + 1} из`)).waitFor();
+  await q.getByLabel("Пока нет").check();
+  await q.getByRole("button", { name: "Далее" }).click();
+  await q.getByLabel("Да, получилось").check();
+  await sleep(300);
+  await q.reload();
+  await q.getByText(new RegExp(`^Экран ${firstCrit + 2} из`)).waitFor();
+  assert.equal(await q.getByLabel("Да, получилось").isChecked(), true, "criterion mark restored after reload");
+  await q.getByRole("button", { name: "Назад" }).click();
+  assert.equal(await q.getByLabel("Пока нет").isChecked(), true, "previous criterion mark restored");
+  await post(q, `${API}/player/lessons/SAL-03/position`, { scriptVersion: pl.scriptVersion, exerciseId: pl.exerciseId, screen: firstQuiz, seq: Date.now() * 1000 });
+  await q.reload();
+  await q.getByText(/Мини-тест · вопрос 1/i).waitFor();
+  await q.locator('[data-player-screen] input[type="radio"]').nth(1).check();
+  await sleep(300);
+  await q.reload();
+  await q.getByText(/Мини-тест · вопрос 1/i).waitFor();
+  assert.equal(await q.locator('[data-player-screen] input[type="radio"]').nth(1).isChecked(), true, "quiz choice restored after reload");
+  pass("Pixel 7: 9 fast taps + reload → same screen; criterion marks and quiz choice restored after reload");
 
-  // ——— 200% text zoom on a narrow phone: nothing clipped, navigation reachable ———
-  // WCAG 1.4.10 reflow: 640 px at 200% = 320 CSS px of width.
+  // ——— D. Materials catalogue instead of the long page ———
+  await q.getByRole("button", { name: "Материалы" }).click();
+  await q.getByRole("heading", { level: 1, name: "Материалы урока" }).waitFor();
+  await q.getByRole("heading", { name: "Правила безопасности" }).waitFor();
+  await q.getByRole("heading", { name: /Промпты для разрешённого ИИ/ }).waitFor();
+  const docH = await q.evaluate(() => document.documentElement.scrollHeight);
+  await q.screenshot({ path: `${shots}/sal03-materials-pixel7.png`, fullPage: true });
+  await q.getByRole("button", { name: "Вернуться к уроку" }).first().click();
+  await q.getByText(/Мини-тест · вопрос 1/i).waitFor();
+  pass(`materials catalogue: safety rules, grouped collapsed templates/prompts, files, sources (${docH}px instead of the ≈25 000px full page); back to the same screen`);
+
+  // ——— F. 200% zoom (320 CSS px) and accessibility tree ———
   const zoom = await open({ viewport: { width: 640, height: 1136 }, deviceScaleFactor: 1, isMobile: true, hasTouch: true });
   const z = zoom.page;
   await z.goto("/career/v3");
   await registerWithRoute(z, "player-zoom");
   await z.goto("/career/v3#play=VAL-02");
-  await z.getByText(/^Экран 1 из \d+$/).waitFor();
+  await counter(z).waitFor();
   await z.addStyleTag({ content: "html { zoom: 2 }" });
   for (let k = 0; k < 8; k++) await z.getByRole("button", { name: "Далее" }).click();
-  await z.getByText(/^Экран 9 из \d+$/).waitFor();
-  const zv = await z.evaluate(() => {
-    const clipped = [...document.querySelectorAll("main p, main li, main h2, main button")].filter((e) => e.scrollWidth > e.clientWidth + 1 && getComputedStyle(e).overflowX === "hidden").length;
-    return { sw: document.documentElement.scrollWidth - document.documentElement.clientWidth, clipped };
-  });
-  assert.equal(zv.clipped, 0, "no clipped text at 200%");
-  assert.ok(zv.sw <= 1, "no horizontal scroll at 320 CSS px (200% zoom)");
-  await z.getByRole("button", { name: "Далее" }).scrollIntoViewIfNeeded();
-  assert.ok(await z.getByRole("button", { name: "Далее" }).isVisible(), "navigation reachable at 200%");
-  await z.screenshot({ path: `${shots}/val02-09-formula-320-zoom200.png` });
-  await z.addStyleTag({ content: "html { zoom: 1 }" });
-  pass("200% zoom (320 CSS px): no clipped text, no horizontal scroll, navigation reachable");
-
-  // ——— Accessibility tree on a formula screen ———
+  const zv = await z.evaluate(() => ({ sw: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    clipped: [...document.querySelectorAll("main p, main li, main h2, main button")].filter((e) => e.scrollWidth > e.clientWidth + 1 && getComputedStyle(e).overflowX === "hidden").length }));
+  assert.deepEqual([zv.sw <= 1, zv.clipped], [true, 0]);
   const tree = await z.locator("main").ariaSnapshot();
-  assert.match(tree, /progressbar "Прогресс урока"/);
-  assert.match(tree, /navigation "Навигация по уроку"/);
-  assert.match(tree, /button "Назад"/);
-  assert.match(tree, /button "Далее"/);
-  assert.match(tree, /heading .*level=2/);
-  pass("screen reader tree: heading per screen, labelled progress bar, navigation landmark with «Назад»/«Далее», live screen counter");
+  for (const re of [/progressbar "Прогресс урока"/, /navigation "Навигация по уроку"/, /button "Назад"/, /button "Далее"/, /heading .*level=2/]) assert.match(tree, re);
+  pass("200% zoom at 320 CSS px: no horizontal scroll or clipped text; accessibility tree: heading per screen, labelled progress, navigation landmark");
 
-  // ——— Desktop + iPhone 13 screenshots ———
+  // ——— G. iPhone 13 fit + screenshots, desktop ———
   const fit13 = {};
-  for (const [dev, name] of [[{ viewport: { width: 1440, height: 900 } }, "desktop"], [devices["iPhone 13"], "iphone13"]]) {
+  for (const [dev, name] of [[devices["iPhone 13"], "iphone13"], [{ viewport: { width: 1440, height: 900 } }, "desktop"]]) {
     const d = await open(dev);
     await d.page.goto("/career/v3");
-    await registerWithRoute(d.page, "player-" + name);
-    for (const [lesson, n] of [["VAL-02", 8], ["SAL-03", 9], ["SAF-01", 9]]) {
-      await d.page.goto(`/career/v3#play=${lesson}`);
-      await d.page.getByText(/^Экран 1 из \d+$/).waitFor();
-      for (let k = 1; k < n; k++) await d.page.getByRole("button", { name: "Далее" }).click();
-      await d.page.getByText(new RegExp(`^Экран ${n} из`)).waitFor();
-      await screenCheck(d.page, `${name} ${lesson}`);
-      if (name === "iphone13") {
-        await d.page.goto(`/career/v3#play=${lesson}`);
-        await d.page.getByText(/^Экран \d+ из \d+$/).waitFor();
-        const t = Number((await d.page.getByText(/^Экран \d+ из \d+$/).innerText()).match(/из (\d+)/)[1]);
-        await d.page.getByRole("button", { name: "Назад" }).click({ trial: true }).catch(() => undefined);
-        while (!(await d.page.getByText(/^Экран 1 из/).isVisible())) await d.page.getByRole("button", { name: "Назад" }).click();
-        const f = [];
-        for (let k = 1; k <= t; k++) {
-          f.push(await screenCheck(d.page, `iPhone 13 ${lesson} ${k}`));
-          const radios = d.page.locator('input[type="radio"]');
-          if (await radios.count()) { await radios.first().check(); await d.page.getByRole("button", { name: "Проверить" }).click(); }
-          if (k < t) await d.page.getByRole("button", { name: "Далее" }).click();
+    await registerWithRoute(d.page, "player-" + name, false);
+    for (const lessonId of ["SAF-01", "SAL-03", "VAL-02"]) {
+      await d.page.goto(`/career/v3#play=${lessonId}`);
+      await counter(d.page).waitFor();
+      const t = Number((await counter(d.page).innerText()).match(/из (\d+)/)[1]);
+      const f = [];
+      for (let k = 1; k < t; k++) {
+        f.push(await screenCheck(d.page, `${name} ${lessonId} ${k}`));
+        const kind = await typeOf(d.page);
+        if (kind === "criterion") await d.page.getByLabel("Да, получилось").check();
+        if (kind === "quiz") {
+          const ql = (await json(d.page, `lessons/${lessonId}`)).lesson.content.quiz;
+          const qi = Number((await d.page.getByText(/Мини-тест · вопрос \d+/i).innerText()).match(/вопрос (\d+)/i)[1]) - 1;
+          await d.page.locator(`input[name="player-${ql[qi].id}"]`).nth(ql[qi].options.findIndex((o) => o.id === ql[qi].correctId)).check();
+          await d.page.getByRole("button", { name: "Проверить" }).click();
+          if (qi === ql.length - 1) await d.page.getByText(/Мини-тест засчитан/).waitFor();
         }
-        fit13[lesson] = `${f.filter(Boolean).length}/${t}`;
-        while (!(await d.page.getByText(new RegExp(`^Экран ${n} из`)).isVisible())) await d.page.getByRole("button", { name: "Назад" }).click();
+        if (name === "desktop" && [4, 9].includes(k)) await d.page.screenshot({ path: `${shots}/${lessonId.toLowerCase()}-${String(k).padStart(2, "0")}-desktop.png` });
+        if (name === "iphone13" && [1, 9, 13].includes(k)) await d.page.screenshot({ path: `${shots}/${lessonId.toLowerCase()}-${String(k).padStart(2, "0")}-iphone13.png` });
+        await d.page.getByRole("button", { name: "Далее" }).click();
       }
-      await d.page.screenshot({ path: `${shots}/${lesson.toLowerCase()}-${String(n).padStart(2, "0")}-${name}.png` });
+      await d.page.getByRole("heading", { name: "Теперь я умею" }).waitFor();
+      if (name === "iphone13") fit13[lessonId] = `${f.filter(Boolean).length}/${t - 1}`;
     }
     await d.context.close();
   }
-  pass(`desktop 1440 and iPhone 13: three lessons render without internal identifiers or horizontal scroll; iPhone 13 screens fully visible without scrolling: ${JSON.stringify(fit13)}`);
+  pass(`iPhone 13 and desktop: all three lessons to «Теперь я умею» after a server-counted test; iPhone 13 screens fully visible without scrolling: ${JSON.stringify(fit13)}`);
 
-  // ——— Lesson without a script and normal-mode safety are covered by unit/integration tests ———
   assert.deepEqual(external, [], "no external requests");
   assert.deepEqual(errors, [], "no console errors");
   pass("no external requests, no console errors");

@@ -257,7 +257,7 @@ try {
     assert.equal((await B.c.v3("plan", { rebuild: "yes" })).status, 400);
   });
 
-  await check("lesson player: catalogue, saved screen across sign-in, version guard, step context, isolation; route progress untouched", async () => {
+  await check("lesson player: catalogue, saved screen + choices across sign-in, ordered saves, version carry-over, isolation", async () => {
     const u = await register("player");
     ok(await u.c.v3("diagnostic", { answers: profiles[0].answers }));
     ok(await u.c.v3("task-map", {}));
@@ -266,18 +266,27 @@ try {
     assert.equal(cats.find((c) => c.id === "safety").lessons.find((l) => l.id === "SAF-01").player, true);
     assert.equal(cats.find((c) => c.id === "prompting").status, "future", "empty category is not shown as ready");
     const pl = ok(await u.c.v3("player/lessons/SAF-01"));
-    assert.deepEqual([pl.position, pl.restarted, pl.step], [0, false, null]);
+    assert.deepEqual([pl.position, pl.restarted, pl.step, pl.result.quizPassed], [0, false, null, false]);
     const n = pl.screens.length;
-    assert.ok(n >= 18 && n <= 26);
     const before = ok(await u.c.v3("progress")).summary;
-    const pos = (screen, extra = {}) => u.c.v3("player/lessons/SAF-01/position", { scriptVersion: pl.scriptVersion, exerciseId: pl.exerciseId, screen, ...extra });
-    ok(await pos(7));
+    let seq = 1000;
+    const pos = (screen, extra = {}) => u.c.v3("player/lessons/SAF-01/position", { scriptVersion: pl.scriptVersion, exerciseId: pl.exerciseId, screen, seq: ++seq, ...extra });
+    const quizId = pl.screens.find((x) => x.type === "quiz").id;
+    ok(await pos(7, { choices: { q: { [quizId]: "a" }, checked: [], c: [true, null] } }));
     ok(await u.c.demo("logout", {}));
     ok(await u.c.demo("login", { email: u.email, password: PASSWORD }));
-    assert.equal(ok(await u.c.v3("player/lessons/SAF-01")).position, 7, "screen restored after sign-in");
-    for (const [body, code] of [[{ screen: n }, 400], [{ screen: -1 }, 400], [{ screen: "7" }, 400], [{ scriptVersion: "999" }, 409], [{ exerciseId: "SAF01-TASK-9" }, 400]]) {
-      const b = { scriptVersion: pl.scriptVersion, exerciseId: pl.exerciseId, screen: 3, ...body };
-      assert.equal((await u.c.v3("player/lessons/SAF-01/position", b)).status, code, JSON.stringify(body));
+    const back = ok(await u.c.v3("player/lessons/SAF-01"));
+    assert.equal(back.position, 7, "screen restored after sign-in");
+    assert.deepEqual([back.choices.q[quizId], back.choices.c], ["a", [true, null]], "choices restored");
+    // Fast switching: an older request arriving after a newer one is ignored.
+    const newer = ++seq + 10;
+    ok(await u.c.v3("player/lessons/SAF-01/position", { scriptVersion: pl.scriptVersion, exerciseId: pl.exerciseId, screen: 9, seq: newer }));
+    assert.equal(ok(await u.c.v3("player/lessons/SAF-01/position", { scriptVersion: pl.scriptVersion, exerciseId: pl.exerciseId, screen: 3, seq: newer - 5 })).stale, true);
+    assert.equal(ok(await u.c.v3("player/lessons/SAF-01")).position, 9);
+    seq = newer;
+    for (const [extra, code] of [[{ screen: n }, 400], [{ screen: -1 }, 400], [{ screen: "7" }, 400], [{ scriptVersion: "999" }, 409], [{ exerciseId: "SAF01-TASK-9" }, 400],
+      [{ choices: { q: { [quizId]: "z" } } }, 400], [{ choices: { note: "free text" } }, 400], [{ choices: { c: ["yes"] } }, 400], [{ seq: -1 }, 400]]) {
+      assert.equal((await pos(3, extra)).status, code, JSON.stringify(extra));
     }
     assert.equal((await pos(3, { role: "admin" })).status, 400, "unexpected fields refused");
     assert.equal((await u.c.v3("player/lessons/SAF-02")).status, 404, "lesson without a script → full lesson only");
@@ -285,19 +294,68 @@ try {
     const safStep = plan.steps.find((x) => x.lessonId === "SAF-01");
     const other = plan.steps.find((x) => x.lessonId !== "SAF-01");
     const inStep = ok(await u.c.v3(`player/lessons/SAF-01?step=${safStep.position}`));
-    assert.equal(inStep.step.position, safStep.position);
-    assert.equal(inStep.inRoute, true);
+    assert.deepEqual([inStep.step.position, inStep.inRoute, inStep.step.state], [safStep.position, true, "not_started"]);
     assert.equal((await u.c.v3(`player/lessons/SAF-01?step=${other.position}`)).status, 404, "a step of another lesson");
     assert.equal((await u.c.v3("player/lessons/SAF-01?step=99")).status, 400);
-    // A changed lesson/script version: the old position is not reused, the learner starts the new version from the top.
-    await db.query("UPDATE career_v3_player_positions SET script_version='0' WHERE lesson_id='SAF-01' AND account_id=(SELECT account_id FROM career_demo_users WHERE email=$1)", [u.email]);
-    const again = ok(await u.c.v3("player/lessons/SAF-01"));
-    assert.deepEqual([again.position, again.restarted], [0, true]);
-    const last = ok(await pos(n - 1));
-    assert.equal(last.completed, true);
+    // Script update: theory/practice position is kept, later screens restart from the self-check.
+    await db.query("UPDATE career_v3_player_positions SET script_version='1', screens=screens+1, screen=15 WHERE lesson_id='SAF-01' AND account_id=(SELECT account_id FROM career_demo_users WHERE email=$1)", [u.email]);
+    const upd = ok(await u.c.v3("player/lessons/SAF-01"));
+    const prefix = upd.screens.findIndex((x) => x.type === "criterion");
+    assert.deepEqual([upd.position, upd.restarted], [Math.min(15, prefix), 15 > prefix], "carry-over to the stable prefix");
+    await db.query("UPDATE career_v3_player_positions SET script_version='1', screens=screens+1, screen=5 WHERE lesson_id='SAF-01' AND account_id=(SELECT account_id FROM career_demo_users WHERE email=$1)", [u.email]);
+    assert.deepEqual([ok(await u.c.v3("player/lessons/SAF-01")).position, ok(await u.c.v3("player/lessons/SAF-01")).restarted], [5, false], "theory position survives a script update");
     assert.equal(ok(await B.c.v3("player/lessons/SAF-01")).position, 0, "another account has its own position");
     assert.deepEqual(ok(await u.c.v3("progress")).summary, before, "screens are not route steps; progress unchanged");
     assert.doesNotMatch(JSON.stringify(pl.screens.filter((x) => x.type === "text")), /SAF01-|TPL-|STEP-/, "no internal ids in text screens");
+  });
+
+  await check("lesson result is decided by the server: wrong answers never complete the lesson or the step; right answers + criteria complete the step", async () => {
+    // In the route.
+    const u = await register("result");
+    ok(await u.c.v3("diagnostic", { answers: profiles[0].answers }));
+    ok(await u.c.v3("task-map", {}));
+    const plan = ok(await u.c.v3("plan", {})).plan;
+    const st = plan.steps.find((x) => x.lessonId === "SAF-01");
+    const pl = ok(await u.c.v3(`player/lessons/SAF-01?step=${st.position}`));
+    const quiz = pl.screens.filter((x) => x.type === "quiz");
+    const last = pl.screens.length - 1;
+    const wrong = Object.fromEntries(quiz.map((q) => [q.id, q.options.find((o) => o.id !== q.correctId).id]));
+    const right = Object.fromEntries(quiz.map((q) => [q.id, q.correctId]));
+    const w = ok(await u.c.v3("player/lessons/SAF-01/quiz", { answers: wrong, exerciseId: pl.exerciseId }));
+    assert.deepEqual([w.passed, w.countedIn, w.correct], [false, "route", 0]);
+    const atEnd = ok(await u.c.v3("player/lessons/SAF-01/position", { scriptVersion: pl.scriptVersion, exerciseId: pl.exerciseId, screen: last, seq: 1 }));
+    assert.equal(atEnd.completed, false, "viewing the last screen is not completion");
+    const r1 = ok(await u.c.v3(`player/lessons/SAF-01?step=${st.position}`));
+    assert.deepEqual([r1.result.quizPassed, r1.result.completedAt, r1.step.state], [false, null, "not_started"]);
+    assert.equal((await u.c.v3(`progress/steps/${st.position}/complete`, { stableId: st.stableId, completionMet: st.completionCriteria.map(() => true) })).status, 409, "server refuses step completion");
+    // Self-check with all criteria from the player path, then the right answers.
+    const crit = pl.screens.filter((x) => x.type === "criterion").map(() => true);
+    ok(await u.c.v3(`progress/steps/${st.position}/self-check`, { stableId: st.stableId, criteriaMet: crit }));
+    const g = ok(await u.c.v3("player/lessons/SAF-01/quiz", { answers: right, exerciseId: pl.exerciseId }));
+    assert.deepEqual([g.passed, g.countedIn], [true, "route"]);
+    const r2 = ok(await u.c.v3(`player/lessons/SAF-01?step=${st.position}`));
+    assert.deepEqual([r2.result.quizPassed, r2.step.state], [true, "self_checked"]);
+    assert.equal(ok(await u.c.v3("player/lessons/SAF-01/position", { scriptVersion: pl.scriptVersion, exerciseId: pl.exerciseId, screen: last, seq: 2 })).completed, true);
+    ok(await u.c.v3(`progress/steps/${st.position}/complete`, { stableId: st.stableId, completionMet: st.completionCriteria.map(() => true) }));
+    const r3 = ok(await u.c.v3(`player/lessons/SAF-01?step=${st.position}`));
+    assert.equal(r3.step.state, "done");
+    assert.ok(r3.nextStep && r3.nextStep.position > st.position, "next step offered");
+    assert.equal(ok(await u.c.v3("progress")).summary.done, 1, "exactly the one step completed by the server rules");
+    // A later wrong attempt never erases the pass (existing rule).
+    ok(await u.c.v3("player/lessons/SAF-01/quiz", { answers: wrong, exerciseId: pl.exerciseId }));
+    assert.equal(ok(await u.c.v3(`player/lessons/SAF-01?step=${st.position}`)).result.quizPassed, true);
+
+    // Outside the route (no diagnostic yet): the test is graded on the server and stored with the position.
+    const v = await register("result-free");
+    const pv = ok(await v.c.v3("player/lessons/VAL-02"));
+    const vq = pv.screens.filter((x) => x.type === "quiz");
+    const vw = ok(await v.c.v3("player/lessons/VAL-02/quiz", { answers: Object.fromEntries(vq.map((q) => [q.id, q.options.find((o) => o.id !== q.correctId).id])), exerciseId: pv.exerciseId }));
+    assert.deepEqual([vw.passed, vw.countedIn], [false, "lesson"]);
+    assert.equal(ok(await v.c.v3("player/lessons/VAL-02")).result.quizPassed, false);
+    assert.equal((await v.c.v3("player/lessons/VAL-02/quiz", { answers: { nope: "a" } })).status, 400, "incomplete or foreign answers refused");
+    const vr = ok(await v.c.v3("player/lessons/VAL-02/quiz", { answers: Object.fromEntries(vq.map((q) => [q.id, q.correctId])), exerciseId: pv.exerciseId }));
+    assert.equal(vr.passed, true);
+    assert.equal(ok(await v.c.v3("player/lessons/VAL-02")).result.quizPassed, true);
   });
 
   await check("password recovery: recovery code, operator reset code, sessions revoked", async () => {

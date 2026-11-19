@@ -103,7 +103,7 @@ export default function StepView({ position, onBack, onOpenLesson, onOpenStep, h
       <p className="mt-2"><strong>Результат шага:</strong> {h(step.expectedArtifact)}</p>
       <p className={`mt-2 text-[15px] ${muted}`}><strong>Безопасность:</strong> {h(step.safetyNote)}</p>
       <div className="mt-3 flex flex-wrap items-center gap-3">
-        {onPlay && hasPlayer(step.lessonId) && <Button onClick={() => onPlay(step.lessonId, position)}>Пройти урок короткими экранами</Button>}
+        {onPlay && hasPlayer(step.lessonId) && sp.state !== "done" && <Button onClick={() => onPlay(step.lessonId, position)}>{!quiz && !sp.criteriaMet ? "Пройти урок короткими экранами" : "Продолжить урок короткими экранами"}</Button>}
         <Button variant="secondary" onClick={() => onOpenLesson(step.lessonId)}>{onPlay && hasPlayer(step.lessonId) ? "Полный текст урока" : <>Теория урока: {cleanTitle(step.lessonTitle)}</>}</Button>
         {step.lessonTitle.startsWith("[SYNTHETIC FIXTURE]") && <Badge>Тестовая заглушка</Badge>}
       </div>
@@ -124,7 +124,12 @@ export default function StepView({ position, onBack, onOpenLesson, onOpenStep, h
         </Section>
       )}
 
-      {exercise && (
+      {exercise && (sp.state === "self_checked" || sp.state === "done") && (
+        <Section title="1. Упражнение и самопроверка" id="exercise">
+          <p role="status" className="font-semibold">Самопроверка сохранена: отмечены все критерии ✓</p>
+        </Section>
+      )}
+      {exercise && sp.state !== "self_checked" && sp.state !== "done" && (
         <Section title="1. Упражнение и самопроверка" id="exercise">
           <Notice tone="warn">Используйте только вымышленные данные урока. Ответ остаётся у вас: сохраняются только отметки критериев. Не вставляйте: {lesson!.security.forbiddenInputs.join("; ").toLowerCase()}.</Notice>
           <div className={card}>
@@ -153,7 +158,13 @@ export default function StepView({ position, onBack, onOpenLesson, onOpenStep, h
         </Section>
       )}
 
-      {lesson && (
+      {lesson && quiz?.passed && (
+        <Section title="2. Мини-тест урока" id="quiz">
+          {quizReply?.attempt.passed ? <p role="status" className="font-semibold">Мини-тест пройден.</p>
+            : <p role="status" className="font-semibold">Мини-тест засчитан ✓ <span className={`font-normal ${muted}`}>(попыток: {quiz.attempts})</span></p>}
+        </Section>
+      )}
+      {lesson && !quiz?.passed && (
         <Section title="2. Мини-тест урока" id="quiz">
           <p className={muted}>{quiz?.passed ? `Мини-тест пройден (попыток: ${quiz.attempts}).` : quiz ? `Пока не пройден: верно ${quiz.correct} из ${quiz.total}, попыток: ${quiz.attempts}.` : "Ответьте на все вопросы — нужен полностью верный результат, попытки не ограничены."}</p>
           {lesson.content.quiz.map((q, n) => {
