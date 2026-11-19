@@ -129,6 +129,7 @@ jobs:
           if [ "$ready" -ne 1 ]; then echo "Synthetic fixture not ready"; exit 1; fi
           npm run career:test:integration
           npm run career:test:v3-integration
+          npm run career:test:v3-progress
           npm run career:cleanup
           # Browser checks remain isolated to loopback, fake messages and payments.
           npm install --no-save --no-package-lock playwright
@@ -151,3 +152,21 @@ jobs:
           fi
           echo "Career sandbox browser QA"
           npm run career:test:browser
+          echo "AI Career v3 progress browser QA (local synthetic fixture library only)"
+          # Stop the whole previous server (npm and its next-server child) so the port is really free.
+          kill "$server_pid" 2>/dev/null || true
+          pkill -f next-server || true
+          for i in {1..30}; do curl -s -o /dev/null "http://127.0.0.1:3300/" || break; sleep 1; done
+          if curl -s -o /dev/null "http://127.0.0.1:3300/"; then echo "Previous server still running on 3300"; exit 1; fi
+          node scripts/career/v3-fixture-library.mjs
+          CAREER_V3_FIXTURE_LIBRARY=1 npm run career:start >/tmp/career-synthetic-next-v3.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" "$fixture_pid" 2>/dev/null || true; pkill -f next-server || true' EXIT
+          v3_ready=0
+          for i in {1..60}; do
+            if curl -fsS "http://127.0.0.1:3300/career/v3" >/dev/null 2>&1; then v3_ready=1; break; fi
+            sleep 1
+          done
+          if [ "$v3_ready" -ne 1 ]; then echo "Fixture-library server did not start"; tail -n 60 /tmp/career-synthetic-next-v3.log; exit 1; fi
+          node tests/career-v3-progress-browser.mjs || { tail -n 80 /tmp/career-synthetic-next-v3.log; exit 1; }
+          node scripts/career/v3-fixture-library.mjs remove

@@ -237,7 +237,7 @@ if (MODE === "content") {
   pass("lessons: nothing published, no draft preview in normal mode");
 } else {
   await page.getByRole("link", { name: "Мой маршрут" }).click();
-  await page.locator("main ol > li").first().getByRole("button", { name: /Открыть урок/ }).click();
+  await page.locator("main ol > li").first().getByRole("button", { name: /^Урок:/ }).click();
   await page.getByRole("heading", { level: 1 }).waitFor();
   const t = await mainText();
   for (const part of ["Что вы научитесь делать", "Объяснение", "Разобранные примеры", "Пошаговая инструкция", "Шаблоны и промпты", "Практика", "Мини-тест", "Материалы для скачивания"]) assert.match(t, new RegExp(part));
