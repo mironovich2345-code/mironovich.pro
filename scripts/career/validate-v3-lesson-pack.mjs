@@ -2,12 +2,21 @@
 // Quality gate for v3 lesson packs (scripts/career/v3-lesson-packs.mjs): schema, publication safety,
 // IDs, links to role/curriculum, templates, answer keys, sources registry, text hygiene and
 // plan-step candidates. Generalised from scripts/career/validate-v3-wave1.mjs (PR #62) with a pack
-// config; SAL-03 adds recomputed offer arithmetic and the "AI never sets commercial terms" rules.
+// config (content/career/v3/lesson-packs/*.json) and per-lesson checks (scripts/career/lesson-checks/).
 // No network, production APIs or real personal data. Usage: validate-v3-lesson-pack.mjs [pack]
 import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { schemaCheck } from "./validate-v3-content.mjs";
+import { readdirSync } from "node:fs";
 import { PACKS, practicePath, worksheetPath, renderWorksheet } from "./v3-lesson-packs.mjs";
+export { addWorkingDays } from "./lesson-checks/helpers.mjs";
+
+// Lesson-specific checks live in scripts/career/lesson-checks/<LESSON-ID>.mjs (one file per lesson, so packs on
+// separate branches never touch the same file).
+const CHECKS_DIR = new URL("./lesson-checks/", import.meta.url);
+export const LESSON_CHECKS = Object.fromEntries(await Promise.all(readdirSync(CHECKS_DIR)
+  .filter((f) => /^[A-Z]{3}-\d{2}\.mjs$/.test(f))
+  .map(async (f) => [f.replace(".mjs", ""), (await import(new URL(f, CHECKS_DIR))).default])));
 
 const root = new URL("../../", import.meta.url);
 const text = (p) => readFileSync(new URL(p, root), "utf8");
@@ -30,7 +39,7 @@ export function loadPack(pack = "sal-03") {
   const cfg = PACKS[pack];
   if (!cfg) throw new Error("unknown lesson pack " + pack);
   return {
-    pack, lawRefs: cfg.lawRefs,
+    pack, lawRefs: cfg.lawRefs, requireYearInDates: cfg.requireYearInDates === true,
     lessons: Object.fromEntries(cfg.ids.map((id) => [id, json(`content/career/v3/lessons/${id}.json`)])),
     practice: Object.fromEntries(cfg.ids.map((id) => [id, json(practicePath(pack, id))])),
     worksheets: Object.fromEntries(cfg.ids.map((id) => [id, exists(worksheetPath(pack, id)) ? text(worksheetPath(pack, id)) : null])),
@@ -65,71 +74,13 @@ export function hygieneIssues(s, field) {
   if (!QUOTED_ERROR_FIELDS.has(field)) {
     for (const re of PROMISES) if (re.test(s.replace(/«[^«»]*»/g, " "))) out.push("outcome promise or replacement claim");
     const plain = s.replace(/«[^«»]*»/g, " ");
-    for (const m of plain.matchAll(new RegExp(`(${Object.keys(WEEKDAY).join("|")}),?\\s+(\\d{2})\\.(\\d{2})`, "gi"))) {
-      const d = new Date(Date.UTC(2026, Number(m[3]) - 1, Number(m[2])));
+    for (const m of plain.matchAll(new RegExp(`(${Object.keys(WEEKDAY).join("|")}),?\\s+(\\d{2})\\.(\\d{2})(?:\\.(\\d{4}))?`, "gi"))) {
+      const d = new Date(Date.UTC(Number(m[4] ?? 2026), Number(m[3]) - 1, Number(m[2])));
       if (d.getUTCDay() !== WEEKDAY[m[1].toLowerCase()]) out.push(`weekday mismatch ${m[0]}`);
     }
   }
   return out;
 }
-
-const rub = (n) => n.toLocaleString("ru-RU").replace(/\s/g, " ") + " ₽";
-const iso = (d) => d.toISOString().slice(0, 10);
-export function addWorkingDays(isoDate, n) {
-  const d = new Date(isoDate + "T00:00:00Z");
-  while (n > 0) { d.setUTCDate(d.getUTCDate() + 1); if (d.getUTCDay() % 6 !== 0) n--; }
-  return iso(d);
-}
-const addDays = (isoDate, n) => { const d = new Date(isoDate + "T00:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return iso(d); };
-const dm = (isoDate) => isoDate.slice(8, 10) + "." + isoDate.slice(5, 7);
-const after = (s, marker) => (s.includes(marker) ? s.slice(s.indexOf(marker)) : "");
-
-// Lesson-specific checks: arithmetic is recomputed from the raw practice data, and the lesson must keep
-// prices, discounts, terms and guarantees out of the model's hands.
-export const LESSON_CHECKS = {
-  "SAL-03"(l, data) {
-    const out = [];
-    const good = (ok, msg) => { if (!ok) out.push(msg); };
-    const c = l.content, pl = data.priceList;
-    const [k1, k2] = data.exercises;
-    const [ex1, ex2] = c.exercises;
-    // Exercise 2 numbers.
-    const i = k2.inputs, n = k2.answerKey.numbers;
-    const gross = i.seats * pl.pricePerSeatMonth * i.months;
-    const disc = Math.round(gross * Math.min(i.discountPercent, pl.managerDiscountLimitPercent) / 100);
-    good(n.subscriptionGross === gross, "subscription gross does not match price list");
-    good(n.discount === disc && n.subscriptionNet === gross - disc, "discount must apply to the subscription only, within the manager limit");
-    good(n.implementation === pl.implementation && n.firstYearTotal === gross - disc + pl.implementation, "first-year total");
-    good(n.launchDate === addWorkingDays(i.dataReceivedOn, pl.implementationWorkingDays), "launch date must be counted in working days after data");
-    good(n.validUntil === addDays(i.offerDate, pl.validityCalendarDays), "offer validity date");
-    good(n.extraTrainingCost === (i.requestedTrainingSessions - pl.includedTrainingSessions) * pl.extraTrainingSession, "extra training cost");
-    const m = k2.measurement;
-    good(n.aiTotalMinutes === m.aiGenerationMinutes + m.aiReviewMinutes, "AI time must include review");
-    for (const v of [rub(gross), rub(disc), rub(gross - disc), rub(n.firstYearTotal)]) good(ex2.sampleSolution.includes(v), `sample solution misses ${v}`);
-    good(ex2.sampleSolution.includes(dm(n.launchDate)) && ex2.sampleSolution.includes(dm(n.validUntil)), "sample solution misses launch or validity date");
-    good(ex2.successCriteria.join(" ").includes(rub(n.firstYearTotal)), "success criteria miss the first-year total");
-    good(k1.answerKey.preliminaryMonthlyFor12Seats === 12 * pl.pricePerSeatMonth && ex1.sampleSolution.includes(rub(12 * pl.pricePerSeatMonth)), "exercise 1 preliminary estimate");
-    // Human approval: the safe outputs never carry terms the authorised person has not approved.
-    const final2 = after(ex2.sampleSolution, "Безопасный итоговый вариант");
-    good(final2 && !final2.includes(i.requestedDiscountPercent + "%") && /только после ответа руководителя/.test(final2), "safe final offer must exclude the requested discount and wait for the manager");
-    const fixed1 = after(ex1.sampleSolution, "Исправленный черновик");
-    good(fixed1 && /не отправлять до согласования/.test(fixed1) && !/15%|24\/7|гарантир/.test(fixed1), "corrected draft keeps invented terms or lacks the draft status");
-    good(k2.answerKey.questionsForManager.some((q) => q.includes(i.requestedDiscountPercent + "%")), "requested discount must go to the manager");
-    // Templates: prompts forbid inventing terms; the offer template is a draft until approved.
-    for (const t of c.templates.filter((x) => x.kind === "prompt")) {
-      good(/[Нн]е добавляй|[Нн]е предлагай новых условий/.test(t.body) && /скидк/.test(t.body), `prompt ${t.id} must forbid adding discounts and terms`);
-    }
-    const draft = c.templates.find((t) => t.id === "TPL-SAL03-PROMPT-DRAFT");
-    good(!!draft && ["цены", "скидки", "сроки", "гарантии"].every((w) => draft.body.includes(w)) && /[Нн]е назначай скидки/.test(draft.body), "draft prompt must forbid setting prices, discounts, terms and guarantees");
-    const offer = c.templates.find((t) => t.id === "TPL-SAL03-OFFER");
-    good(!!offer && /ЧЕРНОВИК/.test(offer.body) && /подтверждение уполномоченного/.test(offer.body), "offer template must stay a draft until an authorised person confirms");
-    good(c.procedure.some((p) => /Отправляйте КП только после/.test(p.instruction)), "procedure must gate sending on the authorised person");
-    const types = k1.answerKey.findings.map((f) => f.type);
-    for (const t of ["invented_price", "invented_discount", "invented_term", "invented_commitment", "invented_claim"]) good(types.includes(t), `exercise 1 key lacks ${t}`);
-    good(k2.answerKey.findings.some((f) => f.type === "authority_exceeded"), "exercise 2 key lacks an authority finding");
-    return out;
-  },
-};
 
 export function validatePack(ctx) {
   const e = [];
@@ -207,7 +158,7 @@ export function validatePack(ctx) {
         good(ex.sampleSolution.includes(f.cue), `${id}: ${ex.id} sample solution misses: ${f.cue}`);
       }
     }
-    if (LESSON_CHECKS[id]) e.push(...LESSON_CHECKS[id](l, data).map((x) => `${id}: ${x}`));
+    if (LESSON_CHECKS[id]) e.push(...LESSON_CHECKS[id](l, data, ctx).map((x) => `${id}: ${x}`));
 
     // Sources: registry, hosts, dates, legal citations.
     const lt = JSON.stringify(l);
@@ -225,6 +176,8 @@ export function validatePack(ctx) {
       for (const i of hygieneIssues(s, field)) e.push(`${id}: ${p}: ${i}`);
       // Learner-facing text must not show internal task codes (the cabinet shows task names).
       if (p.startsWith("lesson.") && !p.startsWith("lesson.audience") && /\bT\d{2}\b/.test(s)) e.push(`${id}: ${p}: internal task code in learner text`);
+      // Study dates carry a year so the material does not silently shift to another calendar year.
+      if (ctx.requireYearInDates && (p.startsWith("lesson.content") || p.startsWith("data.exercises")) && /(?<![\d.])\d{2}\.\d{2}(?!\.?\d)/.test(s)) e.push(`${id}: ${p}: study date without a year`);
     }
   }
   for (const s of registry.sources) good(s.usedBy.every((id) => lessons[id]?.sources.some((x) => x.id === s.id)), `registry ${s.id}: stale usage`);

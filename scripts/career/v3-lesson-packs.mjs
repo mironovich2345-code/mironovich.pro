@@ -1,21 +1,20 @@
 #!/usr/bin/env node
 // Lesson packs of AI Career v3 that live outside the earlier packs (#57 safety, #59 SAL-02/05, #62 wave 1).
 // Learner worksheets are generated from the lesson JSON so they never drift; `--check` fails on a stale file.
-// The renderer follows scripts/career/wave1-lessons.mjs from PR #62 but is driven by a pack config, so the
-// other packs can be moved here when the PRs are consolidated (see the PR description: consolidation debt).
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
+// The renderer follows scripts/career/wave1-lessons.mjs from PR #62 but is driven by pack configs in
+// content/career/v3/lesson-packs/*.json, so the other packs can be moved here when the PRs are consolidated.
+import { readFileSync, writeFileSync, existsSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
-export const PACKS = {
-  "sal-03": {
-    ids: ["SAL-03"],
-    materialsDir: "content/career/v3/materials/sal-03",
-    planPath: "content/career/v3/plan-candidates/sal-03.json",
-    lawRefs: { "ГК РФ, ст. 432": "SRC-GK-432", "ГК РФ, ст. 435": "SRC-GK-435" },
-  },
-};
-
 const root = new URL("../../", import.meta.url);
+// One config file per pack keeps packs on separate branches merge-free: the scripts stay identical.
+export const PACKS_DIR = "content/career/v3/lesson-packs";
+export const PACKS = Object.fromEntries(
+  (existsSync(new URL(PACKS_DIR, root)) ? readdirSync(new URL(PACKS_DIR, root)) : [])
+    .filter((f) => f.endsWith(".json")).sort()
+    .map((f) => { const c = JSON.parse(readFileSync(new URL(`${PACKS_DIR}/${f}`, root), "utf8")); return [c.id, c]; }),
+);
+
 const read = (p) => readFileSync(new URL(p, root), "utf8");
 const KIND = { prompt: "Промпт (только при разрешённом ИИ)", checklist: "Чек-лист", measurement_sheet: "Лист замера", script: "Шаблон" };
 const LEVEL = { starter: "начинающий", independent: "самостоятельный", experienced: "опытный" };

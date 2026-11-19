@@ -94,6 +94,32 @@ test("the model never sets prices, discounts, terms or guarantees; a human appro
   assert.match(issues(offer), /offer template must stay a draft/);
 });
 
+test("legal and evidence framing: offer not automatic, fictional 5% limit, study only as another field, legal acceptance open", () => {
+  const offer = fresh();
+  L(offer).content.explanations[0].body = L(offer).content.explanations[0].body.replace("КП не является офертой автоматически. ", "КП — это оферта. ");
+  assert.match(issues(offer), /offer wording must say an offer is not automatic/);
+  const limit = fresh();
+  const ex1 = L(limit).content.exercises[0];
+  ex1.syntheticInput = ex1.syntheticInput.replace("по правилам вымышленной учебной компании «Норд-Софт» ", "");
+  assert.match(issues(limit), /fictional company rule|key quote/);
+  const study = fresh();
+  const src = L(study).sources.find((s) => s.id === "SRC-ARXIV-GENAI-AT-WORK");
+  src.supportsClaim = "ИИ ускоряет подготовку на 15%.";
+  assert.match(issues(study), /only be an example from another field/);
+  const legal = fresh();
+  legal.registry.sources.find((s) => s.id === "SRC-GK-435").officialPublicationCheck.legalAcceptance = "accepted";
+  assert.match(issues(legal), /must keep legal acceptance open/);
+  for (const s of base.registry.sources.filter((x) => x.kind === "law")) assert.ok(s.officialPublicationCheck.attemptedHosts.includes("pravo.gov.ru"));
+});
+
+test("study dates carry a year and weekdays match that year", () => {
+  const ctx = fresh();
+  L(ctx).content.exercises[1].syntheticInput += " Повторный звонок 03.12.";
+  assert.match(issues(ctx), /study date without a year/);
+  assert.ok(hygieneIssues("созвон во вторник, 01.12.2027", "body").length, "01.12.2027 is a Wednesday");
+  assert.deepEqual(hygieneIssues("данные во вторник, 01.12.2026", "body"), []);
+});
+
 test("answer keys: every finding is quoted from the input and addressed in the sample solution", () => {
   const k1 = K(base, 0).answerKey.findings.map((f) => f.type);
   assert.ok(k1.length >= 8 && k1.includes("invented_discount") && k1.includes("invented_claim"));
