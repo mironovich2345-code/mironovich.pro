@@ -9,7 +9,6 @@ import { FIXTURE_MARK } from "./fixtures/career-v3/fixture-library.mjs";
 
 const TODAY = "2026-11-19";
 const g = computeContentGap({ today: TODAY });
-const by = (rows) => Object.fromEntries(rows.map((r) => [r.id.replace("FX-", ""), r.steps]));
 
 test("calculation is deterministic and the committed report matches it", () => {
   assert.deepEqual(computeContentGap({ today: TODAY }), g);
@@ -22,14 +21,14 @@ test("the date is a parameter: sources checked after the calculation date are wi
   assert.throws(() => computeContentGap({ today: "19.11.2026" }), /YYYY-MM-DD/);
   const earlier = computeContentGap({ today: "2026-11-18" });
   const withheld = earlier.whatIf.withheld.map((w) => w.id);
-  assert.ok(withheld.includes("SAL-03") && withheld.includes("SAL-04"), "SAL-03/04 sources were checked on 2026-11-19");
+  for (const id of ["SAL-03", "SAL-04", "VAL-02", "MAP-02"]) assert.ok(withheld.includes(id), `${id} sources were checked on 2026-11-19`);
   assert.ok(earlier.whatIf.withheld.every((w) => w.exclusions.includes("unverified_sources")));
   assert.equal(g.whatIf.withheld.length, 0, "on the check date every written lesson is deliverable once approved");
 });
 
 test("all written lessons and all step candidates take part", () => {
-  assert.deepEqual(g.written, ["MAP-01", "SAF-01", "SAF-02", "SAF-03", "SAF-04", "SAL-01", "SAL-02", "SAL-03", "SAL-04", "SAL-05", "TRD-01", "VAL-01"]);
-  assert.equal(g.stepCount, 39);
+  assert.deepEqual(g.written, ["MAP-01", "MAP-02", "SAF-01", "SAF-02", "SAF-03", "SAF-04", "SAL-01", "SAL-02", "SAL-03", "SAL-04", "SAL-05", "TRD-01", "VAL-01", "VAL-02"]);
+  assert.equal(g.stepCount, 47);
   assert.deepEqual(g.orphanSteps, []);
   assert.deepEqual(g.whatIf.deliverable.sort(), g.written);
 });
@@ -41,10 +40,10 @@ test("actual state is reported separately: nothing is approved, no profile gets 
 });
 
 test("hypothesis: steps per profile if every written lesson were approved", () => {
-  assert.deepEqual(by(g.whatIf.profiles), {
-    "b2b-experienced-public-tools": 27, "inbound-starter": 22, "account-ai-prohibited": 23, "account-approved": 23,
-    "no-policy": 27, "no-baseline": 27, "high-error-cost": 23, "mixed-duties": 30, "minimal-time": 23,
-  });
+  for (const p of g.whatIf.profiles) {
+    assert.equal(p.steps, 30, p.id);
+    for (const [ph, n] of Object.entries(p.phases)) assert.ok(n >= 2, `${p.id}: phase ${ph} has ${n} steps`);
+  }
   const lessonsOf = (id) => g.whatIf.profiles.find((p) => p.id === id).lessons;
   assert.ok(lessonsOf("FX-high-error-cost").includes("SAL-03"), "SAL-03 fills the proposal profile");
   assert.ok(lessonsOf("FX-b2b-experienced-public-tools").includes("SAL-03") && lessonsOf("FX-b2b-experienced-public-tools").includes("SAL-04"));
@@ -63,9 +62,9 @@ test("stand-ins are created only for missing lessons and never reach the actual 
   for (const [, doc] of b.lessonDocuments) assert.ok(!JSON.stringify(doc).includes(FIXTURE_MARK));
 });
 
-test("growth estimate: what still separates each profile from 30 steps", () => {
-  const [sal07, plus2] = g.growth;
-  assert.deepEqual(sal07.stubs, ["SAL-07"]);
-  assert.equal(by(g.profiles.map((p, i) => ({ id: p.id, steps: sal07.steps[i] })))["b2b-experienced-public-tools"], 30);
-  assert.ok(plus2.steps.filter((x) => x === 30).length >= 7);
+test("growth estimate and empty slots: 30 steps do not mean a filled programme", () => {
+  assert.deepEqual(g.modules.flatMap((m) => m.missing), ["MAP-03", "MAP-04", "SAL-06", "SAL-07", "TRD-02", "TRD-03", "VAL-03", "VAL-04", "VAL-05"]);
+  const last = g.growth.at(-1);
+  assert.deepEqual([...last.stubs].sort(), ["MAP-03", "MAP-04", "SAL-06", "SAL-07", "TRD-02", "TRD-03", "VAL-03", "VAL-04", "VAL-05"]);
+  assert.match(renderContentGap(g), /30 шагов в гипотезе не означают готовую программу/);
 });

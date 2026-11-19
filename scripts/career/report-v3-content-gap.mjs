@@ -25,9 +25,9 @@ const REASON = { nothing_fits_profile: "нет практического уро
   no_approved_lessons: "нет утверждённых уроков", content_errors: "ошибки контента", diagnostic_outdated: "диагностика устарела" };
 export const GROWTH = [
   ["+ SAL-07 (переговоры)", ["SAL-07"]],
-  ["+ VAL-02, MAP-02", ["SAL-07", "VAL-02", "MAP-02"]],
-  ["+ TRD-02, VAL-03", ["SAL-07", "VAL-02", "MAP-02", "TRD-02", "VAL-03"]],
-  ["+ MAP-03, VAL-04, SAL-06", ["SAL-07", "VAL-02", "MAP-02", "TRD-02", "VAL-03", "MAP-03", "VAL-04", "SAL-06"]],
+  ["+ TRD-02, VAL-03", ["SAL-07", "TRD-02", "VAL-03"]],
+  ["+ MAP-03, VAL-04, SAL-06", ["SAL-07", "TRD-02", "VAL-03", "MAP-03", "VAL-04", "SAL-06"]],
+  ["Все оставшиеся слоты", ["SAL-06", "SAL-07", "MAP-03", "MAP-04", "TRD-02", "TRD-03", "VAL-03", "VAL-04", "VAL-05"]],
 ];
 
 const isFixture = (doc) => typeof doc?.title === "string" && doc.title.includes(FIXTURE_MARK);
@@ -54,7 +54,8 @@ export function computeContentGap({ today }) {
     const plan = buildPlan(b.engine, { result: r, selection: sel, library, today });
     const steps = plan.status === "ready" ? 30 : sel.status !== "ready" ? 0 : (plan.gaps.find((g) => g.phase === "total")?.available ?? 0);
     return { id: p.id, story: p.story, variant: sel.variant, selection: sel.status, reason: sel.status !== "ready" ? sel.unavailableReason : plan.status === "ready" ? null : plan.reason,
-      lessons: sel.items.map((i) => i.lessonId), steps, emptyPhases: plan.status === "ready" ? [] : plan.gaps.filter((g) => g.phase !== "total" && g.available === 0).map((g) => g.phase) };
+      lessons: sel.items.map((i) => i.lessonId), steps,
+      phases: Object.fromEntries(Object.keys(PHASE).map((ph) => [ph, plan.steps.filter((x) => x.phase === ph).length])), emptyPhases: plan.status === "ready" ? [] : plan.gaps.filter((g) => g.phase !== "total" && g.available === 0).map((g) => g.phase) };
   });
 
   // 1. Actual state.
@@ -106,7 +107,8 @@ export function renderContentGap(g) {
     `- Слотов в программе: **${g.slots}**; написано уроков: **${g.written.length}** (${g.written.join(", ")}).`,
     `- Шагов-кандидатов: **${g.stepCount}** (${g.candidateFiles.map((c) => `${c.file}: ${c.steps}`).join(", ")})${g.orphanSteps.length ? `; без урока: ${g.orphanSteps.join(", ")}` : ""}.`,
     `- Фактически утверждено и доступно к выдаче: **${g.actual.deliverable.length}** уроков; маршрут из 30 шагов сейчас не строится ни для одного профиля.`,
-    `- Если утвердить все написанные материалы: 30 шагов получают **${full.length} из ${g.whatIf.profiles.length}** профилей${full.length ? ` (${full.map((p) => p.id.replace("FX-", "")).join(", ")})` : ""}.`, "",
+    `- Если утвердить все написанные материалы: 30 шагов получают **${full.length} из ${g.whatIf.profiles.length}** профилей${full.length ? ` (${full.map((p) => p.id.replace("FX-", "")).join(", ")})` : ""}.`,
+    `- Слоты без урока: ${g.modules.flatMap((m) => m.missing).join(", ") || "нет"}. 30 шагов в гипотезе не означают готовую программу: эти слоты остаются пустыми, а маршрут существует только после реального утверждения уроков.`, "",
     "## По модулям", "", "| Модуль | Слотов | Написано | Не написано | Шагов-кандидатов |", "| --- | --- | --- | --- | --- |");
   for (const m of g.modules) o.push(`| ${m.title} | ${m.slots} | ${m.written.join(", ") || "—"} | ${m.missing.join(", ") || "—"} | ${m.steps} |`);
   o.push("", "## Фактическое состояние", "", "| Урок | Статус | Доступен к выдаче | Почему нет |", "| --- | --- | --- | --- |");
@@ -115,8 +117,8 @@ export function renderContentGap(g) {
   for (const p of g.actual.profiles) o.push(`| ${p.story} | ${p.selection === "ready" ? p.lessons.length + " уроков" : "недоступен"} | ${p.steps} | ${REASON[p.reason] ?? p.reason ?? "—"} |`);
   o.push("", "## Если утвердить все написанные материалы (гипотеза)", "");
   if (g.whatIf.withheld.length) o.push(`Даже после утверждения не выдаются: ${g.whatIf.withheld.map((w) => `${w.id} (${w.exclusions.join(", ")})`).join("; ")}.`, "");
-  o.push("| Профиль | Вариант практики | Уроков в подборе | Различных шагов из 30 | Пустые этапы или причина |", "| --- | --- | --- | --- | --- |");
-  for (const p of g.whatIf.profiles) o.push(`| ${p.story} | ${p.variant} | ${p.lessons.length} | ${p.steps} | ${p.selection !== "ready" ? REASON[p.reason] ?? p.reason : p.emptyPhases.map((x) => PHASE[x]).join(", ") || "—"} |`);
+  o.push("| Профиль | Вариант практики | Уроков в подборе | Различных шагов из 30 | Шаги по этапам (без. / прим. / пров. / изм. / ценн. / след.) | Пустые этапы или причина |", "| --- | --- | --- | --- | --- | --- |");
+  for (const p of g.whatIf.profiles) o.push(`| ${p.story} | ${p.variant} | ${p.lessons.length} | ${p.steps} | ${p.steps === 30 ? Object.values(p.phases).join(" / ") : "—"} | ${p.selection !== "ready" ? REASON[p.reason] ?? p.reason : p.emptyPhases.map((x) => PHASE[x]).join(", ") || "—"} |`);
   o.push("", "Лимиты движка: не больше 4 шагов на урок, 2 на упражнение и одного на упражнение в каждом этапе; цели по этапам добираются сверх лимита, если шагов хватает. "
     + "Поэтому итог упирается в число подходящих профилю уроков.", "",
     "## Оценка наращивания (заглушки для ненаписанных уроков)", "",
