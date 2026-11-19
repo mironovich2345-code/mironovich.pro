@@ -40,7 +40,7 @@ export default function DemoApp() {
     try {
       const s = await demoApi<{ authenticated: boolean; account?: Account }>("session");
       if (s.authenticated && s.account) { setAccount(s.account); setScreen("cabinet"); }
-      else { setAccount(null); setScreen((x) => (x === "loading" || x === "cabinet" ? "welcome" : x)); }
+      else { setAccount(null); const openLogin = new URLSearchParams(window.location.search).get("login") === "1"; setScreen((x) => (x === "loading" || x === "cabinet" ? (openLogin ? "login" : "welcome") : x)); }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Сервис временно недоступен");
       setScreen("welcome");
