@@ -2,7 +2,8 @@
 // Operator commands for the CLOSED CLOUD DEMO of AI Career 3.0. Refuses to run unless the full demo
 // configuration is valid (lib/server/career-demo/config.ts) — the same fail-closed check the server uses.
 // Run inside the demo service (Railway: `railway ssh` into ai-career-v3-demo, or as its pre-deploy command for migrate).
-//   migrate                    apply migrations/career/*.sql to the demo DB (guards require the demo setting)
+//   migrate                    apply migrations/career/*.sql to the demo DB (guards require the demo setting);
+//                              then adds the optional one-time bootstrap invite from CAREER_V3_DEMO_BOOTSTRAP_INVITE
 //   invite [label] [days]      create ONE one-time invite code (printed once, stored only as an HMAC digest)
 //   reset <email>              one-time password reset code, valid 1 hour (after confirming the person out of band)
 //   delete <email>             delete an account and all its data
@@ -34,6 +35,12 @@ if (cmd === "migrate") {
       await tx.query(readFileSync("migrations/career/" + name, "utf8"));
     await tx.query("COMMIT");
     console.log("Схема закрытого демо готова");
+    // Optional first invite from the Railway variable (value never printed): added once, never revived.
+    const auth = await import("../../lib/server/career-demo/auth.ts");
+    const { careerPool } = await import("../../lib/server/career/db.ts");
+    const state = await auth.ensureBootstrapInvite(process.env.CAREER_V3_DEMO_BOOTSTRAP_INVITE);
+    console.log({ absent: "Стартовое приглашение не задано", invalid: "Стартовое приглашение имеет неверный формат и пропущено", added: "Стартовое приглашение добавлено (действует 7 дней, одноразовое)", exists: "Стартовое приглашение уже было добавлено ранее" }[state]);
+    await careerPool().end();
   } catch (e) {
     await tx.query("ROLLBACK");
     console.error("Миграция не выполнена:", e.message);

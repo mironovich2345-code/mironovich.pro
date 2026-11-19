@@ -293,6 +293,22 @@ try {
     assert.doesNotMatch(admin("status"), /@/, "status shows counts only");
   });
 
+  await check("bootstrap invite from the Railway variable: added once, single-use, never revived, never printed", async () => {
+    const { newCode } = await import("../lib/server/career-demo/auth.ts");
+    const code = newCode(4);
+    const run = (value) => execFileSync(process.execPath, ["--experimental-strip-types", "--no-warnings", "scripts/career/demo-admin.mjs", "migrate"],
+      { env: { ...process.env, CAREER_V3_DEMO_BOOTSTRAP_INVITE: value } }).toString();
+    const out1 = run(code);
+    assert.match(out1, /Стартовое приглашение добавлено/);
+    assert.ok(!out1.includes(code) && !out1.includes(code.replaceAll("-", "")), "code never printed");
+    assert.match(run("not-a-code"), /неверный формат/);
+    const c = client(newIp());
+    const e = email("bootstrap");
+    ok(await c.demo("register", { email: e, password: PASSWORD, passwordConfirm: PASSWORD, invite: code }), 201);
+    assert.match(run(code), /уже было добавлено/, "a restart does not revive a spent bootstrap invite");
+    assert.equal((await client(newIp()).demo("register", { email: email("bootstrap2"), password: PASSWORD, passwordConfirm: PASSWORD, invite: code })).status, 403);
+  });
+
   await check("bad configuration closes the demo (404), never opens another mode", async () => {
     await stopServer(server);
     server = null;

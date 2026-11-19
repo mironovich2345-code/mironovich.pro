@@ -214,6 +214,19 @@ export async function createInvite(label = "", days = 14) {
   await careerPool().query("INSERT INTO career_demo_invites(code_hash,label,expires_at) VALUES($1,$2,now()+make_interval(days=>$3))", [mac(c, "invite", code), label, days]);
   return code;
 }
+/** One-time bootstrap invite from the Railway variable CAREER_V3_DEMO_BOOTSTRAP_INVITE (set by the operator, readable
+ *  only by people with access to the Railway project). Inserted once as an HMAC digest; a code that already exists —
+ *  unused, used or revoked — is never re-activated, so a restart cannot revive a spent invite. Never logs the code. */
+export async function ensureBootstrapInvite(raw: string | undefined): Promise<"absent" | "invalid" | "added" | "exists"> {
+  const c = requireDemo();
+  if (!raw) return "absent";
+  const code = normalizeCode(raw, 4);
+  if (!code) return "invalid";
+  const r = await careerPool().query(
+    "INSERT INTO career_demo_invites(code_hash,label,expires_at) VALUES($1,'bootstrap',now()+interval '7 days') ON CONFLICT (code_hash) DO NOTHING",
+    [mac(c, "invite", code)]);
+  return r.rowCount ? "added" : "exists";
+}
 export async function issueResetCode(emailInput: string) {
   const c = requireDemo();
   const email = normalizeEmail(emailInput);
