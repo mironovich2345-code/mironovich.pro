@@ -115,7 +115,9 @@ async function doStep(n, { wrongFirst = false } = {}) {
   const pr = await progressJson();
   const step = pr.plan.steps.find((s) => s.position === n);
   const lesson = await lessonJson(step.lessonId);
-  assert.equal(await stateBadge(), "Изучается");
+  // The first state the learner sees on an opened step is «Изучается» (never a stale «Не начат»).
+  const first = await page.getByTestId("step-state").innerText();
+  assert.equal(first, "Изучается", "audit #49: no flash of «Не начат» on an opened step");
   assert.ok(await page.getByRole("button", { name: "Завершить шаг" }).isDisabled(), "completion is locked before the checks");
   const boxes = page.locator("#exercise-h").locator("xpath=..").locator('input[type="checkbox"]');
   for (let i = 0; i < await boxes.count(); i++) await boxes.nth(i).check();
@@ -209,7 +211,7 @@ try {
   await page.getByText("Завершено 2 из 30 шагов · ≈7%").waitFor();
   await page.getByRole("button", { name: "Продолжить: шаг 3" }).waitFor();
   await shot("route-progress");
-  pass("route: 2 of 30 completed (6%), resume button points to step 3");
+  pass("route: 2 of 30 completed (≈7%), resume button points to step 3");
 
   // 6. Sign out, sign in again with the same synthetic email, resume.
   await page.getByRole("button", { name: "Выйти" }).click();

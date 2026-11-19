@@ -4,7 +4,7 @@
 // enters only numbers, dates, a unit and predefined checkboxes — no free text.
 import { useCallback, useEffect, useState } from "react";
 import {
-  COMPARABILITY, COMPARABILITY_KEYS, INSUFFICIENT, LIMITATIONS, UNIT_LABEL, UNIT_SHORT, fmtNum, tasksWord,
+  COMPARABILITY, COMPARABILITY_KEYS, INSUFFICIENT, conditionsFor, LIMITATIONS, UNIT_LABEL, UNIT_SHORT, fmtNum, tasksWord,
   type Comparison, type LimitationKey, type MeasurementInput, type Unit,
 } from "@/lib/career-v3/results";
 import { REPORT_KINDS, type Report, type ReportKind } from "@/lib/career-v3/report";
@@ -159,7 +159,7 @@ function MeasurementCard({ slot, readOnly, onSaved }: { slot: Slot; readOnly: bo
       const measurement = {
         unit, baseline: point(baseline, "Было"), after: point(after, "Стало"),
         reviewMinutes: unit === "minutes" ? optional(review) : null, fixMinutes: unit === "minutes" ? optional(fix) : null, errorsFound: optional(errorsFound),
-        conditions, limitations: limits,
+        conditions: Object.fromEntries(conditionsFor(unit).map((k) => [k, !!conditions[k]])), limitations: limits,
       };
       await v3(`results/measurements/${slot.position}`, { stableId: slot.stableId, metricId: slot.metric!.id, measurement });
       await onSaved();
@@ -219,7 +219,7 @@ function MeasurementCard({ slot, readOnly, onSaved }: { slot: Slot; readOnly: bo
         <fieldset disabled={readOnly}>
           <legend className="font-semibold">Условия сопоставимости</legend>
           <div className="mt-2 space-y-2">
-            {COMPARABILITY_KEYS.map((k) => (
+            {conditionsFor(unit).map((k) => (
               <label key={k} className="flex items-start gap-3 text-[15px] leading-snug">
                 <input type="checkbox" className="mt-1 h-4 w-4 shrink-0 accent-[#0E0E11]" checked={!!conditions[k]} onChange={() => setConditions({ ...conditions, [k]: !conditions[k] })} />
                 <span>{COMPARABILITY[k]}</span>

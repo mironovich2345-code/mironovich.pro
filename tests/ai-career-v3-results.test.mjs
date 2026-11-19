@@ -2,12 +2,13 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import {
-  COMPARABILITY_KEYS, INSUFFICIENT, ResultsInputError, compareMeasurement, parseMeasurement, progressPercent, unitsFor,
+  COMPARABILITY_KEYS, INSUFFICIENT, ResultsInputError, compareMeasurement, conditionsFor, parseMeasurement, progressPercent, unitsFor,
 } from "../lib/career-v3/results.ts";
 import { buildReport, REPORT_KINDS, SECTION_HEADINGS } from "../lib/career-v3/report.ts";
 
 const TODAY = "2026-11-19";
 const allTrue = Object.fromEntries(COMPARABILITY_KEYS.map((k) => [k, true]));
+const forUnit = (unit) => Object.fromEntries(conditionsFor(unit).map((k) => [k, true]));
 const body = (o = {}) => ({
   unit: "minutes",
   baseline: { value: 19, sampleSize: 4, measuredOn: "2026-11-10" },
@@ -30,7 +31,7 @@ test("formulas: total time includes review and fix; absolute difference and perc
 });
 
 test("shares are compared in percentage points", () => {
-  const p = parseMeasurement(body({ unit: "percent", baseline: { value: 50, sampleSize: 4, measuredOn: "2026-11-10" }, after: { value: 75, sampleSize: 4, measuredOn: "2026-11-17" }, reviewMinutes: null, fixMinutes: null }), "crm_completeness", TODAY);
+  const p = parseMeasurement(body({ unit: "percent", baseline: { value: 50, sampleSize: 4, measuredOn: "2026-11-10" }, after: { value: 75, sampleSize: 4, measuredOn: "2026-11-17" }, reviewMinutes: null, fixMinutes: null, conditions: forUnit("percent") }), "crm_completeness", TODAY);
   const c = compareMeasurement(p, "exercise");
   assert.equal(c.percentagePoints, 25);
   assert.deepEqual(c.relative, { value: 50 });
@@ -38,7 +39,7 @@ test("shares are compared in percentage points", () => {
 });
 
 test("division by zero gives an explanation instead of a percent", () => {
-  const c = compareMeasurement(parseMeasurement(body({ unit: "count", baseline: { value: 0, sampleSize: 5, measuredOn: "2026-11-10" }, after: { value: 2, sampleSize: 5, measuredOn: "2026-11-17" }, reviewMinutes: null, fixMinutes: null }), "error_rate", TODAY), "exercise");
+  const c = compareMeasurement(parseMeasurement(body({ unit: "count", baseline: { value: 0, sampleSize: 5, measuredOn: "2026-11-10" }, after: { value: 2, sampleSize: 5, measuredOn: "2026-11-17" }, reviewMinutes: null, fixMinutes: null, conditions: forUnit("count") }), "error_rate", TODAY), "exercise");
   assert.equal(c.status, "ok");
   assert.equal(c.relative.value, null);
   assert.match(c.relative.explanation, /делить на него нельзя/);
@@ -61,6 +62,34 @@ test("insufficient grounds: no baseline, small sample, non-comparable conditions
   }
 });
 
+test("audit #49 — comparability uses only conditions relevant to the unit", () => {
+  assert.deepEqual(conditionsFor("minutes"), COMPARABILITY_KEYS);
+  assert.ok(!conditionsFor("percent").includes("reviewIncluded") && !conditionsFor("count").includes("reviewIncluded"));
+  const pct = parseMeasurement(body({ unit: "percent", baseline: { value: 40, sampleSize: 5, measuredOn: "2026-11-10" }, after: { value: 70, sampleSize: 5, measuredOn: "2026-11-17" }, reviewMinutes: null, fixMinutes: null, conditions: forUnit("percent") }), "crm_completeness", TODAY);
+  assert.equal(compareMeasurement(pct, "exercise").status, "ok", "a share is comparable without the time-only condition");
+  assert.throws(() => parseMeasurement(body({ unit: "percent", conditions: allTrue, reviewMinutes: null, fixMinutes: null }), "crm_completeness", TODAY), /для выбранной единицы/, "the time-only condition is not accepted for a share");
+  assert.throws(() => parseMeasurement(body({ conditions: forUnit("percent") }), "research_time", TODAY), /для выбранной единицы/, "minutes still require the review condition");
+});
+
+test("audit #49 — an empty fix time is never turned into zero", () => {
+  const c = compareMeasurement(m({ fixMinutes: null }), "exercise");
+  assert.equal(c.status, "insufficient");
+  assert.match(c.reasons.join(" "), /Не указано время исправления \(укажите 0/);
+  const zero = compareMeasurement(m({ fixMinutes: 0 }), "exercise");
+  assert.equal(zero.status, "ok", "an explicit 0 is accepted");
+  assert.equal(zero.after, 9.3);
+});
+
+test("audit #49 — symmetric rounding of negative changes and next-day date tolerance", () => {
+  const down = compareMeasurement(m({ baseline: { value: 40, sampleSize: 4, measuredOn: "2026-11-10" }, after: { value: 17, sampleSize: 4, measuredOn: "2026-11-17" }, reviewMinutes: 7, fixMinutes: 3 }), "exercise");
+  assert.equal(down.absDiff, -13);
+  assert.equal(down.relative.value, -33, "−32.5% rounds to −33%, like +32.5% → +33%");
+  const up = compareMeasurement(m({ baseline: { value: 40, sampleSize: 4, measuredOn: "2026-11-10" }, after: { value: 43, sampleSize: 4, measuredOn: "2026-11-17" }, reviewMinutes: 7, fixMinutes: 3 }), "exercise");
+  assert.equal(up.relative.value, 33);
+  assert.doesNotThrow(() => parseMeasurement(body({ after: { value: 2, sampleSize: 4, measuredOn: "2026-11-20" } }), "research_time", "2026-11-20"));
+  assert.throws(() => parseMeasurement(body({ after: { value: 2, sampleSize: 4, measuredOn: "2026-11-21" } }), "research_time", "2026-11-20"), /не позже/);
+});
+
 test("strict input: negatives, out-of-range values, wrong units, future or reversed dates, free text and extra fields are refused", () => {
   const bad = [
     { baseline: { value: -1, sampleSize: 4, measuredOn: "2026-11-10" } },
@@ -69,7 +98,7 @@ test("strict input: negatives, out-of-range values, wrong units, future or rever
     { after: { value: 2, sampleSize: 4, measuredOn: "2026-12-30" } },
     { after: { value: 2, sampleSize: 4, measuredOn: "2026-11-01" } },
     { unit: "rubles" },
-    { unit: "percent", baseline: { value: 120, sampleSize: 4, measuredOn: "2026-11-10" } },
+    { unit: "percent", baseline: { value: 120, sampleSize: 4, measuredOn: "2026-11-10" }, conditions: forUnit("percent") },
     { reviewMinutes: "семь" },
     { conditions: { ...allTrue, sameMethod: "да" } },
     { conditions: { sameTaskType: true } },
