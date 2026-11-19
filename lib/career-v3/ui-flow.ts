@@ -124,6 +124,7 @@ export function humanize(text: string, names: Record<string, string> = {}): stri
     .replace(/\bSAFE-\d{2}\b/g, "правило безопасности")
     .replace(/ программы v3\b/g, " программы")
     .replace(/(^|[^A-Za-z0-9])T\d{2}(\s+—\s+|:\s+)/g, "$1")
+    .replace(/\s?\(T\d{2}(?:,\s*T\d{2})*\)/g, "")
     .replace(/«(safety|apply|verify|measure|value|next_level)»/g, (_, p) => `«${PHASE_LABEL[p]}»`);
 }
 

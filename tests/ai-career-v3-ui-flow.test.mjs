@@ -78,3 +78,7 @@ test("lesson IDs after the word «урока» are dropped", () => {
 test("a leading task code in lesson text is stripped", () => {
   assert.equal(humanize("Задачи: T07 — подготовить ответ; T10 — обновить CRM"), "Задачи: подготовить ответ; обновить CRM");
 });
+
+test("task codes in parentheses are removed", () => {
+  assert.equal(humanize("резюме звонка для CRM (T09); метрики"), "резюме звонка для CRM; метрики");
+});

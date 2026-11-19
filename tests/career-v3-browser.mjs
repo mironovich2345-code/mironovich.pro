@@ -77,6 +77,8 @@ async function a11y(label) {
   return r.worst;
 }
 async function noTechIds(label) {
+  // Open every disclosure so collapsed sample answers are checked too.
+  await page.evaluate(() => document.querySelectorAll("main details").forEach((d) => { d.open = true; }));
   const t = await mainText();
   const m = TECH_ID.exec(t);
   assert.ok(!m, `${label}: technical identifier shown: ${m?.[0]} … ${t.slice(Math.max(0, (m?.index ?? 0) - 60), (m?.index ?? 0) + 40)}`);
