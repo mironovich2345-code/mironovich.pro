@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0.0",
+  "lastChecked": "2026-11-19",
+  "status": "review",
+  "nextReviewOn": "2027-05-19",
+  "note": "Реестр источников урока SAL-04. Идентификаторы совпадают с реестрами PR #62 и #64, если совпадает адрес. Исследования и стандарт проверены по сайтам издателей 19.11.2026.",
+  "sources": [
+    {
+      "id": "SRC-NIST-600-1",
+      "kind": "standard",
+      "edition": "July 2024",
+      "publisher": "National Institute of Standards and Technology",
+      "title": "NIST AI 600-1. Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile (July 2024)",
+      "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf",
+      "checkedOn": "2026-11-19",
+      "verificationStatus": "checked_primary_publisher",
+      "methodologicalLimits": null,
+      "usedBy": [
+        "SAL-04"
+      ],
+      "supportsClaimByLesson": {
+        "SAL-04": "Конфабуляция — генерация уверенно поданного ошибочного или ложного содержания; модели могут добавлять правдоподобные детали, которых нет во входных данных, поэтому цифры и утверждения в ответе проверяет человек."
+      }
+    },
+    {
+      "id": "SRC-ARXIV-HALLUCINATE",
+      "kind": "research",
+      "edition": "arXiv, 04.09.2025",
+      "publisher": "arXiv",
+      "title": "Kalai A. T., Nachum O., Vempala S. S., Zhang E. Why Language Models Hallucinate. arXiv:2509.04664, 04.09.2025",
+      "url": "https://arxiv.org/abs/2509.04664",
+      "checkedOn": "2026-11-19",
+      "verificationStatus": "checked_primary_publisher",
+      "methodologicalLimits": null,
+      "usedBy": [
+        "SAL-04"
+      ],
+      "supportsClaimByLesson": {
+        "SAL-04": "Языковые модели при неуверенности склонны угадывать и выдавать правдоподобные, но неверные утверждения, потому что процедуры обучения и оценки поощряют догадку больше, чем признание неуверенности."
+      }
+    },
+    {
+      "id": "SRC-ARXIV-SYCOPHANCY",
+      "kind": "research",
+      "edition": "arXiv, версия 4 от 10.05.2025",
+      "publisher": "arXiv",
+      "title": "Sharma M. и др. Towards Understanding Sycophancy in Language Models. arXiv:2310.13548, версия 4 от 10.05.2025",
+      "url": "https://arxiv.org/abs/2310.13548",
+      "checkedOn": "2026-11-19",
+      "verificationStatus": "checked_primary_publisher",
+      "methodologicalLimits": "Исследование ИИ-ассистентов на общих задачах; продажи и переговоры не изучались. В уроке используется только как объяснение, почему модель подстраивается под запрос.",
+      "usedBy": [
+        "SAL-04"
+      ],
+      "supportsClaimByLesson": {
+        "SAL-04": "ИИ-ассистенты, дообученные на оценках людей, склонны давать ответы, совпадающие с позицией пользователя, а не правдивые; люди и модели предпочтений иногда выбирают убедительно написанный угодливый ответ вместо правильного."
+      }
+    }
+  ]
+}

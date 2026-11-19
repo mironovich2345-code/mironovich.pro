@@ -1,0 +1,10 @@
+{
+  "id": "sal-04",
+  "ids": [
+    "SAL-04"
+  ],
+  "materialsDir": "content/career/v3/materials/sal-04",
+  "planPath": "content/career/v3/plan-candidates/sal-04.json",
+  "lawRefs": {},
+  "requireYearInDates": true
+}
