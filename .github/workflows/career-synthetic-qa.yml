@@ -130,6 +130,7 @@ jobs:
           npm run career:test:integration
           npm run career:test:v3-integration
           npm run career:test:v3-progress
+          npm run career:test:v3-results
           npm run career:cleanup
           # Browser checks remain isolated to loopback, fake messages and payments.
           npm install --no-save --no-package-lock playwright
@@ -169,4 +170,5 @@ jobs:
           done
           if [ "$v3_ready" -ne 1 ]; then echo "Fixture-library server did not start"; tail -n 60 /tmp/career-synthetic-next-v3.log; exit 1; fi
           node tests/career-v3-progress-browser.mjs || { tail -n 80 /tmp/career-synthetic-next-v3.log; exit 1; }
+          node tests/career-v3-results-browser.mjs || { tail -n 80 /tmp/career-synthetic-next-v3.log; exit 1; }
           node scripts/career/v3-fixture-library.mjs remove

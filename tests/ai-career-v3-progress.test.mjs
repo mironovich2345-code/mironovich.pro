@@ -62,6 +62,7 @@ test("summary counts states and the percent of completed steps out of 30", () =>
   const states = [...Array(7).fill("done"), "self_checked", "in_progress", ...Array(21).fill("not_started")];
   assert.deepEqual(summarize(states), { total: 30, done: 7, selfChecked: 1, inProgress: 1, notStarted: 21, percent: 23 });
   assert.equal(summarize(Array(30).fill("done")).percent, 100);
+  assert.equal(summarize([...Array(2).fill("done"), ...Array(28).fill("not_started")]).percent, 7, "2/30 is shown as about 7%, not 6%");
   assert.equal(summarize(Array(30).fill("not_started")).percent, 0);
 });
 

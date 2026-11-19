@@ -14,6 +14,8 @@ import { transaction } from "../career/db.ts";
 import {
   activePlanRow, completeStep, ensurePlanVersion, readProgress, saveSelfCheck, startStep, submitQuiz, versionStaleReasons,
 } from "./progress-store.ts";
+import { readResults, reportPdf, resultsReport, saveMeasurement } from "./results-store.ts";
+import type { ReportKind } from "../../career-v3/report.ts";
 
 type Queryable = { query: (q: string, args?: unknown[]) => Promise<{ rows: Record<string, unknown>[] }> };
 
@@ -217,4 +219,20 @@ export async function readV3Plan(accountId: string, professionId: string, db: Qu
   const reasons = planStaleReasons(a.payload as PlanV3, bundle.engine, bundle.library);
   if (!d || d.savedAt !== a.diagnosticSavedAt) reasons.push("diagnostic_resubmitted");
   return { plan: a.payload as PlanV3, stale: reasons.length > 0, staleReasons: reasons };
+}
+
+// ---------- Results (#47, migration 008) ----------
+
+export async function readV3Results(accountId: string, professionId: string, db: Queryable = careerPool()) {
+  const d = await diagnosticForProgress(accountId, professionId, db);
+  return readResults(db, accountId, professionId, d);
+}
+export async function saveV3Measurement(accountId: string, professionId: string, position: number, stableId: unknown, metricId: unknown, measurement: unknown, db: Queryable = careerPool()) {
+  return saveMeasurement(accountId, professionId, position, stableId, metricId, measurement, await progressDiagnostic(accountId, professionId, db));
+}
+export async function v3Report(accountId: string, professionId: string, kind: ReportKind, db: Queryable = careerPool()) {
+  return resultsReport(await readV3Results(accountId, professionId, db), kind);
+}
+export async function v3ReportPdf(accountId: string, professionId: string, kind: ReportKind, db: Queryable = careerPool()) {
+  return reportPdf(await v3Report(accountId, professionId, kind, db));
 }

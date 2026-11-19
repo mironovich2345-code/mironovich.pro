@@ -60,8 +60,12 @@ test("the v3 UI does not import the v2 synthetic diagnostic or cabinet, and v2 d
 test("no free-text inputs in the cabinet UI except tester code, synthetic email and one-time code", () => {
   const all = readdirSync("components/career-v3").map((f) => readFileSync("components/career-v3/" + f, "utf8")).join("\n");
   assert.doesNotMatch(all, /<textarea/);
-  const textInputs = [...all.matchAll(/<input[^>]*type="(password|email)"|inputMode="numeric"/g)].length;
-  assert.equal(textInputs, 3, "only tester code, synthetic email and OTP are typed");
+  // Every control is a checkbox, radio, number or date field — except the three sign-in fields.
+  const inputs = [...all.matchAll(/<input\b[^>]*>/g)].map((m) => m[0]);
+  const typed = inputs.filter((i) => /type="(password|email)"/.test(i) || (!/type="/.test(i) && /pattern="\[0-9\]\{6\}"/.test(i)));
+  assert.equal(typed.length, 3, "only tester code, synthetic email and OTP are typed");
+  for (const i of inputs.filter((x) => !typed.includes(x))) assert.match(i, /type=("(checkbox|radio|number|date)"|\{multi \? "checkbox" : "radio"\})/, "no free-text input: " + i.slice(0, 120));
+  assert.doesNotMatch(all, /type="text"/);
 });
 
 test("user-facing UI never prints internal rule names, statuses or raw IDs", () => {

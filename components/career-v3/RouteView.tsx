@@ -14,7 +14,7 @@ type Unavailable = Extract<PlanV3, { status: "unavailable" }>;
 export function ProgressBar({ done, total, percent }: { done: number; total: number; percent: number }) {
   return (
     <div>
-      <p className="font-semibold">Завершено {done} из {total} шагов · {percent}%</p>
+      <p className="font-semibold">Завершено {done} из {total} шагов · {(done * 100) % total === 0 ? "" : "≈"}{percent}%</p>
       <div role="progressbar" aria-label="Прохождение маршрута" aria-valuemin={0} aria-valuemax={total} aria-valuenow={done}
         className="mt-2 h-3 w-full overflow-hidden rounded-full border border-graphite/30 bg-white">
         <div className="h-full bg-graphite" style={{ width: `${percent}%` }} />

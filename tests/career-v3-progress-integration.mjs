@@ -152,7 +152,7 @@ try {
   pr = await store.readV3Progress(back.id, P);
   assert.equal(pr.resumePosition, 3);
   assert.equal(pr.summary.done, 2);
-  assert.equal(pr.summary.percent, 6);
+  assert.equal(pr.summary.percent, 7, "2/30 rounds to 7%");
   assert.deepEqual(pr.steps.slice(0, 3).map((s) => s.state), ["done", "done", "in_progress"]);
   pass("sign-out → sign-in: same account, progress and the resume position (step 3) are restored");
 
