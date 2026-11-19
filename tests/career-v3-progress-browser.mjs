@@ -206,7 +206,7 @@ try {
   await page.getByRole("button", { name: /Следующий шаг: 3/ }).click();
   await page.waitForFunction(() => document.querySelector("[data-testid=step-state]")?.textContent === "Изучается");
   await page.getByRole("button", { name: "← Мой маршрут" }).click();
-  await page.getByText("Завершено 2 из 30 шагов · 6%").waitFor();
+  await page.getByText("Завершено 2 из 30 шагов · ≈7%").waitFor();
   await page.getByRole("button", { name: "Продолжить: шаг 3" }).waitFor();
   await shot("route-progress");
   pass("route: 2 of 30 completed (6%), resume button points to step 3");
@@ -219,7 +219,7 @@ try {
   await page.goto("/career/v3");
   await admitAndSignIn(email);
   await page.getByRole("heading", { level: 1, name: "Мой маршрут" }).waitFor();
-  await page.getByText("Завершено 2 из 30 шагов · 6%").waitFor();
+  await page.getByText("Завершено 2 из 30 шагов · ≈7%").waitFor();
   await page.getByRole("button", { name: "Продолжить: шаг 3" }).click();
   await page.waitForFunction(() => document.querySelector("[data-testid=step-state]")?.textContent === "Изучается");
   assert.match(await mainText(), /Шаг 3 из 30/);

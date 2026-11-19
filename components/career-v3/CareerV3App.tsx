@@ -7,13 +7,14 @@ import TaskMapView from "./TaskMapView";
 import RouteView from "./RouteView";
 import LessonView from "./LessonView";
 import StepView from "./StepView";
+import ResultsView from "./ResultsView";
 import { ApiError, Badge, Button, Notice, card, field, muted, v2, v3 } from "./primitives";
 
 type Session = { authenticated?: boolean; active?: boolean; paymentMode?: string; account?: { email: string; access_until: string | null } };
 type CabinetState = { libraryMode: "content" | "synthetic_fixture"; previewEnabled: boolean; publishedLessons: number };
-type View = "diagnostic" | "map" | "route" | "lessons" | "lesson" | "step";
+type View = "diagnostic" | "map" | "route" | "results" | "lessons" | "lesson" | "step";
 const VIEWS: { id: Exclude<View, "lesson" | "step">; label: string }[] = [
-  { id: "diagnostic", label: "Диагностика" }, { id: "map", label: "Моя карта" }, { id: "route", label: "Мой маршрут" }, { id: "lessons", label: "Уроки" },
+  { id: "diagnostic", label: "Диагностика" }, { id: "map", label: "Моя карта" }, { id: "route", label: "Мой маршрут" }, { id: "results", label: "Мои результаты" }, { id: "lessons", label: "Уроки" },
 ];
 
 type Route = { view: View; lesson?: string; preview?: boolean; step?: number; implicit?: boolean };
@@ -117,6 +118,7 @@ export default function CareerV3App() {
             )}
             {route.view === "map" && <TaskMapView onRetake={() => go("diagnostic")} onRoute={() => go("route")} />}
             {route.view === "route" && <RouteView fixtureMode={state.libraryMode === "synthetic_fixture"} onRetake={() => go("diagnostic")} onOpenLesson={(id) => go("lesson", id)} onOpenStep={(n) => go("step", undefined, false, n)} />}
+            {route.view === "results" && <ResultsView onRoute={() => go("route")} />}
             {route.view === "step" && route.step && <StepView key={route.step} position={route.step} onBack={() => go("route")} onOpenLesson={(id) => go("lesson", id)} onOpenStep={(n) => go("step", undefined, false, n)} />}
             {route.view === "lessons" && <Lessons state={state} open={(id, preview) => go("lesson", id, preview)} />}
             {route.view === "lesson" && route.lesson && <LessonView lessonId={route.lesson} preview={!!route.preview} onBack={() => go("lessons")} />}

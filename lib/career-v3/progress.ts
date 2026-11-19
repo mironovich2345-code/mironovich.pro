@@ -84,7 +84,8 @@ export function summarize(states: StepState[]) {
   return {
     total: PLAN_STEPS_REQUIRED, done, selfChecked: count("self_checked"), inProgress: count("in_progress"),
     notStarted: PLAN_STEPS_REQUIRED - done - count("self_checked") - count("in_progress"),
-    percent: Math.floor((done / PLAN_STEPS_REQUIRED) * 100),
+    // Rounded to the nearest whole percent (2/30 → 7%); the exact number of steps is always shown next to it.
+    percent: Math.round((done / PLAN_STEPS_REQUIRED) * 100),
   };
 }
 
