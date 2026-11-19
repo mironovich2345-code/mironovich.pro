@@ -1,0 +1,79 @@
+{
+  "schemaVersion": "1.0.0",
+  "lastChecked": "2026-11-19",
+  "status": "review",
+  "nextReviewOn": "2027-05-19",
+  "note": "Реестр источников уроков VAL-02 и MAP-02. Идентификаторы совпадают с реестрами PR #62, #64 и #65, если совпадает адрес. Проверено по сайтам издателей 19.11.2026.",
+  "sources": [
+    {
+      "id": "SRC-ARXIV-GENAI-AT-WORK",
+      "kind": "research",
+      "edition": "arXiv, версия 2 от 06.11.2024",
+      "publisher": "arXiv",
+      "title": "Brynjolfsson E., Li D., Raymond L. Generative AI at Work. arXiv:2304.11771, версия 2 от 06.11.2024",
+      "url": "https://arxiv.org/abs/2304.11771",
+      "checkedOn": "2026-11-19",
+      "verificationStatus": "checked_primary_publisher",
+      "methodologicalLimits": "Одна компания, клиентская поддержка; в уроке используется только как пример дизайна сравнения, не как данные о продажах.",
+      "usedBy": [
+        "VAL-02"
+      ],
+      "supportsClaimByLesson": {
+        "VAL-02": "Авторы изучали поэтапное введение ИИ-ассистента у 5 172 операторов поддержки; поэтапное введение для разных групп позволяет сравнивать с теми, у кого инструмента ещё нет, чего нет в простом сравнении «было → стало»."
+      }
+    },
+    {
+      "id": "SRC-NIST-600-1",
+      "kind": "standard",
+      "edition": "July 2024",
+      "publisher": "National Institute of Standards and Technology",
+      "title": "NIST AI 600-1. Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile (July 2024)",
+      "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf",
+      "checkedOn": "2026-11-19",
+      "verificationStatus": "checked_primary_publisher",
+      "methodologicalLimits": null,
+      "usedBy": [
+        "MAP-02",
+        "VAL-02"
+      ],
+      "supportsClaimByLesson": {
+        "VAL-02": "Конфабуляция — генерация уверенно поданного ошибочного или ложного содержания; поэтому результат генеративной модели требует проверки человеком, а время проверки входит в работу.",
+        "MAP-02": "Конфабуляция — генерация уверенно поданного ошибочного или ложного содержания; поэтому решения и действия с последствиями для клиентов остаются за человеком, который проверяет результат."
+      }
+    },
+    {
+      "id": "SRC-OWASP-LLM06",
+      "kind": "standard",
+      "edition": "OWASP Top 10 for LLM Applications 2025",
+      "publisher": "OWASP",
+      "title": "OWASP Top 10 for LLM Applications 2025: LLM06 Excessive Agency",
+      "url": "https://genai.owasp.org/llmrisk/llm062025-excessive-agency/",
+      "checkedOn": "2026-11-19",
+      "verificationStatus": "checked_primary_publisher",
+      "methodologicalLimits": null,
+      "usedBy": [
+        "MAP-02"
+      ],
+      "supportsClaimByLesson": {
+        "MAP-02": "Чрезмерная самостоятельность — уязвимость, при которой ошибочный или изменённый ответ модели приводит к вредным действиям; причины — лишние функции, права и самостоятельность; рекомендуется требовать подтверждения человека для действий с серьёзными последствиями."
+      }
+    },
+    {
+      "id": "SRC-ARXIV-ECON-INDEX",
+      "kind": "research",
+      "edition": "arXiv, 11.02.2025",
+      "publisher": "arXiv",
+      "title": "Handa K. и др. Which Economic Tasks are Performed with AI? Evidence from Millions of Claude Conversations. arXiv:2503.04761, 11.02.2025",
+      "url": "https://arxiv.org/abs/2503.04761",
+      "checkedOn": "2026-11-19",
+      "verificationStatus": "checked_primary_publisher",
+      "methodologicalLimits": "Данные одной платформы; авторы связаны с её разработчиком.",
+      "usedBy": [
+        "MAP-02"
+      ],
+      "supportsClaimByLesson": {
+        "MAP-02": "Исследователи различают использование ИИ как дополнение работы человека (57% диалогов, например итерации над результатом) и как автоматизацию (43%, выполнение запроса с минимальным участием человека); данные относятся к одной платформе."
+      }
+    }
+  ]
+}
