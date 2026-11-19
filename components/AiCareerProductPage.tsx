@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import { careerLoginHref } from "@/config/career-access";
 import { commerceCopy } from "@/config/ai-career-commerce";
 import { rubles } from "@/config/ai-career-pricing";
 import AiCareerPrice from "@/components/AiCareerPrice";
@@ -54,6 +55,12 @@ export default async function AiCareerProductPage({ product }: { product: Digita
             <a href="mailto:damironovich@mail.ru?subject=Вопрос%20о%20продукте%20для%20сотрудников" className="inline-flex min-h-[48px] items-center border border-cream/40 px-5 text-sm font-medium hover:border-signal">
               Задать вопрос о продукте
             </a>
+            <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
+              <a href={careerLoginHref} className="inline-flex min-h-[48px] items-center border border-cream/55 px-5 text-sm font-semibold text-cream hover:border-signal focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal">
+                Войти в обучение
+              </a>
+              <p className="m-0 max-w-[320px] text-[13px] leading-relaxed text-stone">Для участников закрытого тестирования. Регистрация пока по приглашению, продажи не открыты.</p>
+            </div>
           </div>
           <Image
             src={product.cover} width={960} height={640}
