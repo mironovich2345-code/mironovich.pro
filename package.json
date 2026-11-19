@@ -21,6 +21,8 @@
     "career:mail": "node --experimental-strip-types scripts/career/runtime.mjs mail",
     "career:test:integration": "node --experimental-strip-types tests/career-integration.mjs",
     "career:test:browser": "node tests/career-browser.mjs",
+    "commerce:test:prices": "node --experimental-strip-types tests/commerce-price-periods-integration.mjs",
+    "commerce:price": "node --experimental-strip-types --no-warnings scripts/commerce/price-admin.mjs",
     "career:local:init": "node scripts/career/local-sandbox.mjs init",
     "career:local:verify": "node scripts/career/local-sandbox.mjs verify",
     "career:local:start": "node scripts/career/local-sandbox.mjs start",

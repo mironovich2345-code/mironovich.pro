@@ -21,6 +21,10 @@ on:
       - "app/products/**"
       - "app/solutions/**"
       - ".github/workflows/career-synthetic-qa.yml"
+      - "config/ai-career-pricing.ts"
+      - "migrations/commerce/**"
+      - "components/AiCareerPrice.tsx"
+      - "scripts/commerce/**"
 
 permissions:
   contents: read
@@ -125,6 +129,7 @@ jobs:
           done
           if [ "$ready" -ne 1 ]; then echo "Synthetic fixture not ready"; exit 1; fi
           npm run career:test:integration
+          COMMERCE_TEST_DATABASE_URL="$CAREER_DATABASE_URL" npm run commerce:test:prices
           npm run career:cleanup
           # Browser checks remain isolated to loopback, fake messages and payments.
           npm install --no-save --no-package-lock playwright
