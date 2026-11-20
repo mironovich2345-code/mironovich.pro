@@ -1,6 +1,7 @@
 "use client";
 // Closed cloud demo shell: the notice on every screen, invite-only registration, email + password sign-in,
 // password recovery with a one-time code, the account screen (data and deletion), and the v3 cabinet.
+import Link from "next/link";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import CareerV3App from "@/components/career-v3/CareerV3App";
 import { ApiError, Button, Notice, card, field, muted } from "@/components/career-v3/primitives";
@@ -70,7 +71,7 @@ export default function DemoApp() {
       <header className={`mx-auto max-w-4xl items-center justify-between gap-3 px-4 pt-5 sm:px-6 ${playing && screen === "cabinet" ? "hidden" : "flex"}`}>
         <p className="font-display text-lg font-bold tracking-tight">AI Career 3.0 <span className={`font-sans text-sm font-semibold ${muted}`}>· {modes.profile === "stage1" ? "закрытое превью" : "закрытая демоверсия"}</span></p>
         <span className="flex items-center gap-3 text-sm">
-          {account?.isAdmin && <a href="/admin" className="font-semibold underline">Админ-кабинет</a>}
+          {account?.isAdmin && <Link href="/admin" className="font-semibold underline">Админ-кабинет</Link>}
           {account && <span className={`hidden truncate sm:inline ${muted}`}>{account.email}</span>}
         </span>
       </header>
