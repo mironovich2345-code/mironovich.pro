@@ -1,5 +1,7 @@
 import { PHASE_PRODUCTION_BUILD } from "next/constants.js";
 import { runReleaseGuard } from "./lib/release-guard.mjs";
+/** Local test builds served over plain http on loopback (never the public site). */
+const loopbackSite = /^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?\/?$/.test(process.env.NEXT_PUBLIC_SITE_URL ?? "");
 
 // Same validation as lib/analytics.ts: a malformed id disables the provider and its hosts.
 const rawMetrica = (process.env.NEXT_PUBLIC_YANDEX_METRICA_ID || "").trim();
@@ -35,7 +37,9 @@ const securityHeaders = [
       "img-src 'self' data: blob:" + join(imgHosts),
       "font-src 'self' data:",
       "connect-src 'self'" + join(connectHosts),
-      "upgrade-insecure-requests",
+      // Upgrading http→https is right for every public origin, but on a loopback test server (http://127.0.0.1 in CI)
+      // Safari/WebKit would upgrade the page's own scripts and API calls to https and the page would never load.
+      ...(loopbackSite ? [] : ["upgrade-insecure-requests"]),
     ].join("; "),
   },
 ];

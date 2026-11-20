@@ -128,3 +128,13 @@ test("no SMTP, Robokassa, OTP or session secrets in the repository", () => {
     assert.deepEqual(hits.map((m) => m[0]), [], f);
   }
 });
+
+test("CSP keeps upgrade-insecure-requests for every public origin; only a loopback http test build drops it", async () => {
+  const src = readFileSync("next.config.mjs", "utf8");
+  const m = /const loopbackSite = (\/.+\/)\.test\(process\.env\.NEXT_PUBLIC_SITE_URL/.exec(src);
+  assert.ok(m, "loopback switch present");
+  const re = new Function("return " + m[1])();
+  for (const url of ["https://mironovich.pro", "https://ai-career-stage1-ai-career-stage1-preview.up.railway.app", "http://mironovich.pro", "http://127.0.0.1.evil.com"]) assert.equal(re.test(url), false, url);
+  for (const url of ["http://127.0.0.1:3410", "http://localhost:3000"]) assert.equal(re.test(url), true, url);
+  assert.match(src, /\.\.\.\(loopbackSite \? \[\] : \["upgrade-insecure-requests"\]\)/);
+});
