@@ -10,6 +10,8 @@ import { pageMetadata, breadcrumbList } from "@/lib/seo";
 import { jsonLd } from "@/lib/jsonld";
 type Props = { params: Promise<{ slug: string }> };
 export const dynamicParams = false;
+// The AI Career price is read from the commerce database on the server; a change shows within a minute, no deploy.
+export const revalidate = 60;
 export function generateStaticParams() {
   return publicStorefrontProducts.map((p) => ({ slug: p.slug }));
 }

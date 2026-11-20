@@ -2,8 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { rub } from "@/config/solutions";
 import type { DigitalProduct } from "@/content/products";
+import { rubles, type CurrentPrice } from "@/config/ai-career-pricing";
 
-export default function ProductCard({ product: p }: { product: DigitalProduct }) {
+export default function ProductCard({ product: p, currentPrice }: { product: DigitalProduct; currentPrice?: CurrentPrice }) {
   return (
     <article className="flex min-w-0 flex-col border-t border-cream/25 pt-6">
       <Link
@@ -26,8 +27,8 @@ export default function ProductCard({ product: p }: { product: DigitalProduct })
       <p className="text-sm leading-relaxed text-stone">{p.outcome}</p>
       <div className="mt-auto flex flex-wrap items-center justify-between gap-4 pt-5">
         <p className="m-0 text-lg">
-          {rub(p.plannedPrice)}{" "}
-          <span className="block text-sm text-stone">фиксированная стоимость · оплата подключается</span>
+          {currentPrice ? (currentPrice.known ? rubles(currentPrice.priceRub) : "Действующая цена уточняется") : rub(p.plannedPrice)}{" "}
+          <span className="block text-sm text-stone">{currentPrice?.known ? (currentPrice.kind === "default" ? "стартовая цена · оплата подключается" : "действующая цена · оплата подключается") : "цена уточняется · оплата подключается"}</span>
         </p>
         <Link
           href={"/products/" + p.slug}

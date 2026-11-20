@@ -32,6 +32,10 @@ on:
       - "app/robots.ts"
       - "scripts/career/demo-admin.mjs"
       - "content/career/v3/player/**"
+      - "config/ai-career-pricing.ts"
+      - "migrations/commerce/**"
+      - "components/AiCareerPrice.tsx"
+      - "scripts/commerce/**"
 
 permissions:
   contents: read
@@ -141,6 +145,7 @@ jobs:
           npm run career:test:v3-integration
           npm run career:test:v3-progress
           npm run career:test:v3-results
+          COMMERCE_TEST_DATABASE_URL="$CAREER_DATABASE_URL" npm run commerce:test:prices
           npm run career:cleanup
           # Browser checks remain isolated to loopback, fake messages and payments.
           npm install --no-save --no-package-lock playwright

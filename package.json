@@ -24,6 +24,8 @@
     "career:test:v3-progress": "node --experimental-strip-types tests/career-v3-progress-integration.mjs",
     "career:test:v3-results": "node --experimental-strip-types tests/career-v3-results-integration.mjs",
     "career:test:browser": "node tests/career-browser.mjs",
+    "commerce:test:prices": "node --experimental-strip-types tests/commerce-price-periods-integration.mjs",
+    "commerce:price": "node --experimental-strip-types --no-warnings scripts/commerce/price-admin.mjs",
     "career:local:init": "node scripts/career/local-sandbox.mjs init",
     "career:local:verify": "node scripts/career/local-sandbox.mjs verify",
     "career:local:start": "node scripts/career/local-sandbox.mjs start",

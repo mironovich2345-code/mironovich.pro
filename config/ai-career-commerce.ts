@@ -5,8 +5,8 @@
  */
 export const aiCareerCommerce = {
   title: "Как стать ценнее для компании с помощью ИИ",
+  /** Launch price. The price in force is set at run time — config/ai-career-pricing.ts, lib/server/commerce/price-periods.ts. */
   priceRub: 1993,
-  referencePriceRub: 3990,
   extensionPriceRub: 1490,
   accessDays: 90,
   retentionDaysAfterExpiry: 30,
@@ -24,7 +24,8 @@ export const aiCareerCommerce = {
 
 /** Shared proposed terms, never a statement that checkout or hosting is live. */
 export const commerceCopy = {
-  initialPurchase: "1 993 ₽: одна диагностика из 18 основных вопросов, один персональный анализ, план из 30 шагов, PDF и 90 дней доступа с момента фактической выдачи.",
+  pricePeriods: "Цена может меняться в разные периоды: 1 993 ₽, 3 990 ₽ или 5 900 ₽. Сумма фиксируется в заказе при его оформлении и после этого не меняется.",
+  initialPurchase: "Первоначальная покупка: одна диагностика из 18 основных вопросов, один персональный анализ, план из 30 шагов, PDF и 90 дней доступа с момента фактической выдачи.",
   refundWindow: "Полный возврат при отказе в течение семи дней, не считая дня оплаты; прохождение анализа и скачивание PDF не уменьшают сумму возврата.",
   age: "Покупатели продукта — только совершеннолетние лица 18+.",
   edition: "Проект к утверждению от 17 ноября 2026 года; дата начала действия не назначена.",
