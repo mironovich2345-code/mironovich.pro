@@ -23,11 +23,17 @@ type Queryable = { query: (q: string, args?: unknown[]) => Promise<{ rows: Recor
 export async function requireV3Access(accountId: string, db: Queryable = careerPool()) {
   // Closed cloud demo: access is the server-side tester grant of the invite-registered demo user — not a purchase.
   // Outside a valid demo configuration this branch never runs and the paid/synthetic grant applies unchanged.
+  // Stage 1 adds paid access: a confirmed payment's grant (career_access_grants, migration 012) also opens the program.
   const r = demoConfig()
     ? await db.query("SELECT access_until FROM career_demo_users WHERE account_id=$1 AND tester", [accountId])
     : await db.query("SELECT access_until FROM career_accounts WHERE id=$1", [accountId]);
-  const until = r.rows[0]?.access_until as string | Date | null | undefined;
-  if (!until || new Date(until).getTime() <= Date.now()) throw new CareerError(403, "Учебный доступ отсутствует или истёк");
+  const live = (v: unknown) => !!v && new Date(v as string).getTime() > Date.now();
+  if (live(r.rows[0]?.access_until)) return;
+  if (demoConfig() && (await db.query("SELECT to_regclass('public.career_access_grants') IS NOT NULL AS ok")).rows[0]?.ok) {
+    const g = await db.query("SELECT max(expires_at) AS until FROM career_access_grants WHERE account_id=$1 AND revoked_at IS NULL", [accountId]);
+    if (live(g.rows[0]?.until)) return;
+  }
+  throw new CareerError(403, "Учебный доступ отсутствует или истёк");
 }
 
 function bundleOrFail(professionId: string) {

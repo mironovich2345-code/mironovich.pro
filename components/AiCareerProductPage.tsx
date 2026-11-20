@@ -1,7 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
-import { aiCareerCommerce, commerceCopy } from "@/config/ai-career-commerce";
+import { careerLoginHref } from "@/config/career-access";
+import { commerceCopy } from "@/config/ai-career-commerce";
+import { rubles } from "@/config/ai-career-pricing";
+import AiCareerPrice from "@/components/AiCareerPrice";
+import { readCurrentPrice } from "@/lib/server/commerce/price-current";
 import type { DigitalProduct } from "@/content/products";
 
 const features = [
@@ -27,7 +31,9 @@ const legalLinks = [
   { href: "/consent", label: "Согласие для обращения" },
 ];
 
-export default function AiCareerProductPage({ product }: { product: DigitalProduct }) {
+export default async function AiCareerProductPage({ product }: { product: DigitalProduct }) {
+  // Read on the server at request time (see app/products/[slug]/page.tsx revalidate); never from the browser.
+  const price = await readCurrentPrice();
   return (
     <main id="main" className="bg-graphite px-[22px] pb-20 pt-8 text-cream">
       <div className="mx-auto max-w-[1080px]">
@@ -49,6 +55,12 @@ export default function AiCareerProductPage({ product }: { product: DigitalProdu
             <a href="mailto:damironovich@mail.ru?subject=Вопрос%20о%20продукте%20для%20сотрудников" className="inline-flex min-h-[48px] items-center border border-cream/40 px-5 text-sm font-medium hover:border-signal">
               Задать вопрос о продукте
             </a>
+            <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
+              <a href={careerLoginHref} className="inline-flex min-h-[48px] items-center border border-cream/55 px-5 text-sm font-semibold text-cream hover:border-signal focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal">
+                Войти в обучение
+              </a>
+              <p className="m-0 max-w-[320px] text-[13px] leading-relaxed text-stone">Для участников закрытого тестирования. Регистрация пока по приглашению, продажи не открыты.</p>
+            </div>
           </div>
           <Image
             src={product.cover} width={960} height={640}
@@ -93,24 +105,23 @@ export default function AiCareerProductPage({ product }: { product: DigitalProdu
           <p className="mt-5 text-sm leading-relaxed text-stone">Рекомендации не гарантируют сохранение работы, повышение зарплаты или конкретную экономию времени.</p>
         </section>
         <section className="mt-16 border-t border-cream/25 pt-10" aria-labelledby="ai-career-price-heading">
-          <div className="grid gap-6 border-l-2 border-signal bg-cream/[0.035] p-6 min-[700px]:grid-cols-[minmax(0,1fr)_auto] min-[700px]:items-center min-[700px]:p-8">
+          <h2 id="ai-career-price-heading" className="font-display text-[clamp(25px,4vw,35px)] font-extrabold uppercase leading-[1.1]">Стоимость программы</h2>
+          <div className="mt-6 grid gap-6 border-l-2 border-signal bg-cream/[0.035] p-6 min-[700px]:grid-cols-[minmax(0,1fr)_auto] min-[700px]:items-center min-[700px]:p-8">
             <div>
-              <p className="m-0 text-xs font-semibold uppercase tracking-[0.14em] text-signal">Фиксированная стоимость цифрового продукта</p>
-              <h2 id="ai-career-price-heading" className="mt-3 font-display text-[clamp(25px,4vw,35px)] font-extrabold uppercase leading-[1.1]">Стоимость программы</h2>
-              <p className="mt-3 max-w-[65ch] text-[14px] leading-relaxed text-stone">{commerceCopy.initialPurchase}</p>
-              <p className="mt-2 max-w-[65ch] text-xs leading-relaxed text-stone">3 990 ₽ — плановая стандартная стоимость, а не цена прежних продаж. Цена первой покупки фиксирована: 1 993 ₽, без обязательных дополнений и подписки.</p>
+              <AiCareerPrice price={price} />
+              <p className="mt-5 max-w-[65ch] text-[15px] leading-relaxed text-cream/85">{commerceCopy.initialPurchase}</p>
+              <p className="mt-3 max-w-[65ch] text-[13px] leading-relaxed text-stone">
+                Цена может меняться. Сумма фиксируется в заказе при его оформлении, показывается до подтверждения оплаты и после этого не меняется. Без обязательных дополнений и подписки.
+              </p>
             </div>
-            <div className="min-w-[170px]">
-              <del className="block text-[21px] text-stone">{aiCareerCommerce.referencePriceRub.toLocaleString("ru-RU")} ₽</del>
-              <strong className="mt-1 block font-display text-[clamp(34px,4vw,46px)] leading-none text-cream">{aiCareerCommerce.priceRub.toLocaleString("ru-RU")} ₽</strong>
-              <span className="mt-3 block text-[13px] text-cream/70">90 дней доступа · один персональный анализ</span>
+            <div className="min-w-[200px]">
               <button
                 type="button"
                 disabled
                 aria-describedby="ai-career-payment-status"
-                className="mt-5 inline-flex min-h-[52px] w-full cursor-not-allowed items-center justify-center bg-signal/65 px-5 text-center text-[14px] font-bold uppercase tracking-[0.03em] text-white/90"
+                className="inline-flex min-h-[52px] w-full cursor-not-allowed items-center justify-center bg-signal/65 px-5 text-center text-[14px] font-bold uppercase tracking-[0.03em] text-white/90"
               >
-                Купить за {aiCareerCommerce.priceRub.toLocaleString("ru-RU")} ₽
+                {price.known ? <>Купить за {rubles(price.priceRub)}</> : "Купить"}
               </button>
               <p id="ai-career-payment-status" role="status" className="mt-3 max-w-[270px] text-[13px] leading-relaxed text-cream/75">
                 Приём онлайн-платежей через ЮKassa ещё подключается. Пока оплатить и получить доступ нельзя.
@@ -127,7 +138,7 @@ export default function AiCareerProductPage({ product }: { product: DigitalProdu
             </li>
             <li className="list-none border border-cream/20 p-5">
               <span className="text-xs font-bold text-signal">02 / Оплата</span>
-              <p className="mb-0 mt-3 text-[14px] leading-relaxed text-cream/80">Оплатите фиксированные 1 993 ₽ через ЮKassa. Доступные способы оплаты отобразятся при оформлении.</p>
+              <p className="mb-0 mt-3 text-[14px] leading-relaxed text-cream/80">Оплатите сумму, зафиксированную в вашем заказе, через ЮKassa. Доступные способы оплаты отобразятся при оформлении.</p>
             </li>
             <li className="list-none border border-cream/20 p-5">
               <span className="text-xs font-bold text-signal">03 / Доступ</span>

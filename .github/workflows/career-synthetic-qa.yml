@@ -32,6 +32,13 @@ on:
       - "app/robots.ts"
       - "scripts/career/demo-admin.mjs"
       - "content/career/v3/player/**"
+      - "config/ai-career-pricing.ts"
+      - "components/AiCareerPrice.tsx"
+      - "lib/server/career-demo/**"
+      - "lib/server/career-admin/**"
+      - "components/career-admin/**"
+      - "app/admin/**"
+      - "app/preview-*/**"
 
 permissions:
   contents: read
@@ -249,5 +256,57 @@ jobs:
         with:
           name: career-demo-screenshots
           path: /tmp/career-demo-shots
+          if-no-files-found: ignore
+          retention-days: 7
+
+  stage1-preview:
+    # AI Career 3.0 stage 1 on a LOCAL loopback copy: email-code sign-in, admin cabinet, AUTO/MANUAL prices, orders and
+    # Robokassa TEST notifications through the preview emulator. Own throw-away PostgreSQL, generated secrets, no network
+    # payments, no real mailbox (preview outbox), no Railway variables.
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: synthetic_only
+          POSTGRES_DB: postgres
+        ports:
+          - 55435:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Stage-1 HTTP integration (builds the stage-1 profile itself)
+        env:
+          CAREER_STAGE1_PG: postgresql://postgres:synthetic_only@127.0.0.1:55435
+        run: node --experimental-strip-types --no-warnings tests/career-stage1-integration.mjs
+      - name: Stage-1 SMTP module against a loopback TLS server
+        run: node --experimental-strip-types --no-warnings tests/career-stage1-smtp.mjs
+      - name: Stage-1 browser checks (iPhone Safari/WebKit, Android Chrome, desktop Chrome)
+        env:
+          CAREER_STAGE1_PG: postgresql://postgres:synthetic_only@127.0.0.1:55435
+          STAGE1_SHOTS: /tmp/stage1-shots
+          STAGE1_WEBKIT: "1"
+        run: |
+          npm install --no-save --no-package-lock playwright
+          npx playwright install --with-deps chromium webkit
+          sudo ln -sf "$(node -p 'require("playwright").chromium.executablePath()')" /usr/bin/chromium
+          node --experimental-strip-types --no-warnings tests/career-stage1-browser.mjs
+      - name: Stage-1 screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage1-screenshots
+          path: /tmp/stage1-shots
           if-no-files-found: ignore
           retention-days: 7

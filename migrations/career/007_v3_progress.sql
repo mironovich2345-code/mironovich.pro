@@ -4,7 +4,7 @@
 -- the old version is marked superseded and stays as history. Only booleans and option IDs are stored —
 -- no free text. Dedicated local synthetic database only.
 DO $$ BEGIN
-  IF current_database() !~ '^mironovich_career_test(_[a-z0-9]+)*$' AND NOT (current_database() = 'mironovich_career_demo_v3' AND coalesce(current_setting('mironovich.career_demo', true), '') = 'closed-demo-v3') THEN
+  IF current_database() !~ '^mironovich_career_test(_[a-z0-9]+)*$' AND NOT (current_database() = 'mironovich_career_demo_v3' AND coalesce(current_setting('mironovich.career_demo', true), '') = 'closed-demo-v3') AND NOT (current_database() = 'mironovich_career_stage1' AND coalesce(current_setting('mironovich.career_demo', true), '') = 'stage1-preview') THEN
     RAISE EXCEPTION 'CAREER_TEST_DATABASE_REQUIRED';
   END IF;
 END $$;

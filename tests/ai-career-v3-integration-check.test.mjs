@@ -39,7 +39,13 @@ function simulatedApproval() {
 }
 
 test("JSON schemas are untouched by all four PRs and every real lesson passes them", () => {
+  // git diff --quiet: 0 = identical, 1 = different, anything else = the comparison itself failed (e.g. no origin/main
+  // in a shallow CI checkout). A failed comparison is a failure with its real cause, never a pass.
+  const ref = spawnSync("git", ["rev-parse", "--verify", "--quiet", "origin/main^{commit}"]);
+  assert.equal(ref.status, 0, "origin/main is not available: fetch it first (git fetch --depth=1 origin main:refs/remotes/origin/main)");
   const diff = spawnSync("git", ["diff", "--quiet", "origin/main", "--", "content/career/v3/schemas"]);
+  assert.notEqual(diff.status, null, "git diff did not run");
+  assert.ok(diff.status === 0 || diff.status === 1, `git diff failed with exit ${diff.status}: ${diff.stderr}`);
   assert.equal(diff.status, 0, "lesson/plan-step schemas differ from main");
   const lib = bundle.library;
   assert.deepEqual(lib.issues.filter((i) => i.severity === "error"), []);

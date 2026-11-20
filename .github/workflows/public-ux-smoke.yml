@@ -25,6 +25,9 @@ jobs:
     timeout-minutes: 22
     steps:
       - uses: actions/checkout@v4
+      # npm test includes the schema comparison with main (tests/ai-career-v3-integration-check.test.mjs).
+      - name: Fetch main for schema comparison
+        run: git fetch --no-tags --depth=1 origin main:refs/remotes/origin/main
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
