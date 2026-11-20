@@ -27,7 +27,7 @@ const answers = JSON.parse(readFileSync("tests/fixtures/career-v3/pilot-profiles
 const API = `${origin}/api/career/v3/sales_manager`;
 const PASSWORD = "Player-test-" + Math.random().toString(36).slice(2, 8);
 const TECH = /\b(?:[A-Z]{3}\d{2}-(?:TASK|EX|P|Q)-?\d+|TPL-[A-Z0-9-]+|STEP-\d{2}|SAF-0\d|SAL-0\d|VAL-0\d)\b|[0-9a-f]{8}-[0-9a-f]{4}-|example\.invalid|status=/;
-const checks = [], errors = [], external = [];
+const checks = [], errors = [], external = [], failed = [];
 const pass = (n) => { checks.push(n); console.log("PASS", n); };
 
 const server = spawn("npx", ["next", "start", "-H", "127.0.0.1", "-p", new URL(origin).port], { env: process.env, stdio: "ignore", detached: true });
@@ -39,6 +39,7 @@ async function open(device) {
   await context.route("**/*", async (r) => { if (new URL(r.request().url()).origin !== origin) { external.push(r.request().url()); await r.abort(); } else await r.continue(); });
   const page = await context.newPage();
   page.on("pageerror", (e) => errors.push(e.message));
+  page.on("response", (r) => { if (r.status() >= 400) failed.push(`${r.status()} ${new URL(r.url()).pathname}`); });
   page.on("console", (m) => { if (m.type() === "error" && !/Failed to load resource/.test(m.text())) errors.push(m.text()); });
   return { context, page };
 }
@@ -296,7 +297,15 @@ try {
         }
         if (name === "desktop" && [4, 9].includes(k)) await d.page.screenshot({ path: `${shots}/${lessonId.toLowerCase()}-${String(k).padStart(2, "0")}-desktop.png` });
         if (name === "iphone13" && [1, 9, 13].includes(k)) await d.page.screenshot({ path: `${shots}/${lessonId.toLowerCase()}-${String(k).padStart(2, "0")}-iphone13.png` });
-        await d.page.getByRole("button", { name: "Далее" }).click();
+        const next = d.page.getByRole("button", { name: "Далее" });
+        try { await next.click({ timeout: 20000 }); } catch (e) {
+          // Diagnostics instead of a bare timeout: which screen, what is selected, which requests failed.
+          const state = await d.page.evaluate(() => ({
+            counter: document.querySelector('[aria-live="polite"]')?.textContent, head: document.querySelector("[data-player-screen] p")?.textContent,
+            checked: [...document.querySelectorAll("[data-player-screen] input:checked")].map((x) => x.name), disabled: [...document.querySelectorAll("button")].filter((b) => b.disabled).map((b) => b.textContent),
+          }));
+          throw new Error(`«Далее» not clickable: ${lessonId} screen ${k}/${t} kind=${kind} ${JSON.stringify(state)} failed=${JSON.stringify(failed.slice(-5))}\n${e.message}`);
+        }
         await d.page.getByText(new RegExp(`^Экран ${k + 1} из ${t}$`)).waitFor(); // read the next screen only after it is shown
       }
       await d.page.getByRole("heading", { name: "Теперь я умею" }).waitFor();
