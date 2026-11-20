@@ -74,6 +74,9 @@ export default function DemoApp() {
           {account && <span className={`hidden truncate sm:inline ${muted}`}>{account.email}</span>}
         </span>
       </header>
+      {screen === "cabinet" && account && notice && !playing && (
+        <div className="mx-auto max-w-4xl px-4 pt-4 sm:px-6"><Notice>{notice}</Notice></div>
+      )}
       {screen === "cabinet" && account ? (
         <CareerV3App demo={{
           onLogout: async () => { await demoApi("logout", {}).catch(() => undefined); signedOut("Вы вышли. Прогресс сохранён — войдите снова, чтобы продолжить."); },

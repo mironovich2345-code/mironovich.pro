@@ -39,16 +39,18 @@ function Stat({ label, value, note }: { label: string; value: string | number; n
   );
 }
 
-export default async function AdminPage({ searchParams }: { searchParams: Promise<{ tab?: string; emails?: string }> }) {
+// Sections are path segments (/admin/users, /admin/users/emails): the site's URL-hygiene script strips query strings.
+export default async function AdminPage({ params }: { params: Promise<{ section?: string[] }> }) {
   const c = demoConfig();
   if (!c?.commerce) notFound();
   const user = await demoSessionUser((await cookies()).get(c.cookieName)?.value).catch(() => null);
   if (!user?.isAdmin) notFound();
-  const sp = await searchParams;
-  const tab: Tab = (TABS.find(([id]) => id === sp.tab)?.[0] ?? "overview") as Tab;
-  const showEmails = sp.emails === "1";
+  const [section, flag, ...rest] = (await params).section ?? [];
+  if (rest.length || (section && !TABS.some(([id]) => id === section)) || (flag && flag !== "emails")) notFound();
+  const tab: Tab = (section ?? "overview") as Tab;
+  const showEmails = flag === "emails";
   const db = careerPool();
-  const link = (t: Tab, extra = "") => `/admin?tab=${t}${extra}`;
+  const link = (t: Tab) => (t === "overview" ? "/admin" : `/admin/${t}`);
 
   return (
     <div className="min-h-screen bg-cream text-graphite [color-scheme:light]">
@@ -100,7 +102,7 @@ function Overview({ data: d, quote: q }: { data: Awaited<ReturnType<typeof overv
 function EmailToggle({ tab, showEmails }: { tab: Tab; showEmails: boolean }) {
   return (
     <p className="mt-3 text-[14px]">
-      Email скрыты по умолчанию. <Link className="font-semibold underline" href={`/admin?tab=${tab}${showEmails ? "" : "&emails=1"}`}>{showEmails ? "Скрыть email" : "Показать полные email"}</Link>
+      Email скрыты по умолчанию. <Link className="font-semibold underline" href={`/admin/${tab}${showEmails ? "" : "/emails"}`}>{showEmails ? "Скрыть email" : "Показать полные email"}</Link>
     </p>
   );
 }

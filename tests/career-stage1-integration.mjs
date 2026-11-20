@@ -106,7 +106,7 @@ function client(ip) {
       },
       body: form ? new URLSearchParams(form).toString() : body === undefined ? undefined : JSON.stringify(body),
     });
-    for (const sc of r.headers.getSetCookie()) { const m = /^([^=]+)=([^;]*)/.exec(sc); if (m) (m[2] ? jar.set(m[1], m[2]) : jar.delete(m[1])); }
+    for (const sc of r.headers.getSetCookie()) { const m = /^([^=]+)=([^;]*)/.exec(sc); if (m) { if (m[2]) jar.set(m[1], m[2]); else jar.delete(m[1]); } }
     const type = r.headers.get("content-type") ?? "";
     const value = type.includes("json") ? await r.json() : await r.text();
     return { status: r.status, body: value, headers: r.headers };
@@ -250,20 +250,20 @@ await check("admin: email code for the bootstrap admin opens /admin; every tab r
   assert.equal(acc.isAdmin, true);
   assert.equal(acc.hasAccess, false, "the admin role does not grant a paid program");
   for (const tab of ["overview", "users", "sales", "learning", "prices"]) {
-    const r = await A.call("/admin?tab=" + tab);
+    const r = await A.call("/admin/" + tab);
     assert.equal(r.status, 200, tab);
     assert.match(r.body, /админ-кабинет/);
   }
-  const users = await A.call("/admin?tab=users");
+  const users = await A.call("/admin/users");
   assert.match(users.body, /l\*\*\*@example\.com/, "emails masked by default");
   assert.doesNotMatch(users.body, /legacy-s1@example\.com/);
-  assert.match((await A.call("/admin?tab=users&emails=1")).body, /legacy-s1@example\.com/, "shown only on explicit request");
+  assert.match((await A.call("/admin/users/emails")).body, /legacy-s1@example\.com/, "shown only on explicit request");
 });
 
 await check("non-admins: /admin and the admin API answer 404; no role from browser parameters; password session is not enough", async () => {
   for (const c of [U, L, client(nextIp())]) {
     assert.equal((await c.call("/admin")).status, 404);
-    assert.equal((await c.call("/admin?tab=prices&role=admin&isAdmin=1")).status, 404);
+    assert.equal((await c.call("/admin/prices?role=admin&isAdmin=1")).status, 404);
     assert.equal((await c.adm("price", { mode: "manual", priceRub: 5900, reason: "попытка", confirm: true })).status, 404);
   }
   assert.equal((await U.demo("otp-verify", { code: "123456", role: "admin" })).status, 400, "unexpected fields refused");
@@ -427,13 +427,13 @@ await check("full emulator path: order → emulator page → Pay (test) → serv
 });
 
 await check("admin figures: sales by price level and learning funnel are counts only", async () => {
-  const s = await A.call("/admin?tab=sales");
+  const s = await A.call("/admin/sales");
   assert.match(s.body, /Выручка по ценовым уровням/);
   assert.match(s.body, /неверная подпись/);
-  const l = await A.call("/admin?tab=learning");
+  const l = await A.call("/admin/learning");
   assert.match(l.body, /Начали диагностику/);
   assert.doesNotMatch(l.body, /answers|"q\d+"/);
-  const o = (await A.call("/admin?tab=overview")).body;
+  const o = (await A.call("/admin/overview")).body;
   assert.match(o, /Подтверждённые оплаты/);
 });
 

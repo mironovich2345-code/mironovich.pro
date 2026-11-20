@@ -119,7 +119,7 @@ test("ResultURL: OutSum:InvId:Password#2:Shp_* (as received, case-insensitive he
 
 test("no SMTP, Robokassa, OTP or session secrets in the repository", () => {
   const files = [];
-  const walk = (d) => { for (const n of readdirSync(d)) { if ([".git", "node_modules", ".next", "public"].includes(n)) continue; const p = d + "/" + n; statSync(p).isDirectory() ? walk(p) : /\.(ts|tsx|mjs|js|json|ya?ml|md|sql)$/.test(n) && files.push(p); } };
+  const walk = (d) => { for (const n of readdirSync(d)) { if ([".git", "node_modules", ".next", "public"].includes(n)) continue; const p = d + "/" + n; if (statSync(p).isDirectory()) walk(p); else if (/\.(ts|tsx|mjs|js|json|ya?ml|md|sql)$/.test(n)) files.push(p); } };
   for (const d of ["app", "lib", "components", "config", "scripts", "migrations", ".github", "docs"]) walk(d);
   for (const f of files) {
     const s = readFileSync(f, "utf8");

@@ -11,7 +11,9 @@ export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   const c = demoConfig();
   const rk = c?.commerce?.robokassa;
-  if (!c || rk?.mode !== "emulator" || req.headers.get("host") !== c.host || req.headers.get("origin") !== c.origin) return new NextResponse("Not found", { status: 404 });
+  // Form navigations under "Referrer-Policy: no-referrer" send "Origin: null"; Sec-Fetch-Site (set only by the browser) proves same origin.
+  const sameOrigin = req.headers.get("sec-fetch-site") === "same-origin" ? ["null", c?.origin].includes(req.headers.get("origin") ?? "null") : req.headers.get("origin") === c?.origin;
+  if (!c || rk?.mode !== "emulator" || req.headers.get("host") !== c.host || !sameOrigin) return new NextResponse("Not found", { status: 404 });
   if (req.headers.get("content-type")?.split(";")[0] !== "application/x-www-form-urlencoded") return new NextResponse("Bad request", { status: 400 });
   const raw = await req.text();
   if (raw.length > 8192) return new NextResponse("Bad request", { status: 400 });

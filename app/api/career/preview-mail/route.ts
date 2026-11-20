@@ -13,7 +13,8 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   const c = demoConfig();
-  if (!c || c.mail?.mode !== "preview-outbox" || req.headers.get("host") !== c.host || req.headers.get("origin") !== c.origin) return new NextResponse("Not found", { status: 404 });
+  const sameOrigin = req.headers.get("sec-fetch-site") === "same-origin" ? ["null", c?.origin].includes(req.headers.get("origin") ?? "null") : req.headers.get("origin") === c?.origin;
+  if (!c || c.mail?.mode !== "preview-outbox" || req.headers.get("host") !== c.host || !sameOrigin) return new NextResponse("Not found", { status: 404 });
   try { await demoLimit(c, "preview-mail:" + clientIp(req), 10, 900); } catch { return new NextResponse("Слишком много попыток", { status: 429 }); }
   const key = new URLSearchParams((await req.text()).slice(0, 512)).get("key") ?? "";
   const a = Buffer.from(previewMailToken(c.sessionSecret, key)), b = Buffer.from(previewMailToken(c.sessionSecret, c.mail.key));

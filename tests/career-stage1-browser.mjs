@@ -49,7 +49,7 @@ async function api(jar, path, body, ip) {
   const r = await fetch(ORIGIN + path, { method: body === undefined ? "GET" : "POST", redirect: "manual",
     headers: { "x-real-ip": ip, ...(jar.c ? { cookie: jar.c } : {}), ...(body === undefined ? {} : { "content-type": "application/json", origin: ORIGIN }) },
     body: body === undefined ? undefined : JSON.stringify(body) });
-  for (const sc of r.headers.getSetCookie()) { const m = /^([^=]+)=([^;]*)/.exec(sc); if (m) { const map = new Map((jar.c ?? "").split("; ").filter(Boolean).map((x) => x.split("="))); m[2] ? map.set(m[1], m[2]) : map.delete(m[1]); jar.c = [...map].map(([k, v]) => `${k}=${v}`).join("; "); } }
+  for (const sc of r.headers.getSetCookie()) { const m = /^([^=]+)=([^;]*)/.exec(sc); if (m) { const map = new Map((jar.c ?? "").split("; ").filter(Boolean).map((x) => x.split("="))); if (m[2]) map.set(m[1], m[2]); else map.delete(m[1]); jar.c = [...map].map(([k, v]) => `${k}=${v}`).join("; "); } }
   const v = (r.headers.get("content-type") ?? "").includes("json") ? await r.json() : await r.text();
   if (r.status >= 400) throw new Error(`${path} ${r.status} ${JSON.stringify(v).slice(0, 200)}`);
   return v;
@@ -83,11 +83,16 @@ for (let i = 0; i < 4; i++) {
 const browser = await chromium.launch({ headless: true, executablePath: process.env.CHROMIUM_PATH || "/usr/bin/chromium" });
 let failures = 0, passed = 0;
 async function check(name, fn) {
-  try { await fn(); passed++; console.log("PASS " + name); } catch (e) { failures++; console.log("FAIL " + name + "\n  " + String(e.stack ?? e).split("\n").slice(0, 5).join("\n  ")); }
+  try { await fn(); passed++; console.log("PASS " + name); } catch (e) {
+    failures++; console.log("FAIL " + name + "\n  " + String(e.stack ?? e).split("\n").slice(0, 5).join("\n  "));
+    for (const ctx of browser.contexts()) for (const pg of ctx.pages()) console.log("  page:", pg.url(), (await pg.locator("body").innerText().catch(() => "")).replace(/\s+/g, " ").slice(0, 300));
+  }
 }
 const shot = (p, name) => p.screenshot({ path: `${SHOTS}/${name}.png`, fullPage: true });
 
 async function signInUi(p, email, prefix) {
+  // A second sign-in for the same address within 60 s would hit the resend cooldown — skip it in tests.
+  await db.query("UPDATE career_login_challenges SET resend_available_at=now()-interval '1 second' WHERE email=$1", [email]);
   await p.goto(ORIGIN + "/");
   await p.getByRole("button", { name: "Войти по коду из письма" }).click();
   await p.getByLabel("Email").fill(email);
@@ -97,10 +102,14 @@ async function signInUi(p, email, prefix) {
   if (prefix) await shot(p, prefix + "-2-code");
   await p.getByLabel("Шестизначный код").fill(await code(email));
   await p.getByRole("button", { name: "Войти" }).click();
+  await p.getByLabel("Шестизначный код").waitFor({ state: "detached" });
 }
 
 const iphone = await browser.newContext({ ...devices["iPhone 13"] });
 const desktop = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 });
+for (const ctx of [iphone, desktop]) ctx.on("page", (pg) => {
+  pg.on("console", (m) => { if (m.type() === "error") console.log("  console:", m.text().slice(0, 200)); });
+});
 
 await check("iPhone: admin signs in with a code from info@mironovich.pro (preview mailbox), sees the admin link", async () => {
   const p = await iphone.newPage();
@@ -108,7 +117,7 @@ await check("iPhone: admin signs in with a code from info@mironovich.pro (previe
   await p.getByRole("link", { name: "Админ-кабинет" }).waitFor();
   await shot(p, "iphone-admin-3-signed-in");
   for (const [tab, title] of [["overview", "Обзор"], ["users", "Пользователи"], ["sales", "Продажи"], ["learning", "Обучение"], ["prices", "Цены"]]) {
-    await p.goto(`${ORIGIN}/admin?tab=${tab}`);
+    await p.goto(`${ORIGIN}/admin/${tab}`);
     await p.getByRole("heading", { level: 1, name: title }).waitFor();
     const overflow = await p.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
     assert.equal(overflow, false, tab + ": no horizontal page scroll on iPhone");
@@ -119,7 +128,7 @@ await check("iPhone: admin signs in with a code from info@mironovich.pro (previe
 await check("desktop: admin changes the price with radio buttons (MANUAL 3 990 ₽), confirmation and reason; history shows the change", async () => {
   const p = await desktop.newPage();
   await signInUi(p, ADMIN, "desktop-admin-login");
-  await p.goto(ORIGIN + "/admin?tab=prices");
+  await p.goto(ORIGIN + "/admin/prices");
   await p.getByRole("radio", { name: /MANUAL — 3 990 ₽/ }).check();
   await p.getByLabel("Причина изменения").fill("Приёмка: проверка ступени 3 990 ₽");
   const apply = p.getByRole("button", { name: "Применить" });
@@ -128,9 +137,10 @@ await check("desktop: admin changes the price with radio buttons (MANUAL 3 990 �
   await shot(p, "desktop-admin-prices-before-apply");
   await apply.click();
   await p.getByRole("status").filter({ hasText: "3 990 ₽" }).waitFor();
-  await p.getByRole("cell", { name: "Приёмка: проверка ступени 3 990 ₽" }).waitFor();
+  await p.reload();
+  await p.getByText("Приёмка: проверка ступени 3 990 ₽", { exact: true }).waitFor();
   await shot(p, "desktop-admin-prices-after-apply");
-  for (const tab of ["overview", "users", "sales", "learning"]) { await p.goto(`${ORIGIN}/admin?tab=${tab}`); await shot(p, `desktop-admin-${tab}`); }
+  for (const tab of ["overview", "users", "sales", "learning"]) { await p.goto(`${ORIGIN}/admin/${tab}`); await shot(p, `desktop-admin-${tab}`); }
   await p.goto(ORIGIN + "/products/ai-career");
   await p.getByText(/Купить за 3 990 ₽/).waitFor();
   await shot(p, "desktop-product-page-3990");
@@ -138,11 +148,13 @@ await check("desktop: admin changes the price with radio buttons (MANUAL 3 990 �
 
 await check("iPhone: buyer without access sees 3 990 ₽, pays through the Robokassa emulator (3990.00), returns with access", async () => {
   const email = "buyer-browser@example.com";
-  const p = await iphone.newPage();
+  const buyerCtx = await browser.newContext({ ...devices["iPhone 13"] });
+  const p = await buyerCtx.newPage();
   await p.goto(ORIGIN + "/");
   await p.getByRole("button", { name: "Войти по коду из письма" }).click();
   await p.getByLabel("Email").fill(email);
   await p.getByRole("button", { name: "Получить код" }).click();
+  await p.getByLabel("Шестизначный код").waitFor();
   await p.getByLabel("Шестизначный код").fill(await code(email));
   await p.getByRole("button", { name: "Войти" }).click();
   await p.getByLabel("Пригласительный код").fill(admin("invite", "buyer", "7"));
@@ -179,10 +191,10 @@ await check("regular user: /admin is an ordinary 404", async () => {
 
 await check("desktop: sales tab shows the paid 3 990 ₽ order and revenue by price level", async () => {
   const p = await desktop.newPage();
-  await p.goto(ORIGIN + "/admin?tab=sales");
+  await p.goto(ORIGIN + "/admin/sales");
   await p.getByRole("cell", { name: "оплачен Robokassa · эмулятор" }).first().waitFor();
   await shot(p, "desktop-admin-sales-after-payment");
-  await p.goto(ORIGIN + "/admin?tab=overview");
+  await p.goto(ORIGIN + "/admin/overview");
   await shot(p, "desktop-admin-overview-after-payment");
 });
 
