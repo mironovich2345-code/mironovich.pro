@@ -41,7 +41,7 @@ export async function sendCodeEmail(c: DemoConfig, to: string, code: string, min
       return { ok: true };
     }
     transport ??= nodemailer.createTransport({
-      host: mail.host, port: mail.port, secure: mail.secure, auth: { user: mail.user, pass: mail.password },
+      host: mail.host, port: mail.port, secure: mail.secure, requireTLS: !mail.secure, auth: { user: mail.user, pass: mail.password },
       connectionTimeout: 8000, greetingTimeout: 8000, socketTimeout: 15000,
     });
     await transport.sendMail({ from: mail.from, to, subject, text, html });

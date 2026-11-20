@@ -63,20 +63,27 @@ DNS проверен 20.11.2026 через dns.google:
 - DKIM: селектор `mailru._domainkey` опубликован;
 - **DMARC: записи нет.** Рекомендуется `_dmarc.mironovich.pro TXT "v=DMARC1; p=none; rua=mailto:info@mironovich.pro"`, после проверки ужесточить до `quarantine`.
 
-Сам SMTP проверить нельзя: учётных данных ящика нет, а сессия не делает SMTP-соединений. Чтобы отправка заработала:
+SMTP-модуль проверен на уровне кода (`tests/career-stage1-smtp.mjs`, локальный TLS-сервер на 127.0.0.1): AUTH под `info@mironovich.pro`, отправитель, получатель, MIME-тема и код в теле письма; при неверном пароле письмо не уходит, ошибка обезличена (в журнале нет пароля, полного адреса и кода). Порт 465 — неявный TLS, 587 — обязательный STARTTLS (`requireTLS`); открытый SMTP не используется. Настоящий ящик проверить нельзя без пароля приложения — его не создаю и не запрашиваю.
 
-1. Убедиться, что ящик `info@mironovich.pro` создан в VK WorkSpace.
-2. В настройках ящика создать **пароль для внешнего приложения** («Пароли для внешних приложений», доступ «SMTP»).
-3. В Railway-сервисе превью (или будущем коммерческом) задать переменные:
-   - `CAREER_V3_MAIL=smtp`;
-   - `CAREER_V3_SMTP_HOST=smtp.mail.ru`;
-   - `CAREER_V3_SMTP_PORT=465`;
-   - `CAREER_V3_SMTP_USER=info@mironovich.pro`;
-   - `CAREER_V3_SMTP_PASSWORD=<пароль приложения>`;
-   - `CAREER_V3_SMTP_FROM=AI Career <info@mironovich.pro>`.
+### Что заполнить в Railway (проект `mironovich-career-stage1`, сервис `ai-career-stage1`, вкладка Variables)
 
-   Затем удалить `CAREER_V3_PREVIEW_OUTBOX_KEY`.
-4. Конфигурация разрешает отправителя только `info@mironovich.pro`. Тестовый почтовый ящик превью (`preview-outbox`) запрещён везде, кроме профиля превью этапа 1 и локальных тестов. Production им заменить отправку не может.
+1. В VK WorkSpace (biz.mail.ru): убедиться, что ящик `info@mironovich.pro` создан; в его настройках → «Безопасность» → «Пароли для внешних приложений» создать пароль с доступом «SMTP».
+2. Задать переменные (значение пароля — только в Railway, не в чат и не в репозиторий):
+
+| Переменная | Значение |
+|---|---|
+| `CAREER_V3_MAIL` | `smtp` |
+| `CAREER_V3_SMTP_HOST` | `smtp.mail.ru` |
+| `CAREER_V3_SMTP_PORT` | `465` |
+| `CAREER_V3_SMTP_USER` | `info@mironovich.pro` |
+| `CAREER_V3_SMTP_PASSWORD` | пароль внешнего приложения из шага 1 |
+| `CAREER_V3_SMTP_FROM` | `AI Career <info@mironovich.pro>` |
+
+3. Удалить `CAREER_V3_PREVIEW_OUTBOX_KEY` (после переключения на `smtp` страница `/preview-mail` перестаёт существовать). Railway перезапустит сервис; при любой ошибке конфигурации контур закроется, а не перейдёт в слабый режим.
+4. Добавить DMARC: `_dmarc.mironovich.pro TXT "v=DMARC1; p=none; rua=mailto:info@mironovich.pro"`.
+5. Проверка доставки (после шагов 1–3): войти на превью со своего адреса → письмо «Код входа в AI Career 3.0» от info@mironovich.pro должно прийти за минуту и не попасть в «Спам»; проверить заголовки `DKIM=pass`, `SPF=pass`.
+
+Защита от массовой отправки кодов сохраняется в любом режиме: на адрес — повтор через 60 с и не больше 5 писем в час; с одного IP — 20 в час и 60 в сутки; на весь сервис — 300 в час и 1000 в сутки. Конфигурация разрешает отправителя только `info@mironovich.pro`; почтовый ящик превью запрещён везде, кроме превью этапа 1 и локальных тестов.
 
 ## 4. Администратор
 
@@ -162,7 +169,8 @@ DNS проверен 20.11.2026 через dns.google:
 | Набор | Команда | Результат |
 |---|---|---|
 | Unit | `npm test` | 559/559 |
-| Этап 1, HTTP | `CAREER_STAGE1_PG=… node --experimental-strip-types tests/career-stage1-integration.mjs` | 23 сценария |
-| Этап 1, браузер (iPhone 13, 1440 px) | `tests/career-stage1-browser.mjs` | скриншоты в CI-артефакте `stage1-screenshots` |
+| Этап 1, HTTP | `CAREER_STAGE1_PG=… node --experimental-strip-types tests/career-stage1-integration.mjs` | 28 сценариев |
+| Этап 1, SMTP | `node --experimental-strip-types tests/career-stage1-smtp.mjs` | 2 сценария |
+| Этап 1, браузер (iPhone Safari — WebKit в CI, Android Chrome, компьютер 1440 px) | `tests/career-stage1-browser.mjs` | 7 сценариев, скриншоты в CI-артефакте `stage1-screenshots` |
 | Закрытая демоверсия, HTTP | `tests/career-demo-integration.mjs` | 16/16 (вход по паролю сохранён) |
 | Закрытая демоверсия, браузер | `tests/career-demo-browser.mjs` | 11/11 |

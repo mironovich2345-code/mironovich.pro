@@ -125,6 +125,11 @@ async function signIn(c, email, invite) {
   if (r.needInvite) ok(await c.demo("otp-signup", { invite }));
   return ok(await c.demo("session")).account;
 }
+/** Value of an admin stat tile by its label (server-rendered HTML). */
+const stat = (html, label) => {
+  const m = new RegExp(label.replace(/[()]/g, "\\$&") + "</p><p[^>]*>([^<]*)</p>").exec(html.replace(/<!-- -->/g, ""));
+  return m ? m[1].replace(/\u00a0/g, " ") : null;
+};
 let ipn = 10;
 const nextIp = () => `10.0.0.${ipn++}`;
 const invite = () => admin("invite", "s1test", "7");
@@ -258,6 +263,26 @@ await check("admin: email code for the bootstrap admin opens /admin; every tab r
   assert.match(users.body, /l\*\*\*@example\.com/, "emails masked by default");
   assert.doesNotMatch(users.body, /legacy-s1@example\.com/);
   assert.match((await A.call("/admin/users/emails")).body, /legacy-s1@example\.com/, "shown only on explicit request");
+  // zero statistics render as explicit empty states, not errors or blanks
+  const sales = (await A.call("/admin/sales")).body;
+  for (const t of ["Продаж пока нет.", "Заказов пока нет.", "Уведомлений пока не было."]) assert.ok(sales.includes(t), t);
+  assert.ok((await A.call("/admin/prices")).body.includes("Изменений ещё не было: действует AUTO."));
+  assert.equal(stat((await A.call("/admin/overview")).body, "Подтверждённые оплаты (тест)"), "0");
+  assert.equal(stat((await A.call("/admin/overview")).body, "Выручка (тест)"), "0 ₽");
+  assert.match((await A.call("/admin/overview")).body, /это не реальная выручка/);
+});
+
+await check("session survives a reload; sign-out revokes it on the server (a copied cookie stops working)", async () => {
+  const c = client(nextIp()), e = "session-s1@example.com";
+  await signIn(c, e, invite());
+  assert.equal(ok(await c.demo("session")).authenticated, true, "reload = new request with the same cookie");
+  const saved = new Map(c.jar);
+  ok(await c.demo("logout", {}));
+  assert.equal(ok(await c.demo("session")).authenticated, false);
+  const thief = client(nextIp());
+  for (const [k, v] of saved) thief.jar.set(k, v);
+  assert.equal(ok(await thief.demo("session")).authenticated, false, "old cookie no longer valid");
+  assert.equal((await thief.v3("progress")).status, 401);
 });
 
 await check("non-admins: /admin and the admin API answer 404; no role from browser parameters; password session is not enough", async () => {
@@ -435,6 +460,77 @@ await check("admin figures: sales by price level and learning funnel are counts 
   assert.doesNotMatch(l.body, /answers|"q\d+"/);
   const o = (await A.call("/admin/overview")).body;
   assert.match(o, /Подтверждённые оплаты/);
+});
+
+await check("admin figures equal independent SQL over the same tables (users, payments, revenue, refunds, tiers, learning)", async () => {
+  const q = async (sql) => (await db.query(sql)).rows[0];
+  const users = await q("SELECT count(*)::int AS n FROM career_demo_users");
+  const pay = await q(`SELECT count(*) FILTER (WHERE status IN ('paid','refunded','refund_required'))::int AS confirmed,
+    coalesce(sum(price_kopeks) FILTER (WHERE status IN ('paid','refunded','refund_required')),0)::bigint AS gross,
+    count(*) FILTER (WHERE status='refunded')::int AS refunds, coalesce(sum(refund_kopeks) FILTER (WHERE status='refunded'),0)::bigint AS refunded FROM career_shop_orders`);
+  const rub = (k) => (Number(k) / 100).toLocaleString("ru-RU").replace(/\s/g, " ") + " ₽";
+  const o = (await A.call("/admin/overview")).body;
+  assert.equal(stat(o, "Пользователи"), String(users.n));
+  assert.equal(stat(o, "Подтверждённые оплаты (тест)"), String(pay.confirmed));
+  assert.equal(stat(o, "Выручка (тест)"), rub(pay.gross));
+  assert.equal(stat(o, "Возвраты"), String(pay.refunds));
+  assert.ok(o.replace(/<!-- -->/g, "").includes(rub(pay.refunded)));
+  assert.ok(pay.confirmed >= 10 && pay.refunds >= 1, "non-trivial data");
+  const avg = await q(`SELECT coalesce(round(avg(done)*100.0/30,1),0)::float AS p FROM (SELECT count(*) FILTER (WHERE sp.state='done') AS done FROM career_v3_plan_versions pv
+    LEFT JOIN career_v3_step_progress sp ON sp.plan_version_id=pv.id WHERE pv.status='active' GROUP BY pv.id) a`);
+  assert.equal(stat(o, "Среднее прохождение"), `${avg.p.toLocaleString("ru-RU")} %`);
+  const tiers = (await db.query("SELECT price_kopeks, count(*) FILTER (WHERE status IN ('paid','refunded','refund_required'))::int AS n FROM career_shop_orders GROUP BY price_kopeks")).rows;
+  const sales = (await A.call("/admin/sales")).body.replace(/<!-- -->/g, "");
+  for (const t of tiers) assert.match(sales, new RegExp(`<td[^>]*>${rub(t.price_kopeks)}</td><td[^>]*>${t.n}</td>`), "tier " + t.price_kopeks);
+  const dx = await q("SELECT count(DISTINCT account_id)::int AS n FROM career_v3_diagnostics");
+  assert.equal(stat((await A.call("/admin/learning")).body, "Завершили диагностику"), String(dx.n));
+  assert.match(sales, /Тестовый режим: все заказы и оплаты ниже проведены без списания денег/);
+  assert.equal((await db.query("SELECT count(*)::int AS n FROM career_shop_orders WHERE provider_mode NOT IN ('test','emulator')")).rows[0].n, 0, "no live orders can exist (DB constraint)");
+});
+
+async function fillPaidTo(target) {
+  await db.query("UPDATE career_shop_orders SET status='canceled', canceled_at=now() WHERE status='pending'");
+  let paid = (await db.query("SELECT count(*)::int AS n FROM career_shop_orders WHERE status='paid'")).rows[0].n;
+  for (; paid < target; paid++) {
+    const acc = (await db.query("INSERT INTO career_accounts(id,email) VALUES(gen_random_uuid(), 'demo-s1fx' || substr(md5(random()::text),1,10) || '@example.invalid') RETURNING id")).rows[0].id;
+    await db.query("INSERT INTO career_shop_orders(id,account_id,price_kopeks,price_mode,sale_position,status,provider_mode,offer_version,adult_confirmed,reserved_until,paid_at,paid_out_sum) VALUES(gen_random_uuid(),$1,590000,'auto',$2,'paid','emulator','draft-2026-11-17',true,now(),now(),'5900.00')", [acc, paid + 1]);
+  }
+}
+
+await check("boundary 20/21: concurrent buyers get sale №20 → 3 990 ₽ and №21 → 5 900 ₽", async () => {
+  await fillPaidTo(19);
+  const [b1, b2] = [await buyer("b20"), await buyer("b21")];
+  const [o1, o2] = await Promise.all([b1.shop("order", { adultConfirmed: true, offerAccepted: true }), b2.shop("order", { adultConfirmed: true, offerAccepted: true })]);
+  assert.deepEqual([ok(o1).order.priceRub, ok(o2).order.priceRub].sort(), [3990, 5900]);
+  assert.deepEqual((await db.query("SELECT sale_position FROM career_shop_orders WHERE status='pending' ORDER BY 1")).rows.map((x) => x.sale_position), [20, 21]);
+});
+
+await check("after sale №40 the price stays 5 900 ₽ and the admin sees «нужно решение»", async () => {
+  await fillPaidTo(40);
+  const b = await buyer("b41");
+  assert.equal(ok(await b.shop("order")).priceRub, 5900);
+  const o = ok(await b.shop("order", { adultConfirmed: true, offerAccepted: true })).order;
+  assert.deepEqual([o.priceRub, (await db.query("SELECT sale_position FROM career_shop_orders WHERE id=$1", [o.id])).rows[0].sale_position], [5900, 41]);
+  assert.match((await A.call("/admin/prices")).body, /после № 40: нужно решение/);
+});
+
+await check("reservation expiry: the number is freed for the next buyer; a late payment is honoured at its fixed amount", async () => {
+  await fillPaidTo(41);
+  const late = await buyer("late");
+  const o = ok(await late.shop("order", { adultConfirmed: true, offerAccepted: true })).order;
+  const pos = async (id) => (await db.query("SELECT sale_position FROM career_shop_orders WHERE id=$1", [id])).rows[0].sale_position;
+  const p1 = await pos(o.id);
+  await db.query("UPDATE career_shop_orders SET reserved_until=now()-interval '1 second' WHERE id=$1", [o.id]);
+  const next = await buyer("next");
+  const o2 = ok(await next.shop("order", { adultConfirmed: true, offerAccepted: true })).order;
+  assert.equal(await pos(o2.id), p1, "the expired reservation freed its sale number for the next buyer");
+  assert.equal((await db.query("SELECT status FROM career_shop_orders WHERE id=$1", [o.id])).rows[0].status, "expired");
+  const r = await notify(null, `${o.priceRub}.00`, o.invId, o.id);
+  assert.equal(r.text, "OK" + o.invId, "paid at Robokassa before expiry reached us — honoured");
+  assert.equal((await db.query("SELECT status, price_kopeks FROM career_shop_orders WHERE id=$1", [o.id])).rows[0].status, "paid");
+  assert.equal(ok(await late.demo("session")).account.hasAccess, true);
+  // the late buyer sees a new order screen after expiry if they had not paid: the next order is a new reservation
+  assert.equal(ok(await late.shop("order")).order.status, "paid");
 });
 
 await check("closed contour stays closed: other pages 404, noindex everywhere", async () => {

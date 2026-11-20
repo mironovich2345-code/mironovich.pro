@@ -151,7 +151,9 @@ function mailProblems(env: NodeJS.ProcessEnv, profile: DemoProfile, local: boole
   if (mode === "smtp") {
     for (const k of ["CAREER_V3_SMTP_HOST", "CAREER_V3_SMTP_USER", "CAREER_V3_SMTP_PASSWORD", "CAREER_V3_SMTP_FROM"]) if (!norm(env[k])) p.push(`${k} не задан`);
     const port = Number(env.CAREER_V3_SMTP_PORT ?? "465");
-    if (![465, 587].includes(port)) p.push("CAREER_V3_SMTP_PORT должен быть 465 или 587");
+    // Mail.ru SMTP: 465 (implicit TLS) or 587 (STARTTLS, required). Local tests may use a loopback test server port.
+    if (!local && ![465, 587].includes(port)) p.push("CAREER_V3_SMTP_PORT должен быть 465 или 587");
+    if (local && (!Number.isInteger(port) || port < 1 || port > 65535)) p.push("CAREER_V3_SMTP_PORT неверный");
     const from = norm(env.CAREER_V3_SMTP_FROM).toLowerCase();
     if (from && !(from === MAIL_FROM_ADDRESS || from.endsWith("<" + MAIL_FROM_ADDRESS + ">"))) p.push(`отправитель должен быть ${MAIL_FROM_ADDRESS}`);
   } else if (mode === "preview-outbox") {
@@ -215,7 +217,8 @@ function readMail(env: NodeJS.ProcessEnv): MailConfig | null {
   if (mode === "preview-outbox") return { mode, key: env.CAREER_V3_PREVIEW_OUTBOX_KEY! };
   if (mode !== "smtp") return null;
   const port = Number(env.CAREER_V3_SMTP_PORT ?? "465");
-  return { mode, host: norm(env.CAREER_V3_SMTP_HOST), port, secure: port === 465, user: norm(env.CAREER_V3_SMTP_USER), password: env.CAREER_V3_SMTP_PASSWORD!, from: norm(env.CAREER_V3_SMTP_FROM) };
+  // Implicit TLS on 465 and on local test ports; STARTTLS (mandatory) on 587. Plain-text SMTP is never used.
+  return { mode, host: norm(env.CAREER_V3_SMTP_HOST), port, secure: port !== 587, user: norm(env.CAREER_V3_SMTP_USER), password: env.CAREER_V3_SMTP_PASSWORD!, from: norm(env.CAREER_V3_SMTP_FROM) };
 }
 function readRobokassa(env: NodeJS.ProcessEnv): RobokassaConfig | null {
   const mode = norm(env.CAREER_V3_ROBOKASSA);

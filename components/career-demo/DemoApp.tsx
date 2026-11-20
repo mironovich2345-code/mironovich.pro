@@ -303,17 +303,24 @@ function CodeLogin({ onDone, onPassword }: { onDone: () => void; onPassword?: ()
     return () => window.clearTimeout(t);
   }, [wait]);
   if (step === "email") return (
-    <Form title="Вход" submit="Получить код" intro={<>Отправим шестизначный код на ваш email с адреса info@mironovich.pro. Пароль не нужен.</>}
+    <Form title="Вход и регистрация" submit={info ? "Получить новый код" : "Получить код"} intro={<>Отправим шестизначный код на ваш email с адреса info@mironovich.pro. Пароль не нужен. Если вы здесь впервые, после кода попросим пригласительный код.</>}
       onSubmit={async () => { const r = await demoApi<{ maskedEmail: string; resendSeconds: number }>("otp-start", { email }); setMasked(r.maskedEmail); setWait(r.resendSeconds); setInfo(null); setStep("code"); }}
       footer={onPassword && <Button variant="quiet" onClick={onPassword}>Войти по паролю (старые аккаунты демо)</Button>}>
       <Field label="Email"><input className={inputClass} type="email" name="email" autoComplete="email" inputMode="email" required maxLength={254} value={email} onChange={(e) => setEmail(e.target.value)} /></Field>
+      {info && <Notice tone="error">{info}</Notice>}
     </Form>
   );
   if (step === "code") return (
     <Form title="Код из письма" submit="Войти"
       intro={<>Если адрес {masked} можно использовать для входа, на него отправлен код. Он действует 10 минут, неверно ввести можно не больше 5 раз. Проверьте папку «Спам».</>}
       onSubmit={async () => {
-        const r = await demoApi<{ ok: boolean; needInvite?: boolean }>("otp-verify", { code });
+        let r: { ok: boolean; needInvite?: boolean };
+        try { r = await demoApi<{ ok: boolean; needInvite?: boolean }>("otp-verify", { code }); }
+        catch (x) {
+          // Expired, used or locked code: back to the email step (address kept) with the reason — one tap for a new code.
+          if (x instanceof ApiError && [409, 410, 423].includes(x.status)) { setCode(""); setInfo(x.message); setStep("email"); return; }
+          throw x;
+        }
         setCode("");
         if (r.needInvite) { setStep("invite"); return; }
         onDone();
@@ -376,8 +383,8 @@ function Purchase({ account, shop, onLogout }: { account: Account; shop: boolean
           {pending && <p className="mt-2 text-[15px]">Заказ № {pending.invId} ожидает оплаты. Сумма зафиксирована до {new Date(pending.reservedUntil).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })}.</p>}
           <p className={`mt-2 text-[14px] ${muted}`}>Тестовая оплата: деньги не списываются. Сумма фиксируется в заказе и показывается до оплаты.</p>
           {!pending && <div className="mt-4 space-y-3">
-            <label className="flex items-start gap-3 text-[15px]"><input type="checkbox" className="mt-1 h-5 w-5" checked={adult} onChange={(e) => setAdult(e.target.checked)} /><span>Мне исполнилось 18 лет</span></label>
-            <label className="flex items-start gap-3 text-[15px]"><input type="checkbox" className="mt-1 h-5 w-5" checked={offer} onChange={(e) => setOffer(e.target.checked)} /><span>Принимаю <a className="underline" href="/offer/ai-career" target="_blank" rel="noreferrer">условия оферты</a> (проект, тестовый режим)</span></label>
+            <label className="flex items-start gap-3 text-[15px]"><input type="checkbox" className="mt-1 h-5 w-5 shrink-0" checked={adult} onChange={(e) => setAdult(e.target.checked)} /><span>Мне исполнилось 18 лет</span></label>
+            <label className="flex items-start gap-3 text-[15px]"><input type="checkbox" className="mt-1 h-5 w-5 shrink-0" checked={offer} onChange={(e) => setOffer(e.target.checked)} /><span>Принимаю <a className="underline" href="/offer/ai-career" target="_blank" rel="noreferrer">условия оферты</a> (проект, тестовый режим)</span></label>
           </div>}
           {error && <div className="mt-4"><Notice tone="error">{error}</Notice></div>}
           <div className="mt-5 grid gap-3 sm:grid-cols-2">

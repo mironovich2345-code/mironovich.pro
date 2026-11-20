@@ -59,8 +59,8 @@ export default async function AdminPage({ params }: { params: Promise<{ section?
         <p className="font-display text-lg font-bold">AI Career 3.0 <span className="font-sans text-sm font-semibold text-graphite/60">· админ-кабинет</span></p>
         <p className="text-sm text-graphite/70">{user.email} · <Link className="underline" href="/">в кабинет</Link></p>
       </header>
-      <nav aria-label="Разделы" className="mx-auto mt-4 max-w-6xl overflow-x-auto px-4 sm:px-6">
-        <ul className="flex gap-1.5">
+      <nav aria-label="Разделы" className="mx-auto mt-4 max-w-6xl px-4 sm:px-6">
+        <ul className="flex flex-wrap gap-1.5">
           {TABS.map(([id, label]) => (
             <li key={id}><Link href={link(id)} aria-current={id === tab ? "page" : undefined}
               className={`inline-flex min-h-11 items-center whitespace-nowrap rounded-md border px-3.5 text-[15px] font-semibold ${id === tab ? "border-graphite bg-graphite text-cream" : "border-graphite/20 bg-white hover:border-graphite/50"}`}>{label}</Link></li>
@@ -85,12 +85,13 @@ function H1({ children, intro }: { children: React.ReactNode; intro?: string }) 
 function Overview({ data: d, quote: q }: { data: Awaited<ReturnType<typeof overview>>; quote: Awaited<ReturnType<typeof prices>>["quote"] }) {
   return (
     <section>
-      <H1 intro="Продажи считаются только по подтверждённым серверным уведомлениям об оплате. Тестовый режим: реальных списаний нет.">Обзор</H1>
+      <H1 intro="Продажи считаются только по подтверждённым серверным уведомлениям об оплате.">Обзор</H1>
+      <p className="mt-3 rounded-md border border-signal/40 bg-[#FBF6EC] p-3 text-[14px] font-semibold">Все оплаты этапа 1 — тестовые (Robokassa IsTest=1 или эмулятор): деньги не списывались, это не реальная выручка.</p>
       <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
         <Stat label="Пользователи" value={d.users} />
         <Stat label="С доступом" value={d.withAccess} note="приглашение или оплата" />
-        <Stat label="Подтверждённые оплаты" value={d.confirmedPayments} note={d.refundRequired ? `нужен возврат: ${d.refundRequired}` : undefined} />
-        <Stat label="Выручка" value={rubles(d.grossRub)} note={`чистая ${rubles(d.netRub)}`} />
+        <Stat label="Подтверждённые оплаты (тест)" value={d.confirmedPayments} note={d.refundRequired ? `нужен возврат: ${d.refundRequired}` : undefined} />
+        <Stat label="Выручка (тест)" value={rubles(d.grossRub)} note={`за вычетом возвратов ${rubles(d.netRub)}`} />
         <Stat label="Возвраты" value={d.refundsCount} note={rubles(d.refundedRub)} />
         <Stat label="Среднее прохождение" value={`${d.avgCompletionPct.toLocaleString("ru-RU")} %`} note={`активных маршрутов: ${d.activePlans}`} />
         <Stat label="Цена сейчас" value={rubles(q.priceRub)} note={q.mode === "auto" ? `AUTO · следующая продажа № ${q.nextSale}` : "MANUAL"} />
@@ -134,6 +135,7 @@ function Sales({ data: d, showEmails }: { data: Awaited<ReturnType<typeof sales>
   return (
     <section>
       <H1 intro="Сумма фиксируется в заказе при создании и не пересчитывается. Возврат здесь записывается в учёте; сами деньги возвращаются через Robokassa.">Продажи</H1>
+      <p className="mt-3 rounded-md border border-signal/40 bg-[#FBF6EC] p-3 text-[14px] font-semibold">Тестовый режим: все заказы и оплаты ниже проведены без списания денег.</p>
       <h2 className="mt-6 text-[19px] font-bold">Выручка по ценовым уровням</h2>
       <Table label="Выручка по ценовым уровням" head={["Цена", "Подтверждённых оплат", "Возвратов", "Выручка", "Чистая"]}>
         {d.byTier.map((t) => <tr key={t.priceRub}><td className={td}>{rubles(t.priceRub)}</td><td className={td}>{t.confirmed}</td><td className={td}>{t.refunded}</td><td className={td}>{rubles(t.grossRub)}</td><td className={td}>{rubles(t.netRub)}</td></tr>)}

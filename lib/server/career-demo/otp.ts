@@ -51,8 +51,12 @@ export interface Started { token: string; expiresAt: Date; maskedEmail: string; 
 export async function startOtp(emailInput: unknown, ip: string): Promise<Started> {
   const c = requireDemo();
   const secret = otpReady(c);
+  // Protection against mass sending of codes to arbitrary addresses: per address (cooldown + 5/hour, below),
+  // per IP (20/hour, 60/day) and for the whole service (300/hour, 1000/day).
   await demoLimit(c, "otp-start-global", 300, 3600);
+  await demoLimit(c, "otp-start-global-day", 1000, 86400);
   await demoLimit(c, "otp-start-ip:" + ip, 20, 3600);
+  await demoLimit(c, "otp-start-ip-day:" + ip, 60, 86400);
   const email = normalizeEmail(emailInput);
   if (!email) throw new CareerError(400, "Введите корректный email");
   const wait = await cooldownLeft(email);

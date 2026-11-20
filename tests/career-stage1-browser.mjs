@@ -12,7 +12,7 @@ import { setTimeout as sleep } from "node:timers/promises";
 import pg from "pg";
 
 const require = createRequire(import.meta.url);
-const { chromium, devices } = require("playwright");
+const { chromium, webkit, devices } = require("playwright");
 const PORT = Number(process.env.STAGE1_PORT ?? 3411);
 const ORIGIN = `http://127.0.0.1:${PORT}`;
 const DB = "mironovich_career_stage1";
@@ -81,11 +81,16 @@ for (let i = 0; i < 4; i++) {
 }
 
 const browser = await chromium.launch({ headless: true, executablePath: process.env.CHROMIUM_PATH || "/usr/bin/chromium" });
+// Mobile Safari: real WebKit where installed (CI: STAGE1_WEBKIT=1); otherwise the iPhone profile runs on Chromium and
+// the report says so.
+const safari = process.env.STAGE1_WEBKIT === "1" ? await webkit.launch({ headless: true }) : null;
+const SAFARI = safari ? "iPhone Safari (WebKit)" : "iPhone profile (Chromium; WebKit not installed here)";
+console.log("mobile engine: " + SAFARI);
 let failures = 0, passed = 0;
 async function check(name, fn) {
   try { await fn(); passed++; console.log("PASS " + name); } catch (e) {
     failures++; console.log("FAIL " + name + "\n  " + String(e.stack ?? e).split("\n").slice(0, 5).join("\n  "));
-    for (const ctx of browser.contexts()) for (const pg of ctx.pages()) console.log("  page:", pg.url(), (await pg.locator("body").innerText().catch(() => "")).replace(/\s+/g, " ").slice(0, 300));
+    for (const ctx of [...browser.contexts(), ...(safari?.contexts() ?? [])]) for (const pg of ctx.pages()) console.log("  page:", pg.url(), (await pg.locator("body").innerText().catch(() => "")).replace(/\s+/g, " ").slice(0, 300));
   }
 }
 const shot = (p, name) => p.screenshot({ path: `${SHOTS}/${name}.png`, fullPage: true });
@@ -109,6 +114,7 @@ const iphone = await browser.newContext({ ...devices["iPhone 13"] });
 const desktop = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 });
 for (const ctx of [iphone, desktop]) ctx.on("page", (pg) => {
   pg.on("console", (m) => { if (m.type() === "error") console.log("  console:", m.text().slice(0, 200)); });
+  pg.on("response", (r) => { if (r.status() >= 400) console.log("  http", r.status(), new URL(r.url()).pathname); });
 });
 
 await check("iPhone: admin signs in with a code from info@mironovich.pro (preview mailbox), sees the admin link", async () => {
@@ -143,6 +149,8 @@ await check("desktop: admin changes the price with radio buttons (MANUAL 3 990 �
   for (const tab of ["overview", "users", "sales", "learning"]) { await p.goto(`${ORIGIN}/admin/${tab}`); await shot(p, `desktop-admin-${tab}`); }
   await p.goto(ORIGIN + "/products/ai-career");
   await p.getByText(/Купить за 3 990 ₽/).waitFor();
+  const cover = await p.locator("main img").first().evaluate((img) => img.complete && img.naturalWidth > 0);
+  assert.equal(cover, true, "product cover image loads in the preview");
   await shot(p, "desktop-product-page-3990");
 });
 
@@ -198,7 +206,51 @@ await check("desktop: sales tab shows the paid 3 990 ₽ order and revenue by pr
   await shot(p, "desktop-admin-overview-after-payment");
 });
 
+await check(`${SAFARI}: wrong code message, reload keeps the session, sign-out ends it (Back does not reopen the cabinet)`, async () => {
+  const ctx = await (safari ?? browser).newContext({ ...devices["iPhone 13"] });
+  const p = await ctx.newPage();
+  const email = "learner2-s1@example.com";
+  await db.query("UPDATE career_login_challenges SET resend_available_at=now()-interval '1 second' WHERE email=$1", [email]);
+  await p.goto(ORIGIN + "/");
+  await p.getByRole("button", { name: "Войти по коду из письма" }).click();
+  await p.getByLabel("Email").fill(email);
+  await p.getByRole("button", { name: "Получить код" }).click();
+  await p.getByLabel("Шестизначный код").waitFor();
+  const right = await code(email);
+  await p.getByLabel("Шестизначный код").fill(right === "000000" ? "111111" : "000000");
+  await p.getByRole("button", { name: "Войти" }).click();
+  await p.getByText(/Неверный код\. Осталось попыток: 4\./).waitFor();
+  await shot(p, "iphone-safari-wrong-code");
+  await p.getByLabel("Шестизначный код").fill(right);
+  await p.getByRole("button", { name: "Войти" }).click();
+  await p.getByRole("button", { name: "Выйти" }).first().waitFor();
+  await p.reload();
+  await p.getByRole("button", { name: "Выйти" }).first().waitFor();
+  await shot(p, "iphone-safari-cabinet-after-reload");
+  await p.getByRole("button", { name: "Выйти" }).first().click();
+  await p.getByRole("heading", { name: "Вход и регистрация" }).waitFor();
+  await p.goBack().catch(() => {});
+  await p.reload();
+  await p.getByRole("button", { name: "Войти по коду из письма" }).waitFor();
+  const r = await p.request.get(ORIGIN + "/api/career/demo/session");
+  assert.equal((await r.json()).authenticated, false);
+  await shot(p, "iphone-safari-after-sign-out");
+  await ctx.close();
+});
+
+await check("Android Chrome (Pixel 7): sign in by code and open the cabinet", async () => {
+  const ctx = await browser.newContext({ ...devices["Pixel 7"] });
+  const p = await ctx.newPage();
+  await signInUi(p, "learner1-s1@example.com", "android-login");
+  await p.getByRole("button", { name: "Выйти" }).first().waitFor();
+  const overflow = await p.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
+  assert.equal(overflow, false);
+  await shot(p, "android-cabinet");
+  await ctx.close();
+});
+
 await browser.close();
+await safari?.close();
 try { process.kill(-server.pid, "SIGTERM"); } catch { /* gone */ }
 await db.end();
 console.log(`career stage-1 browser: ${passed} passed, ${failures} failed; screenshots in ${SHOTS}`);

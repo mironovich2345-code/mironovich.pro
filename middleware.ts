@@ -11,7 +11,8 @@ const NOT_FOUND = '<!doctype html><html lang="ru"><head><meta charset="utf-8"><m
 // Stage-1 preview adds the admin cabinet, the test shop, Robokassa callbacks, preview-only helper pages and the product
 // page with its documents (to check that the site, the order and the payment request show one price).
 const STAGE1 = [/^\/admin(\/[a-z]+(\/emails)?)?\/?$/, /^\/api\/career\/(admin|shop)\/[a-z-]+$/, /^\/api\/career\/pay\/robokassa\/(result|success|fail)$/, /^\/api\/career\/pay\/emulator$/,
-  /^\/api\/career\/preview-mail$/, /^\/preview-(robokassa|mail)\/?$/, /^\/products(\/ai-career)?\/?$/, /^\/(offer\/ai-career|delivery|refund|requisites|privacy|consent)\/?$/, /^\/_next\/image$/];
+  /^\/api\/career\/preview-mail$/, /^\/preview-(robokassa|mail)\/?$/, /^\/products(\/ai-career)?\/?$/, /^\/(offer\/ai-career|delivery|refund|requisites|privacy|consent)\/?$/, /^\/_next\/image$/,
+  /^\/products\/[a-z0-9-]+\.(png|svg|webp)$/];
 
 export function middleware(req: NextRequest) {
   if (process.env.CAREER_V3_DEMO !== "1") return NextResponse.next();
