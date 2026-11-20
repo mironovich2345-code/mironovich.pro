@@ -10,7 +10,7 @@ import { jsonLd } from "@/lib/jsonld";
 export const revalidate = 60;
 export const metadata: Metadata = pageMetadata({
   title: "Продукты: интерактивные инструменты об ИИ — MIRONOVICH",
-  description: "Цифровой продукт для сотрудников: персональная диагностика и 30 шагов развития с ИИ. Цена может меняться по периодам; приём платежей подключается.",
+  description: "Цифровой продукт для сотрудников: персональная диагностика и 30 шагов развития с ИИ. Действующая цена указана на странице продукта; приём платежей подключается.",
   path: "/products",
 });
 const crumbs = [{ name: "Главная", href: "/" }, { name: "Продукты", href: "/products" }];
@@ -24,7 +24,7 @@ export default async function Products() {
         <h1 className="mb-6 mt-10 font-display text-[clamp(38px,7vw,76px)] font-extrabold uppercase leading-none">Продукты<span className="text-signal">.</span></h1>
         <p className="mb-12 max-w-[65ch] text-lg leading-relaxed text-stone">
           На этой странице представлен только цифровой продукт для сотрудников.
-          Цена может меняться в разные периоды: 1 993 ₽, 3 990 ₽ или 5 900 ₽;
+          Цена может меняться: 1 993 ₽, 3 990 ₽ или 5 900 ₽;
           действующая указана в карточке и на странице продукта. Онлайн-оплата пока не включена.
           Консультации и разработка для бизнеса обсуждаются индивидуально и не продаются здесь.
         </p>

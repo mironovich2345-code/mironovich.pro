@@ -10,6 +10,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { careerConfig, CareerError, GATE_COOKIE, SESSION_COOKIE } from "@/lib/server/career/config";
 import { limit, sessionAccount, validGate } from "@/lib/server/career/auth";
 import { demoConfig } from "@/lib/server/career-demo/config";
+import { careerPool } from "@/lib/server/career/db";
 import { demoLimit, demoSessionUser } from "@/lib/server/career-demo/auth";
 import { guardDemoRequest } from "@/lib/server/career-demo/http";
 import { loadProfessionBundle, ProfessionUnavailableError } from "@/lib/server/career-v3/content";
@@ -59,8 +60,11 @@ async function handle(req: NextRequest, ctx: { params: Promise<{ action: string[
     if (demo) {
       // Closed cloud demo: the invite-registered demo session replaces the tester gate + OTP session.
       guardDemoRequest(req);
-      accountId = (await demoSessionUser(req.cookies.get(demo.cookieName)?.value))?.accountId ?? null;
-      if (!accountId) throw new CareerError(401, "Войдите в демо-кабинет");
+      const user = await demoSessionUser(req.cookies.get(demo.cookieName)?.value);
+      if (!user) throw new CareerError(401, "Войдите в кабинет");
+      // Learning needs access: an invite (demo) or a confirmed payment. Signed in without access → 402.
+      if (!user.hasAccess) throw new CareerError(402, "Доступ к программе откроется после оплаты");
+      accountId = user.accountId;
       await demoLimit(demo, "v3:" + accountId, 240, 60);
     } else {
       const config = careerConfig();
@@ -92,7 +96,12 @@ async function handle(req: NextRequest, ctx: { params: Promise<{ action: string[
         "Content-Type": f.type, "Content-Disposition": `attachment; filename="${f.filename}"`,
         "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff", "X-Robots-Tag": "noindex, nofollow" } });
     }
-    if (req.method === "GET" && action === "diagnostic/questions") return json(questionnaire(loadProfessionBundle(professionId).diagnostic));
+    if (req.method === "GET" && action === "diagnostic/questions") {
+      // Funnel metric for the admin cabinet: the first time this account opened the diagnostic (no answers stored).
+      if (demo) await careerPool().query(
+        "INSERT INTO career_events(account_id,code) SELECT $1,'v3.diagnostic.opened' WHERE NOT EXISTS (SELECT 1 FROM career_events WHERE account_id=$1 AND code='v3.diagnostic.opened')", [accountId]);
+      return json(questionnaire(loadProfessionBundle(professionId).diagnostic));
+    }
     if (req.method === "POST" && action === "diagnostic/task-options") {
       onlyFields(body, ["answers"]);
       return json(taskOptionsFor(professionId, body.answers));

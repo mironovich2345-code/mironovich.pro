@@ -44,3 +44,11 @@ export function setSessionCookie(res: NextResponse, c: DemoConfig, token: string
 export function clearSessionCookie(res: NextResponse, c: DemoConfig) {
   res.cookies.set(c.cookieName, "", { httpOnly: true, secure: !c.local, sameSite: "lax", path: "/", maxAge: 0 });
 }
+
+/** Short-lived cookie with the opaque email-code challenge token (HttpOnly; only its HMAC is stored). */
+export function setLoginCookie(res: NextResponse, c: DemoConfig, token: string, expiresAt: Date) {
+  res.cookies.set(c.loginCookieName, token, { httpOnly: true, secure: !c.local, sameSite: "lax", path: "/", expires: expiresAt });
+}
+export function clearLoginCookie(res: NextResponse, c: DemoConfig) {
+  res.cookies.set(c.loginCookieName, "", { httpOnly: true, secure: !c.local, sameSite: "lax", path: "/", maxAge: 0 });
+}

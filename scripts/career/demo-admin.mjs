@@ -9,7 +9,10 @@
 //   delete <email>             delete an account and all its data
 //   purge                      retention: remove accounts 7 days after access ends, spent sessions and counters
 //   revoke-invites             revoke every unused invite
+//   grant-admin <email>        admin role for an email (the person still signs in with an email code)
+//   revoke-admin <email>       remove the admin role
 //   status                     counts only (no emails)
+// migrate also adds admins listed in CAREER_V3_ADMIN_EMAILS (add-only; removal is revoke-admin).
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 process.chdir(fileURLToPath(new URL("../..", import.meta.url)));
@@ -29,8 +32,8 @@ if (cmd === "migrate") {
   try {
     await tx.query("BEGIN");
     const db = (await tx.query("SELECT current_database() AS n")).rows[0].n;
-    if (db !== cfg.DEMO_DATABASE_NAME) throw new Error("подключение не к базе демо");
-    await tx.query("SELECT set_config($1,$2,true)", [cfg.DEMO_MIGRATION_SETTING, cfg.DEMO_MIGRATION_VALUE]);
+    if (db !== c.databaseName) throw new Error("подключение не к базе контура");
+    await tx.query("SELECT set_config($1,$2,true)", [cfg.DEMO_MIGRATION_SETTING, c.migrationValue]);
     for (const name of readdirSync("migrations/career").filter((n) => /^\d+.*\.sql$/.test(n)).sort())
       await tx.query(readFileSync("migrations/career/" + name, "utf8"));
     await tx.query("COMMIT");
@@ -40,6 +43,8 @@ if (cmd === "migrate") {
     const { careerPool } = await import("../../lib/server/career/db.ts");
     const state = await auth.ensureBootstrapInvite(process.env.CAREER_V3_DEMO_BOOTSTRAP_INVITE);
     console.log({ absent: "Стартовое приглашение не задано", invalid: "Стартовое приглашение имеет неверный формат и пропущено", added: "Стартовое приглашение добавлено (действует 7 дней, одноразовое)", exists: "Стартовое приглашение уже было добавлено ранее" }[state]);
+    const admins = await auth.ensureBootstrapAdmins(process.env.CAREER_V3_ADMIN_EMAILS);
+    console.log(admins ? `Роль администратора подтверждена для адресов из CAREER_V3_ADMIN_EMAILS: ${admins}` : "CAREER_V3_ADMIN_EMAILS не задан");
     await careerPool().end();
   } catch (e) {
     await tx.query("ROLLBACK");
@@ -60,7 +65,9 @@ try {
   else if (cmd === "purge") console.log(JSON.stringify(await auth.purgeExpired()));
   else if (cmd === "revoke-invites") console.log("Отозвано: " + (await auth.revokeOpenInvites()));
   else if (cmd === "status") console.log(JSON.stringify(await auth.demoStatus()));
-  else { console.error("Команды: migrate | invite [label] [days] | reset <email> | delete <email> | purge | revoke-invites | status"); process.exitCode = 1; }
+  else if (cmd === "grant-admin") console.log(a1 ? "Администратор: " + (await auth.grantAdmin(a1, "operator")) : "Укажите email");
+  else if (cmd === "revoke-admin") console.log(a1 && (await auth.revokeAdmin(a1)) ? "Роль снята" : "Активной роли нет");
+  else { console.error("Команды: migrate | invite [label] [days] | reset <email> | delete <email> | purge | revoke-invites | grant-admin <email> | revoke-admin <email> | status"); process.exitCode = 1; }
 } finally {
   await careerPool().end();
 }

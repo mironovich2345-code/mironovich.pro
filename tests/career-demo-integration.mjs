@@ -392,7 +392,8 @@ try {
     assert.equal((await client(newIp()).demo("login", { email: t.email, password: PASSWORD })).status, 401);
     const old = await register("expired");
     await db.query("UPDATE career_demo_users SET access_until=now()-interval '8 days' WHERE email=$1", [old.email]);
-    assert.equal((await old.c.v3("state")).status, 401, "expired access closes the cabinet");
+    // Stage 1: the session stays, but learning needs access — expired access closes the cabinet with 402 (buy / ask for access).
+    assert.equal((await old.c.v3("state")).status, 402, "expired access closes the cabinet");
     assert.equal((await client(newIp()).demo("login", { email: old.email, password: PASSWORD })).status, 403);
     assert.ok(JSON.parse(admin("purge")).accountsRemoved >= 1);
     assert.equal((await db.query("SELECT count(*)::int n FROM career_demo_users WHERE email=$1", [old.email])).rows[0].n, 0);
