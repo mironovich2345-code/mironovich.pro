@@ -38,3 +38,9 @@ body {
 
 /* consent-required mode: a stored choice hides the server-rendered banner before paint */
 .mrnv-consent-set [data-consent-banner]:not([data-reopened]) { display: none; }
+
+/* AI Career lesson player: a short, calm transition between screens (disabled with reduced motion). */
+@keyframes playerIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}

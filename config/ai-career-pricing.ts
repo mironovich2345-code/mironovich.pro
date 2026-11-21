@@ -1,49 +1,42 @@
 /**
- * AI Career 3.0 — price of the employee digital product. The ONLY source of the price rules:
- * the product page, checkout and the payment order all read them from here.
+ * AI Career 3.0 — price of the employee digital product. The ONLY source of the price rules: catalogue, product
+ * page, checkout, the Robokassa request and the reports all read the price through lib/server/commerce/shop.ts,
+ * which applies these rules (see docs/products/ai-career-pricing.md).
  *
- * Model (see docs/products/ai-career-pricing.md):
- *  - the seller sets the current price at run time (no code change, no deploy) by recording a price period
- *    in the commerce database: a base price from a date, or a promotion with a start and an end;
- *  - only the three allowed prices can be set; every change is kept as history for comparing periods;
- *  - an order records its price and period when it is created; a later price change never alters it.
- * No seat limits, counters or invented discounts. Nothing here enables sales: salesEnabled / legalApproved
- * stay in ai-career-commerce.ts.
+ * Two modes, switched by the administrator (every change is kept in an append-only history):
+ *  - AUTO:   the price follows the number of CONFIRMED sales plus orders currently reserved:
+ *            sales № 1–10 → 1 993 ₽, № 11–20 → 3 990 ₽, № 21–40 → 5 900 ₽; after № 40 → 5 900 ₽ until a separate decision;
+ *  - MANUAL: the administrator picks one of the three prices; it applies to every new order and to the public pages.
+ * An order fixes its amount when it is created; nothing recalculates it later. The site shows one price, with no
+ * struck-through "old" price, counters or timers. Nothing here enables sales: salesEnabled / legalApproved stay in
+ * ai-career-commerce.ts.
  */
 export const ALLOWED_PRICES_RUB = [1993, 3990, 5900] as const;
 export type AllowedPriceRub = (typeof ALLOWED_PRICES_RUB)[number];
-/** Launch price used while no period is recorded (and in the synthetic sandbox). */
+/** Price shown while no commerce database is connected (the public site today). */
 export const DEFAULT_PRICE_RUB: AllowedPriceRub = 1993;
-export const PRICE_TIME_ZONE = "Europe/Moscow";
+export type PriceMode = "auto" | "manual";
+
+/** AUTO ladder by sale number. Sales after the last tier keep the last price until the administrator decides. */
+export const AUTO_TIERS: ReadonlyArray<{ from: number; to: number; priceRub: AllowedPriceRub }> = [
+  { from: 1, to: 10, priceRub: 1993 },
+  { from: 11, to: 20, priceRub: 3990 },
+  { from: 21, to: 40, priceRub: 5900 },
+];
+export const AFTER_PLAN_PRICE_RUB: AllowedPriceRub = 5900;
+export const AUTO_PLAN_LAST_SALE = 40;
+
+export function autoPriceFor(saleNumber: number): AllowedPriceRub {
+  if (!Number.isInteger(saleNumber) || saleNumber < 1) throw new RangeError("sale number must be a positive integer");
+  return AUTO_TIERS.find((t) => saleNumber >= t.from && saleNumber <= t.to)?.priceRub ?? AFTER_PLAN_PRICE_RUB;
+}
 
 export const isAllowedPrice = (n: unknown): n is AllowedPriceRub =>
   typeof n === "number" && (ALLOWED_PRICES_RUB as readonly number[]).includes(n);
 
 export const rubles = (n: number) => n.toLocaleString("ru-RU").replace(/\s/g, " ") + " ₽";
 
-/** What the page may say about the price right now. */
+/** What the page may say about the price right now: one price, or "unknown" when the price source cannot be read. */
 export type CurrentPrice =
-  | {
-      known: true;
-      priceRub: AllowedPriceRub;
-      /** "default" = no period recorded yet (launch price); "base" = price set from a date; "promo" = limited period. */
-      kind: "default" | "base" | "promo";
-      startsAt: string | null;
-      endsAt: string | null;
-      /** Base price that applies after a promotion ends, if one is recorded. */
-      afterPriceRub: AllowedPriceRub | null;
-    }
+  | { known: true; priceRub: AllowedPriceRub; mode: PriceMode | "default" }
   | { known: false };
-
-const dateFmt = new Intl.DateTimeFormat("ru-RU", { timeZone: PRICE_TIME_ZONE, day: "numeric", month: "long", year: "numeric" });
-const timeFmt = new Intl.DateTimeFormat("ru-RU", { timeZone: PRICE_TIME_ZONE, hour: "2-digit", minute: "2-digit" });
-/** «30 ноября 2026 года, 23:59 МСК» */
-export const moscowDateTime = (iso: string) => `${dateFmt.format(new Date(iso))}, ${timeFmt.format(new Date(iso))} МСК`;
-
-/** Plain sentence about the period of a promotion; null when the price has no end date. */
-export function periodText(p: CurrentPrice): string | null {
-  if (!p.known || p.kind !== "promo" || !p.endsAt) return null;
-  // ends_at is exclusive: the last moment of the price is one minute earlier.
-  const last = new Date(new Date(p.endsAt).getTime() - 60_000).toISOString();
-  return `Цена действует до ${moscowDateTime(last)} включительно.`;
-}

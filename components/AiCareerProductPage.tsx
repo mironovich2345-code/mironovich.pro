@@ -111,7 +111,7 @@ export default async function AiCareerProductPage({ product }: { product: Digita
               <AiCareerPrice price={price} />
               <p className="mt-5 max-w-[65ch] text-[15px] leading-relaxed text-cream/85">{commerceCopy.initialPurchase}</p>
               <p className="mt-3 max-w-[65ch] text-[13px] leading-relaxed text-stone">
-                Цена может меняться в разные периоды. Сумма фиксируется в заказе при его оформлении, показывается до подтверждения оплаты и после этого не меняется. Без обязательных дополнений и подписки.
+                Цена может меняться. Сумма фиксируется в заказе при его оформлении, показывается до подтверждения оплаты и после этого не меняется. Без обязательных дополнений и подписки.
               </p>
             </div>
             <div className="min-w-[200px]">

@@ -1,4 +1,4 @@
 -- Persist request time so delayed sandbox refund confirmation survives the ordinary window.
-DO $$ BEGIN IF current_database() !~ '^mironovich_career_test(_[a-z0-9]+)*$' THEN RAISE EXCEPTION 'CAREER_TEST_DATABASE_REQUIRED'; END IF; END $$;
+DO $$ BEGIN IF current_database() !~ '^mironovich_career_test(_[a-z0-9]+)*$' AND NOT (current_database() = 'mironovich_career_demo_v3' AND coalesce(current_setting('mironovich.career_demo', true), '') = 'closed-demo-v3') AND NOT (current_database() = 'mironovich_career_stage1' AND coalesce(current_setting('mironovich.career_demo', true), '') = 'stage1-preview') THEN RAISE EXCEPTION 'CAREER_TEST_DATABASE_REQUIRED'; END IF; END $$;
 ALTER TABLE career_orders ADD COLUMN IF NOT EXISTS refund_started_at timestamptz;
 INSERT INTO career_migrations(version) VALUES(2) ON CONFLICT DO NOTHING;

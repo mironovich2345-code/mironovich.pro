@@ -1,0 +1,97 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "review",
+  "usableForPaidUser": false,
+  "note": "Правила будущего подбора практических уроков продаж по ответам диагностики. Используются только для черновых уроков в статусе review; в кабинет не подключены. Условия ссылаются на вопросы и правила diagnostic-sales.json.",
+  "lessons": [
+    {
+      "lessonId": "SAL-02",
+      "curriculumSlotId": "SAL-02",
+      "scenarioId": "S02",
+      "relevantWhen": {
+        "Q01": ["outbound_b2b", "inbound", "account", "mixed"],
+        "Q03": ["outreach", "account"]
+      },
+      "taskBySubtype": {
+        "outbound_b2b": ["T03", "T15"],
+        "inbound": ["T07", "T15"],
+        "account": ["T15"]
+      },
+      "exerciseFocusBySubtype": {
+        "outbound_b2b": ["SAL02-TASK-1", "SAL02-TASK-2"],
+        "inbound": ["SAL02-TASK-2", "SAL02-TASK-1"],
+        "account": ["SAL02-TASK-2"]
+      },
+      "levelNotes": {
+        "starter": "Сначала ручной каркас TPL-SAL02-MANUAL, затем промпт.",
+        "independent": "Промпт и чек-лист; обязательный замер «как обычно».",
+        "experienced": "Дополнительно промпт TPL-SAL02-PROMPT-REVIEW для проверки чужих писем."
+      }
+    },
+    {
+      "lessonId": "SAL-05",
+      "curriculumSlotId": "SAL-05",
+      "scenarioId": "S05",
+      "relevantWhen": {
+        "Q01": ["outbound_b2b", "inbound", "account", "mixed"],
+        "Q03": ["crm", "account"]
+      },
+      "taskBySubtype": {
+        "outbound_b2b": ["T09", "T10", "T23"],
+        "inbound": ["T09", "T10", "T23"],
+        "account": ["T09", "T10", "T19", "T23"]
+      },
+      "exerciseFocusBySubtype": {
+        "outbound_b2b": ["SAL05-TASK-1", "SAL05-TASK-2"],
+        "inbound": ["SAL05-TASK-1", "SAL05-TASK-2"],
+        "account": ["SAL05-TASK-1", "SAL05-TASK-2"]
+      },
+      "levelNotes": {
+        "starter": "Сначала ручной шаблон TPL-SAL05-SUMMARY, затем промпт.",
+        "independent": "Промпт итога и чек-лист сверки; замер на сопоставимых разговорах.",
+        "experienced": "Дополнительно разбор передачи клиента (пример SAL05-EX-2) и промпт TPL-SAL05-PROMPT-DIFF."
+      }
+    }
+  ],
+  "safeVariants": [
+    {
+      "id": "SALV-01",
+      "ruleId": "SAFE-01",
+      "condition": {"Q12": ["prohibited", "unknown", "general_only"]},
+      "mode": "synthetic_only",
+      "effect": "Только вымышленные данные урока; при Q12=prohibited — ручные шаблоны без ИИ.",
+      "manualTemplates": {
+        "SAL-02": ["TPL-SAL02-MANUAL", "TPL-SAL02-CHECKLIST"],
+        "SAL-05": ["TPL-SAL05-SUMMARY", "TPL-SAL05-VERIFY", "TPL-SAL05-CRM"]
+      }
+    },
+    {
+      "id": "SALV-02",
+      "ruleId": "SAFE-02",
+      "condition": {"Q13": ["internal", "personal", "transcripts", "unknown"]},
+      "mode": "synthetic_only",
+      "effect": "Не предлагать загружать реальные письма, заметки, записи звонков и выгрузки CRM; только учебные данные урока."
+    },
+    {
+      "id": "SALV-03",
+      "ruleId": "SAFE-03",
+      "condition": {"Q14": ["money", "privacy", "unknown"]},
+      "mode": "human_review_required",
+      "effect": "Обязательная проверка человеком; не предлагать автоматическую отправку писем и автоматическое изменение полей CRM."
+    },
+    {
+      "id": "SALV-04",
+      "ruleId": "SAFE-04",
+      "condition": {"Q16": ["manager", "unknown", "no_deals"]},
+      "mode": "no_commitments",
+      "effect": "Не предлагать самостоятельно подтверждать цены, скидки, сроки и обязательства; такие пункты уходят в поле «что требует утверждения»."
+    },
+    {
+      "id": "SALV-05",
+      "ruleId": "SAFE-05",
+      "condition": {"always": true},
+      "mode": "no_inference",
+      "effect": "Не делать выводов о росте продаж, доле ответов, экономии денег и согласии адресатов по ответам и учебным замерам."
+    }
+  ]
+}

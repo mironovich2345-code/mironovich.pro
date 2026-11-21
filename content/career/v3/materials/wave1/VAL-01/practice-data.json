@@ -1,0 +1,143 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "DL-VAL01-DATA",
+  "lessonId": "VAL-01",
+  "status": "review",
+  "syntheticOnly": true,
+  "notice": "Все компании, люди, сайты, цифры и события вымышлены; домены — зарезервированный .example. Данные предназначены только для учебной практики и не являются показателями реальных компаний.",
+  "exercises": [
+    {
+      "exerciseId": "VAL01-TASK-1",
+      "materialIds": [
+        "TPL-VAL01-METRIC",
+        "TPL-VAL01-SHEET"
+      ],
+      "tasks": [
+        {
+          "id": "З-1",
+          "minutes": 14,
+          "errors": 1,
+          "comparable": true
+        },
+        {
+          "id": "З-2",
+          "minutes": 12,
+          "errors": 0,
+          "comparable": true
+        },
+        {
+          "id": "З-3",
+          "minutes": 16,
+          "errors": 1,
+          "comparable": true
+        },
+        {
+          "id": "З-4",
+          "minutes": 41,
+          "errors": 2,
+          "comparable": false
+        }
+      ],
+      "answerKey": {
+        "numbers": {
+          "baselineAvgMinutes": 14,
+          "baselineErrors": 2,
+          "baselineTasks": 3
+        },
+        "findings": [
+          {
+            "quote": "З-4",
+            "cue": "З-4 исключена",
+            "type": "exclude_noncomparable",
+            "why": "Другой состав вопросов и объём втрое больше."
+          },
+          {
+            "quote": "клиенты не ждали ответа",
+            "cue": "время первого ответа клиенту",
+            "type": "workplace_outcome",
+            "why": "Время первого ответа зависит от очереди и графика — только наблюдается."
+          },
+          {
+            "quote": "ошибок в ценах и сроках",
+            "cue": "ошибок в ценах и сроках",
+            "type": "exercise_metric",
+            "why": "Ошибки по чек-листу измеряются на собственном результате."
+          }
+        ]
+      }
+    },
+    {
+      "exerciseId": "VAL01-TASK-2",
+      "materialIds": [
+        "TPL-VAL01-SHEET",
+        "TPL-VAL01-VALIDITY",
+        "TPL-VAL01-REPORT",
+        "TPL-VAL01-PROMPT-CLAIMS"
+      ],
+      "tasks": [
+        {
+          "id": "З-5",
+          "generation": 3,
+          "review": 6,
+          "aiErrors": 2,
+          "remaining": 0
+        },
+        {
+          "id": "З-6",
+          "generation": 2,
+          "review": 7,
+          "aiErrors": 1,
+          "remaining": 0
+        },
+        {
+          "id": "З-7",
+          "generation": 3,
+          "review": 9,
+          "aiErrors": 3,
+          "remaining": 1
+        }
+      ],
+      "answerKey": {
+        "numbers": {
+          "afterAvgMinutes": 10,
+          "afterRemainingErrors": 1,
+          "aiErrorsTotal": 6,
+          "foundByReview": 5,
+          "changePercentRounded": 29
+        },
+        "findings": [
+          {
+            "quote": "в 5 раз",
+            "cue": "«в 5 раз»",
+            "type": "exaggeration",
+            "why": "Посчитано по времени генерации без проверки."
+          },
+          {
+            "quote": "ошибки исчезли",
+            "cue": "«ошибки исчезли»",
+            "type": "false_claim",
+            "why": "Одна неверная цена прошла проверку."
+          },
+          {
+            "quote": "600 часов в год",
+            "cue": "«600 часов в год»",
+            "type": "extrapolation",
+            "why": "Перенос трёх учебных заявок на отдел и год."
+          },
+          {
+            "quote": "время ответа клиентам",
+            "cue": "«время ответа клиентам»",
+            "type": "wrong_metric",
+            "why": "Измерялась подготовка ответа, а не ожидание клиента."
+          },
+          {
+            "quote": "отвечал клиентам автоматически",
+            "cue": "«отвечал автоматически»",
+            "type": "removes_review",
+            "why": "Без проверки ошибки дошли бы до клиента."
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "val-02-map-02",
+  "ids": [
+    "VAL-02",
+    "MAP-02"
+  ],
+  "materialsDir": "content/career/v3/materials/val-02-map-02",
+  "planPath": "content/career/v3/plan-candidates/val-02-map-02.json",
+  "lawRefs": {},
+  "requireYearInDates": true
+}
