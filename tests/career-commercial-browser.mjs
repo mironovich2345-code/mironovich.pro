@@ -59,7 +59,11 @@ let failures = 0, passed = 0;
 async function check(name, fn) {
   try { await fn(); passed++; console.log("PASS " + name); } catch (e) { failures++; console.log("FAIL " + name + "\n  " + String(e.stack ?? e).split("\n").slice(0, 5).join("\n  ")); }
 }
-const shot = (p, name) => p.screenshot({ path: `${SHOTS}/${name}.png`, fullPage: true });
+// Full-page shots, except pages taller than WebKit's 32 767 px screenshot limit (the long public home page at DPR 3).
+const shot = async (p, name) => {
+  const tall = await p.evaluate(() => document.documentElement.scrollHeight * devicePixelRatio > 30000);
+  await p.screenshot({ path: `${SHOTS}/${name}.png`, fullPage: !tall });
+};
 const code = async (email) => /Код для входа: (\d{6})/.exec((await db.query("SELECT body FROM career_mail_preview WHERE to_email=$1 ORDER BY created_at DESC LIMIT 1", [email])).rows[0]?.body ?? "")?.[1];
 const watch = (p) => { const bad = []; p.on("response", (r) => { if (r.status() >= 400 && !r.url().includes("/api/career/demo/session")) bad.push(`${r.status()} ${new URL(r.url()).pathname}`); }); p.on("pageerror", (e) => bad.push("pageerror " + e.message)); return bad; };
 async function signIn(p, email, prefix) {
