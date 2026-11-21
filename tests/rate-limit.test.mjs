@@ -106,6 +106,33 @@ test("x-forwarded-for source: only the rightmost entry; client-sent prefixes are
   assert.equal(clientKey(h({ "x-real-ip": "1.2.3.4" }), "x-forwarded-for"), "missing", "X-Real-IP not consulted");
 });
 
+test("behind Cloudflare: the visitor comes from CF-Connecting-IP only when the edge address is Cloudflare's", () => {
+  // via Cloudflare (X-Real-IP = a Cloudflare edge, as on mironovich.pro): each visitor gets their own key
+  assert.equal(clientKey(h({ "x-real-ip": "172.70.1.2", "cf-connecting-ip": "198.51.100.7" }), "x-real-ip"), "198.51.100.7");
+  assert.equal(clientKey(h({ "x-real-ip": "2606:4700:10::1", "cf-connecting-ip": "2001:db8::5" }), "x-real-ip"), "2001:db8::5");
+  assert.equal(clientKey(h({ "x-forwarded-for": "162.158.4.4", "cf-connecting-ip": "198.51.100.8" }), "x-forwarded-for"), "198.51.100.8");
+  // no or broken CF-Connecting-IP: the edge address (shared, stricter — never a fresh key)
+  assert.equal(clientKey(h({ "x-real-ip": "172.70.1.2" }), "x-real-ip"), "172.70.1.2");
+  assert.equal(clientKey(h({ "x-real-ip": "172.70.1.2", "cf-connecting-ip": "evil" }), "x-real-ip"), "172.70.1.2");
+  // bypassing Cloudflare: a forged CF-Connecting-IP is ignored, the real connecting address counts
+  assert.equal(clientKey(h({ "x-real-ip": "203.0.113.9", "cf-connecting-ip": "198.51.100.1" }), "x-real-ip"), "203.0.113.9");
+  // "none" stays "none": no per-client key from any header
+  assert.equal(clientKey(h({ "x-real-ip": "172.70.1.2", "cf-connecting-ip": "198.51.100.7" }), "none"), null);
+});
+
+test("Cloudflare: rotating forged CF-Connecting-IP on a direct request cannot dodge the per-client limit; limits unchanged", () => {
+  const c = clock();
+  const limit = createLeadLimiter({ source: "x-real-ip", now: c.now, timer: false });
+  const forged = Array.from({ length: 7 }, (_, i) => ({ "x-real-ip": "203.0.113.50", "cf-connecting-ip": "198.51.100." + i, "x-forwarded-for": "10.0.0." + i }));
+  assert.deepEqual(forged.map((x) => limit(h(x))), [false, false, false, false, false, true, true], "5 a minute per client, as before");
+  // two different visitors behind the same Cloudflare edge are counted separately
+  const c2 = clock();
+  const l2 = createLeadLimiter({ source: "x-real-ip", now: c2.now, timer: false });
+  for (let i = 0; i < 5; i++) assert.equal(l2(h({ "x-real-ip": "172.70.1.2", "cf-connecting-ip": "198.51.100.10" })), false);
+  assert.equal(l2(h({ "x-real-ip": "172.70.1.2", "cf-connecting-ip": "198.51.100.10" })), true);
+  assert.equal(l2(h({ "x-real-ip": "172.70.1.2", "cf-connecting-ip": "198.51.100.11" })), false, "another visitor is not blocked");
+});
+
 test("garbage or missing values share one key instead of minting new counters", () => {
   assert.equal(clientKey(h({ "x-real-ip": "random-" + Math.random() }), "x-real-ip"), "invalid");
   assert.equal(clientKey(h({ "x-forwarded-for": "1.1.1.1, not-an-ip" }), "x-forwarded-for"), "invalid");
