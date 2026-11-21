@@ -36,8 +36,12 @@ if (cmd === "migrate") {
     await tx.query("SELECT set_config($1,$2,true)", [cfg.DEMO_MIGRATION_SETTING, c.migrationValue]);
     for (const name of readdirSync("migrations/career").filter((n) => /^\d+.*\.sql$/.test(n)).sort())
       await tx.query(readFileSync("migrations/career/" + name, "utf8"));
+    // Commercial profiles only: real-user schema (drops synthetic-only constraints in THIS database).
+    if (cfg.isCommercial(c.profile))
+      for (const name of readdirSync("migrations/career-commercial").filter((n) => /^\d+.*\.sql$/.test(n)).sort())
+        await tx.query(readFileSync("migrations/career-commercial/" + name, "utf8"));
     await tx.query("COMMIT");
-    console.log("Схема закрытого демо готова");
+    console.log(cfg.isCommercial(c.profile) ? "Коммерческая схема готова" : "Схема закрытого демо готова");
     // Optional first invite from the Railway variable (value never printed): added once, never revived.
     const auth = await import("../../lib/server/career-demo/auth.ts");
     const { careerPool } = await import("../../lib/server/career/db.ts");
