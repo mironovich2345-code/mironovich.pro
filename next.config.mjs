@@ -47,11 +47,18 @@ const securityHeaders = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Local two-server tests build the public site and the learning app side by side (default .next everywhere else).
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   poweredByHeader: false,
   compress: true,
   // Critical search/crawler user agents need metadata in <head> before streaming.
   // Do not classify ordinary browsers as bots: this can delay their response.
   // Verify Googlebot, Lighthouse and YandexBot output in browser smoke tests.
+  // Commercial learning app (separate service behind the site's proxy): its static files are served on the site under
+  // /career-app/_next/… so they never collide with the site's own /_next/… files. Keep in sync with middleware.ts.
+  assetPrefix: process.env.CAREER_V3_DEMO === "1" && /^commercial(-staging)?$/.test(process.env.CAREER_V3_DEMO_PROFILE ?? "") ? "/career-app" : undefined,
+  // Public site → learning app proxy: a hung app must not hold the site's workers for long.
+  experimental: { proxyTimeout: 15000 },
   htmlLimitedBots: /Googlebot|Google-InspectionTool|Lighthouse|Bingbot|Slurp|DuckDuckBot|Baiduspider|YandexBot|YandexMobileBot|facebookexternalhit|Twitterbot|LinkedInBot/i,
   async headers() {
     // staging / preview copies: keep every response out of search indexes

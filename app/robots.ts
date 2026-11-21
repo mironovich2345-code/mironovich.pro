@@ -8,7 +8,8 @@ export default function robots(): MetadataRoute.Robots {
     return { rules: [{ userAgent: "*", disallow: "/" }] };
   }
   return {
-    rules: [{ userAgent: "*", allow: "/", disallow: ["/api/"] }],
+    // Personal cabinets (learning app behind the proxy) stay out of search engines: also X-Robots-Tag noindex there.
+    rules: [{ userAgent: "*", allow: "/", disallow: ["/api/", "/career", "/admin", "/career-app/", "/preview-"] }],
     sitemap: siteUrl + "/sitemap.xml",
   };
 }

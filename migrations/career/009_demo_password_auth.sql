@@ -3,7 +3,7 @@
 -- migration runner (scripts/career/demo-admin.mjs migrate) has validated the demo configuration and set the setting.
 -- Passwords are stored only as scrypt hashes; invite, recovery and session tokens only as HMAC digests.
 -- career_accounts keeps its synthetic alias address (demo-…@example.invalid); the real login email lives here only.
-DO $$ BEGIN IF current_database() !~ '^mironovich_career_test(_[a-z0-9]+)*$' AND NOT (current_database() = 'mironovich_career_demo_v3' AND coalesce(current_setting('mironovich.career_demo', true), '') = 'closed-demo-v3') AND NOT (current_database() = 'mironovich_career_stage1' AND coalesce(current_setting('mironovich.career_demo', true), '') = 'stage1-preview') THEN RAISE EXCEPTION 'CAREER_TEST_DATABASE_REQUIRED'; END IF; END $$;
+DO $$ BEGIN IF current_database() !~ '^mironovich_career_test(_[a-z0-9]+)*$' AND NOT (current_database() = 'mironovich_career_demo_v3' AND coalesce(current_setting('mironovich.career_demo', true), '') = 'closed-demo-v3') AND NOT (current_database() = 'mironovich_career_stage1' AND coalesce(current_setting('mironovich.career_demo', true), '') = 'stage1-preview') AND NOT (current_database() = 'mironovich_career_staging' AND coalesce(current_setting('mironovich.career_demo', true), '') = 'commercial-staging') AND NOT (current_database() = 'mironovich_career' AND coalesce(current_setting('mironovich.career_demo', true), '') = 'commercial') THEN RAISE EXCEPTION 'CAREER_TEST_DATABASE_REQUIRED'; END IF; END $$;
 
 CREATE TABLE IF NOT EXISTS career_demo_invites (
   code_hash text PRIMARY KEY CHECK (code_hash ~ '^[a-f0-9]{64}$'),

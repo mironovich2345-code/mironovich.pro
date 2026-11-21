@@ -52,7 +52,9 @@ export function normalizeCode(value: unknown, groups: number): string | null {
 export function normalizeEmail(value: unknown): string | null {
   if (typeof value !== "string") return null;
   const e = value.trim().toLowerCase();
-  if (e.length < 6 || e.length > 254 || !/^[^@\s]{1,64}@[^@\s]+\.[^@\s]{2,}$/.test(e)) return null;
+  // Plain addresses only (letters, digits, . _ % + - in the local part; a dotted domain): no quotes, angle brackets or
+  // control characters can reach the database, the admin cabinet or an SMTP header.
+  if (e.length < 6 || e.length > 254 || !/^[a-z0-9._%+-]{1,64}@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/.test(e)) return null;
   return e;
 }
 

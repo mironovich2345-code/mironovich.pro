@@ -6,9 +6,8 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import CareerV3App from "@/components/career-v3/CareerV3App";
 import { ApiError, Button, Notice, card, field, muted } from "@/components/career-v3/primitives";
 
-const DEFAULT_BANNER = "Демонстрационная версия. Учебные материалы находятся на проверке. Используйте только вымышленные данные";
 type Account = { email: string; emailVerified: boolean; accessUntil: string | null; hasAccess: boolean; createdAt: string; isAdmin: boolean; hasPassword: boolean };
-type Modes = { otp: boolean; password: boolean; profile: "closed-demo" | "stage1"; banner: string; shop: boolean };
+type Modes = { otp: boolean; password: boolean; profile: "closed-demo" | "stage1" | "commercial-staging" | "commercial"; banner: string; shop: boolean; signup: "invite" | "open" };
 type Screen = "loading" | "welcome" | "login" | "code" | "register" | "recover" | "recovery-code" | "cabinet" | "purchase";
 
 async function demoApi<T = Record<string, unknown>>(action: string, body?: unknown): Promise<T> {
@@ -28,7 +27,7 @@ export default function DemoApp() {
   const [recoveryCode, setRecoveryCode] = useState<{ code: string; next: Screen } | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [modes, setModes] = useState<Modes>({ otp: false, password: true, profile: "closed-demo", banner: DEFAULT_BANNER, shop: false });
+  const [modes, setModes] = useState<Modes>({ otp: false, password: true, profile: "closed-demo", banner: "", shop: false, signup: "invite" });
 
   // Lesson player = focus mode: the product line is hidden (the demo notice above always stays).
   const [playing, setPlaying] = useState(false);
@@ -42,7 +41,7 @@ export default function DemoApp() {
     setError(null);
     try {
       const s = await demoApi<{ authenticated: boolean; account?: Account } & Modes>("session");
-      setModes({ otp: s.otp, password: s.password, profile: s.profile, banner: s.banner, shop: s.shop });
+      setModes({ otp: s.otp, password: s.password, profile: s.profile, banner: s.banner, shop: s.shop, signup: s.signup ?? "invite" });
       const query = new URLSearchParams(window.location.search);
       const payment = query.get("payment");
       if (payment) {
@@ -65,11 +64,11 @@ export default function DemoApp() {
 
   return (
     <div className="min-h-screen bg-cream text-graphite [color-scheme:light]">
-      <div role="note" className="border-b border-signal/40 bg-[#FBF6EC] px-3 py-2 text-center text-[13px] font-semibold leading-snug sm:px-4 sm:py-2.5 sm:text-[15px]">
+      {modes.banner && <div role="note" className="border-b border-signal/40 bg-[#FBF6EC] px-3 py-2 text-center text-[13px] font-semibold leading-snug sm:px-4 sm:py-2.5 sm:text-[15px]">
         <span className="mr-1.5 inline-block h-2 w-2 rounded-full bg-signal align-middle" aria-hidden="true" />{modes.banner}
-      </div>
+      </div>}
       <header className={`mx-auto max-w-4xl items-center justify-between gap-3 px-4 pt-5 sm:px-6 ${playing && screen === "cabinet" ? "hidden" : "flex"}`}>
-        <p className="font-display text-lg font-bold tracking-tight">AI Career 3.0 <span className={`font-sans text-sm font-semibold ${muted}`}>· {modes.profile === "stage1" ? "закрытое превью" : "закрытая демоверсия"}</span></p>
+        <p className="font-display text-lg font-bold tracking-tight">AI Career 3.0 <span className={`font-sans text-sm font-semibold ${muted}`}>· {modes.profile === "stage1" ? "закрытое превью" : modes.profile === "commercial-staging" ? "staging" : modes.profile === "commercial" ? "обучение" : "закрытая демоверсия"}</span></p>
         <span className="flex items-center gap-3 text-sm">
           {account?.isAdmin && <Link href="/admin" className="font-semibold underline">Админ-кабинет</Link>}
           {account && <span className={`hidden truncate sm:inline ${muted}`}>{account.email}</span>}
@@ -90,10 +89,10 @@ export default function DemoApp() {
           {notice && <div className="mb-5"><Notice>{notice}</Notice></div>}
           {screen === "loading" && <p role="status">Загрузка…</p>}
           {screen === "welcome" && <Welcome modes={modes} onCode={() => go("code")} onLogin={() => go("login")} onRegister={() => go("register")} />}
-          {screen === "code" && <CodeLogin onDone={() => { setNotice(null); void load(); }} onPassword={modes.password ? () => go("login") : undefined} />}
+          {screen === "code" && <CodeLogin openSignup={modes.signup === "open"} onDone={() => { setNotice(null); void load(); }} onPassword={modes.password ? () => go("login") : undefined} />}
           {screen === "login" && (modes.password
             ? <LoginForm onDone={() => { setNotice(null); void load(); }} onRegister={() => go("register")} onRecover={() => go("recover")} onCode={modes.otp ? () => go("code") : undefined} />
-            : <CodeLogin onDone={() => { setNotice(null); void load(); }} />)}
+            : <CodeLogin openSignup={modes.signup === "open"} onDone={() => { setNotice(null); void load(); }} />)}
           {screen === "purchase" && account && <Purchase account={account} shop={modes.shop}
             onLogout={async () => { await demoApi("logout", {}).catch(() => undefined); signedOut("Вы вышли."); }} />}
           {screen === "register" && <RegisterForm onLogin={() => go("login")} onDone={(code) => { setRecoveryCode({ code, next: "cabinet" }); setScreen("recovery-code"); }} />}
@@ -107,7 +106,9 @@ export default function DemoApp() {
         </main>
       )}
       <footer className={`mx-auto max-w-4xl px-4 pb-10 pt-4 text-[13px] leading-relaxed sm:px-6 ${muted}`}>
-        {modes.profile === "stage1"
+        {modes.profile === "commercial" || modes.profile === "commercial-staging"
+          ? <>AI Career 3.0 на mironovich.pro. Вход по коду из письма, без пароля. Оплата пока не подключена. Удалить аккаунт и все данные можно в разделе «Аккаунт». <a className="underline" href="/privacy">Политика конфиденциальности</a>.</>
+          : modes.profile === "stage1"
           ? <>Закрытое превью этапа 1 для приёмки. Не является публичным продуктом и офертой: оплата только тестовая (Robokassa IsTest=1 или эмулятор), внешние ИИ-сервисы отключены. Данные аккаунта удаляются по кнопке в разделе «Аккаунт».</>
           : <>Закрытая демонстрационная версия для приглашённых тестировщиков. Не является публичным продуктом и офертой: оплаты и внешние ИИ-сервисы отключены.
             Данные аккаунта удаляются через 7 дней после окончания демо-доступа или сразу — по кнопке в разделе «Аккаунт».</>}
@@ -151,7 +152,7 @@ function Welcome({ modes, onCode, onLogin, onRegister }: { modes: Modes; onCode:
     <section className={card} aria-labelledby="welcome-title">
       <h1 id="welcome-title" className="font-display text-[clamp(28px,7vw,42px)] font-bold leading-tight">Карьерный маршрут менеджера по продажам</h1>
       <p className="mt-3 text-[16px] leading-relaxed">Диагностика из 18 вопросов, карта задач, маршрут из 30 шагов с уроками и упражнениями, замеры «до и после» и учебные отчёты.</p>
-      <p className={`mt-3 text-[15px] leading-relaxed ${muted}`}>Вход без пароля: введите email и код из письма. Все данные в кабинете должны быть вымышленными.</p>
+      <p className={`mt-3 text-[15px] leading-relaxed ${muted}`}>Вход без пароля: введите email и код из письма. Не вводите в кабинет коммерческую тайну работодателя и персональные данные других людей.</p>
       <button type="button" onClick={onCode} className="mt-6 inline-flex min-h-12 w-full items-center justify-center rounded-md border border-graphite bg-graphite px-4 text-[16px] font-semibold text-cream">Войти по коду из письма</button>
     </section>
   );
@@ -289,7 +290,7 @@ function AccountView({ account, onDeleted }: { account: Account; onDeleted: () =
 }
 
 /** Passwordless sign-in: email → six-digit code from info@mironovich.pro → (new email in a closed contour) invite. */
-function CodeLogin({ onDone, onPassword }: { onDone: () => void; onPassword?: () => void }) {
+function CodeLogin({ onDone, onPassword, openSignup = false }: { onDone: () => void; onPassword?: () => void; openSignup?: boolean }) {
   const [step, setStep] = useState<"email" | "code" | "invite">("email");
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
@@ -303,7 +304,7 @@ function CodeLogin({ onDone, onPassword }: { onDone: () => void; onPassword?: ()
     return () => window.clearTimeout(t);
   }, [wait]);
   if (step === "email") return (
-    <Form title="Вход и регистрация" submit={info ? "Получить новый код" : "Получить код"} intro={<>Отправим шестизначный код на ваш email с адреса info@mironovich.pro. Пароль не нужен. Если вы здесь впервые, после кода попросим пригласительный код.</>}
+    <Form title="Вход и регистрация" submit={info ? "Получить новый код" : "Получить код"} intro={<>Отправим шестизначный код на ваш email с адреса info@mironovich.pro. Пароль не нужен. {openSignup ? "Если вы здесь впервые, аккаунт создастся после ввода кода." : "Если вы здесь впервые, после кода попросим пригласительный код."}</>}
       onSubmit={async () => { const r = await demoApi<{ maskedEmail: string; resendSeconds: number }>("otp-start", { email }); setMasked(r.maskedEmail); setWait(r.resendSeconds); setInfo(null); setStep("code"); }}
       footer={onPassword && <Button variant="quiet" onClick={onPassword}>Войти по паролю (старые аккаунты демо)</Button>}>
       <Field label="Email"><input className={inputClass} type="email" name="email" autoComplete="email" inputMode="email" required maxLength={254} value={email} onChange={(e) => setEmail(e.target.value)} /></Field>

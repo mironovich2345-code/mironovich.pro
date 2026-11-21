@@ -18,7 +18,7 @@ async function handle(req: NextRequest, ctx: { params: Promise<{ action: string 
     const token = req.cookies.get(c.cookieName)?.value;
     if (req.method === "GET" && action === "session") {
       const user = await demoSessionUser(token);
-      const modes = { otp: !!(c.otpSecret && c.mail), password: c.passwordLogin, profile: c.profile, banner: c.banner, shop: !!c.commerce };
+      const modes = { otp: !!(c.otpSecret && c.mail), password: c.passwordLogin, profile: c.profile, banner: c.banner, shop: !!c.commerce, signup: c.signup };
       return json(user
         ? { authenticated: true, ...modes, account: {
             email: user.email, emailVerified: user.emailVerified, accessUntil: user.accessUntil, hasAccess: user.hasAccess, createdAt: user.createdAt,

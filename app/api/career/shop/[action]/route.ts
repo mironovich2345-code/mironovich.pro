@@ -15,6 +15,11 @@ async function handle(req: NextRequest, ctx: { params: Promise<{ action: string 
   try {
     const c = guardDemoRequest(req);
     if (!c.commerce) throw new CareerError(404, "Страница не найдена");
+    // The one price for public pages (the public site reads it through its proxy; no session, no personal data).
+    if (req.method === "GET" && (await ctx.params).action === "public-quote") {
+      const q = await quote(careerPool());
+      return json({ priceRub: q.priceRub, mode: q.mode, salesOpen: false });
+    }
     const user = await demoSessionUser(req.cookies.get(c.cookieName)?.value);
     if (!user) throw new CareerError(401, "Войдите в кабинет");
     await demoLimit(c, "shop:" + user.accountId, 30, 60);

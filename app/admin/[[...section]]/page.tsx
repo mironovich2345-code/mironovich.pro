@@ -57,7 +57,7 @@ export default async function AdminPage({ params }: { params: Promise<{ section?
       <div role="note" className="border-b border-signal/40 bg-[#FBF6EC] px-3 py-2 text-center text-[13px] font-semibold">{c.banner}</div>
       <header className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 pt-5 sm:px-6">
         <p className="font-display text-lg font-bold">AI Career 3.0 <span className="font-sans text-sm font-semibold text-graphite/60">· админ-кабинет</span></p>
-        <p className="text-sm text-graphite/70">{user.email} · <Link className="underline" href="/">в кабинет</Link></p>
+        <p className="text-sm text-graphite/70">{user.email} · <Link className="underline" href="/career">в кабинет</Link></p>
       </header>
       <nav aria-label="Разделы" className="mx-auto mt-4 max-w-6xl px-4 sm:px-6">
         <ul className="flex flex-wrap gap-1.5">

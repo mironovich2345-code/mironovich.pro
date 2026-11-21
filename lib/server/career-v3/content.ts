@@ -116,7 +116,7 @@ export function loadProfessionBundle(professionId: string, today = new Date().to
     }
     hash.update("synthetic-fixture").update(JSON.stringify(fixture.lessons.map((l) => l.path)));
   }
-  if (!fixture && demoConfig()) {
+  if (!fixture && demoConfig()?.reviewPreview) {
     // Closed cloud demo: route building on an in-memory preview copy of the lessons in review (content untouched).
     const preview = demoPreviewSources(curriculum, lessons, today);
     library = buildLibrary({

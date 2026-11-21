@@ -3,6 +3,7 @@
 // Password#2 — the same code path a Robokassa test payment takes — and redirects like Robokassa (Success/Fail URL).
 import { NextRequest, NextResponse } from "next/server";
 import { demoConfig } from "@/lib/server/career-demo/config";
+import { requestHost } from "@/lib/server/career-demo/http";
 import { signResult, signature, verifyRequest } from "@/lib/server/commerce/robokassa";
 
 export const runtime = "nodejs";
@@ -13,7 +14,7 @@ export async function POST(req: NextRequest) {
   const rk = c?.commerce?.robokassa;
   // Form navigations under "Referrer-Policy: no-referrer" send "Origin: null"; Sec-Fetch-Site (set only by the browser) proves same origin.
   const sameOrigin = req.headers.get("sec-fetch-site") === "same-origin" ? ["null", c?.origin].includes(req.headers.get("origin") ?? "null") : req.headers.get("origin") === c?.origin;
-  if (!c || rk?.mode !== "emulator" || req.headers.get("host") !== c.host || !sameOrigin) return new NextResponse("Not found", { status: 404 });
+  if (!c || rk?.mode !== "emulator" || requestHost(req.headers, c) !== c.host || !sameOrigin) return new NextResponse("Not found", { status: 404 });
   if (req.headers.get("content-type")?.split(";")[0] !== "application/x-www-form-urlencoded") return new NextResponse("Bad request", { status: 400 });
   const raw = await req.text();
   if (raw.length > 8192) return new NextResponse("Bad request", { status: 400 });

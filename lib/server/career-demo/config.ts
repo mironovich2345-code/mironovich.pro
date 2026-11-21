@@ -31,12 +31,24 @@ export const DEMO_BANNER =
 export const STAGE1_BANNER =
   "Закрытое превью этапа 1. Оплата только тестовая, без списаний. Используйте вымышленные данные";
 
-export type DemoProfile = "closed-demo" | "stage1";
+export const COMMERCIAL_STAGING_BANNER =
+  "Коммерческий staging. Реальной оплаты нет, данные могут быть удалены. Используйте вымышленные данные";
+export const COMMERCIAL_SESSION_COOKIE = "__Host-career_session";
+export const COMMERCIAL_LOGIN_COOKIE = "__Host-career_login";
+/** The public site that proxies the commercial learning app (/career, /admin, /api/career/*). */
+export const PRODUCTION_SITE_ORIGIN = "https://mironovich.pro";
+
+export type DemoProfile = "closed-demo" | "stage1" | "commercial-staging" | "commercial";
+export const isCommercial = (p: DemoProfile) => p === "commercial" || p === "commercial-staging";
 interface ProfileSpec { project: string; environment: string; service: string; database: string; migration: string }
 /** Each profile lives in its own Railway project: the stage-1 preview cannot reach the closed demo's services or data. */
 export const PROFILES: Record<DemoProfile, ProfileSpec> = {
   "closed-demo": { project: DEMO_RAILWAY_PROJECT, environment: DEMO_RAILWAY_ENVIRONMENT, service: DEMO_RAILWAY_SERVICE, database: DEMO_DATABASE_NAME, migration: DEMO_MIGRATION_VALUE },
   stage1: { project: "mironovich-career-stage1", environment: "ai-career-stage1-preview", service: "ai-career-stage1", database: "mironovich_career_stage1", migration: "stage1-preview" },
+  // Commercial learning app behind the public site's proxy. Its own empty database; no synthetic-only constraints
+  // (migration 013 runs only on these two databases). The app service has no public domain of its own.
+  "commercial-staging": { project: "mironovich-commercial-staging", environment: "staging", service: "ai-career-app", database: "mironovich_career_staging", migration: "commercial-staging" },
+  commercial: { project: "mironovich-career-production", environment: "production", service: "ai-career-app", database: "mironovich_career", migration: "commercial" },
 };
 /** The only sender address the product may use. */
 export const MAIL_FROM_ADDRESS = "info@mironovich.pro";
@@ -79,6 +91,11 @@ export interface DemoConfig {
   /** Commerce (orders, price modes, Robokassa TEST) — stage-1 profile only. */
   commerce: { robokassa: RobokassaConfig | null; paidAccessDays: number; reservationMinutes: number } | null;
   banner: string;
+  /** Commercial: requests must come through the public site's proxy carrying this secret. */
+  proxySecret: string | null;
+  /** invite: a new email needs a one-time invite; open: a confirmed email creates an account without access. */
+  signup: "invite" | "open";
+  reviewPreview: boolean;
 }
 
 const norm = (v: string | undefined) => (v ?? "").trim();
@@ -88,11 +105,14 @@ export function demoProblems(env: NodeJS.ProcessEnv = process.env): string[] {
   const problems: string[] = [];
   if (env.CAREER_V3_DEMO !== "1") return ["CAREER_V3_DEMO не равен 1"];
   const profileName = norm(env.CAREER_V3_DEMO_PROFILE) || "closed-demo";
-  if (!(profileName in PROFILES)) return ["CAREER_V3_DEMO_PROFILE должен быть closed-demo или stage1"];
+  if (!(profileName in PROFILES)) return ["CAREER_V3_DEMO_PROFILE должен быть closed-demo, stage1, commercial-staging или commercial"];
   const profile = profileName as DemoProfile;
   const spec = PROFILES[profile];
+  const commercial = isCommercial(profile);
   for (const k of FORBIDDEN) if (norm(env[k])) problems.push(`задана посторонняя переменная ${k}`);
-  if (norm(env.SITE_NOINDEX) !== "1") problems.push("SITE_NOINDEX должен быть 1");
+  // Closed contours keep the whole deploy out of search engines; the commercial app marks every response noindex in
+  // middleware.ts and, in production, is built for the main domain (where SITE_NOINDEX would stop the release guard).
+  if (!commercial && norm(env.SITE_NOINDEX) !== "1") problems.push("SITE_NOINDEX должен быть 1");
   const railwayVars = Object.keys(env).filter((k) => k.startsWith("RAILWAY_") && norm(env[k]));
   const local = env.CAREER_V3_DEMO_LOCAL === "1";
   let origin: URL | null = null;
@@ -110,15 +130,31 @@ export function demoProblems(env: NodeJS.ProcessEnv = process.env): string[] {
     if (norm(env.RAILWAY_PROJECT_NAME) !== spec.project) problems.push("проект Railway не совпадает с разрешённым");
     if (norm(env.RAILWAY_ENVIRONMENT_NAME) !== spec.environment) problems.push("среда Railway не совпадает с разрешённой");
     if (norm(env.RAILWAY_SERVICE_NAME) !== spec.service) problems.push("сервис Railway не совпадает с разрешённым");
-    if (norm(env.RAILWAY_ENVIRONMENT).toLowerCase() === "production") problems.push("среда production запрещена");
+    if (!commercial && norm(env.RAILWAY_ENVIRONMENT).toLowerCase() === "production") problems.push("среда production запрещена");
     if (origin) {
       if (origin.protocol !== "https:") problems.push("облачное демо работает только по HTTPS");
-      if (!origin.hostname.endsWith(".up.railway.app")) problems.push("разрешён только служебный домен *.up.railway.app");
-      if (origin.hostname !== norm(env.RAILWAY_PUBLIC_DOMAIN)) problems.push("домен не совпадает с публичным доменом сервиса");
+      if (profile === "commercial") {
+        // Production: only the main domain, reached through the public site's proxy.
+        if (origin.origin !== PRODUCTION_SITE_ORIGIN) problems.push(`адрес коммерческой версии должен быть ${PRODUCTION_SITE_ORIGIN}`);
+      } else if (profile === "commercial-staging") {
+        // Staging: the staging SITE's domain (the app itself has no public domain).
+        if (!origin.hostname.endsWith(".up.railway.app")) problems.push("staging работает только на служебном домене сайта *.up.railway.app");
+        if (norm(env.RAILWAY_PUBLIC_DOMAIN)) problems.push("у сервиса приложения не должно быть публичного домена: доступ только через сайт");
+      } else {
+        if (!origin.hostname.endsWith(".up.railway.app")) problems.push("разрешён только служебный домен *.up.railway.app");
+        if (origin.hostname !== norm(env.RAILWAY_PUBLIC_DOMAIN)) problems.push("домен не совпадает с публичным доменом сервиса");
+      }
     }
+    if (profile === "commercial" && norm(env.RAILWAY_PUBLIC_DOMAIN)) problems.push("у сервиса приложения не должно быть публичного домена: доступ только через сайт");
     if (norm(env.NEXT_PUBLIC_SITE_URL).replace(/\/+$/, "") !== (origin?.origin ?? "-")) problems.push("NEXT_PUBLIC_SITE_URL должен совпадать с адресом демо");
   }
-  if (/mironovich\.pro$/i.test(origin?.hostname ?? "")) problems.push("основной домен запрещён");
+  if (profile !== "commercial" && /mironovich\.pro$/i.test(origin?.hostname ?? "")) problems.push("основной домен запрещён");
+  if (commercial) {
+    // Every request must arrive through the public site's proxy, which adds this secret (see middleware.ts).
+    const ps = env.CAREER_PROXY_SECRET ?? "";
+    if (ps.length < 32 || /^(.)\1+$/.test(ps)) problems.push("CAREER_PROXY_SECRET короче 32 символов");
+    if (ps && ps === env.CAREER_V3_DEMO_SESSION_SECRET) problems.push("CAREER_PROXY_SECRET не должен совпадать с секретом сессий");
+  } else if (norm(env.CAREER_PROXY_SECRET)) problems.push("CAREER_PROXY_SECRET задан вне коммерческого профиля");
   try {
     const db = new URL(norm(env.CAREER_V3_DEMO_DATABASE_URL));
     if (!["postgres:", "postgresql:"].includes(db.protocol)) problems.push("CAREER_V3_DEMO_DATABASE_URL не PostgreSQL");
@@ -131,11 +167,11 @@ export function demoProblems(env: NodeJS.ProcessEnv = process.env): string[] {
   if (secret.length < 48 || /^(.)\1+$/.test(secret)) problems.push("CAREER_V3_DEMO_SESSION_SECRET короче 48 символов");
   const days = Number(env.CAREER_V3_DEMO_ACCESS_DAYS ?? "30");
   if (!Number.isInteger(days) || days < 1 || days > 60) problems.push("CAREER_V3_DEMO_ACCESS_DAYS должен быть от 1 до 60");
-  const max = Number(env.CAREER_V3_DEMO_MAX_USERS ?? "50");
-  if (!Number.isInteger(max) || max < 1 || max > 200) problems.push("CAREER_V3_DEMO_MAX_USERS должен быть от 1 до 200");
+  const max = Number(env.CAREER_V3_DEMO_MAX_USERS ?? (commercial ? "100000" : "50"));
+  if (!Number.isInteger(max) || max < 1 || max > (commercial ? 1_000_000 : 200)) problems.push("CAREER_V3_DEMO_MAX_USERS вне допустимых пределов");
   // Email codes: a dedicated key, never the session secret.
   const otp = env.CAREER_V3_OTP_SECRET ?? "";
-  if (profile === "stage1" && !otp) problems.push("CAREER_V3_OTP_SECRET не задан");
+  if (profile !== "closed-demo" && !otp) problems.push("CAREER_V3_OTP_SECRET не задан");
   if (otp && (otp.length < 32 || /^(.)\1+$/.test(otp))) problems.push("CAREER_V3_OTP_SECRET короче 32 символов");
   if (otp && otp === secret) problems.push("CAREER_V3_OTP_SECRET не должен совпадать с секретом сессий");
   problems.push(...mailProblems(env, profile, local, !!otp));
@@ -146,7 +182,7 @@ export function demoProblems(env: NodeJS.ProcessEnv = process.env): string[] {
 function mailProblems(env: NodeJS.ProcessEnv, profile: DemoProfile, local: boolean, otp: boolean): string[] {
   const mode = norm(env.CAREER_V3_MAIL);
   const p: string[] = [];
-  if (!mode) return otp && profile === "stage1" ? ["CAREER_V3_MAIL не задан: без отправки писем вход по коду невозможен"] : [];
+  if (!mode) return otp && profile !== "closed-demo" ? ["CAREER_V3_MAIL не задан: без отправки писем вход по коду невозможен"] : [];
   if (!otp) p.push("CAREER_V3_MAIL задан, но нет CAREER_V3_OTP_SECRET");
   if (mode === "smtp") {
     for (const k of ["CAREER_V3_SMTP_HOST", "CAREER_V3_SMTP_USER", "CAREER_V3_SMTP_PASSWORD", "CAREER_V3_SMTP_FROM"]) if (!norm(env[k])) p.push(`${k} не задан`);
@@ -158,7 +194,9 @@ function mailProblems(env: NodeJS.ProcessEnv, profile: DemoProfile, local: boole
     if (from && !(from === MAIL_FROM_ADDRESS || from.endsWith("<" + MAIL_FROM_ADDRESS + ">"))) p.push(`отправитель должен быть ${MAIL_FROM_ADDRESS}`);
   } else if (mode === "preview-outbox") {
     // Codes go to a key-protected preview mailbox page instead of email: stage-1 preview and local tests only.
-    if (profile !== "stage1" && !local) p.push("предпросмотр писем разрешён только в превью этапа 1");
+    // Never in the commercial production profile, not even locally: real users always get real email.
+    if (profile === "commercial") p.push("в рабочей коммерческой версии письма отправляются только через SMTP info@mironovich.pro");
+    else if (profile !== "stage1" && profile !== "commercial-staging" && !local) p.push("предпросмотр писем разрешён только в превью этапа 1 и коммерческом staging");
     const key = env.CAREER_V3_PREVIEW_OUTBOX_KEY ?? "";
     if (key.length < 24 || /^(.)\1+$/.test(key)) p.push("CAREER_V3_PREVIEW_OUTBOX_KEY короче 24 символов");
   } else p.push("CAREER_V3_MAIL должен быть smtp или preview-outbox");
@@ -167,12 +205,14 @@ function mailProblems(env: NodeJS.ProcessEnv, profile: DemoProfile, local: boole
 
 function commerceProblems(env: NodeJS.ProcessEnv, profile: DemoProfile, local: boolean): string[] {
   const set = COMMERCE_VARS.filter((k) => norm(env[k]));
-  if (profile !== "stage1") return set.length ? ["переменные оплаты запрещены в закрытой демоверсии"] : [];
+  if (profile === "closed-demo") return set.length ? ["переменные оплаты запрещены в закрытой демоверсии"] : [];
+  // Commercial production: no payment provider at all until the launch decision (real payments stay off).
+  if (profile === "commercial") return set.length ? ["оплата в рабочей коммерческой версии не подключается до решения о запуске продаж"] : [];
   if (!set.length) return [];
   const p: string[] = [];
   const mode = norm(env.CAREER_V3_ROBOKASSA);
   if (mode !== "test" && mode !== "emulator") p.push("CAREER_V3_ROBOKASSA должен быть test или emulator (боевой режим на этапе 1 запрещён)");
-  if (mode === "emulator" && !local && profile !== "stage1") p.push("эмулятор Robokassa разрешён только в превью этапа 1");
+  if (mode === "emulator" && !local && profile !== "stage1" && profile !== "commercial-staging") p.push("эмулятор Robokassa разрешён только в превью");
   if (mode === "test" && !norm(env.CAREER_V3_ROBOKASSA_LOGIN)) p.push("CAREER_V3_ROBOKASSA_LOGIN не задан");
   for (const k of ["CAREER_V3_ROBOKASSA_TEST_PASSWORD1", "CAREER_V3_ROBOKASSA_TEST_PASSWORD2"]) if ((env[k] ?? "").length < 8) p.push(`${k} не задан`);
   if (env.CAREER_V3_ROBOKASSA_TEST_PASSWORD1 && env.CAREER_V3_ROBOKASSA_TEST_PASSWORD1 === env.CAREER_V3_ROBOKASSA_TEST_PASSWORD2) p.push("тестовые пароли #1 и #2 должны различаться");
@@ -194,18 +234,22 @@ export function demoConfig(env: NodeJS.ProcessEnv = process.env): DemoConfig | n
       local,
       databaseUrl: norm(env.CAREER_V3_DEMO_DATABASE_URL),
       sessionSecret: env.CAREER_V3_DEMO_SESSION_SECRET!,
-      cookieName: local ? DEMO_SESSION_COOKIE_LOCAL : DEMO_SESSION_COOKIE_SECURE,
+      cookieName: local ? DEMO_SESSION_COOKIE_LOCAL : isCommercial(profile) ? COMMERCIAL_SESSION_COOKIE : DEMO_SESSION_COOKIE_SECURE,
       accessDays: Number(env.CAREER_V3_DEMO_ACCESS_DAYS ?? "30"),
-      maxUsers: Number(env.CAREER_V3_DEMO_MAX_USERS ?? "50"),
+      maxUsers: Number(env.CAREER_V3_DEMO_MAX_USERS ?? (isCommercial(profile) ? "100000" : "50")),
       profile,
       databaseName: PROFILES[profile].database,
       migrationValue: PROFILES[profile].migration,
-      loginCookieName: local ? LOGIN_COOKIE_LOCAL : LOGIN_COOKIE_SECURE,
+      loginCookieName: local ? LOGIN_COOKIE_LOCAL : isCommercial(profile) ? COMMERCIAL_LOGIN_COOKIE : LOGIN_COOKIE_SECURE,
       passwordLogin: profile === "closed-demo",
       otpSecret: env.CAREER_V3_OTP_SECRET || null,
       mail: readMail(env),
-      commerce: profile === "stage1" ? { robokassa: readRobokassa(env), paidAccessDays: 90, reservationMinutes: 30 } : null,
-      banner: profile === "stage1" ? STAGE1_BANNER : DEMO_BANNER,
+      commerce: profile === "closed-demo" ? null : { robokassa: profile === "commercial" ? null : readRobokassa(env), paidAccessDays: 90, reservationMinutes: 30 },
+      banner: profile === "stage1" ? STAGE1_BANNER : profile === "commercial-staging" ? COMMERCIAL_STAGING_BANNER : profile === "commercial" ? "" : DEMO_BANNER,
+      proxySecret: isCommercial(profile) ? env.CAREER_PROXY_SECRET! : null,
+      signup: isCommercial(profile) ? "open" : "invite",
+      // Lessons still in review are shown only inside closed contours (a copy in memory); production shows approved lessons only.
+      reviewPreview: profile !== "commercial",
     };
   } catch {
     return null;

@@ -444,7 +444,7 @@ await check("full emulator path: order → emulator page → Pay (test) → serv
   assert.match(r.headers.get("location"), /\/api\/career\/pay\/robokassa\/success\?/);
   const s = await b.call(new URL(r.headers.get("location")).pathname + new URL(r.headers.get("location")).search);
   assert.equal(s.status, 303);
-  assert.match(s.headers.get("location"), /\?payment=success$/);
+  assert.match(s.headers.get("location"), /\/career\?payment=success$/);
   assert.equal(ok(await b.demo("session")).account.hasAccess, true);
   assert.equal(ok(await b.v3("diagnostic/questions")).questions.length, 18);
   const tampered = { ...Object.fromEntries(u.searchParams), OutSum: "1.00", decision: "pay" };

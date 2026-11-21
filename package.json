@@ -26,6 +26,7 @@
     "career:test:browser": "node tests/career-browser.mjs",
     "career:test:stage1": "node --experimental-strip-types tests/career-stage1-integration.mjs",
     "career:test:stage1-smtp": "node --experimental-strip-types tests/career-stage1-smtp.mjs",
+    "career:test:commercial": "node --experimental-strip-types tests/career-commercial-integration.mjs",
     "career:local:init": "node scripts/career/local-sandbox.mjs init",
     "career:local:verify": "node scripts/career/local-sandbox.mjs verify",
     "career:local:start": "node scripts/career/local-sandbox.mjs start",

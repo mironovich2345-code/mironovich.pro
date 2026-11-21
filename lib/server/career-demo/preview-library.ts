@@ -9,7 +9,7 @@ import { demoConfig } from "./config.ts";
 export const DEMO_REVIEWER = "DEMO PREVIEW ONLY — not an editorial or legal approval";
 
 export function demoPreviewSources<L extends { path: string; document: unknown }>(curriculum: Curriculum, lessons: L[], today: string) {
-  if (!demoConfig()) throw new Error("demo preview library outside the closed demo");
+  if (!demoConfig()?.reviewPreview) throw new Error("review preview library outside the closed demo or another closed contour");
   const copies = lessons.map((l) => ({ ...l, document: structuredClone(l.document) as Record<string, unknown> }));
   const ids = new Set<string>();
   for (const l of copies) {

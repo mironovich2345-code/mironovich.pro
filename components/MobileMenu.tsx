@@ -7,7 +7,6 @@ import { createPortal } from "react-dom";
 import CtaLink from "./CtaLink";
 import { contactHref, type NavLink } from "@/config/routes";
 import { aboutMenuLinks } from "@/config/site";
-import { careerLoginHref } from "@/config/career-access";
 
 const FOCUSABLE = 'a[href], button:not([disabled])';
 
@@ -20,7 +19,7 @@ const FOCUSABLE = 'a[href], button:not([disabled])';
  * clip the panel to the header's height. Its top edge follows the header's
  * actual bottom.
  */
-export default function MobileMenu({ links }: { links: NavLink[] }) {
+export default function MobileMenu({ links, loginHref = null }: { links: NavLink[]; loginHref?: string | null }) {
   const [open, setOpen] = useState(false);
   const [top, setTop] = useState(65);
   const pathname = usePathname();
@@ -109,9 +108,9 @@ export default function MobileMenu({ links }: { links: NavLink[] }) {
               ))}
             </ul>
           </nav>
-          <a href={careerLoginHref} onClick={close} className={itemClass + " mt-4 border-t border-cream/20"} aria-label="Войти в обучение AI Career 3.0">
+          {loginHref && <a href={loginHref} onClick={close} className={itemClass + " mt-4 border-t border-cream/20"} aria-label="Войти в обучение AI Career 3.0">
             Войти <span aria-hidden className="text-stone">→</span>
-          </a>
+          </a>}
           <CtaLink
             href={contactHref}
             location="header"

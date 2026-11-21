@@ -35,6 +35,11 @@ on:
       - "config/ai-career-pricing.ts"
       - "components/AiCareerPrice.tsx"
       - "lib/server/career-demo/**"
+      - "migrations/career-commercial/**"
+      - "config/career-access.ts"
+      - "components/SiteHeader.tsx"
+      - "components/MobileMenu.tsx"
+      - "next.config.mjs"
       - "lib/server/career-admin/**"
       - "components/career-admin/**"
       - "app/admin/**"
@@ -308,5 +313,55 @@ jobs:
         with:
           name: stage1-screenshots
           path: /tmp/stage1-shots
+          if-no-files-found: ignore
+          retention-days: 7
+
+  commercial-topology:
+    # Stage 1.5: the production topology on loopback — the public site proxies /career, /admin and /api/career/* to the
+    # separate learning app (profile commercial-staging) with an EMPTY commercial database. Generated secrets, preview
+    # mailbox, Robokassa emulator only; no real mailbox, no payments, no Railway variables.
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: synthetic_only
+          POSTGRES_DB: postgres
+        ports:
+          - 55436:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Site + app integration (builds both)
+        env:
+          CAREER_COMMERCIAL_PG: postgresql://postgres:synthetic_only@127.0.0.1:55436
+        run: node --experimental-strip-types --no-warnings tests/career-commercial-integration.mjs
+      - name: Browser checks (iPhone Safari/WebKit, desktop Chrome)
+        env:
+          CAREER_COMMERCIAL_PG: postgresql://postgres:synthetic_only@127.0.0.1:55436
+          COMMERCIAL_SHOTS: /tmp/commercial-shots
+          STAGE1_WEBKIT: "1"
+        run: |
+          npm install --no-save --no-package-lock playwright
+          npx playwright install --with-deps chromium webkit
+          sudo ln -sf "$(node -p 'require("playwright").chromium.executablePath()')" /usr/bin/chromium
+          node --experimental-strip-types --no-warnings tests/career-commercial-browser.mjs
+      - name: Commercial screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: commercial-screenshots
+          path: /tmp/commercial-shots
           if-no-files-found: ignore
           retention-days: 7

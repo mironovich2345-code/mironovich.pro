@@ -138,3 +138,66 @@ test("CSP keeps upgrade-insecure-requests for every public origin; only a loopba
   for (const url of ["http://127.0.0.1:3410", "http://localhost:3000"]) assert.equal(re.test(url), true, url);
   assert.match(src, /\.\.\.\(loopbackSite \? \[\] : \["upgrade-insecure-requests"\]\)/);
 });
+
+// ——— stage 1.5: commercial profiles ———
+const commercial = (patch = {}) => ({
+  CAREER_V3_DEMO: "1", CAREER_V3_DEMO_PROFILE: "commercial", NODE_ENV: "production",
+  RAILWAY_PROJECT_NAME: "mironovich-career-production", RAILWAY_ENVIRONMENT_NAME: "production", RAILWAY_SERVICE_NAME: "ai-career-app", RAILWAY_ENVIRONMENT: "production",
+  CAREER_V3_DEMO_ORIGIN: "https://mironovich.pro", NEXT_PUBLIC_SITE_URL: "https://mironovich.pro",
+  CAREER_V3_DEMO_DATABASE_URL: "postgresql://u:p@db.railway.internal:5432/mironovich_career",
+  CAREER_V3_DEMO_SESSION_SECRET: "s".repeat(20) + "0123456789abcdef0123456789abcdef", CAREER_V3_OTP_SECRET: "o".repeat(10) + "fedcba9876543210fedcba9876543210",
+  CAREER_PROXY_SECRET: "p".repeat(8) + "0123456789abcdef0123456789abcdef",
+  CAREER_V3_MAIL: "smtp", CAREER_V3_SMTP_HOST: "smtp.mail.ru", CAREER_V3_SMTP_PORT: "465", CAREER_V3_SMTP_USER: "info@mironovich.pro",
+  CAREER_V3_SMTP_PASSWORD: "app-password-x", CAREER_V3_SMTP_FROM: "AI Career <info@mironovich.pro>", ...patch,
+});
+
+test("commercial production profile: main domain through the proxy, open sign-up, real mail only, no payments, approved lessons only", () => {
+  assert.deepEqual(cfg.demoProblems(commercial()), []);
+  const c = cfg.demoConfig(commercial());
+  assert.deepEqual([c.profile, c.origin, c.signup, c.reviewPreview, c.passwordLogin, c.banner], ["commercial", "https://mironovich.pro", "open", false, false, ""]);
+  assert.deepEqual([c.cookieName, c.loginCookieName], ["__Host-career_session", "__Host-career_login"]);
+  assert.ok(c.proxySecret && c.commerce && c.commerce.robokassa === null, "quotes yes, payment provider no");
+  for (const [name, patch] of Object.entries({
+    "other origin": { CAREER_V3_DEMO_ORIGIN: "https://evil.example", NEXT_PUBLIC_SITE_URL: "https://evil.example" },
+    "app has a public domain": { RAILWAY_PUBLIC_DOMAIN: "ai-career-app.up.railway.app" },
+    "no proxy secret": { CAREER_PROXY_SECRET: "" },
+    "proxy secret = session secret": { CAREER_PROXY_SECRET: "s".repeat(20) + "0123456789abcdef0123456789abcdef" },
+    "preview mailbox": { CAREER_V3_MAIL: "preview-outbox", CAREER_V3_PREVIEW_OUTBOX_KEY: "k".repeat(10) + "0123456789abcdefXYZ" },
+    "any payment variable": { CAREER_V3_ROBOKASSA: "test", CAREER_V3_ROBOKASSA_LOGIN: "shop", CAREER_V3_ROBOKASSA_TEST_PASSWORD1: "aaaaaaaa1", CAREER_V3_ROBOKASSA_TEST_PASSWORD2: "bbbbbbbb2" },
+    "demo database": { CAREER_V3_DEMO_DATABASE_URL: "postgresql://u:p@h:5432/" + cfg.DEMO_DATABASE_NAME },
+    "staging database": { CAREER_V3_DEMO_DATABASE_URL: "postgresql://u:p@h:5432/mironovich_career_staging" },
+    "wrong service": { RAILWAY_SERVICE_NAME: "web" },
+  })) assert.equal(cfg.demoConfig(commercial(patch)), null, name);
+});
+
+test("commercial staging: staging site domain, emulator and preview mailbox allowed, review lessons in memory only", () => {
+  const env = commercial({ CAREER_V3_DEMO_PROFILE: "commercial-staging", RAILWAY_PROJECT_NAME: "mironovich-commercial-staging", RAILWAY_ENVIRONMENT_NAME: "staging", RAILWAY_ENVIRONMENT: "staging",
+    CAREER_V3_DEMO_ORIGIN: "https://site-staging.up.railway.app", NEXT_PUBLIC_SITE_URL: "https://site-staging.up.railway.app",
+    CAREER_V3_DEMO_DATABASE_URL: "postgresql://u:p@db.railway.internal:5432/mironovich_career_staging",
+    CAREER_V3_MAIL: "preview-outbox", CAREER_V3_PREVIEW_OUTBOX_KEY: "k".repeat(10) + "0123456789abcdefXYZ",
+    CAREER_V3_ROBOKASSA: "emulator", CAREER_V3_ROBOKASSA_TEST_PASSWORD1: "aaaaaaaa1", CAREER_V3_ROBOKASSA_TEST_PASSWORD2: "bbbbbbbb2" });
+  assert.deepEqual(cfg.demoProblems(env), []);
+  const c = cfg.demoConfig(env);
+  assert.deepEqual([c.reviewPreview, c.signup, c.commerce.robokassa.mode], [true, "open", "emulator"]);
+  assert.equal(cfg.demoConfig({ ...env, CAREER_V3_DEMO_ORIGIN: "https://mironovich.pro", NEXT_PUBLIC_SITE_URL: "https://mironovich.pro" }), null, "staging never on the main domain");
+  assert.equal(cfg.demoConfig({ ...env, CAREER_PROXY_SECRET: undefined }), null);
+  // closed contours refuse the proxy secret (no mixing of roles)
+  assert.equal(cfg.demoConfig({ ...stage1(), CAREER_PROXY_SECRET: "p".repeat(40) }), null);
+});
+
+test("email addresses: only plain characters reach the database (no markup, quotes or spaces)", async () => {
+  const auth = await import("../lib/server/career-demo/auth.ts");
+  assert.equal(auth.normalizeEmail(" Damironovich@Mail.RU "), "damironovich@mail.ru");
+  for (const bad of ["<svg/onload=alert(1)>@example.com", "a\"b@example.com", "a b@example.com", "x@exa<mple>.com", "x@localhost", "x@-.c"]) assert.equal(auth.normalizeEmail(bad), null, bad);
+});
+
+test("public site proxy: only /career, /admin, the app APIs and its assets; secret and visitor host added by the site", () => {
+  const mw = readFileSync("middleware.ts", "utf8");
+  assert.match(mw, /headers\.set\("x-career-proxy", secret\)/, "visitor-supplied proxy header is overwritten");
+  assert.match(mw, /runtime: "nodejs"/, "secrets read at run time, not baked into the build");
+  assert.match(mw, /if \(!upstream \|\| secret\.length < 32/, "no upstream configured → the public site is unchanged");
+  const robots = readFileSync("app/robots.ts", "utf8");
+  for (const p of ["/career", "/admin", "/career-app/"]) assert.ok(robots.includes(`"${p}"`), p);
+  assert.match(readFileSync("next.config.mjs", "utf8"), /proxyTimeout: 15000/);
+  assert.match(readFileSync("config/career-access.ts", "utf8"), /export const careerLoginHref = "\/career\?login=1";/);
+});

@@ -7,6 +7,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { careerPool, transaction } from "@/lib/server/career/db";
 import { demoConfig } from "@/lib/server/career-demo/config";
+import { requestHost } from "@/lib/server/career-demo/http";
 import { confirmPayment } from "@/lib/server/commerce/shop";
 import { parseNotification, verifyResult, verifySuccess } from "@/lib/server/commerce/robokassa";
 
@@ -29,7 +30,7 @@ async function record(outcome: string, invId: number | null, orderId: string | n
 async function handle(req: NextRequest, ctx: { params: Promise<{ kind: string }> }) {
   const c = demoConfig();
   const rk = c?.commerce?.robokassa;
-  if (!c || !rk || req.headers.get("host") !== c.host) return text("Not found", 404);
+  if (!c || !rk || requestHost(req.headers, c) !== c.host) return text("Not found", 404);
   const { kind } = await ctx.params;
   const p = await params(req);
   const n = parseNotification(p);
@@ -43,7 +44,7 @@ async function handle(req: NextRequest, ctx: { params: Promise<{ kind: string }>
   }
   if (kind === "success" || kind === "fail") {
     const ok = kind === "success" && !!n && verifySuccess(rk, n);
-    return NextResponse.redirect(new URL("/?payment=" + (ok ? "success" : "fail"), c.origin), 303);
+    return NextResponse.redirect(new URL("/career?payment=" + (ok ? "success" : "fail"), c.origin), 303);
   }
   return text("Not found", 404);
 }

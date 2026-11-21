@@ -151,7 +151,9 @@ export async function verifyOtp(token: unknown, codeInput: unknown, ip: string):
     let user = (await tx.query("SELECT id FROM career_demo_users WHERE email=$1 FOR UPDATE", [email])).rows[0];
     if (!user) {
       const staff = (await tx.query("SELECT 1 FROM career_staff WHERE email=$1 AND revoked_at IS NULL", [email])).rowCount;
-      if (!staff) return { needInvite: true as const, email };
+      // Closed contours need an invite; the commercial app opens an account (without access) for a confirmed email.
+      if (!staff && c.signup === "invite") return { needInvite: true as const, email };
+      if (!staff && (await tx.query("SELECT count(*)::int AS n FROM career_demo_users")).rows[0].n >= c.maxUsers) return { error: "full" as const };
       user = { id: await insertUser(tx, email, null) };
     }
     await tx.query("UPDATE career_login_challenges SET consumed_at=now() WHERE id=$1", [ch.id]);
@@ -160,7 +162,7 @@ export async function verifyOtp(token: unknown, codeInput: unknown, ip: string):
     await tx.query("UPDATE career_login_challenges SET revoked_at=now(), revoked_reason='superseded' WHERE email=$1 AND id<>$2 AND consumed_at IS NULL AND revoked_at IS NULL", [email, ch.id]);
     return { session: await createSession(c, tx, user.id, "otp") };
   });
-  if ("error" in outcome) throw used();
+  if ("error" in outcome) throw outcome.error === "full" ? new CareerError(429, "Регистрация временно недоступна") : used();
   if ("needInvite" in outcome) return { needInvite: true, maskedEmail: maskEmail(outcome.email as string) };
   return { session: outcome.session as string };
 }
