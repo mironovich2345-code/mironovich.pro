@@ -43,6 +43,21 @@
 не очищаются. Это **не подтверждено** для нашего сервиса — поэтому проверка на
 staging ниже обязательна, а до неё заголовок не используется.
 
+### Измерено (ноябрь 2026) и Cloudflare
+
+* На staging Railway (сервис без Cloudflare) edge **перезаписывает** `X-Real-IP` и `X-Forwarded-For`: присланные
+  значения до приложения не доходят. `CF-Connecting-IP` и другие заголовки проходят без изменений.
+* mironovich.pro проксируется **Cloudflare** (`server: cloudflare`). Поэтому в production `X-Real-IP` — адрес узла
+  Cloudflare, общий для многих посетителей. Без поправки лимит «5 в минуту с IP» делили бы между собой посетители
+  одного узла Cloudflare.
+* Поправка (`lib/rate-limit.ts` + `lib/server/client-ip.ts`, та же логика, что у входа AI Career): если адрес edge
+  входит в опубликованные диапазоны Cloudflare, клиент — `CF-Connecting-IP` (его перезаписывает Cloudflare). Запрос
+  мимо Cloudflare напрямую в Railway остаётся со своим адресом, поддельный `CF-Connecting-IP` игнорируется.
+  Пустой или неверный `CF-Connecting-IP` → адрес узла (строже, но не новый ключ).
+* Сами лимиты не менялись: 10 в минуту на всех, 5 в минуту на клиента. По умолчанию (переменная не задана) лимит по IP
+  по-прежнему выключен — production без изменений, пока владелец не задаст `RATE_LIMIT_CLIENT_IP=x-real-ip`.
+* Диапазоны Cloudflare (https://www.cloudflare.com/ips/) сверять перед включением.
+
 ## Проверка на staging (владелец, 5 минут)
 
 1. Railway → staging → Variables: `RATE_LIMIT_CLIENT_IP` = `x-real-ip` →

@@ -1,4 +1,4 @@
-import { isIP } from "node:net";
+import { isCloudflareIp, parseIp } from "./server/client-ip.ts";
 
 /**
  * Fixed-window rate limiter kept in process memory.
@@ -68,11 +68,18 @@ export function clientIpSource(value: string | undefined): ClientIpSource {
  *
  * Request headers are client-controlled unless a proxy in front overwrites them,
  * so none is trusted by default (`none` → null → only the global limit applies).
- * After a staging test confirms that Railway's edge overwrites the header
- * (docs/release/rate-limit.md), set RATE_LIMIT_CLIENT_IP:
+ * Railway's edge overwrites X-Real-IP and X-Forwarded-For with the connecting
+ * address (measured on staging, see docs/release/rate-limit.md), so
+ * RATE_LIMIT_CLIENT_IP can be set to:
  * - `x-real-ip` — the header as set by the edge;
  * - `x-forwarded-for` — its RIGHTMOST entry (appended by the nearest proxy;
  *   leftmost entries are whatever the client sent).
+ *
+ * mironovich.pro is proxied by Cloudflare: the connecting address is then a
+ * Cloudflare edge, shared by many visitors. Only when it lies in Cloudflare's
+ * published ranges is the visitor taken from CF-Connecting-IP (which Cloudflare
+ * overwrites); a request that bypasses Cloudflare keeps its own address and its
+ * CF-Connecting-IP is ignored (lib/server/client-ip.ts).
  * A value that is not an IP address, or a missing header, yields one shared
  * key, so made-up values cannot mint fresh counters.
  */
@@ -83,7 +90,10 @@ export function clientKey(headers: Headers, source: ClientIpSource): string | nu
       ? headers.get("x-real-ip")?.trim()
       : headers.get("x-forwarded-for")?.split(",").pop()?.trim();
   if (!raw) return "missing";
-  return isIP(raw) ? raw : "invalid";
+  const edge = parseIp(raw);
+  if (!edge) return "invalid";
+  if (isCloudflareIp(edge)) return parseIp(headers.get("cf-connecting-ip")) ?? edge;
+  return edge;
 }
 
 /**
