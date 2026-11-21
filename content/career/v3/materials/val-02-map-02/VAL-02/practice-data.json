@@ -1,0 +1,270 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "DL-VAL02-DATA",
+  "lessonId": "VAL-02",
+  "status": "review",
+  "syntheticOnly": true,
+  "notice": "Все компании, задачи и цифры вымышлены. Данные предназначены только для учебной практики.",
+  "rounding": "half_up_to_integer_percent",
+  "exercises": [
+    {
+      "exerciseId": "VAL02-TASK-1",
+      "materialIds": [
+        "TPL-VAL02-COMPARABLE",
+        "TPL-VAL02-SHEET",
+        "TPL-VAL02-CALC",
+        "TPL-VAL02-WORDING",
+        "TPL-VAL02-PROMPT-CALC"
+      ],
+      "before": [
+        {
+          "id": "З-1",
+          "minutes": 18,
+          "hasError": true
+        },
+        {
+          "id": "З-2",
+          "minutes": 22,
+          "hasError": false
+        },
+        {
+          "id": "З-3",
+          "minutes": 20,
+          "hasError": true
+        },
+        {
+          "id": "З-4",
+          "minutes": 16,
+          "hasError": false
+        }
+      ],
+      "after": [
+        {
+          "id": "З-5",
+          "generation": 2,
+          "review": 7,
+          "fix": 4,
+          "errorsFound": 2,
+          "errorsLeft": 0,
+          "comparable": true
+        },
+        {
+          "id": "З-6",
+          "generation": 2,
+          "review": 6,
+          "fix": 3,
+          "errorsFound": 1,
+          "errorsLeft": 0,
+          "comparable": true
+        },
+        {
+          "id": "З-7",
+          "generation": 3,
+          "review": 8,
+          "fix": 5,
+          "errorsFound": 3,
+          "errorsLeft": 1,
+          "comparable": true
+        },
+        {
+          "id": "З-8",
+          "generation": 2,
+          "review": 6,
+          "fix": 2,
+          "errorsFound": 1,
+          "errorsLeft": 0,
+          "comparable": true
+        },
+        {
+          "id": "З-9",
+          "generation": 4,
+          "review": 25,
+          "fix": 15,
+          "errorsFound": 4,
+          "errorsLeft": 0,
+          "comparable": false
+        }
+      ],
+      "answerKey": {
+        "findings": [
+          {
+            "quote": "ИИ ускорил ответы на 88%",
+            "cue": "34%",
+            "type": "review_time_ignored",
+            "why": "88% получено, если учитывать только генерацию; с проверкой и исправлением время 12,5 минуты, снижение 34%."
+          },
+          {
+            "quote": "генерация занимает всего 2,25 минуты",
+            "cue": "проверку и исправление",
+            "type": "review_time_ignored",
+            "why": "Время проверки и исправления — часть работы: без него ответ не готов к отправке."
+          },
+          {
+            "quote": "тендерная заявка на 40 позиций",
+            "cue": "З-9 исключена",
+            "type": "not_comparable",
+            "why": "Тендерная заявка несопоставима с типовыми заявками «было»."
+          },
+          {
+            "quote": "Качество выросло на 25%",
+            "cue": "25 процентных пунктов",
+            "type": "percent_vs_points",
+            "why": "Доля выросла с 50% до 75% — это +25 процентных пунктов, или +50% относительно «было»."
+          }
+        ],
+        "numbers": {
+          "beforeAvg": 19,
+          "afterAvg": 12.5,
+          "generationOnlyAvg": 2.25,
+          "absDiff": -6.5,
+          "percentChange": -34,
+          "generationOnlyPercent": -88,
+          "beforeShareOk": 50,
+          "afterShareOk": 75,
+          "percentagePoints": 25,
+          "relativeQualityChange": 50,
+          "errorsFound": 7,
+          "errorsLeft": 1,
+          "excluded": [
+            "З-9"
+          ]
+        }
+      }
+    },
+    {
+      "exerciseId": "VAL02-TASK-2",
+      "materialIds": [
+        "TPL-VAL02-FLAGS",
+        "TPL-VAL02-SHEET",
+        "TPL-VAL02-CALC",
+        "TPL-VAL02-WORDING",
+        "TPL-VAL02-PROMPT-CLAIMS"
+      ],
+      "before": [
+        {
+          "id": "И-1",
+          "minutes": 24,
+          "complete": true,
+          "method": "memory"
+        },
+        {
+          "id": "И-2",
+          "minutes": 27,
+          "complete": false,
+          "method": "memory"
+        },
+        {
+          "id": "И-3",
+          "minutes": 25,
+          "complete": true,
+          "method": "memory"
+        },
+        {
+          "id": "И-4",
+          "minutes": 23,
+          "complete": false,
+          "method": "memory"
+        },
+        {
+          "id": "И-5",
+          "minutes": 26,
+          "complete": true,
+          "method": "memory"
+        }
+      ],
+      "afterShortCalls": [
+        {
+          "id": "И-6",
+          "generation": 3,
+          "review": null,
+          "comparable": false
+        },
+        {
+          "id": "И-7",
+          "generation": 4,
+          "review": null,
+          "comparable": false
+        }
+      ],
+      "afterLongMeetings": [
+        {
+          "id": "И-8",
+          "generation": 6,
+          "review": 12,
+          "complete": true,
+          "comparable": true,
+          "method": "timer"
+        },
+        {
+          "id": "И-9",
+          "generation": 5,
+          "review": 13,
+          "complete": true,
+          "comparable": true,
+          "method": "timer"
+        },
+        {
+          "id": "И-10",
+          "generation": 7,
+          "review": 11,
+          "complete": true,
+          "comparable": true,
+          "method": "timer"
+        }
+      ],
+      "claim": {
+        "before": 25,
+        "after": 10,
+        "claimedPercent": 150,
+        "correctPercent": -60
+      },
+      "otherChanges": [
+        "скидку за досрочное продление",
+        "по решению своих головных компаний"
+      ],
+      "answerKey": {
+        "findings": [
+          {
+            "quote": "итоги коротких звонков по 15 минут",
+            "cue": "короткие звонки исключены",
+            "type": "not_comparable",
+            "why": "Итоги 15-минутных звонков нельзя сравнивать с итогами 60-минутных встреч."
+          },
+          {
+            "quote": "проверка не записана",
+            "cue": "без времени проверки",
+            "type": "review_time_ignored",
+            "why": "Для И-6 и И-7 нет времени проверки — результат не готов к сравнению."
+          },
+          {
+            "quote": "время записано по памяти",
+            "cue": "разные способы замера",
+            "type": "different_method",
+            "why": "«Было» записано по памяти, «стало» — таймером; способы замера должны совпадать."
+          },
+          {
+            "quote": "на 150%",
+            "cue": "уменьшение на 60%",
+            "type": "percent_base",
+            "why": "С 25 до 10 минут — это −15 минут, или −60% от «было»; «на 150%» посчитано от неверной базы."
+          },
+          {
+            "quote": "значит, ИИ повысил продления",
+            "cue": "причину не приписываем",
+            "type": "false_causation",
+            "why": "В том же месяце действовали скидка за досрочное продление и решения головных компаний."
+          }
+        ],
+        "numbers": {
+          "beforeAvg": 25,
+          "afterAvg": 18,
+          "absDiff": -7,
+          "percentChange": -28,
+          "beforeComplete": 60,
+          "afterComplete": 100,
+          "percentagePoints": 40
+        }
+      }
+    }
+  ]
+}

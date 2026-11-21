@@ -5,6 +5,7 @@ node_modules
 
 # next.js
 .next
+.next-*
 out
 build
 next-env.d.ts
@@ -39,3 +40,6 @@ coverage
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# AI Career v3 local synthetic fixture library (generated, never committed or built)
+.career-v3-fixture/

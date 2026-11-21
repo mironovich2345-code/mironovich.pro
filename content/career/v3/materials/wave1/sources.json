@@ -1,0 +1,189 @@
+{
+  "schemaVersion": "1.0.0",
+  "lastChecked": "2026-11-18",
+  "status": "review",
+  "nextReviewOn": "2027-05-18",
+  "note": "Реестр источников первой волны уроков (VAL-01, TRD-01, MAP-01, SAL-01). Идентификаторы совпадают с реестрами PR #57 и #59, если совпадает адрес. Исследования проверены по сайтам издателей 18.11.2026; публикация ОЭСР была недоступна из среды проверки и не используется. Нормы 152-ФЗ сверены по КонсультантПлюс без сверки с официальным опубликованием.",
+  "sources": [
+    {
+      "id": "SRC-ARXIV-GENAI-AT-WORK",
+      "kind": "research",
+      "edition": "arXiv, версия 2 от 06.11.2024",
+      "publisher": "arXiv",
+      "title": "Brynjolfsson E., Li D., Raymond L. Generative AI at Work. arXiv:2304.11771, версия 2 от 06.11.2024",
+      "url": "https://arxiv.org/abs/2304.11771",
+      "checkedOn": "2026-11-18",
+      "verificationStatus": "checked_primary_publisher",
+      "methodologicalLimits": "Одна компания, клиентская поддержка; цифры отличаются между версиями работы.",
+      "supportsClaimByLesson": {
+        "VAL-01": "На данных 5 172 операторов поддержки ИИ-ассистент увеличил число решённых обращений в час в среднем на 15% с большой разницей между сотрудниками: менее опытные улучшили скорость и качество, самые опытные получили небольшой прирост скорости и небольшое снижение качества.",
+        "TRD-01": "На данных 5 172 операторов поддержки ИИ-ассистент увеличил число решённых обращений в час в среднем на 15% с большой разницей между сотрудниками: менее опытные улучшили скорость и качество, самые опытные получили небольшой прирост скорости и небольшое снижение качества."
+      },
+      "usedBy": [
+        "VAL-01",
+        "TRD-01"
+      ]
+    },
+    {
+      "id": "SRC-NIST-600-1",
+      "kind": "standard",
+      "edition": "July 2024",
+      "publisher": "National Institute of Standards and Technology",
+      "title": "NIST AI 600-1. Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile (July 2024)",
+      "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf",
+      "checkedOn": "2026-11-18",
+      "verificationStatus": "checked_primary_publisher",
+      "methodologicalLimits": null,
+      "supportsClaimByLesson": {
+        "VAL-01": "Конфабуляция — генерация уверенно поданного ошибочного или ложного содержания; поэтому результат генеративной модели требует проверки человеком, а время проверки входит в работу.",
+        "SAL-01": "Конфабуляция — генерация уверенно поданного ошибочного или ложного содержания; модели могут добавлять правдоподобные детали, которых нет во входных данных."
+      },
+      "usedBy": [
+        "VAL-01",
+        "SAL-01"
+      ]
+    },
+    {
+      "id": "SRC-ARXIV-GPTS-ARE-GPTS",
+      "kind": "potential_estimate",
+      "edition": "arXiv, версия 5 от 21.08.2023",
+      "publisher": "arXiv",
+      "title": "Eloundou T., Manning S., Mishkin P., Rock D. GPTs are GPTs: An Early Look at the Labor Market Impact Potential of Large Language Models. arXiv:2303.10130, версия 5 от 21.08.2023",
+      "url": "https://arxiv.org/abs/2303.10130",
+      "checkedOn": "2026-11-18",
+      "verificationStatus": "checked_primary_publisher",
+      "methodologicalLimits": "Оценка потенциала на уровне задач по рынку США; не прогноз сроков и увольнений.",
+      "supportsClaimByLesson": {
+        "TRD-01": "Около 80% работников США могут иметь не меньше 10% задач, подверженных влиянию языковых моделей, около 19% — не меньше 50% задач; авторы не делают прогнозов о сроках разработки и внедрения.",
+        "MAP-01": "Влияние языковых моделей оценивается на уровне задач, а не профессий целиком: около 80% работников США могут иметь не меньше 10% задач, подверженных влиянию, около 19% — не меньше половины задач."
+      },
+      "usedBy": [
+        "TRD-01",
+        "MAP-01"
+      ]
+    },
+    {
+      "id": "SRC-ILO-WP96-2023",
+      "kind": "official_publication",
+      "edition": "МОТ, 21.08.2023",
+      "publisher": "International Labour Organization",
+      "title": "Gmyrek P., Berg J., Bescond D. Generative AI and jobs: A global analysis of potential effects on job quantity and quality. МОТ, 21.08.2023",
+      "url": "https://www.ilo.org/publications/generative-ai-and-jobs-global-analysis-potential-effects-job-quantity-and",
+      "checkedOn": "2026-11-18",
+      "verificationStatus": "checked_primary_publisher",
+      "methodologicalLimits": "Глобальная оценка подверженности профессий; не наблюдение занятости.",
+      "supportsClaimByLesson": {
+        "TRD-01": "Оценка глобальной подверженности профессий генеративному ИИ: основной эффект скорее дополнение, чем автоматизация работы; влияние сильнее в странах с высоким доходом и среди женщин из-за их доли в канцелярских профессиях."
+      },
+      "usedBy": [
+        "TRD-01"
+      ]
+    },
+    {
+      "id": "SRC-NBER-W31161",
+      "kind": "research",
+      "edition": "NBER Working Paper 31161, редакция ноября 2023",
+      "publisher": "National Bureau of Economic Research",
+      "title": "Brynjolfsson E., Li D., Raymond L. Generative AI at Work. NBER Working Paper 31161, апрель 2023, редакция ноября 2023",
+      "url": "https://www.nber.org/papers/w31161",
+      "checkedOn": "2026-11-18",
+      "verificationStatus": "checked_primary_publisher",
+      "methodologicalLimits": "Та же работа в более ранней редакции; использовать для иллюстрации различий версий.",
+      "supportsClaimByLesson": {
+        "TRD-01": "В редакции рабочего документа NBER на данных 5 179 операторов указан рост числа решённых обращений в час на 14% в среднем и на 34% для новичков; это показывает, что цифры в версиях одного исследования могут отличаться."
+      },
+      "usedBy": [
+        "TRD-01"
+      ]
+    },
+    {
+      "id": "SRC-ARXIV-ECON-INDEX",
+      "kind": "research",
+      "edition": "arXiv, 11.02.2025",
+      "publisher": "arXiv",
+      "title": "Handa K. и др. Which Economic Tasks are Performed with AI? Evidence from Millions of Claude Conversations. arXiv:2503.04761, 11.02.2025",
+      "url": "https://arxiv.org/abs/2503.04761",
+      "checkedOn": "2026-11-18",
+      "verificationStatus": "checked_primary_publisher",
+      "methodologicalLimits": "Данные одной платформы; авторы связаны с её разработчиком.",
+      "supportsClaimByLesson": {
+        "TRD-01": "По более чем четырём миллионам диалогов одной платформы 57% использования похожи на дополнение работы человека, 43% — на автоматизацию; около 36% профессий используют ИИ хотя бы для четверти задач; авторы указывают, что данные относятся к одной платформе.",
+        "MAP-01": "Использование ИИ анализируется по задачам базы O*NET; 57% использования похожи на дополнение работы человека, 43% — на автоматизацию, что показывает разницу между помощью и выполнением задачи."
+      },
+      "usedBy": [
+        "TRD-01",
+        "MAP-01"
+      ]
+    },
+    {
+      "id": "SRC-152FZ-3",
+      "kind": "law",
+      "edition": "ред. от 26.07.2026",
+      "publisher": "КонсультантПлюс",
+      "title": "Федеральный закон от 27.07.2006 № 152-ФЗ «О персональных данных», статья 3",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_61801/4f41fe599ce341751e4e34dc50a4b676674c1416/",
+      "checkedOn": "2026-11-18",
+      "verificationStatus": "checked_secondary_publisher_official_publication_not_compared",
+      "methodologicalLimits": null,
+      "supportsClaimByLesson": {
+        "MAP-01": "Персональные данные — любая информация, относящаяся к прямо или косвенно определённому или определяемому физическому лицу, поэтому имя и личный телефон сотрудника клиента являются персональными данными.",
+        "SAL-01": "Персональные данные — любая информация, относящаяся к прямо или косвенно определённому или определяемому физическому лицу, поэтому имя, должность и телефон конкретного сотрудника клиента являются персональными данными."
+      },
+      "usedBy": [
+        "MAP-01",
+        "SAL-01"
+      ]
+    },
+    {
+      "id": "SRC-ARXIV-HALLUCINATE",
+      "kind": "research",
+      "edition": "arXiv, 04.09.2025",
+      "publisher": "arXiv",
+      "title": "Kalai A. T., Nachum O., Vempala S. S., Zhang E. Why Language Models Hallucinate. arXiv:2509.04664, 04.09.2025",
+      "url": "https://arxiv.org/abs/2509.04664",
+      "checkedOn": "2026-11-18",
+      "verificationStatus": "checked_primary_publisher",
+      "methodologicalLimits": null,
+      "supportsClaimByLesson": {
+        "SAL-01": "Языковые модели при неуверенности склонны угадывать и выдавать правдоподобные, но неверные утверждения, потому что процедуры обучения и оценки поощряют догадку больше, чем признание неуверенности."
+      },
+      "usedBy": [
+        "SAL-01"
+      ]
+    },
+    {
+      "id": "SRC-OWASP-LLM01",
+      "kind": "standard",
+      "edition": "OWASP Top 10 for LLM Applications 2025",
+      "publisher": "OWASP",
+      "title": "OWASP Top 10 for LLM Applications 2025: LLM01 Prompt Injection",
+      "url": "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
+      "checkedOn": "2026-11-18",
+      "verificationStatus": "checked_primary_publisher",
+      "methodologicalLimits": null,
+      "supportsClaimByLesson": {
+        "SAL-01": "Косвенная инъекция промпта возникает, когда модель принимает входные данные из внешних источников, например с веб-сайтов или из файлов, и содержащиеся в них указания меняют поведение модели."
+      },
+      "usedBy": [
+        "SAL-01"
+      ]
+    },
+    {
+      "id": "SRC-152FZ-5",
+      "kind": "law",
+      "edition": "ред. от 26.07.2026",
+      "publisher": "КонсультантПлюс",
+      "title": "Федеральный закон от 27.07.2006 № 152-ФЗ «О персональных данных», статья 5",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_61801/96fbc469f91f57235cc842a85e0516a99f23dc85/",
+      "checkedOn": "2026-11-18",
+      "verificationStatus": "checked_secondary_publisher_official_publication_not_compared",
+      "methodologicalLimits": null,
+      "supportsClaimByLesson": {
+        "SAL-01": "Ч. 5: содержание и объём обрабатываемых персональных данных должны соответствовать заявленным целям обработки и не должны быть избыточными по отношению к ним."
+      },
+      "usedBy": [
+        "SAL-01"
+      ]
+    }
+  ]
+}

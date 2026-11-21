@@ -1,0 +1,278 @@
+{
+  "schemaVersion": "career-v3-professions/1",
+  "engineVersion": "career-v3-engine/0.2",
+  "pilotProfessionId": "sales_manager",
+  "note": "Реестр профессий движка AI Career 3.0. Новая профессия подключается записью здесь и собственными файлами роли, диагностики и программы — без изменения кода. Сейчас реализован только пилот sales_manager; статус planned не выдаётся пользователям.",
+  "shared": {
+    "lessonSchema": "content/career/v3/schemas/lesson.schema.json",
+    "planStepSchema": "content/career/v3/schemas/plan-step.schema.json",
+    "prototypeDir": "content/career/v3/examples",
+    "modulePhases": {
+      "safety": "safety",
+      "task_mapping": "apply",
+      "practice": "apply",
+      "trends": "next_level",
+      "value": "value"
+    },
+    "templateKindPhases": {
+      "checklist": "verify",
+      "measurement_sheet": "measure"
+    }
+  },
+  "professions": [
+    {
+      "id": "sales_manager",
+      "title": "Менеджер по продажам",
+      "status": "pilot",
+      "engine": {
+        "metricKinds": {
+          "research_time": "exercise",
+          "qualification_quality": "exercise",
+          "crm_completeness": "exercise",
+          "proposal_quality": "exercise",
+          "error_rate": "exercise",
+          "funnel_hypotheses": "exercise",
+          "report_quality": "exercise",
+          "reply_rate": "workplace_outcome",
+          "first_response_time": "workplace_outcome",
+          "renewal_rate": "workplace_outcome",
+          "case_resolution_time": "workplace_outcome"
+        },
+        "disputedKpiMappings": [
+          {
+            "kpi": "revenue",
+            "metricId": "proposal_quality",
+            "issue": "Выручку нельзя измерить в учебном задании; качество КП — косвенный показатель, а не выручка."
+          },
+          {
+            "kpi": "conversion",
+            "metricId": "reply_rate",
+            "issue": "Рабочий показатель: зависит от базы, канала, согласия на контакт и сезона; не приписывается обучению."
+          },
+          {
+            "kpi": "conversion",
+            "metricId": "qualification_quality",
+            "issue": "Косвенный учебный показатель вместо конверсии; нужно подтвердить, что руководитель принимает его как сигнал."
+          },
+          {
+            "kpi": "speed",
+            "metricId": "first_response_time",
+            "issue": "Рабочий показатель: зависит от нагрузки, графика и канала; в учебной практике измеряется только время подготовки ответа."
+          },
+          {
+            "kpi": "retention",
+            "metricId": "renewal_rate",
+            "issue": "Сильная внешняя зависимость; наблюдается, но не объявляется эффектом обучения или ИИ."
+          },
+          {
+            "kpi": "retention",
+            "metricId": "case_resolution_time",
+            "issue": "Рабочий показатель; на учебных кейсах измеряется только время подготовки ответа, а не решение вопроса клиента."
+          },
+          {
+            "kpi": "crm",
+            "metricId": "crm_completeness",
+            "issue": "В учебной практике — полнота учебной записи; на реальной CRM — только в разрешённой среде."
+          }
+        ],
+        "developmentBasisSignals": [
+          {
+            "id": "BASIS-OWN-DEALS",
+            "label": "Вы указали, что самостоятельно ведёте сделки: на этот опыт можно опираться при проверке ответов ИИ",
+            "questionId": "Q02",
+            "values": [
+              "independent",
+              "experienced"
+            ],
+            "skillId": "human_negotiation"
+          },
+          {
+            "id": "BASIS-REVIEW-HABIT",
+            "label": "Вы указали, что результаты проверяют по чек-листу или с руководителем: эту привычку стоит перенести на работу с ИИ",
+            "questionId": "Q15",
+            "values": [
+              "checklist",
+              "supervisor"
+            ],
+            "skillId": "source_verification"
+          },
+          {
+            "id": "BASIS-BASELINE",
+            "label": "Вы указали, что есть исходные цифры: сравнение «было → стало» можно начать с них",
+            "questionId": "Q09",
+            "values": [
+              "measured"
+            ],
+            "skillId": "impact_storytelling"
+          },
+          {
+            "id": "BASIS-AI-PRACTICE",
+            "label": "Вы указали регулярный опыт работы с ИИ: можно начинать с более сложных учебных заданий",
+            "questionId": "Q10",
+            "values": [
+              "regular",
+              "advanced"
+            ],
+            "skillId": "prompt_workflow"
+          },
+          {
+            "id": "BASIS-KNOWN-RULES",
+            "label": "Вы указали, что правила компании по ИИ утверждены: практика возможна в разрешённых рамках",
+            "questionId": "Q12",
+            "values": [
+              "approved_specific"
+            ],
+            "skillId": "responsible_automation"
+          }
+        ],
+        "levelProfiles": {
+          "starter": {
+            "label": "Начинающий",
+            "description": "Только осваивает задачи продаж: больше объяснений, шагов безопасности и простого применения, меньше заданий следующего уровня."
+          },
+          "independent": {
+            "label": "Самостоятельный (средний уровень)",
+            "description": "Самостоятельно ведёт обычные сделки (ответ Q02 «Самостоятельно веду обычные сделки»): базовое распределение этапов без дополнительных подготовительных шагов; сложные кейсы — только при подходящих уроках."
+          },
+          "experienced": {
+            "label": "Опытный",
+            "description": "Ведёт сложные случаи и улучшает процессы: больше проверки, измерений, ценности для компании и заданий следующего уровня."
+          }
+        },
+        "goalModuleMap": {
+          "less_routine": [
+            "practice",
+            "task_mapping"
+          ],
+          "quality": [
+            "practice",
+            "safety"
+          ],
+          "customers": [
+            "practice"
+          ],
+          "manager": [
+            "value"
+          ],
+          "grow": [
+            "trends",
+            "value"
+          ]
+        }
+      },
+      "files": {
+        "role": "content/career/v3/roles/sales-manager.json",
+        "diagnostic": "content/career/v3/diagnostic-sales.json",
+        "curriculum": "content/career/v3/curriculum.json"
+      },
+      "lessonDirs": [
+        "content/career/v3/lessons"
+      ],
+      "planCandidateDirs": [
+        "content/career/v3/plan-candidates"
+      ],
+      "diagnosticBinding": {
+        "subtypeQuestion": "Q01",
+        "subtypeClarifier": "F02",
+        "mixedSubtypeValue": "mixed",
+        "levelQuestion": "Q02",
+        "levelMap": {
+          "starter": "starter",
+          "independent": "independent",
+          "experienced": "experienced"
+        },
+        "aiExperienceQuestion": "Q10",
+        "aiExperienceBasic": [
+          "none"
+        ],
+        "aiExperienceAdvanced": [
+          "regular",
+          "advanced"
+        ],
+        "workAreaQuestion": "Q03",
+        "taskQuestion": "Q04",
+        "obstacleQuestion": "Q05",
+        "frequencyQuestion": "Q06",
+        "durationQuestion": "Q07",
+        "kpiQuestion": "Q08",
+        "kpiMetricMap": {
+          "revenue": [
+            "proposal_quality"
+          ],
+          "conversion": [
+            "reply_rate",
+            "qualification_quality"
+          ],
+          "speed": [
+            "first_response_time",
+            "research_time"
+          ],
+          "quality": [
+            "error_rate",
+            "proposal_quality"
+          ],
+          "crm": [
+            "crm_completeness"
+          ],
+          "retention": [
+            "renewal_rate",
+            "case_resolution_time"
+          ],
+          "unknown": []
+        },
+        "baselineQuestion": "Q09",
+        "baselineMissing": [
+          "none",
+          "unknown"
+        ],
+        "paceQuestion": "Q17",
+        "paceMinutes": {
+          "10_15": 15,
+          "20_30": 30,
+          "45_plus": 45,
+          "unknown": null
+        },
+        "goalQuestion": "Q18",
+        "company": {
+          "toolsQuestion": "Q11",
+          "toolsUnavailable": [
+            "none",
+            "unknown"
+          ],
+          "policyQuestion": "Q12",
+          "policyApproved": [
+            "approved_specific"
+          ],
+          "policyProhibited": [
+            "prohibited"
+          ],
+          "policyContactQuestion": "F01",
+          "dataQuestion": "Q13",
+          "errorCostQuestion": "Q14",
+          "reviewQuestion": "Q15",
+          "approvalQuestion": "Q16"
+        },
+        "safetyEffects": {
+          "SAFE-01": [
+            "synthetic_only",
+            "company_policy_first"
+          ],
+          "SAFE-02": [
+            "no_real_data_upload"
+          ],
+          "SAFE-03": [
+            "human_review_required",
+            "no_unattended_changes"
+          ],
+          "SAFE-04": [
+            "no_personal_commitments"
+          ],
+          "SAFE-05": [
+            "no_inference"
+          ]
+        },
+        "mandatoryModuleId": "safety"
+      }
+    }
+  ]
+}

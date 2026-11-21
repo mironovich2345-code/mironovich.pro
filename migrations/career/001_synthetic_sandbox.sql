@@ -1,5 +1,5 @@
 -- Dedicated synthetic database only. Never apply to the public site's/another project's DB.
-DO $$ BEGIN IF current_database() !~ '^mironovich_career_test(_[a-z0-9]+)*$' THEN RAISE EXCEPTION 'CAREER_TEST_DATABASE_REQUIRED'; END IF; END $$;
+DO $$ BEGIN IF current_database() !~ '^mironovich_career_test(_[a-z0-9]+)*$' AND NOT (current_database() = 'mironovich_career_demo_v3' AND coalesce(current_setting('mironovich.career_demo', true), '') = 'closed-demo-v3') AND NOT (current_database() = 'mironovich_career_stage1' AND coalesce(current_setting('mironovich.career_demo', true), '') = 'stage1-preview') AND NOT (current_database() = 'mironovich_career_staging' AND coalesce(current_setting('mironovich.career_demo', true), '') = 'commercial-staging') AND NOT (current_database() = 'mironovich_career' AND coalesce(current_setting('mironovich.career_demo', true), '') = 'commercial') THEN RAISE EXCEPTION 'CAREER_TEST_DATABASE_REQUIRED'; END IF; END $$;
 CREATE TABLE IF NOT EXISTS career_migrations(version integer PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now());
 CREATE TABLE IF NOT EXISTS career_accounts (
  id uuid PRIMARY KEY, email text UNIQUE NOT NULL CHECK(email ~ '^demo-[a-z0-9-]{1,48}@example[.]invalid$'),

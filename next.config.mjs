@@ -1,5 +1,7 @@
 import { PHASE_PRODUCTION_BUILD } from "next/constants.js";
 import { runReleaseGuard } from "./lib/release-guard.mjs";
+/** Local test builds served over plain http on loopback (never the public site). */
+const loopbackSite = /^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?\/?$/.test(process.env.NEXT_PUBLIC_SITE_URL ?? "");
 
 // Same validation as lib/analytics.ts: a malformed id disables the provider and its hosts.
 const rawMetrica = (process.env.NEXT_PUBLIC_YANDEX_METRICA_ID || "").trim();
@@ -35,7 +37,9 @@ const securityHeaders = [
       "img-src 'self' data: blob:" + join(imgHosts),
       "font-src 'self' data:",
       "connect-src 'self'" + join(connectHosts),
-      "upgrade-insecure-requests",
+      // Upgrading http→https is right for every public origin, but on a loopback test server (http://127.0.0.1 in CI)
+      // Safari/WebKit would upgrade the page's own scripts and API calls to https and the page would never load.
+      ...(loopbackSite ? [] : ["upgrade-insecure-requests"]),
     ].join("; "),
   },
 ];
@@ -43,11 +47,18 @@ const securityHeaders = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Local two-server tests build the public site and the learning app side by side (default .next everywhere else).
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   poweredByHeader: false,
   compress: true,
   // Critical search/crawler user agents need metadata in <head> before streaming.
   // Do not classify ordinary browsers as bots: this can delay their response.
   // Verify Googlebot, Lighthouse and YandexBot output in browser smoke tests.
+  // Commercial learning app (separate service behind the site's proxy): its static files are served on the site under
+  // /career-app/_next/… so they never collide with the site's own /_next/… files. Keep in sync with middleware.ts.
+  assetPrefix: process.env.CAREER_V3_DEMO === "1" && /^commercial(-staging)?$/.test(process.env.CAREER_V3_DEMO_PROFILE ?? "") ? "/career-app" : undefined,
+  // Public site → learning app proxy: a hung app must not hold the site's workers for long.
+  experimental: { proxyTimeout: 15000 },
   htmlLimitedBots: /Googlebot|Google-InspectionTool|Lighthouse|Bingbot|Slurp|DuckDuckBot|Baiduspider|YandexBot|YandexMobileBot|facebookexternalhit|Twitterbot|LinkedInBot/i,
   async headers() {
     // staging / preview copies: keep every response out of search indexes

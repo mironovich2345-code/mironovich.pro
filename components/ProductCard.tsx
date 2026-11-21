@@ -28,7 +28,7 @@ export default function ProductCard({ product: p, currentPrice }: { product: Dig
       <div className="mt-auto flex flex-wrap items-center justify-between gap-4 pt-5">
         <p className="m-0 text-lg">
           {currentPrice ? (currentPrice.known ? rubles(currentPrice.priceRub) : "Действующая цена уточняется") : rub(p.plannedPrice)}{" "}
-          <span className="block text-sm text-stone">{currentPrice?.known ? (currentPrice.kind === "default" ? "стартовая цена · оплата подключается" : "действующая цена · оплата подключается") : "цена уточняется · оплата подключается"}</span>
+          <span className="block text-sm text-stone">{currentPrice?.known ? (currentPrice.mode === "default" ? "стартовая цена · оплата подключается" : "действующая цена · оплата подключается") : "цена уточняется · оплата подключается"}</span>
         </p>
         <Link
           href={"/products/" + p.slug}

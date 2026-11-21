@@ -1,0 +1,147 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "DL-SAL01-DATA",
+  "lessonId": "SAL-01",
+  "status": "review",
+  "syntheticOnly": true,
+  "notice": "Все компании, люди, сайты, цифры и события вымышлены; домены — зарезервированный .example. Данные предназначены только для учебной практики и не являются показателями реальных компаний.",
+  "exercises": [
+    {
+      "exerciseId": "SAL01-TASK-1",
+      "materialIds": [
+        "TPL-SAL01-BRIEF",
+        "TPL-SAL01-VERIFY",
+        "TPL-SAL01-SOURCES",
+        "TPL-SAL01-PROMPT-BRIEF"
+      ],
+      "sources": [
+        {
+          "id": "И1",
+          "url": "severpro-demo.example",
+          "section": "О компании",
+          "checkedOn": "16.11"
+        },
+        {
+          "id": "И2",
+          "url": "severpro-demo.example",
+          "section": "Новости",
+          "published": "02.10"
+        },
+        {
+          "id": "И3",
+          "url": "Реестр-Демо (учебный)",
+          "checkedOn": "16.11"
+        },
+        {
+          "id": "И4",
+          "url": "severpro-demo.example",
+          "section": "Вакансии",
+          "published": "10.11"
+        }
+      ],
+      "answerKey": {
+        "minErrors": 6,
+        "findings": [
+          {
+            "quote": "лидер рынка",
+            "cue": "«лидер рынка»",
+            "type": "invented",
+            "why": "Источника нет."
+          },
+          {
+            "quote": "выручкой 2,4 млрд ₽",
+            "cue": "«выручка 2,4 млрд ₽»",
+            "type": "invented_number",
+            "why": "В источниках цифр нет."
+          },
+          {
+            "quote": "выросшей на 30% за год",
+            "cue": "«на 30% за год»",
+            "type": "invented_number",
+            "why": "В источниках цифр нет."
+          },
+          {
+            "quote": "третий завод в Казани",
+            "cue": "«третий завод в Казани»",
+            "type": "invented_plan",
+            "why": "В источниках два завода."
+          },
+          {
+            "quote": "серьёзные проблемы с учётом остатков",
+            "cue": "«серьёзные проблемы с учётом» — догадка",
+            "type": "hypothesis_as_fact",
+            "why": "Вывод из вакансии — гипотеза."
+          },
+          {
+            "quote": "Директор по закупкам Иван Петров",
+            "cue": "«Иван Петров»",
+            "type": "personal_data",
+            "why": "Персональные данные из неофициального источника."
+          },
+          {
+            "quote": "инвестиции от фонда",
+            "cue": "«инвестиции от фонда»",
+            "type": "invented_news",
+            "why": "В новостях этого нет."
+          }
+        ]
+      }
+    },
+    {
+      "exerciseId": "SAL01-TASK-2",
+      "materialIds": [
+        "TPL-SAL01-QUESTIONS",
+        "TPL-SAL01-MEASURE"
+      ],
+      "answerKey": {
+        "keep": [
+          4,
+          7
+        ],
+        "rewrite": [
+          2
+        ],
+        "remove": [
+          1,
+          3,
+          5
+        ],
+        "postpone": [
+          6
+        ],
+        "findings": [
+          {
+            "quote": "Поздравляю с рекордной выручкой",
+            "cue": "1 — удалить",
+            "type": "fake_personalization",
+            "why": "Выручка выдумана."
+          },
+          {
+            "quote": "У вас ведь серьёзные проблемы с учётом остатков?",
+            "cue": "2 — переписать",
+            "type": "leading_question",
+            "why": "Вопрос-подсказка."
+          },
+          {
+            "quote": "завод в Казани",
+            "cue": "3 — удалить",
+            "type": "invented",
+            "why": "Завода нет в источниках."
+          },
+          {
+            "quote": "Иван, удобно ли созвониться в выходные?",
+            "cue": "5 — удалить",
+            "type": "personal_data",
+            "why": "Имя из неофициального источника и выходные."
+          },
+          {
+            "quote": "Сколько вы готовы потратить",
+            "cue": "6 — отложить",
+            "type": "too_early",
+            "why": "Бюджет — после выяснения задачи."
+          }
+        ]
+      }
+    }
+  ]
+}

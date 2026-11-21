@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature/career-20261118-integrate-on-main
+      - demo/ai-career-v3-cloud
   pull_request:
     paths:
       - "app/career/**"
@@ -11,6 +12,9 @@ on:
       - "components/CareerSandbox.tsx"
       - "lib/career-diagnostic.ts"
       - "lib/server/career/**"
+      - "lib/server/career-v3/**"
+      - "lib/career-v3/**"
+      - "content/career/v3/professions.json"
       - "lib/server/commerce/**"
       - "migrations/career/**"
       - "tests/career-*.mjs"
@@ -21,10 +25,26 @@ on:
       - "app/products/**"
       - "app/solutions/**"
       - ".github/workflows/career-synthetic-qa.yml"
+      - "components/career-demo/**"
+      - "components/career-v3/**"
+      - "middleware.ts"
+      - "app/layout.tsx"
+      - "app/robots.ts"
+      - "scripts/career/demo-admin.mjs"
+      - "content/career/v3/player/**"
       - "config/ai-career-pricing.ts"
-      - "migrations/commerce/**"
       - "components/AiCareerPrice.tsx"
-      - "scripts/commerce/**"
+      - "lib/server/career-demo/**"
+      - "lib/server/client-ip.ts"
+      - "migrations/career-commercial/**"
+      - "config/career-access.ts"
+      - "components/SiteHeader.tsx"
+      - "components/MobileMenu.tsx"
+      - "next.config.mjs"
+      - "lib/server/career-admin/**"
+      - "components/career-admin/**"
+      - "app/admin/**"
+      - "app/preview-*/**"
 
 permissions:
   contents: read
@@ -39,6 +59,8 @@ jobs:
       CAREER_SANDBOX_ENABLED: "0"
     steps:
       - uses: actions/checkout@v4
+      - name: Fetch main for the schema comparison test
+        run: git fetch --no-tags --depth=1 origin main:refs/remotes/origin/main
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
@@ -129,7 +151,9 @@ jobs:
           done
           if [ "$ready" -ne 1 ]; then echo "Synthetic fixture not ready"; exit 1; fi
           npm run career:test:integration
-          COMMERCE_TEST_DATABASE_URL="$CAREER_DATABASE_URL" npm run commerce:test:prices
+          npm run career:test:v3-integration
+          npm run career:test:v3-progress
+          npm run career:test:v3-results
           npm run career:cleanup
           # Browser checks remain isolated to loopback, fake messages and payments.
           npm install --no-save --no-package-lock playwright
@@ -152,3 +176,193 @@ jobs:
           fi
           echo "Career sandbox browser QA"
           npm run career:test:browser
+          echo "AI Career v3 progress browser QA (local synthetic fixture library only)"
+          # Stop the whole previous server (npm and its next-server child) so the port is really free.
+          kill "$server_pid" 2>/dev/null || true
+          pkill -f next-server || true
+          for i in {1..30}; do curl -s -o /dev/null "http://127.0.0.1:3300/" || break; sleep 1; done
+          if curl -s -o /dev/null "http://127.0.0.1:3300/"; then echo "Previous server still running on 3300"; exit 1; fi
+          node scripts/career/v3-fixture-library.mjs
+          CAREER_V3_FIXTURE_LIBRARY=1 npm run career:start >/tmp/career-synthetic-next-v3.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" "$fixture_pid" 2>/dev/null || true; pkill -f next-server || true' EXIT
+          v3_ready=0
+          for i in {1..60}; do
+            if curl -fsS "http://127.0.0.1:3300/career/v3" >/dev/null 2>&1; then v3_ready=1; break; fi
+            sleep 1
+          done
+          if [ "$v3_ready" -ne 1 ]; then echo "Fixture-library server did not start"; tail -n 60 /tmp/career-synthetic-next-v3.log; exit 1; fi
+          node tests/career-v3-progress-browser.mjs || { tail -n 80 /tmp/career-synthetic-next-v3.log; exit 1; }
+          node tests/career-v3-results-browser.mjs || { tail -n 80 /tmp/career-synthetic-next-v3.log; exit 1; }
+          node scripts/career/v3-fixture-library.mjs remove
+
+  closed-demo:
+    # Closed cloud demo of AI Career 3.0 on a LOCAL loopback copy: own PostgreSQL database with the exact demo
+    # name, generated throw-away secrets, no Railway variables, no payments, mail or external AI.
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: synthetic_only
+          POSTGRES_DB: mironovich_career_demo_v3
+        ports:
+          - 55434:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d mironovich_career_demo_v3"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Create local-only demo configuration
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import secrets
+          values = {
+            "CAREER_V3_DEMO": "1",
+            "CAREER_V3_DEMO_LOCAL": "1",
+            "CAREER_V3_DEMO_ORIGIN": "http://127.0.0.1:3400",
+            "CAREER_V3_DEMO_DATABASE_URL": "postgresql://postgres:synthetic_only@127.0.0.1:55434/mironovich_career_demo_v3",
+            "CAREER_V3_DEMO_SESSION_SECRET": secrets.token_hex(32),
+            "SITE_NOINDEX": "1",
+            "NEXT_PUBLIC_SITE_URL": "http://127.0.0.1:3400",
+          }
+          p = Path(".env.career-demo.local")
+          p.write_text("".join(f"{key}={value}\n" for key, value in values.items()))
+          p.chmod(0o600)
+          PY
+          PGPASSWORD=synthetic_only psql -h 127.0.0.1 -p 55434 -U postgres -d mironovich_career_demo_v3 -c "CREATE DATABASE mironovich_career_demo_other"
+      - name: Migrate, build, HTTP integration and browser E2E (phone and desktop profiles)
+        shell: bash
+        run: |
+          set -euo pipefail
+          set -a
+          source .env.career-demo.local
+          set +a
+          node --experimental-strip-types --no-warnings scripts/career/demo-admin.mjs migrate
+          npx next build >/tmp/career-demo-build.log 2>&1 || { tail -n 80 /tmp/career-demo-build.log; exit 1; }
+          node --no-warnings tests/career-demo-integration.mjs
+          npm install --no-save --no-package-lock playwright
+          npx playwright install chromium
+          sudo ln -sf "$(node -p 'require("playwright").chromium.executablePath()')" /usr/bin/chromium
+          CAREER_DEMO_SCREENSHOTS=/tmp/career-demo-shots node --no-warnings tests/career-demo-browser.mjs
+          CAREER_PLAYER_SCREENSHOTS=/tmp/career-demo-shots/player node --no-warnings tests/career-demo-player-browser.mjs
+      - name: Demo screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: career-demo-screenshots
+          path: /tmp/career-demo-shots
+          if-no-files-found: ignore
+          retention-days: 7
+
+  stage1-preview:
+    # AI Career 3.0 stage 1 on a LOCAL loopback copy: email-code sign-in, admin cabinet, AUTO/MANUAL prices, orders and
+    # Robokassa TEST notifications through the preview emulator. Own throw-away PostgreSQL, generated secrets, no network
+    # payments, no real mailbox (preview outbox), no Railway variables.
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: synthetic_only
+          POSTGRES_DB: postgres
+        ports:
+          - 55435:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Stage-1 HTTP integration (builds the stage-1 profile itself)
+        env:
+          CAREER_STAGE1_PG: postgresql://postgres:synthetic_only@127.0.0.1:55435
+        run: node --experimental-strip-types --no-warnings tests/career-stage1-integration.mjs
+      - name: Stage-1 SMTP module against a loopback TLS server
+        run: node --experimental-strip-types --no-warnings tests/career-stage1-smtp.mjs
+      - name: Stage-1 browser checks (iPhone Safari/WebKit, Android Chrome, desktop Chrome)
+        env:
+          CAREER_STAGE1_PG: postgresql://postgres:synthetic_only@127.0.0.1:55435
+          STAGE1_SHOTS: /tmp/stage1-shots
+          STAGE1_WEBKIT: "1"
+        run: |
+          npm install --no-save --no-package-lock playwright
+          npx playwright install --with-deps chromium webkit
+          sudo ln -sf "$(node -p 'require("playwright").chromium.executablePath()')" /usr/bin/chromium
+          node --experimental-strip-types --no-warnings tests/career-stage1-browser.mjs
+      - name: Stage-1 screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage1-screenshots
+          path: /tmp/stage1-shots
+          if-no-files-found: ignore
+          retention-days: 7
+
+  commercial-topology:
+    # Stage 1.5: the production topology on loopback — the public site proxies /career, /admin and /api/career/* to the
+    # separate learning app (profile commercial-staging) with an EMPTY commercial database. Generated secrets, preview
+    # mailbox, Robokassa emulator only; no real mailbox, no payments, no Railway variables.
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: synthetic_only
+          POSTGRES_DB: postgres
+        ports:
+          - 55436:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Site + app integration (builds both)
+        env:
+          CAREER_COMMERCIAL_PG: postgresql://postgres:synthetic_only@127.0.0.1:55436
+        run: node --experimental-strip-types --no-warnings tests/career-commercial-integration.mjs
+      - name: Browser checks (iPhone Safari/WebKit, desktop Chrome)
+        env:
+          CAREER_COMMERCIAL_PG: postgresql://postgres:synthetic_only@127.0.0.1:55436
+          COMMERCIAL_SHOTS: /tmp/commercial-shots
+          STAGE1_WEBKIT: "1"
+        run: |
+          npm install --no-save --no-package-lock playwright
+          npx playwright install --with-deps chromium webkit
+          sudo ln -sf "$(node -p 'require("playwright").chromium.executablePath()')" /usr/bin/chromium
+          node --experimental-strip-types --no-warnings tests/career-commercial-browser.mjs
+      - name: Commercial screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: commercial-screenshots
+          path: /tmp/commercial-shots
+          if-no-files-found: ignore
+          retention-days: 7

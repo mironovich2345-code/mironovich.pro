@@ -1,0 +1,8 @@
+{
+  "id": "sal-03",
+  "ids": ["SAL-03"],
+  "materialsDir": "content/career/v3/materials/sal-03",
+  "planPath": "content/career/v3/plan-candidates/sal-03.json",
+  "lawRefs": { "ГК РФ, ст. 432": "SRC-GK-432", "ГК РФ, ст. 435": "SRC-GK-435" },
+  "requireYearInDates": true
+}
