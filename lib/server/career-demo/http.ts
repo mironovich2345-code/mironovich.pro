@@ -3,6 +3,7 @@ import { timingSafeEqual } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
 import { CareerError } from "../career/config.ts";
 import { demoConfig, requireDemo, type DemoConfig } from "./config.ts";
+import { parseIp, trustedClientIp } from "../client-ip.ts";
 
 export const MAX_BODY = 8192;
 export const noStore = { "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow" };
@@ -49,16 +50,12 @@ export async function readJson(req: NextRequest, allowed: string[]): Promise<Rec
 
 /** Client address for rate limits only (never stored: limit keys are HMAC digests). Railway's edge sets X-Real-IP. */
 export function clientIp(req: NextRequest): string {
-  // Commercial app: the site's proxy passes the visitor's address (trusted only with the proxy secret).
   const c = demoConfig();
-  if (c?.proxySecret && requestHost(req.headers, c) !== null) {
-    const fwd = req.headers.get("x-career-client-ip")?.trim();
-    if (fwd && fwd.length <= 64) return fwd;
-  }
-  const real = req.headers.get("x-real-ip")?.trim();
-  if (real && real.length <= 64) return real;
-  const xff = req.headers.get("x-forwarded-for")?.split(",").map((s) => s.trim()).filter(Boolean);
-  return xff?.length ? xff[xff.length - 1].slice(0, 64) : "unknown";
+  // Commercial app: only the public site's proxy reaches it; the site passes the visitor's address it took from
+  // Railway/Cloudflare (trusted only together with the proxy secret). Anything else shares one strict bucket.
+  if (c?.proxySecret) return requestHost(req.headers, c) !== null ? parseIp(req.headers.get("x-career-client-ip")) ?? "unknown" : "unknown";
+  // Closed contours on their own *.up.railway.app domain: the address Railway's edge wrote.
+  return trustedClientIp(req.headers);
 }
 
 export function setSessionCookie(res: NextResponse, c: DemoConfig, token: string) {

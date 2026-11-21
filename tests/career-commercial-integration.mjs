@@ -229,6 +229,38 @@ await check("sign-out ends the session on the server", async () => {
   assert.equal(ok(await thief.demo("session")).authenticated, false);
 });
 
+await check("code limits per visitor IP cannot be dodged with forged X-Forwarded-For, CF-Connecting-IP or x-career-client-ip", async () => {
+  // Railway's edge overwrites X-Real-IP with the connecting address (measured); everything else is visitor-written.
+  const forged = (i) => ({ "x-forwarded-for": `198.51.100.${i}, 198.51.100.${i + 100}`, "cf-connecting-ip": `203.0.113.${i}`, "x-career-client-ip": `192.0.2.${i}` });
+  const direct = [];
+  for (let i = 0; i < 21; i++) direct.push((await client("10.9.9.9").demo("otp-start", { email: `ip-direct-${i}@example.com` }, { headers: forged(i) })).status);
+  assert.deepEqual([direct.slice(0, 20).every((s) => s === 200), direct[20]], [true, 429], "21st code request from one edge address is refused: " + direct.join(","));
+  // Through Cloudflare (edge address in Cloudflare's range): the visitor is CF-Connecting-IP; forged XFF changes nothing.
+  const cf = [];
+  for (let i = 0; i < 21; i++) cf.push((await client("172.70.1.2").demo("otp-start", { email: `ip-cf-${i}@example.com` }, { headers: { "cf-connecting-ip": "198.51.100.77", "x-forwarded-for": `10.0.0.${i}` } })).status);
+  assert.equal(cf[20], 429, "one visitor behind Cloudflare is limited: " + cf.join(","));
+  assert.equal((await client("172.70.1.2").demo("otp-start", { email: "ip-cf-other@example.com" }, { headers: { "cf-connecting-ip": "198.51.100.78" } })).status, 200, "another visitor behind the same Cloudflare edge is not blocked");
+});
+
+await check("without CAREER_APP_UPSTREAM the public site behaves like today's production: no sign-in link, cabinet paths 404", async () => {
+  const PLAIN = 3522, base = `http://127.0.0.1:${PLAIN}`;
+  const plainEnv = { ...siteEnv }; delete plainEnv.CAREER_APP_UPSTREAM; delete plainEnv.CAREER_PROXY_SECRET;
+  // Built without the variable, as production is built today (the sign-in link is part of the static pages, so
+  // removing CAREER_APP_UPSTREAM takes effect with the rebuild Railway runs on every variable change).
+  build(plainEnv, ".next-plain");
+  await start("plain", plainEnv, PLAIN, ".next-plain");
+  try {
+    const home = await client(ip()).call("/", undefined, { base });
+    assert.equal(home.status, 200);
+    assert.doesNotMatch(home.body, /\/career\?login=1|Войти в обучение/, "no sign-in entry");
+    for (const p of ["/products", "/products/ai-career", "/services", "/contact", "/robots.txt"]) assert.equal((await client(ip()).call(p, undefined, { base })).status, 200, p);
+    // same answers as https://mironovich.pro today (checked live on 2026-11-21)
+    for (const p of ["/career", "/career/v3", "/admin", "/api/career/demo/session", "/career-app/_next/x", "/preview-mail"]) assert.equal((await client(ip()).call(p, undefined, { base })).status, 404, p);
+    const product = await client(ip()).call("/products/ai-career", undefined, { base });
+    assert.match(product.body, /1 993/, "launch price without the app");
+  } finally { stop("plain"); }
+});
+
 await check("the public site keeps working while the learning app is down; /career fails fast", async () => {
   stop("app");
   await sleep(1500);

@@ -11,6 +11,7 @@
 //    Without CAREER_APP_UPSTREAM (today's production) this middleware changes nothing on the public site.
 import { timingSafeEqual } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
+import { trustedClientIp } from "./lib/server/client-ip.ts";
 
 const ALLOWED = [/^\/career\/v3\/?$/, /^\/api\/career\/demo\/[a-z-]+$/, /^\/api\/career\/v3\//, /^\/robots\.txt$/, /^\/favicon\.ico$/, /^\/icon-\d+\.png$/, /^\/apple-touch-icon\.png$/, /^\/fonts\//];
 
@@ -50,8 +51,8 @@ function publicSite(req: NextRequest): NextResponse {
   const headers = new Headers(req.headers);
   headers.set("x-career-proxy", secret); // overwrites anything a visitor might send
   headers.set("x-forwarded-host", req.headers.get("host") ?? "");
-  const ip = req.headers.get("x-real-ip")?.trim() || req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  headers.set("x-career-client-ip", ip.slice(0, 64));
+  // Only a source Railway/Cloudflare guarantee (see lib/server/client-ip.ts); never a header a visitor can write.
+  headers.set("x-career-client-ip", trustedClientIp(req.headers));
   return noindex(NextResponse.rewrite(target, { request: { headers } }));
 }
 

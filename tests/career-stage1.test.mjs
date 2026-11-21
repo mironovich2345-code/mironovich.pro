@@ -142,7 +142,7 @@ test("CSP keeps upgrade-insecure-requests for every public origin; only a loopba
 // ——— stage 1.5: commercial profiles ———
 const commercial = (patch = {}) => ({
   CAREER_V3_DEMO: "1", CAREER_V3_DEMO_PROFILE: "commercial", NODE_ENV: "production",
-  RAILWAY_PROJECT_NAME: "mironovich-career-production", RAILWAY_ENVIRONMENT_NAME: "production", RAILWAY_SERVICE_NAME: "ai-career-app", RAILWAY_ENVIRONMENT: "production",
+  RAILWAY_PROJECT_NAME: "handsome-warmth", RAILWAY_PROJECT_ID: "7139f66b-111b-48ad-b8fc-ce40b2da3e9c", RAILWAY_ENVIRONMENT_NAME: "production", RAILWAY_SERVICE_NAME: "ai-career-app", RAILWAY_ENVIRONMENT: "production",
   CAREER_V3_DEMO_ORIGIN: "https://mironovich.pro", NEXT_PUBLIC_SITE_URL: "https://mironovich.pro",
   CAREER_V3_DEMO_DATABASE_URL: "postgresql://u:p@db.railway.internal:5432/mironovich_career",
   CAREER_V3_DEMO_SESSION_SECRET: "s".repeat(20) + "0123456789abcdef0123456789abcdef", CAREER_V3_OTP_SECRET: "o".repeat(10) + "fedcba9876543210fedcba9876543210",
@@ -167,7 +167,16 @@ test("commercial production profile: main domain through the proxy, open sign-up
     "demo database": { CAREER_V3_DEMO_DATABASE_URL: "postgresql://u:p@h:5432/" + cfg.DEMO_DATABASE_NAME },
     "staging database": { CAREER_V3_DEMO_DATABASE_URL: "postgresql://u:p@h:5432/mironovich_career_staging" },
     "wrong service": { RAILWAY_SERVICE_NAME: "web" },
+    "inside the public site's service": { RAILWAY_SERVICE_NAME: "mironovich.pro" },
+    "old separate project": { RAILWAY_PROJECT_NAME: "mironovich-career-production" },
+    "foreign project renamed handsome-warmth": { RAILWAY_PROJECT_ID: "00000000-0000-0000-0000-000000000000" },
+    "staging environment": { RAILWAY_ENVIRONMENT_NAME: "staging", RAILWAY_ENVIRONMENT: "staging" },
+    "public database proxy": { CAREER_V3_DEMO_DATABASE_URL: "postgresql://u:p@roundhouse.proxy.rlwy.net:41234/mironovich_career" },
+    "site's Telegram token copied": { TELEGRAM_BOT_TOKEN: "123:abc" },
+    "site's OpenAI key copied": { OPENAI_API_KEY: "sk-x" },
   })) assert.equal(cfg.demoConfig(commercial(patch)), null, name);
+  // other contours still refuse any production environment, including the commercial staging profile
+  for (const p of ["closed-demo", "stage1", "commercial-staging"]) assert.ok(cfg.demoProblems({ ...commercial(), CAREER_V3_DEMO_PROFILE: p }).includes("среда production запрещена"), p);
 });
 
 test("commercial staging: staging site domain, emulator and preview mailbox allowed, review lessons in memory only", () => {
@@ -183,6 +192,23 @@ test("commercial staging: staging site domain, emulator and preview mailbox allo
   assert.equal(cfg.demoConfig({ ...env, CAREER_PROXY_SECRET: undefined }), null);
   // closed contours refuse the proxy secret (no mixing of roles)
   assert.equal(cfg.demoConfig({ ...stage1(), CAREER_PROXY_SECRET: "p".repeat(40) }), null);
+});
+
+test("visitor IP for code limits: only Railway's X-Real-IP, or Cloudflare's CF-Connecting-IP when the edge address is Cloudflare", async () => {
+  const ipm = await import("../lib/server/client-ip.ts");
+  const h = (o) => new Headers(o);
+  assert.equal(ipm.trustedClientIp(h({ "x-real-ip": "203.0.113.7", "x-forwarded-for": "1.1.1.1" })), "203.0.113.7", "X-Forwarded-For never read");
+  assert.equal(ipm.trustedClientIp(h({ "x-forwarded-for": "1.1.1.1, 2.2.2.2" })), "unknown", "no edge address → one shared bucket");
+  assert.equal(ipm.trustedClientIp(h({ "x-real-ip": "203.0.113.7", "cf-connecting-ip": "9.9.9.9" })), "203.0.113.7", "forged CF header on a direct request ignored");
+  assert.equal(ipm.trustedClientIp(h({ "x-real-ip": "172.70.1.2", "cf-connecting-ip": "198.51.100.4" })), "198.51.100.4", "via Cloudflare: the visitor");
+  assert.equal(ipm.trustedClientIp(h({ "x-real-ip": "2606:4700:10::1", "cf-connecting-ip": "2001:db8::5" })), "2001:db8::5");
+  assert.equal(ipm.trustedClientIp(h({ "x-real-ip": "162.158.0.9", "cf-connecting-ip": "not-an-ip" })), "162.158.0.9");
+  assert.equal(ipm.trustedClientIp(h({ "x-real-ip": "::ffff:203.0.113.7" })), "203.0.113.7");
+  assert.equal(ipm.trustedClientIp(h({ "x-real-ip": "<script>" })), "unknown");
+  for (const a of ["104.21.62.43", "172.67.219.246"]) assert.ok(ipm.isCloudflareIp(a), a + " (mironovich.pro today) is Cloudflare");
+  const mw = readFileSync("middleware.ts", "utf8");
+  assert.match(mw, /headers\.set\("x-career-client-ip", trustedClientIp\(req\.headers\)\)/);
+  assert.doesNotMatch(mw, /x-forwarded-for/i);
 });
 
 test("email addresses: only plain characters reach the database (no markup, quotes or spaces)", async () => {

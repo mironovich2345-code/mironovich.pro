@@ -40,7 +40,11 @@ export const PRODUCTION_SITE_ORIGIN = "https://mironovich.pro";
 
 export type DemoProfile = "closed-demo" | "stage1" | "commercial-staging" | "commercial";
 export const isCommercial = (p: DemoProfile) => p === "commercial" || p === "commercial-staging";
-interface ProfileSpec { project: string; environment: string; service: string; database: string; migration: string }
+/** Railway project of mironovich.pro (handsome-warmth); not a secret, it identifies the project. */
+export const COMMERCIAL_RAILWAY_PROJECT_ID = "7139f66b-111b-48ad-b8fc-ce40b2da3e9c";
+/** The public site's service in that project: the learning app must never run as it. */
+export const PUBLIC_SITE_RAILWAY_SERVICE = "mironovich.pro";
+interface ProfileSpec { project: string; projectId?: string; environment: string; service: string; database: string; migration: string }
 /** Each profile lives in its own Railway project: the stage-1 preview cannot reach the closed demo's services or data. */
 export const PROFILES: Record<DemoProfile, ProfileSpec> = {
   "closed-demo": { project: DEMO_RAILWAY_PROJECT, environment: DEMO_RAILWAY_ENVIRONMENT, service: DEMO_RAILWAY_SERVICE, database: DEMO_DATABASE_NAME, migration: DEMO_MIGRATION_VALUE },
@@ -48,7 +52,9 @@ export const PROFILES: Record<DemoProfile, ProfileSpec> = {
   // Commercial learning app behind the public site's proxy. Its own empty database; no synthetic-only constraints
   // (migration 013 runs only on these two databases). The app service has no public domain of its own.
   "commercial-staging": { project: "mironovich-commercial-staging", environment: "staging", service: "ai-career-app", database: "mironovich_career_staging", migration: "commercial-staging" },
-  commercial: { project: "mironovich-career-production", environment: "production", service: "ai-career-app", database: "mironovich_career", migration: "commercial" },
+  // Production: inside the public site's own Railway project (handsome-warmth), because Railway's private network does
+  // not cross projects. Pinned by project ID as well as name, so a renamed foreign project cannot pass.
+  commercial: { project: "handsome-warmth", projectId: COMMERCIAL_RAILWAY_PROJECT_ID, environment: "production", service: "ai-career-app", database: "mironovich_career", migration: "commercial" },
 };
 /** The only sender address the product may use. */
 export const MAIL_FROM_ADDRESS = "info@mironovich.pro";
@@ -57,6 +63,8 @@ export const MAIL_FROM_ADDRESS = "info@mironovich.pro";
 const FORBIDDEN = [
   "CAREER_SANDBOX_ENABLED", "CAREER_PAYMENT_MODE", "YOOKASSA_SHOP_ID", "YOOKASSA_TEST_SECRET_KEY", "YOOKASSA_SECRET_KEY",
   "CAREER_MAIL_MODE", "CAREER_SMTP_URL", "CAREER_AI_MODE", "ANTHROPIC_API_KEY", "OPENAI_API_KEY",
+  // Secrets of the public site that shares the production project: never copied into the learning app.
+  "TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID", "COMMERCE_DATABASE_URL",
   "CAREER_V3_FIXTURE_LIBRARY", "CAREER_V3_REVIEW_PREVIEW", "LEGAL_PREVIEW",
   // Live Robokassa credentials are never accepted at stage 1: only the separate TEST pair is.
   "ROBOKASSA_PASSWORD1", "ROBOKASSA_PASSWORD2", "ROBOKASSA_PASSWORD3", "CAREER_V3_ROBOKASSA_PASSWORD1", "CAREER_V3_ROBOKASSA_PASSWORD2",
@@ -128,9 +136,13 @@ export function demoProblems(env: NodeJS.ProcessEnv = process.env): string[] {
     if (origin && !(origin.protocol === "http:" && origin.hostname === "127.0.0.1")) problems.push("локальный режим допускает только http://127.0.0.1");
   } else {
     if (norm(env.RAILWAY_PROJECT_NAME) !== spec.project) problems.push("проект Railway не совпадает с разрешённым");
+    if (spec.projectId && norm(env.RAILWAY_PROJECT_ID) !== spec.projectId) problems.push("идентификатор проекта Railway не совпадает с разрешённым");
+    if (norm(env.RAILWAY_SERVICE_NAME) === PUBLIC_SITE_RAILWAY_SERVICE) problems.push("приложение нельзя запускать в сервисе публичного сайта");
     if (norm(env.RAILWAY_ENVIRONMENT_NAME) !== spec.environment) problems.push("среда Railway не совпадает с разрешённой");
     if (norm(env.RAILWAY_SERVICE_NAME) !== spec.service) problems.push("сервис Railway не совпадает с разрешённым");
-    if (!commercial && norm(env.RAILWAY_ENVIRONMENT).toLowerCase() === "production") problems.push("среда production запрещена");
+    // Only the commercial production profile may run in a Railway "production" environment.
+    const prodEnv = [env.RAILWAY_ENVIRONMENT, env.RAILWAY_ENVIRONMENT_NAME].some((v) => norm(v).toLowerCase() === "production");
+    if (profile !== "commercial" && prodEnv) problems.push("среда production запрещена");
     if (origin) {
       if (origin.protocol !== "https:") problems.push("облачное демо работает только по HTTPS");
       if (profile === "commercial") {
@@ -160,6 +172,8 @@ export function demoProblems(env: NodeJS.ProcessEnv = process.env): string[] {
     if (!["postgres:", "postgresql:"].includes(db.protocol)) problems.push("CAREER_V3_DEMO_DATABASE_URL не PostgreSQL");
     if (db.pathname.slice(1) !== spec.database) problems.push(`имя базы должно быть ${spec.database}`);
     if (norm(env.CAREER_DATABASE_URL) || norm(env.DATABASE_URL)) problems.push("заданы адреса других баз (CAREER_DATABASE_URL/DATABASE_URL)");
+    // Commercial cloud: the database is reachable only over the project's private network, never a public proxy.
+    if (commercial && !local && !db.hostname.endsWith(".railway.internal")) problems.push("коммерческая база должна быть во внутренней сети Railway (*.railway.internal)");
   } catch {
     problems.push("CAREER_V3_DEMO_DATABASE_URL не задан");
   }

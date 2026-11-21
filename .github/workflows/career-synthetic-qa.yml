@@ -35,6 +35,7 @@ on:
       - "config/ai-career-pricing.ts"
       - "components/AiCareerPrice.tsx"
       - "lib/server/career-demo/**"
+      - "lib/server/client-ip.ts"
       - "migrations/career-commercial/**"
       - "config/career-access.ts"
       - "components/SiteHeader.tsx"
